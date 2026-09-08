@@ -132,7 +132,7 @@ se fusionan con los ADRs de `grill-with-docs`, que viven en su propia carpeta ba
 el mismo techo.
 
 La línea `docs/` del `.gitignore` se elimina (hecho ya, al crear esta spec), junto
-con el bloque de comentarios sobre la migración a la extinta ruta `docs/`.
+con el bloque de comentarios sobre la migración a la extinta ruta `02-DOCS/`.
 
 ## 5. Nombre del paquete
 
@@ -168,7 +168,8 @@ resolvía renombrados correctamente. No había nada que arreglar.
 - `npm test` no supera el baseline de fallos de entorno Windows (symlinks,
   Python, hooks de git) ni introduce ninguno nuevo: se compara el conjunto de
   nombres de tests que fallan antes y después, no el recuento total.
-- Ninguna mención viva de `docs` en el repo.
+- Ninguna mención viva de `02-DOCS` en el repo, salvo `site/clase/` (material
+  didáctico del usuario, sin versionar), que se deja intacto a propósito.
 - Ninguna mención de `@ericrisco/rsc`.
 - Instalación de prueba en un proyecto limpio: recibe el paquete correcto de los
   tres, con superpowers declarado y sin skills duplicadas.

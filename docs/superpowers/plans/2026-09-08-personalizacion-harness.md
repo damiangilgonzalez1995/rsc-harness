@@ -173,7 +173,7 @@ git commit -m "🐛 Arreglar la deteccion de entrypoint en Windows"
 
 ---
 
-### Task 3: Renombrar `docs/` a `docs/`
+### Task 3: Renombrar `02-DOCS/` a `docs/`
 
 Unas 1.050 menciones en 278 ficheros. Se hace de una pasada porque los tests y `doctor` comprueban la ruta y una mezcla los rompería.
 
@@ -183,13 +183,13 @@ Unas 1.050 menciones en 278 ficheros. Se hace de una pasada porque los tests y `
 
 **Interfaces:**
 - Consumes: árbol en LF (Tarea 1).
-- Produces: la cadena `docs` deja de existir en el repo.
+- Produces: la cadena `02-DOCS` deja de existir en el repo.
 
 - [ ] **Step 1: Contar el punto de partida**
 
 ```bash
-grep -rl "docs" --exclude-dir=node_modules --exclude-dir=.git . | wc -l
-grep -ro "docs" --exclude-dir=node_modules --exclude-dir=.git . | wc -l
+grep -rl "02-DOCS" --exclude-dir=node_modules --exclude-dir=.git . | wc -l
+grep -ro "02-DOCS" --exclude-dir=node_modules --exclude-dir=.git . | wc -l
 ```
 
 Anotar ambos números.
@@ -197,14 +197,14 @@ Anotar ambos números.
 - [ ] **Step 2: Sustituir en todo el repo**
 
 ```bash
-grep -rl "docs" --exclude-dir=node_modules --exclude-dir=.git . \
-  | xargs sed -i 's|docs|docs|g'
+grep -rl "02-DOCS" --exclude-dir=node_modules --exclude-dir=.git . \
+  | xargs sed -i 's|02-DOCS|docs|g'
 ```
 
 - [ ] **Step 3: Comprobar que no queda ninguna**
 
 ```bash
-grep -rn "docs" --exclude-dir=node_modules --exclude-dir=.git . | wc -l
+grep -rn "02-DOCS" --exclude-dir=node_modules --exclude-dir=.git . | wc -l
 ```
 
 Esperado: `0`.
@@ -232,7 +232,7 @@ Esperado: mismos números que el baseline de la Tarea 1.
 
 ```bash
 git add -A
-git commit -m "📁 Mover la documentacion del harness de docs a docs"
+git commit -m "📁 Mover la documentacion del harness de 02-DOCS a docs"
 ```
 
 ---
@@ -854,10 +854,10 @@ Esperado: sin resultados.
 - [ ] **Step 5: Comprobar dónde escribe**
 
 ```bash
-ls /tmp/prueba-web/docs 2>/dev/null; ls /tmp/prueba-web/docs 2>/dev/null
+ls /tmp/prueba-web/docs 2>/dev/null; ls /tmp/prueba-web/02-DOCS 2>/dev/null
 ```
 
-Esperado: existe `docs/`, no existe `docs/`.
+Esperado: existe `docs/`, no existe `02-DOCS/`.
 
 - [ ] **Step 6: Borrar la copia global de `escribir-adr`**
 
