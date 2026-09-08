@@ -165,6 +165,17 @@ test('drift-check: the wrong-depth bug is caught (the shape of both real ones)',
   assert.deepEqual(checkCatalog({ root: fixed }).findings, []);
 });
 
+test('drift-check: a real, existing multi-segment link resolves on every platform', () => {
+  // `existsExact` walks `relative(root, absTarget)` one path segment at a time. `relative()`
+  // returns platform-native separators (`\` on Windows), so a target two-or-more directories
+  // deep must resolve there too, not just on Linux where `sep` happens to be `/`.
+  const root = tree({
+    'skills/a/references/x.md': 'See [c](../../c/deep/SKILL.md).\n',
+    'skills/c/deep/SKILL.md': '# C\n',
+  });
+  assert.deepEqual(checkCatalog({ root }).findings, []);
+});
+
 test('drift-check: catalog mode resolves ONLY from the document\'s directory', () => {
   // Being generous here (repo root as a fallback) would resolve `../b/SKILL.md` via some other
   // base and hide the wrong-depth bug. This asserts the strictness on purpose.

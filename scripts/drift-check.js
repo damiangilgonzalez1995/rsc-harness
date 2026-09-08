@@ -25,7 +25,7 @@
 //
 // It never writes. The output is a report; adopting it is a human's job.
 import { readdirSync, readFileSync, existsSync, realpathSync } from 'node:fs';
-import { join, dirname, resolve, relative, basename } from 'node:path';
+import { join, dirname, resolve, relative, basename, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { homedir } from 'node:os';
 
@@ -164,7 +164,10 @@ function existsExact(absTarget, root, cache) {
   if (rel === '' || rel.startsWith('..') || rel.startsWith('/')) return existsSync(absTarget);
 
   let dir = root;
-  for (const segment of rel.split('/')) {
+  // `relative()` returns platform-native separators (`\` on Windows, `/` elsewhere); splitting
+  // on a hardcoded '/' left every Windows path as a single un-matched segment, so no link ever
+  // resolved there. Split on `sep` instead — it is exactly the separator `relative()` used.
+  for (const segment of rel.split(sep)) {
     let entries = cache.get(dir);
     if (entries === undefined) {
       // An unreadable directory is not evidence of drift; fall back rather than accuse.
