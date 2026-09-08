@@ -2,11 +2,26 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 let memory = {};
 try { memory = await import('../targets/session-memory-core.mjs'); } catch { /* RED: core absent */ }
+
+test('session-memory-adapter: el guardia de entrypoint usa pathToFileURL', () => {
+  const src = readFileSync(join(ROOT, 'targets/session-memory-adapter.mjs'), 'utf8');
+  assert.match(src, /pathToFileURL\(process\.argv\[1\]\)\.href/,
+    'compara URLs con pathToFileURL; `file://${process.argv[1]}` nunca coincide en Windows');
+  assert.doesNotMatch(src, /file:\/\/\$\{process\.argv\[1\]\}/);
+});
+
+test('session-memory-core: los nombres de fichero llegan sin el código de estado de git', () => {
+  const files = memory.parseStatusFiles(' M targets/claude.js\n?? docs/nuevo.md\nA  scripts/x.js\n');
+  assert.deepEqual(files, ['targets/claude.js', 'docs/nuevo.md', 'scripts/x.js']);
+});
 
 const git = (cwd, args) => execFileSync('git', args, { cwd, encoding: 'utf8' }).trim();
 function repo() {

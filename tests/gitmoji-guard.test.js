@@ -14,6 +14,15 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { GITMOJIS, EMOJI_SET, hasGitmoji, commitMessages, denyMessage } from '../targets/gitmoji-guard.mjs';
 
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+
+test('gitmoji-guard: el guardia de entrypoint usa pathToFileURL', () => {
+  const src = readFileSync(join(ROOT, 'targets/gitmoji-guard.mjs'), 'utf8');
+  assert.match(src, /pathToFileURL\(process\.argv\[1\]\)\.href/,
+    'compara URLs con pathToFileURL; `file://${process.argv[1]}` nunca coincide en Windows');
+  assert.doesNotMatch(src, /file:\/\/\$\{process\.argv\[1\]\}/);
+});
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..');
 const GUARD = join(REPO, 'targets', 'gitmoji-guard.mjs');
