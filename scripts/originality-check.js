@@ -4,7 +4,7 @@ import {
 import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { stackAgents } from '../targets/agent-catalog.js';
 import { allAgentNames } from '../targets/agents.js';
 import { resolveCommands } from '../targets/commands.js';
@@ -134,4 +134,4 @@ function main() {
   console.log(`originality OK (${result.documents} documents vs ${fingerprintCorpus().metadata.fingerprintCount} corpus fingerprints; ${result.exemptions} exemptions)`);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) main();
+if (import.meta.url === pathToFileURL(process.argv[1]).href) main();

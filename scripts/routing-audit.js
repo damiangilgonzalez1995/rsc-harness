@@ -2,7 +2,7 @@
 
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createRanker } from './consult.js';
 import { loadManifest } from './lib/manifest.js';
 import { buildTextCorpus, descriptionCollisions } from './lib/text-rank.js';
@@ -160,4 +160,4 @@ async function main() {
   console.log('PASS');
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) main();
+if (import.meta.url === pathToFileURL(process.argv[1]).href) main();
