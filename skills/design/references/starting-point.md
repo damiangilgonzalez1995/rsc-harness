@@ -10,7 +10,7 @@ fallback is your own prior, which is the AI-template median — the thing the wh
 **Look before you offer.** Run it; do not reason about it:
 
 ```bash
-npx @ericrisco/rsc doctor --json   # read `designStartingPoint`
+npx @damiangil/harness doctor --json   # read `designStartingPoint`
 ```
 
 | State | What it means | What you do |

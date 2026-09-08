@@ -132,7 +132,7 @@ Record to `docs/wiki/harness/` as you go. Questionnaires for both cases →
 ### Phase 3 — INSTALL
 
 Map what you learned to skills. **You have a terminal — install them yourself** after a one-word
-confirm: `npx @ericrisco/rsc add <ids>`. Only if you genuinely cannot run a shell, hand the exact
+confirm: `npx @damiangil/harness add <ids>`. Only if you genuinely cannot run a shell, hand the exact
 command over for another tab. Never install without the confirm; it changes their environment.
 
 | Need | Skills |
@@ -161,7 +161,7 @@ means the user starts clean.
 2. **Context7 (live library docs).** For software, offer to wire it once:
    `claude mcp add --transport http context7 https://mcp.context7.com/mcp`. It gives version-correct
    docs instead of guessing from memory. Declined → `.rsc/.no-context7`.
-3. **Skill audit.** Run `npx @ericrisco/rsc audit`. It inventories what is installed here and on the
+3. **Skill audit.** Run `npx @damiangil/harness audit`. It inventories what is installed here and on the
    machine and flags overlap or skills with no footprint, so the project starts with the right set
    rather than a pile. Summarize at their level.
 4. **Tell them about the danger guard.** A `technical_level` of `non-technical` or `mixed` (and the

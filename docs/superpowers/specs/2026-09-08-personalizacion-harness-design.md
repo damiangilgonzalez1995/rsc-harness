@@ -137,7 +137,7 @@ con el bloque de comentarios sobre la migración a la extinta ruta `02-DOCS/`.
 ## 5. Nombre del paquete
 
 `@ericrisco/rsc` → `@damiangil/harness`, en `package.json` y en todos los textos de
-instalación repartidos por hooks, skills y README (`npx @ericrisco/rsc@latest`).
+instalación repartidos por hooks, skills y README (`npx @damiangil/harness@latest`).
 
 ## 6. Fallo de Windows
 

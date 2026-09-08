@@ -240,10 +240,10 @@ Print a final report:
 
 Once the structure stands, make sure the workspace has the rsc skills its stack and goals call for — detection here, not just at `init`:
 
-1. **Detect → propose.** From the detected stacks/providers and the user's goals in `docs/wiki/harness/`, build a shortlist. Ask the CLI if unsure: `npx @ericrisco/rsc consult "<stack + goal>"`. (Map e.g. detected Stripe→`stripe`, Postgres→`postgresdb`, Next→`nextjs`+`design`, a company/ops focus→`finance-ops`/`invoicing`/`gdpr-privacy`…)
+1. **Detect → propose.** From the detected stacks/providers and the user's goals in `docs/wiki/harness/`, build a shortlist. Ask the CLI if unsure: `npx @damiangil/harness consult "<stack + goal>"`. (Map e.g. detected Stripe→`stripe`, Postgres→`postgresdb`, Next→`nextjs`+`design`, a company/ops focus→`finance-ops`/`invoicing`/`gdpr-privacy`…)
 2. **Confirm, then install yourself.** Show the shortlist with a one-line *why* each (matched to the dial), get a one-word confirm, and run it via Bash — installing writes to their environment, so always confirm first:
    ```bash
-   npx @ericrisco/rsc add <skill> [<skill> ...]
+   npx @damiangil/harness add <skill> [<skill> ...]
    ```
    Can't run a shell? Print the exact command for another terminal tab.
 3. **Flag the new session.** New skills load at session start — tell the user to open a **new tab/session** (or reload Cursor/Codex/Gemini) in this folder for them to activate. Log the installed set in `docs/wiki/harness/decisions.md`.

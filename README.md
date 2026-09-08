@@ -4,8 +4,8 @@
 
 # `rsc-harness` — You decide what to build. It builds your agent's harness.
 
-[![npm](https://img.shields.io/npm/v/@ericrisco/rsc?color=63d68a&labelColor=12161c&label=npm)](https://www.npmjs.com/package/@ericrisco/rsc)
-[![downloads](https://img.shields.io/npm/dm/@ericrisco/rsc?color=63d68a&labelColor=12161c&label=downloads)](https://www.npmjs.com/package/@ericrisco/rsc)
+[![npm](https://img.shields.io/npm/v/@damiangil/harness?color=63d68a&labelColor=12161c&label=npm)](https://www.npmjs.com/package/@damiangil/harness)
+[![downloads](https://img.shields.io/npm/dm/@damiangil/harness?color=63d68a&labelColor=12161c&label=downloads)](https://www.npmjs.com/package/@damiangil/harness)
 [![skills](https://img.shields.io/badge/skills-272-63d68a?labelColor=12161c)](#the-catalog)
 [![license](https://img.shields.io/badge/license-MIT-63d68a?labelColor=12161c)](LICENSE)
 [![stars](https://img.shields.io/github/stars/ericrisco/rsc-harness?color=63d68a&labelColor=12161c)](https://github.com/ericrisco/rsc-harness/stargazers)
@@ -24,7 +24,7 @@ Ask me the onboarding questions, show me the exact plan, and wait for my accepta
 Or start from the terminal:
 
 ```bash
-npx @ericrisco/rsc@latest onboard
+npx @damiangil/harness@latest onboard
 ```
 
 <img src="https://raw.githubusercontent.com/ericrisco/rsc-harness/main/site/meta-harness.png" alt="rsc-harness wizard turns an outcome into a verified plan: memory, tools, knowledge and rules selected, deferred or excluded according to evidence." width="960">
@@ -63,7 +63,7 @@ asked you to **install rsc / this harness / these skills**, run this in the **ro
 project they're equipping** — not inside a clone of this repo (see the note under *Install*):
 
 ```bash
-npx @ericrisco/rsc@latest onboard
+npx @damiangil/harness@latest onboard
 ```
 
 That launches the binding plain-language onboarding. It asks the user for technical level,
@@ -75,11 +75,11 @@ prints a SHA-256 plan id. Only rerun with `--accept-plan <id>` after the user ac
 For a non-interactive agent, collect the answers and preview the same plan explicitly:
 
 ```bash
-npx @ericrisco/rsc@latest onboard --technical-level mixed --accompaniment L1 \
+npx @damiangil/harness@latest onboard --technical-level mixed --accompaniment L1 \
   --project-kind software --goal "small compound-interest website" \
   --software-scope small --target codex
 # After the user accepts the printed plan:
-npx @ericrisco/rsc@latest onboard --technical-level mixed --accompaniment L1 \
+npx @damiangil/harness@latest onboard --technical-level mixed --accompaniment L1 \
   --project-kind software --goal "small compound-interest website" \
   --software-scope small --target codex --accept-plan PRINTED_SHA256_ID
 ```
@@ -151,13 +151,13 @@ injects at most 4,096 bytes. Disable every memory surface for a project with
 ## Install
 
 ```bash
-npx @ericrisco/rsc@latest onboard
+npx @damiangil/harness@latest onboard
 ```
 
 Prefer the short `rsc` command? Install once, globally:
 
 ```bash
-npm install -g @ericrisco/rsc   # then just: rsc
+npm install -g @damiangil/harness   # then just: rsc
 ```
 
 Run it inside any project and describe what you want. Working on the catalog
@@ -169,11 +169,11 @@ cd ~/rsc-skills && npm install && npm link
 ```
 
 > **Run it inside the project you're equipping — not inside this repo.** The
-> catalog's own `package.json` is named `@ericrisco/rsc`, so `npx @ericrisco/rsc`
+> catalog's own `package.json` is named `@damiangil/harness`, so `npx @damiangil/harness`
 > *from within a `rsc-harness` clone* resolves to the local (unlinked) bin and
 > dies with `sh: rsc: command not found`. Working on the catalog itself? Use
 > `node scripts/rsc.js …`, the `npm link` above, or pin the published build with
-> `npx @ericrisco/rsc@latest …`.
+> `npx @damiangil/harness@latest …`.
 
 The first run asks **how technical the conversation should be**, the accompaniment level, what the
 project is for, its goal and the assistants to target. It then presents the complete plan. A small
@@ -279,7 +279,7 @@ The harness travels by git, but not all of it — and the split is the point.
 Whoever clones runs **one command** and ends up with the same harness:
 
 ```bash
-npx @ericrisco/rsc@latest sync
+npx @damiangil/harness@latest sync
 ```
 
 Same skills, same version — `.rsc.json` pins the catalog, so a teammate who clones in three
@@ -309,7 +309,7 @@ Recognise any of these? They are all the same fix.
 | Template lines showed up inside your hand-written `AGENTS.md` | |
 
 ```bash
-npx @ericrisco/rsc@latest repair
+npx @damiangil/harness@latest repair
 ```
 
 Safe in any folder: with no rsc there, it says so and writes nothing. It shows what it
@@ -331,7 +331,7 @@ so rsc does not repair, move or delete them — not even when rebuilding from sc
 re-sync what's already wired into your project:
 
 ```bash
-npm install -g @ericrisco/rsc@latest   # global install: pull the newest catalog
+npm install -g @damiangil/harness@latest   # global install: pull the newest catalog
 rsc sync                               # refresh managed skills + hooks (auto-detects your assistant)
 ```
 
@@ -342,7 +342,7 @@ rsc upgrade --dry-run                  # prints the npm install + rsc sync lines
 ```
 
 Running through `npx` (no global install)? There's nothing to upgrade —
-`npx @ericrisco/rsc@latest` always fetches the latest published catalog; just run
+`npx @damiangil/harness@latest` always fetches the latest published catalog; just run
 `rsc sync` afterwards if the project already has skills installed.
 
 Every sync snapshots the project first, so a bad update is always reversible:
@@ -411,7 +411,7 @@ The front door and the workspace brain.
 > root, anything in `inbox/`) is *moved* into `raw/`, never left as clutter.
 
 ### 📐 Spec-Driven Development
-Take a fuzzy intent to a shipped, verified change — phase by phase. `npx @ericrisco/rsc install --profile core`.
+Take a fuzzy intent to a shipped, verified change — phase by phase. `npx @damiangil/harness install --profile core`.
 
 [sdd](skills/sdd/) · [constitution](skills/constitution/) · [idea-refinement](skills/idea-refinement/) · [specify](skills/specify/) · [clarify](skills/clarify/) · [plan](skills/plan/) · [tasks](skills/tasks/) · [analyze](skills/analyze/) · [decision-challenge](skills/decision-challenge/) · [implement](skills/implement/) · [source-grounded-development](skills/source-grounded-development/) · [verify](skills/verify/) · [review](skills/review/) · [simplify-code](skills/simplify-code/) · [ship](skills/ship/) · [debug](skills/debug/) · [worktrees](skills/worktrees/) · [parallel](skills/parallel/)
 

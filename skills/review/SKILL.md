@@ -116,10 +116,10 @@ without actually running the lenses produces a valid sello and a worthless one.
 Every state transition is deterministic CLI, never tokens:
 
 ```text
-1. npx @ericrisco/rsc sello freeze      → hashes the candidate, prints risk tier + lens count
+1. npx @damiangil/harness sello freeze      → hashes the candidate, prints risk tier + lens count
 2. Run the lenses (below), filter findings, decide
-3a. approved → npx @ericrisco/rsc sello approve --lenses correctness,security,tests
-3b. blocked  → npx @ericrisco/rsc sello block --reason "<the blocking finding>"
+3a. approved → npx @damiangil/harness sello approve --lenses correctness,security,tests
+3b. blocked  → npx @damiangil/harness sello block --reason "<the blocking finding>"
 ```
 
 `approve` refuses to seal with fewer lenses than the tier requires — pass them all, or accept the
@@ -175,7 +175,7 @@ find something is not evidence:
    `[question]`, and questions don't block.
 
 **Fixing a blocker is budgeted, one attempt.** Before touching anything: estimate the fix and
-declare it — `npx @ericrisco/rsc sello budget --lines <N>`. After the fix:
+declare it — `npx @damiangil/harness sello budget --lines <N>`. After the fix:
 `sello budget-check` (over budget → justify with `--justify "…"` or shrink; an unexplained
 overrun is how over-engineering enters disguised as a fix). Then `sello freeze` + re-review
 **only the divergence**, and approve. Still broken after one attempt → stop, hand it to the human.

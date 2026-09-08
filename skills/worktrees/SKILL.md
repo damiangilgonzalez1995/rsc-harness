@@ -110,7 +110,7 @@ git switch -c feat/<slug> origin/<default-branch>
 
 ```bash
 # when the work has landed — the cleanup is the default, and it is a command, not a judgement call
-npx @ericrisco/rsc worktrees reap
+npx @damiangil/harness worktrees reap
 ```
 
 Either way, the contract is identical: **after this step, the cwd is an isolated branch off a clean
@@ -124,9 +124,9 @@ reading the situation, because "is this safe to delete?" is a deterministic ques
 answer costs a directory that cannot be brought back. Ask the command:
 
 ```bash
-npx @ericrisco/rsc worktrees        # every landed worktree, with a verdict and a reason
-npx @ericrisco/rsc worktrees reap   # retire the ones that are safe with nothing to lose
-npx @ericrisco/rsc worktrees reap <path>   # retire one the user has just confirmed
+npx @damiangil/harness worktrees        # every landed worktree, with a verdict and a reason
+npx @damiangil/harness worktrees reap   # retire the ones that are safe with nothing to lose
+npx @damiangil/harness worktrees reap <path>   # retire one the user has just confirmed
 ```
 
 Three things have to hold before a worktree is retired without asking, and each fails towards

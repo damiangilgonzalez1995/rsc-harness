@@ -53,7 +53,7 @@ function digestGovernedPaths(cwd, paths) {
 function recoveryCommand(plan, planId) {
   const record = plan.record;
   return [
-    'npx @ericrisco/rsc@latest onboard',
+    'npx @damiangil/harness@latest onboard',
     `--technical-level ${record.technicalLevel}`,
     `--accompaniment ${record.accompaniment}`,
     `--project-kind ${record.projectKind}`,

@@ -224,7 +224,7 @@ test('automation gap: the always-on rule stays within the approved 300-byte ceil
   assert.ok(section, 'the automation-gap rule must be present in the always-on body');
   const bytes = Buffer.byteLength(section[0].trim());
   assert.ok(bytes <= 300, `the rule is ${bytes} bytes; the approved ceiling is 300 — put detail in skill-scout`);
-  assert.match(section[0], /rsc capabilities/, 'it must name the mechanism');
+  assert.match(section[0], /damiangil\/harness capabilities/, 'it must name the mechanism');
   assert.match(section[0], /skill-scout/, 'and where the rules live');
 });
 
