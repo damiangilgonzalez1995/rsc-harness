@@ -155,8 +155,12 @@ import { pathToFileURL } from 'node:url';
 if (import.meta.url === pathToFileURL(process.argv[1]).href)
 ```
 
-Detalle menor asociado: `session-memory-core.mjs` deja el prefijo `"M "` pegado a
-los nombres de fichero al parsear la salida de `git status`.
+Detalle menor asociado (creído, luego descartado): se pensó que
+`session-memory-core.mjs` dejaba el prefijo `"M "` pegado a los nombres de
+fichero al parsear la salida de `git status`. Al implementarlo se comprobó que
+`parseStatus` (misma fichero, usada por `snapshot()`) ya parseaba el formato
+`--porcelain=v1 -z`, localizaba el separador en vez de cortar bytes fijos y
+resolvía renombrados correctamente. No había nada que arreglar.
 
 ## Criterio de acabado
 

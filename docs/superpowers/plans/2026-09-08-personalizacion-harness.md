@@ -99,7 +99,6 @@ Dos hooks comparan `import.meta.url` con una URL construida a mano. En Windows l
 **Files:**
 - Modify: `targets/session-memory-adapter.mjs:128`
 - Modify: `targets/gitmoji-guard.mjs:224`
-- Modify: `targets/session-memory-core.mjs` (parseo de `git status`)
 - Test: `tests/session-memory.test.js`, `tests/gitmoji-guard.test.js`
 
 **Interfaces:**
@@ -155,28 +154,17 @@ Esperado: PASS.
 
 Añadir el mismo test en `tests/gitmoji-guard.test.js` apuntando a `targets/gitmoji-guard.mjs`, verlo fallar, aplicar el mismo import y la misma sustitución en la línea 224, verlo pasar.
 
-- [ ] **Step 6: Escribir el test del prefijo `"M "`**
+- [ ] **Step 6: Comprobar la premisa del prefijo `"M "` — resultó falsa**
 
-En `tests/session-memory.test.js`:
+Se creía que `session-memory-core.mjs` dejaba el prefijo de estado de `git
+status` (p. ej. `"M "`) pegado a los nombres de fichero. Al comprobarlo, la
+función real que parsea esa salida, `parseStatus` en
+`targets/session-memory-core.mjs` (usada por `snapshot()`), ya opera sobre
+`--porcelain=v1 -z`, localiza el separador en vez de cortar bytes fijos y
+resuelve renombrados correctamente. No hay fallo que arreglar aquí: no se
+escribe test ni se extrae ninguna función nueva.
 
-```js
-test('session-memory-core: los nombres de fichero llegan sin el código de estado de git', () => {
-  const files = parseStatusFiles(' M targets/claude.js\n?? docs/nuevo.md\nA  scripts/x.js\n');
-  assert.deepEqual(files, ['targets/claude.js', 'docs/nuevo.md', 'scripts/x.js']);
-});
-```
-
-Importar `parseStatusFiles` de `../targets/session-memory-core.mjs`. Si la función que parsea `git status` en ese fichero no está exportada ni tiene nombre, extraerla a una función exportada `parseStatusFiles(raw)` antes de escribir el test.
-
-- [ ] **Step 7: Ejecutar, corregir, ejecutar**
-
-```bash
-node --test tests/session-memory.test.js
-```
-
-La corrección: al partir cada línea de `git status --porcelain`, quedarse con `line.slice(3)` en vez de con la línea entera. Verlo fallar antes, pasar después.
-
-- [ ] **Step 8: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
 git add targets/session-memory-adapter.mjs targets/gitmoji-guard.mjs targets/session-memory-core.mjs tests/session-memory.test.js tests/gitmoji-guard.test.js

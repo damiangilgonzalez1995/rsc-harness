@@ -18,11 +18,6 @@ test('session-memory-adapter: el guardia de entrypoint usa pathToFileURL', () =>
   assert.doesNotMatch(src, /file:\/\/\$\{process\.argv\[1\]\}/);
 });
 
-test('session-memory-core: los nombres de fichero llegan sin el código de estado de git', () => {
-  const files = memory.parseStatusFiles(' M targets/claude.js\n?? docs/nuevo.md\nA  scripts/x.js\n');
-  assert.deepEqual(files, ['targets/claude.js', 'docs/nuevo.md', 'scripts/x.js']);
-});
-
 const git = (cwd, args) => execFileSync('git', args, { cwd, encoding: 'utf8' }).trim();
 function repo() {
   const cwd = mkdtempSync(join(tmpdir(), 'rsc-memory-'));

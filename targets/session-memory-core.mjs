@@ -140,16 +140,6 @@ function settings(input = {}) {
   return merged;
 }
 
-// Parses the plain (non `-z`) `git status --porcelain` text format: one entry per line, each
-// starting with a two-byte XY status column. Exported so callers that consume that plain format
-// (and tests) get the file list without the status code, without re-deriving the offset.
-export function parseStatusFiles(raw) {
-  return raw
-    .split('\n')
-    .map((line) => line.slice(3))
-    .filter(Boolean);
-}
-
 function parseStatus(output) {
   const entries = output.split('\0').filter(Boolean);
   const files = [];
