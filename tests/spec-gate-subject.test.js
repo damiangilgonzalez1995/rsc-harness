@@ -65,7 +65,7 @@ function workspace({ config = null, children = ['child'] } = {}) {
   }
 
   if (config !== null) {
-    put(root, '02-DOCS/wiki/sdd/config.yaml', `version: 1\nproject:\n  root: ${config}\n`);
+    put(root, 'docs/wiki/sdd/config.yaml', `version: 1\nproject:\n  root: ${config}\n`);
   }
   return { root, children: made };
 }
@@ -105,8 +105,8 @@ El autor.
 ## Puntos a clarificar
 - **pregunta abierta** — ¿cuál es el umbral?
 `;
-  const path = join(root, '02-DOCS', 'wiki', 'sdd', 'specs', `${slug}.md`);
-  put(root, `02-DOCS/wiki/sdd/specs/${slug}.md`, body);
+  const path = join(root, 'docs', 'wiki', 'sdd', 'specs', `${slug}.md`);
+  put(root, `docs/wiki/sdd/specs/${slug}.md`, body);
   return path;
 }
 

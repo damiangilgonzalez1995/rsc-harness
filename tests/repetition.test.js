@@ -13,7 +13,7 @@ import { GAP_VERDICTS, globalGapLogPath, repoNameOf, appendGap, gapLogPath } fro
 // The always-on rule asks "was that a repeatable procedure?" about ONE episode, judged by the agent that
 // just did it. Nothing looked backwards. The evidence is the session that wrote the spec: four manual
 // mutation runs and five identical score-then-rescore passes, none of which ever triggered it.
-// Spec: 02-DOCS/wiki/sdd/specs/repetition-detector.md
+// Spec: docs/wiki/sdd/specs/repetition-detector.md
 //
 // Both directions on every rule (v1.0.17): it must fire when it should AND stay silent when it should
 // not. For a detector whose whole risk is nagging, the silence half is the important half.

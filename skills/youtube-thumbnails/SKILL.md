@@ -20,7 +20,7 @@ This skill runs a closed loop, not a one-off design pass:
 
 1. **Design** 2-3 candidate concepts that differ on exactly ONE testable axis.
 2. **Test** them in YouTube Studio "Test & Compare".
-3. **Log** the outcome to `02-DOCS/wiki/youtube/thumbnail-experiments.md`.
+3. **Log** the outcome to `docs/wiki/youtube/thumbnail-experiments.md`.
 4. **Learn**: mine the log into `thumbnail-patterns.md` (what wins on THIS
    channel) and let that pick the next concept.
 
@@ -125,7 +125,7 @@ the video doesn't cash. That is a promise problem, not an image problem.
 ## The feedback loop (wiki)
 
 Every test result goes to the channel wiki. Exact path:
-`02-DOCS/wiki/youtube/`. `02-DOCS/wiki/` is an **OKF v0.1** bundle: both files
+`docs/wiki/youtube/`. `docs/wiki/` is an **OKF v0.1** bundle: both files
 below carry file-level frontmatter with a non-empty `type` (`thumbnail-experiment`)
 plus the OKF surface (`title`, `description`, `tags`, `timestamp`) shared with the
 api/strategy/packaging siblings, and cross-references use standard markdown links,
@@ -175,7 +175,7 @@ example rows, and the pattern-mining heuristic live in
 - [ ] 2-3 colors only
 - [ ] Variant set differs on exactly ONE named axis
 - [ ] Test & Compare configured (<=3 variants, watch-time-share, ~2-week window)
-- [ ] Log row staged for `02-DOCS/wiki/youtube/thumbnail-experiments.md`
+- [ ] Log row staged for `docs/wiki/youtube/thumbnail-experiments.md`
 
 ## See also
 

@@ -1,6 +1,6 @@
 # Conversion Copywriting Frameworks
 
-The marketing-copy engine. Copy carries the value prop — the prettiest hero fails if the words are vague. Write benefit-led, specific, and human. The `marketing` skill is the canonical owner of the WORDS (voice, full landing copy, launch, channel adaptation) and grounds them in the same `02-DOCS/wiki/brand/` study; this file is the design-side quick reference that makes on-page copy convert and keeps it in sync with the design. For anything beyond the hero/section copy, hand off to `marketing`.
+The marketing-copy engine. Copy carries the value prop — the prettiest hero fails if the words are vague. Write benefit-led, specific, and human. The `marketing` skill is the canonical owner of the WORDS (voice, full landing copy, launch, channel adaptation) and grounds them in the same `docs/wiki/brand/` study; this file is the design-side quick reference that makes on-page copy convert and keeps it in sync with the design. For anything beyond the hero/section copy, hand off to `marketing`.
 
 ## The 5s value-prop test
 
@@ -103,7 +103,7 @@ Buttons use value verbs; forms label clearly; states stay human.
 
 ## Voice/tone system
 
-Define a reusable VOICE block once and apply it everywhere. If a brand study exists under `02-DOCS/wiki/brand/voice.md` (owned by `marketing`), consume its profile verbatim; otherwise fill this and persist it back to the brand study:
+Define a reusable VOICE block once and apply it everywhere. If a brand study exists under `docs/wiki/brand/voice.md` (owned by `marketing`), consume its profile verbatim; otherwise fill this and persist it back to the brand study:
 
 ```text
 VOICE

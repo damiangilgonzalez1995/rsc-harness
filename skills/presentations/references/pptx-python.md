@@ -17,7 +17,7 @@ required to build** (only to render to PDF afterward).
 
 ## Skeleton: a themed deck from design tokens
 
-Map the project's design tokens (`02-DOCS/wiki/stack/design.md`) into PPTX theme values. PPTX is **sRGB**, so
+Map the project's design tokens (`docs/wiki/stack/design.md`) into PPTX theme values. PPTX is **sRGB**, so
 convert OKLCH tokens to hex first (the `design` skill's `design-tokens.json` should carry sRGB/hex fallbacks;
 if only OKLCH exists, convert via the design pipeline — do not eyeball it).
 
@@ -31,7 +31,7 @@ from pptx.util import Inches, Pt, Emu
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 
-# --- design tokens -> sRGB hex (from 02-DOCS/wiki/stack/design.md) ----------
+# --- design tokens -> sRGB hex (from docs/wiki/stack/design.md) ----------
 BRAND      = RGBColor(0x4F, 0x46, 0xE5)   # oklch(0.62 0.19 264) -> #4F46E5
 BRAND_INK  = RGBColor(0x1E, 0x1B, 0x2E)
 SURFACE    = RGBColor(0xFA, 0xFA, 0xFC)

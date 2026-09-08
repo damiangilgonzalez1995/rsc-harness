@@ -1,15 +1,15 @@
 # Brand Grounding — Checklist, Question Script & Persistence (visual)
 
-The brand study is the source of truth every design decision is grounded in. This file holds the **completeness checklist** (the visual/design dimensions a brand study must cover before you paint a single pixel), the **question script** (how to interview the user, batched), and the **persistence format** (how to write it into `02-DOCS` and link it from `CLAUDE.md`). The runtime mechanism that invokes this — the hard STOP on an incomplete study — lives in `SKILL.md` under "Brand grounding (read this first)".
+The brand study is the source of truth every design decision is grounded in. This file holds the **completeness checklist** (the visual/design dimensions a brand study must cover before you paint a single pixel), the **question script** (how to interview the user, batched), and the **persistence format** (how to write it into `docs` and link it from `CLAUDE.md`). The runtime mechanism that invokes this — the hard STOP on an incomplete study — lives in `SKILL.md` under "Brand grounding (read this first)".
 
-This skill **co-owns the brand study with the `marketing` skill**. Marketing owns the *words* dimensions (positioning, audience, value prop, voice & tone, proof, offers, channels, SEO/GEO keywords — see `../../marketing/references/brand-grounding.md`). Design owns the *visual* dimensions below. They write into the **same** `02-DOCS/wiki/brand/` study and the **same** `## Brand & voice` section of root `CLAUDE.md` — never a parallel copy. If marketing already created the study, extend it with the visual articles; do not duplicate the words articles.
+This skill **co-owns the brand study with the `marketing` skill**. Marketing owns the *words* dimensions (positioning, audience, value prop, voice & tone, proof, offers, channels, SEO/GEO keywords — see `../../marketing/references/brand-grounding.md`). Design owns the *visual* dimensions below. They write into the **same** `docs/wiki/brand/` study and the **same** `## Brand & voice` section of root `CLAUDE.md` — never a parallel copy. If marketing already created the study, extend it with the visual articles; do not duplicate the words articles.
 
 ## Where the brand study lives
 
 Following the `harness` Karpathy-wiki convention (compiled articles in `wiki/`, immutable raw inputs in `raw/`):
 
 ```text
-02-DOCS/
+docs/
 ├── raw/brand/             ← immutable: pasted inputs (screenshots, palettes, competitor lists, mood refs)
 │   ├── inspiration-linear.png
 │   ├── existing-palette.txt
@@ -66,7 +66,7 @@ Ask **one batch at a time**. Send the batch, wait for the answer, persist what y
 
 ```text
 5. Do you have brand colors already? Paste any hex/RGB values, a palette, or a brand guide —
-   I'll convert them to an OKLCH token ramp (I'll save the raw input under 02-DOCS/raw/brand/).
+   I'll convert them to an OKLCH token ramp (I'll save the raw input under docs/raw/brand/).
 6. If not: pick a brand hue direction (cool/blue, warm/orange, green, violet, near-neutral)
    and how saturated it should read (muted vs vivid).
 7. Any required or owned fonts? If not, do you lean geometric-sans, humanist-sans, serif/
@@ -102,7 +102,7 @@ If the user can't answer a question, that dimension stays incomplete — note th
 
 ### Visual-identity wiki article template
 
-Each `02-DOCS/wiki/brand/*.md` article follows the harness wiki format. It is an OKF v0.1 article: open it with YAML frontmatter carrying a non-empty `type:` (`brand-study`), then the H1 and body:
+Each `docs/wiki/brand/*.md` article follows the harness wiki format. It is an OKF v0.1 article: open it with YAML frontmatter carrying a non-empty `type:` (`brand-study`), then the H1 and body:
 
 ```markdown
 ---
@@ -151,7 +151,7 @@ One paragraph: the visual personality and the ONE memorable detail.
 
 ### Raw inputs
 
-Paste each user-provided input (palette text, competitor list, screenshots saved as files) under `02-DOCS/raw/brand/` with a one-line provenance header on text files:
+Paste each user-provided input (palette text, competitor list, screenshots saved as files) under `docs/raw/brand/` with a one-line provenance header on text files:
 
 ```markdown
 > Source: user-pasted, YYYY-MM-DD, origin: "current brand guide, page 3 palette"
@@ -169,23 +169,23 @@ Add (or **extend**, never duplicate) the shared `## Brand & voice` section in th
 ## Brand & voice
 
 Design and marketing/landing copy are grounded in the brand study under
-`02-DOCS/wiki/brand/`. Read it before any user-facing design or copy:
+`docs/wiki/brand/`. Read it before any user-facing design or copy:
 
-- [Positioning](02-DOCS/wiki/brand/index.md)
-- [Visual identity (color, type, personality)](02-DOCS/wiki/brand/visual-identity.md)
-- [Imagery & illustration](02-DOCS/wiki/brand/imagery.md)
-- [Layout & references](02-DOCS/wiki/brand/layout.md)
-- [Accessibility & performance constraints](02-DOCS/wiki/brand/constraints.md)
-- [Audience](02-DOCS/wiki/brand/audience.md)
-- [Value proposition](02-DOCS/wiki/brand/value-proposition.md)
-- [Voice & tone](02-DOCS/wiki/brand/voice.md)
+- [Positioning](docs/wiki/brand/index.md)
+- [Visual identity (color, type, personality)](docs/wiki/brand/visual-identity.md)
+- [Imagery & illustration](docs/wiki/brand/imagery.md)
+- [Layout & references](docs/wiki/brand/layout.md)
+- [Accessibility & performance constraints](docs/wiki/brand/constraints.md)
+- [Audience](docs/wiki/brand/audience.md)
+- [Value proposition](docs/wiki/brand/value-proposition.md)
+- [Voice & tone](docs/wiki/brand/voice.md)
 
-Raw inputs (palettes, screenshots, voice samples): `02-DOCS/raw/brand/`.
+Raw inputs (palettes, screenshots, voice samples): `docs/raw/brand/`.
 The `design` skill owns the visual articles; `marketing` owns the words
 articles. Either stops to interview the user if its dimensions are missing.
 ```
 
-Also update `02-DOCS/wiki/index.md` (add the new brand articles) and append a one-line entry to `02-DOCS/wiki/log.md` per the harness wiki protocol.
+Also update `docs/wiki/index.md` (add the new brand articles) and append a one-line entry to `docs/wiki/log.md` per the harness wiki protocol.
 
 ## See Also
 
@@ -194,4 +194,4 @@ Also update `02-DOCS/wiki/index.md` (add the new brand articles) and append a on
 - `research-method.md` — uses the reference sites (V6) as archetypes for the research loop.
 - `trends-2026.md` — researched defaults to offer when a visual dimension has no user direction.
 - `../../marketing/references/brand-grounding.md` — the co-owned words dimensions (incl. SEO/GEO) of the same study.
-- `../../harness/SKILL.md` — the canonical `02-DOCS` wiki protocol and article templates.
+- `../../harness/SKILL.md` — the canonical `docs` wiki protocol and article templates.

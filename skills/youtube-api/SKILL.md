@@ -1,6 +1,6 @@
 ---
 name: youtube-api
-description: "Use when wiring code to a real YouTube channel: user OAuth 2.0, resumable videos.insert uploads, editing metadata after publish, pulling views/watch time/retention/traffic from the Analytics API v2 into a dated 02-DOCS/wiki/youtube/ feedback log. NOT what to publish or how to title and thumbnail it (that is youtube-strategy / youtube-packaging)."
+description: "Use when wiring code to a real YouTube channel: user OAuth 2.0, resumable videos.insert uploads, editing metadata after publish, pulling views/watch time/retention/traffic from the Analytics API v2 into a dated docs/wiki/youtube/ feedback log. NOT what to publish or how to title and thumbnail it (that is youtube-strategy / youtube-packaging)."
 tags: [youtube, youtube-data-api, youtube-analytics-api, oauth2, resumable-upload, video-metadata, audience-retention, channel-feedback-log]
 recommends: [social-publisher, api-connector-builder, automation-flows, knowledge-ops]
 origin: risco
@@ -195,10 +195,10 @@ Full metric+dimension catalog and copy-paste bodies for geography, device, and s
 
 ## 6. Ingest into the wiki — the actual deliverable
 
-A pull that prints to stdout and vanishes is wasted. **Every pull appends a dated entry under `02-DOCS/wiki/youtube/`** so the channel's numbers become queryable history that the strategy/packaging siblings can read.
+A pull that prints to stdout and vanishes is wasted. **Every pull appends a dated entry under `docs/wiki/youtube/`** so the channel's numbers become queryable history that the strategy/packaging siblings can read.
 
 ```text
-02-DOCS/wiki/youtube/
+docs/wiki/youtube/
   index.md                  # rolling pointer to latest snapshot + open questions
   channel-2026-05-31.md     # dated channel snapshot (one per pull)
   videos/<VIDEO_ID>.md      # per-video running log, newest entry on top
@@ -231,7 +231,7 @@ Sharp drop 0.00→0.06 (intro), recovers, second dip ~0.55.
 avg_view_pct +2.1pts; SUGGESTED share up 6pts after the Ep.13 packaging change.
 ```
 
-Rule: **append, never overwrite.** The feedback log *is* the value — overwriting yesterday's snapshot destroys the trend the siblings need. `02-DOCS/wiki/` is an OKF v0.1 bundle: keep the domain keys (`date`, `range`, `channel`, `source`) the siblings parse, add `type`/`timestamp` alongside them, use standard markdown links (never `[[wikilinks]]`), and leave the reserved `index.md` frontmatter-free. Exact file tree, naming, per-video log shape, and how siblings read the log: `references/wiki-schema.md`.
+Rule: **append, never overwrite.** The feedback log *is* the value — overwriting yesterday's snapshot destroys the trend the siblings need. `docs/wiki/` is an OKF v0.1 bundle: keep the domain keys (`date`, `range`, `channel`, `source`) the siblings parse, add `type`/`timestamp` alongside them, use standard markdown links (never `[[wikilinks]]`), and leave the reserved `index.md` frontmatter-free. Exact file tree, naming, per-video log shape, and how siblings read the log: `references/wiki-schema.md`.
 
 ## 7. Quota & failure math
 

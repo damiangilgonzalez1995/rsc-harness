@@ -107,7 +107,7 @@ no method deciding whether each piece belongs. rsc-harness keeps that constructi
   *next* skill the moment a task needs it — a one-word confirm installs it.
 - **Not code-only.** First-class support for running a *company*: bookkeeping,
   invoicing, hiring, GDPR, pitch decks, SEO, a YouTube/TikTok/LinkedIn presence —
-  each wired to a `02-DOCS/` knowledge loop that learns from your own results.
+  each wired to a `docs/` knowledge loop that learns from your own results.
 - **Specialists follow the stack.** The four base agents stay small; installing a
   supported stack adds only its reviewer and build resolver. `rsc add go`, for
   example, adds the Go pair without pulling reviewers for every other language.
@@ -265,7 +265,7 @@ The harness travels by git, but not all of it — and the split is the point.
 | | |
 | --- | --- |
 | `.rsc.json` | The decision: which assistants, which skills, **which catalog version**, the developer tier, which gates you disarmed |
-| `01-TOOLS/` · `02-DOCS/` | Your tooling and your wiki, if you use them |
+| `01-TOOLS/` · `docs/` | Your tooling and your wiki, if you use them |
 | Skills and agents you wrote by hand | They are yours. rsc does not claim them, does not count them as drift, and does not touch them |
 
 **Do not commit these** — rsc adds them to `.gitignore` for you:
@@ -273,7 +273,7 @@ The harness travels by git, but not all of it — and the split is the point.
 | | Why |
 | --- | --- |
 | `.rsc/` | Machine state: hook scripts, seals, logs and fallback session memory |
-| `02-DOCS/raw/worklog/.rsc-memory/` | Preferred session journal when a local wiki exists; protected with git's local exclude |
+| `docs/raw/worklog/.rsc-memory/` | Preferred session journal when a local wiki exists; protected with git's local exclude |
 | The skill entries rsc manages | Symlinks on macOS/Linux, real copies on Windows — two incompatible shapes of one thing |
 
 Whoever clones runs **one command** and ends up with the same harness:
@@ -384,19 +384,19 @@ The front door and the workspace brain.
 [init](skills/init/) · [harness](skills/harness/) · [orient](skills/orient/) · [suggest](skills/suggest/) · [bro](skills/bro/) · [unslop](skills/unslop/) · [author-skill](skills/author-skill/) · [sdd-init](skills/sdd-init/)
 
 > **harness** is the Karpathy *chaos→knowledge* engine — a `01-TOOLS/` layer (one
-> folder per provider, each with a working `test_connection`) and a `02-DOCS/`
+> folder per provider, each with a working `test_connection`) and a `docs/`
 > self-improving wiki. It governs software *or* a whole company. **orient** is the
 > always-on compass that keeps a non-technical human oriented after every step.
 > **bro** is installed with every profile and rewrites any answer in plain, natural
 > language when the user asks — without making its full body always-on.
 
-> #### 📦 The `02-DOCS/` brain is now 100% Open Knowledge Format (OKF v0.1) conformant
+> #### 📦 The `docs/` brain is now 100% Open Knowledge Format (OKF v0.1) conformant
 >
 > Google Cloud published the [**Open Knowledge Format**](https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf)
 > — a vendor-neutral standard for portable, agent-readable knowledge — built on the
-> same Karpathy *LLM-wiki* pattern our `02-DOCS/` engine has used from day one. We
+> same Karpathy *LLM-wiki* pattern our `docs/` engine has used from day one. We
 > independently converged on the same design, so adopting the standard cost almost
-> nothing. As of now, **every `02-DOCS/wiki/` is a valid, portable OKF bundle**:
+> nothing. As of now, **every `docs/wiki/` is a valid, portable OKF bundle**:
 >
 > - **Markdown + YAML frontmatter**, `type` on every concept doc, OKF-standard
 >   fields (`title`, `description`, `resource`, `tags`, `timestamp`).
@@ -434,7 +434,7 @@ Take a fuzzy intent to a shipped, verified change — phase by phase. `npx @eric
 [marketing](skills/marketing/) · [seo-geo](skills/seo-geo/) · [content-engine](skills/content-engine/) · [social-publisher](skills/social-publisher/) · [brand-voice](skills/brand-voice/) · [brand-identity](skills/brand-identity/) · [newsletter](skills/newsletter/) · [landing-copy](skills/landing-copy/) · [ads](skills/ads/) · [article-writing](skills/article-writing/) · [case-studies](skills/case-studies/) · [video-shorts](skills/video-shorts/) · [podcast](skills/podcast/) · [market-research](skills/market-research/) · [competitor-watch](skills/competitor-watch/) · [press-kit](skills/press-kit/) · [community](skills/community/) · [webinar](skills/webinar/) · [review-management](skills/review-management/)
 
 ### 🎬 Grow a channel
-Each with a `02-DOCS` feedback loop that learns from your own results. `remotion-video` edits programmatically — transitions, Whisper captions, silence removal.
+Each with a `docs` feedback loop that learns from your own results. `remotion-video` edits programmatically — transitions, Whisper captions, silence removal.
 
 [youtube-api](skills/youtube-api/) · [youtube-strategy](skills/youtube-strategy/) · [youtube-ideation](skills/youtube-ideation/) · [youtube-thumbnails](skills/youtube-thumbnails/) · [youtube-packaging](skills/youtube-packaging/) · [remotion-video](skills/remotion-video/) · [tiktok-api](skills/tiktok-api/) · [instagram-api](skills/instagram-api/) · [shortform-strategy](skills/shortform-strategy/) · [shortform-ideation](skills/shortform-ideation/) · [shortform-packaging](skills/shortform-packaging/) · [shortform-editing](skills/shortform-editing/) · [viral-score](skills/viral-score/) · [linkedin-api](skills/linkedin-api/) · [linkedin-strategy](skills/linkedin-strategy/) · [linkedin-content](skills/linkedin-content/) · [linkedin-carousels](skills/linkedin-carousels/) · [linkedin-outreach](skills/linkedin-outreach/) · [medium-writing](skills/medium-writing/) · [medium-publishing](skills/medium-publishing/) · [medium-strategy](skills/medium-strategy/)
 

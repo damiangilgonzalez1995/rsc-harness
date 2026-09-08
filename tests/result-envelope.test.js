@@ -5,7 +5,7 @@ import { parseResultEnvelope, validateResultEnvelope } from '../scripts/lib/resu
 const validEnvelope = {
   status: 'complete',
   executive_summary: 'Spec and tests are green.',
-  artifact: '02-DOCS/wiki/sdd/specs/export-csv.md',
+  artifact: 'docs/wiki/sdd/specs/export-csv.md',
   next_recommended: 'plan',
   risk: 'low',
   skill_resolution: {

@@ -113,13 +113,13 @@ Opt out with .rsc/.no-scope-check · this notice repeats at most every ${SCOPE_W
   }
 }
 
-const profile = join(root, '02-DOCS', 'wiki', 'harness', 'user-profile.md');
+const profile = join(root, 'docs', 'wiki', 'harness', 'user-profile.md');
 const optout = join(root, '.rsc', '.no-harness');
 const profileExists = existsSync(profile);
 if (!existsSync(profile) && !existsSync(optout)) {
   process.stdout.write(`
 ===== rsc onboarding =====
-Fresh setup: 02-DOCS/wiki/harness/user-profile.md is missing.
+Fresh setup: docs/wiki/harness/user-profile.md is missing.
 ACTION: invoke \`init\` now (first contact: technical level + accompaniment dial) before the task.
 If the user does not want a harness here: create .rsc/.no-harness
 ==========================
@@ -130,8 +130,8 @@ If the user does not want a harness here: create .rsc/.no-harness
 // (anything other than README.md / dotfiles / the _processed archive), tell the
 // agent to run the Auto-Ingest Sweep. The hook only reminds; the agent does the
 // scan + ingest. Cheap signal here; the thorough workspace scan lives in the sweep.
-const inbox = join(root, '02-DOCS', 'inbox');
-if (existsSync(join(root, '02-DOCS', 'wiki')) && existsSync(inbox)) {
+const inbox = join(root, 'docs', 'inbox');
+if (existsSync(join(root, 'docs', 'wiki')) && existsSync(inbox)) {
   let pending = false;
   try {
     pending = readdirSync(inbox, { withFileTypes: true })
@@ -140,7 +140,7 @@ if (existsSync(join(root, '02-DOCS', 'wiki')) && existsSync(inbox)) {
   if (pending) {
     process.stdout.write(`
 ===== rsc auto-ingest =====
-Un-ingested material is waiting in 02-DOCS/inbox/.
+Un-ingested material is waiting in docs/inbox/.
 ACTION: run the Auto-Ingest Sweep now — ingest inbox/, then scan the workspace
 (minus .rscignore) for un-ingested documents, recording them in wiki/.ingested.json.
 Originals are copied, never moved; deleting an emptied folder needs explicit consent.
@@ -190,7 +190,7 @@ ACTION: run \`npx @ericrisco/rsc audit\`. Opt out with .rsc/.no-audit.
 // CLAUDE.md hygiene: the root CLAUDE.md is read on EVERY turn, so an overgrown one (usually
 // the Knowledge map accreting a row per wiki article) is a permanent context tax that rots
 // adherence. When it passes the ~200-line 2026 budget, nudge to offload the index into
-// 02-DOCS/wiki/index.md and keep CLAUDE.md a short pointer (the `harness` skill owns the move;
+// docs/wiki/index.md and keep CLAUDE.md a short pointer (the `harness` skill owns the move;
 // it's a relocation, not a delete). Opt out with .rsc/.no-claudemd-check.
 const CLAUDEMD_MAX_LINES = 200;
 if (!has('.rsc', '.no-claudemd-check')) {
@@ -200,7 +200,7 @@ if (!has('.rsc', '.no-claudemd-check')) {
       process.stdout.write(`
 ===== rsc CLAUDE.md hygiene =====
 CLAUDE.md is ${lines} lines — over the ~${CLAUDEMD_MAX_LINES}-line budget (it's read every turn, so each line costs context).
-ACTION: offload the Knowledge map / overgrown sections into 02-DOCS/wiki/index.md and leave a short
+ACTION: offload the Knowledge map / overgrown sections into docs/wiki/index.md and leave a short
 pointer in CLAUDE.md (no info lost — it's a move). The \`harness\` skill owns the procedure.
 Opt out with .rsc/.no-claudemd-check.
 =================================

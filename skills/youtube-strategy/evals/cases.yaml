@@ -3,7 +3,7 @@ skill: youtube-strategy
 # Prompts that MUST load `youtube-strategy`. This skill works at CHANNEL/portfolio
 # altitude: positioning/niche, upload cadence, how videos chain into playlists/series,
 # end-screen routing for session time, and "what's working" reviews — read from and
-# written back to 02-DOCS/wiki/youtube/. It does NOT generate per-video topics/hooks
+# written back to docs/wiki/youtube/. It does NOT generate per-video topics/hooks
 # (youtube-ideation), per-video titles/thumbnail-text (youtube-packaging), thumbnail
 # images (youtube-thumbnails), or fetch metrics from the Data API (youtube-api).
 should_trigger:
@@ -48,14 +48,14 @@ should_not_trigger:
 
 capability:
   - scenario: >
-      A channel has 40 videos and flat subscriber growth. 02-DOCS/wiki/youtube/
+      A channel has 40 videos and flat subscriber growth. docs/wiki/youtube/
       already contains retention and CTR notes (the top 3 videos by AVD are all
       keyboard reviews) and current cadence of 2/week that held. Produce a strategy
       decision for where this channel should go next.
     must_include:
-      - "Reads 02-DOCS/wiki/youtube/ first (prior positioning, whether cadence held, top retention/CTR performers, killed experiments) — or bootstraps the dir if it were empty"
+      - "Reads docs/wiki/youtube/ first (prior positioning, whether cadence held, top retention/CTR performers, killed experiments) — or bootstraps the dir if it were empty"
       - "Gives a positioning/niche-down recommendation grounded in the three factors (interest x demand x monetization), narrowing 2-3 levels from an industry to a defensible angle"
       - "Gives a cadence recommendation justified by the channel's own retention data (e.g. hold 2/wk since it held at quality), not a generic blog number, and applies the 8-week sustainability gate"
       - "Proposes at least one playlist/Series-Playlist/end-screen move for session time (e.g. a binge chain built around the keyboard format that already earns the best AVD)"
-      - "Writes a dated decision record back to 02-DOCS/wiki/youtube/ that names the single metric it bets on and a review date"
+      - "Writes a dated decision record back to docs/wiki/youtube/ that names the single metric it bets on and a review date"
       - "Routes single-asset work out: next-video ideas to youtube-ideation, per-video packaging to youtube-packaging, raw metrics to youtube-api"

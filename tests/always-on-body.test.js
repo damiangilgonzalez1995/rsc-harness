@@ -7,7 +7,7 @@ import { SDD_GATE_TEXT } from '../targets/hook-once.mjs';
 
 // The always-on body is the single most expensive piece of context rsc owns: it is injected at
 // every session start and again after every compaction. These are the invariants that let it stay
-// small without quietly losing what only it can do. See 02-DOCS/wiki/sdd/specs/always-on-diet.md.
+// small without quietly losing what only it can do. See docs/wiki/sdd/specs/always-on-diet.md.
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const body = readFileSync(join(ROOT, 'skills/suggest/SKILL.md'), 'utf8');
 
@@ -34,7 +34,7 @@ test('always-on body: no longer over-constrains, per our own skill-rubric', () =
   // catalog skill. The always-on layer used to be the one place that broke its own rule.
   assert.doesNotMatch(body, /stop rationalizing/i, 'no rationalization table');
   assert.doesNotMatch(body, /non-negotiable/i, 'no urgency block');
-  // Only prose can shout: strip code spans so filenames (SKILL.md, 02-DOCS/…) are not mistaken
+  // Only prose can shout: strip code spans so filenames (SKILL.md, docs/…) are not mistaken
   // for directives.
   const prose = body.replace(/`[^`]*`/g, '');
   const yelled = (prose.match(/\b[A-Z]{4,}\b/g) || []).filter((w) => w !== 'SDD');

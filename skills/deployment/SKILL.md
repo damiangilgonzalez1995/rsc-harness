@@ -356,13 +356,13 @@ async def readyz() -> dict[str, str]:
 - [ ] trivy clean (no HIGH/CRITICAL)
 - [ ] Rollback path known
 
-## Project grounding (02-DOCS)
+## Project grounding (docs)
 
-In a project with a `02-DOCS/` layer (the [`harness`](../harness/SKILL.md) Karpathy wiki), read
-`02-DOCS/wiki/stack/deployment.md` first and stay consistent with it. Create or update it with this
+In a project with a `docs/` layer (the [`harness`](../harness/SKILL.md) Karpathy wiki), read
+`docs/wiki/stack/deployment.md` first and stay consistent with it. Create or update it with this
 project's real choices — base-image/container choices, the CI pipeline, the target config, the
-secrets flow, the rollback strategy — index it in `02-DOCS/wiki/index.md` (the Knowledge map root
-`CLAUDE.md` points to), and bump its `Updated` date in the same change. No `02-DOCS/` layer? Skip
+secrets flow, the rollback strategy — index it in `docs/wiki/index.md` (the Knowledge map root
+`CLAUDE.md` points to), and bump its `Updated` date in the same change. No `docs/` layer? Skip
 silently (optionally suggest `harness`) — technical conventions are *recorded, not gated*; never
 block the task on this.
 

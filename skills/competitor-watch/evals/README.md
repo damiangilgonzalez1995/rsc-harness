@@ -9,7 +9,7 @@ battlecard), `data-scraper` (one-off extraction), `automation-flows` (scheduling
 passes only when the router prefers the named sibling over `competitor-watch`. The
 **capability** block is an LLM- or human-graded rubric: run the scenario with the skill loaded
 and check the produced plan hits every `must_include` line — ethics gate first, tracker
-persisted under `02-DOCS/` with a `source_url`+`date` on every price/feature cell (no invented
+persisted under `docs/` with a `source_url`+`date` on every price/feature cell (no invented
 numbers), each surface mapped to URL+selector+tiered cadence, the change-log axis+materiality
 schema, `changedetection.io` as the runnable default with Wayback flagged as archive-only, and
 the handoffs to automation-flows and sales-pipeline. There is no automated runner and no live

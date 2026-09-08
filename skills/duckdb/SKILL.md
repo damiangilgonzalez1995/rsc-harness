@@ -193,10 +193,10 @@ CLI, falls back to `python3 -c "import duckdb"` — that runs an aggregate and a
 generated file and asserts a known scalar, proving the documented commands execute on your installed
 version. If neither the CLI nor the Python module is present it prints `SKIP` and exits 0. No network.
 
-## Project grounding (02-DOCS + CLAUDE.md)
+## Project grounding (docs + CLAUDE.md)
 
-In a project with a `02-DOCS/` layer (the [`harness`](../harness/SKILL.md) wiki), record this project's
+In a project with a `docs/` layer (the [`harness`](../harness/SKILL.md) wiki), record this project's
 DuckDB decisions — version pin, file layout, persistent vs in-memory, remote/secret setup — in
-`02-DOCS/wiki/stack/duckdb.md` and index it in `02-DOCS/wiki/index.md` (the Knowledge map; root `CLAUDE.md`
+`docs/wiki/stack/duckdb.md` and index it in `docs/wiki/index.md` (the Knowledge map; root `CLAUDE.md`
 keeps only a short pointer to it). Read it first on
-every use and keep choices consistent. No `02-DOCS/`? Skip silently. Conventions are recorded, never gated.
+every use and keep choices consistent. No `docs/`? Skip silently. Conventions are recorded, never gated.

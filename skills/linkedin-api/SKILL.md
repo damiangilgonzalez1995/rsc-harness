@@ -163,9 +163,9 @@ Lifetime or time-bound follower counts, segmented by facet (geo, industry, senio
 
 ## Step 5 — ingest performance into the wiki
 
-This is the deliverable that makes the skill durable: after pulling stats, write one file per post under `02-DOCS/wiki/linkedin/`. Later content decisions get grounded in what actually worked, not vibes.
+This is the deliverable that makes the skill durable: after pulling stats, write one file per post under `docs/wiki/linkedin/`. Later content decisions get grounded in what actually worked, not vibes.
 
-Filename: the post id slug, e.g. `02-DOCS/wiki/linkedin/share-7012345678901234567.md`.
+Filename: the post id slug, e.g. `docs/wiki/linkedin/share-7012345678901234567.md`.
 
 ```markdown
 ---
@@ -194,7 +194,7 @@ Carousel on OAuth pitfalls. Highest unique-impression post this month;
 CTR ~4.4%. The "common 403 causes" hook outperformed the plain howto.
 ```
 
-`type` is the only required OKF v0.1 field; `title`/`description`/`tags`/`timestamp` are the recommended OKF surface. The DOMAIN keys below them are mandatory and must stay byte-for-byte — `verify.sh` checks that `post_urn`, `captured_at`, `impressions`, and `engagement` are present in every file under that directory. `captured_at` is the API-capture instant (a domain value verify.sh parses); `timestamp` is the OKF last-edit field — keep both. Note these files share `02-DOCS/wiki/linkedin/` with `linkedin-strategy`; using `type: linkedin-record` keeps the two skills' wiki content consistent.
+`type` is the only required OKF v0.1 field; `title`/`description`/`tags`/`timestamp` are the recommended OKF surface. The DOMAIN keys below them are mandatory and must stay byte-for-byte — `verify.sh` checks that `post_urn`, `captured_at`, `impressions`, and `engagement` are present in every file under that directory. `captured_at` is the API-capture instant (a domain value verify.sh parses); `timestamp` is the OKF last-edit field — keep both. Note these files share `docs/wiki/linkedin/` with `linkedin-strategy`; using `type: linkedin-record` keeps the two skills' wiki content consistent.
 
 ## Anti-patterns
 
@@ -213,7 +213,7 @@ CTR ~4.4%. The "common 403 causes" hook outperformed the plain howto.
 
 ## Verify
 
-Run `scripts/verify.sh [TARGET_DIR]` (default current dir). It is read-only and static — no network. It confirms each `02-DOCS/wiki/linkedin/*.md` carries the required front-matter keys, and fails on any committed token / client secret in the tree. A clean or not-yet-run target passes with a NOTE.
+Run `scripts/verify.sh [TARGET_DIR]` (default current dir). It is read-only and static — no network. It confirms each `docs/wiki/linkedin/*.md` carries the required front-matter keys, and fails on any committed token / client secret in the tree. A clean or not-yet-run target passes with a NOTE.
 
 ## References
 

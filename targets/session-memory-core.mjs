@@ -83,9 +83,9 @@ export function chooseMemoryRoot(cwd = process.cwd()) {
     return { root: join(project, '.rsc', 'memory'), kind: 'local-state', reason: 'without-git', git: false };
   }
 
-  const worklog = join(project, '02-DOCS', 'raw', 'worklog');
+  const worklog = join(project, 'docs', 'raw', 'worklog');
   if (existsSync(worklog)) {
-    const tracked = git(project, ['ls-files', '--', '02-DOCS/raw/worklog']).out;
+    const tracked = git(project, ['ls-files', '--', 'docs/raw/worklog']).out;
     if (!tracked) {
       const candidate = join(worklog, '.rsc-memory');
       if (ensureExcluded(project, candidate)) {
@@ -96,7 +96,7 @@ export function chooseMemoryRoot(cwd = process.cwd()) {
 
   const local = join(project, '.rsc', 'memory');
   if (ensureExcluded(project, local)) {
-    const trackedWorklog = existsSync(worklog) && Boolean(git(project, ['ls-files', '--', '02-DOCS/raw/worklog']).out);
+    const trackedWorklog = existsSync(worklog) && Boolean(git(project, ['ls-files', '--', 'docs/raw/worklog']).out);
     return { root: local, kind: 'local-state', reason: trackedWorklog ? 'tracked-worklog' : 'no-wiki', git: true };
   }
 
@@ -188,9 +188,9 @@ function snapshot(cwd, baselineHead = null) {
 
 function ledgerSnapshot(cwd) {
   const roots = [
-    ['spec', join(cwd, '02-DOCS', 'wiki', 'sdd', 'specs')],
-    ['plan', join(cwd, '02-DOCS', 'wiki', 'sdd', 'plans')],
-    ['progress', join(cwd, '02-DOCS', 'wiki', 'sdd', 'progress')],
+    ['spec', join(cwd, 'docs', 'wiki', 'sdd', 'specs')],
+    ['plan', join(cwd, 'docs', 'wiki', 'sdd', 'plans')],
+    ['progress', join(cwd, 'docs', 'wiki', 'sdd', 'progress')],
   ];
   const out = [];
   for (const [type, root] of roots) {

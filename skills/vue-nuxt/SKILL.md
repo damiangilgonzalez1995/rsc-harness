@@ -308,14 +308,14 @@ is a yellow SKIP, never a failure; everything is read-only except the final buil
 `.nuxt/`/`.output/` (or `dist/`). No installs, no network mutations, safe to re-run, exits 0 on a
 clean/empty target.
 
-## Project grounding (02-DOCS + CLAUDE.md)
+## Project grounding (docs + CLAUDE.md)
 
-In a project with a `02-DOCS/` layer (the [`harness`](../harness/SKILL.md) Karpathy wiki), read
-`02-DOCS/wiki/stack/vue-nuxt.md` first and stay consistent with it. If it is missing or stale,
+In a project with a `docs/` layer (the [`harness`](../harness/SKILL.md) Karpathy wiki), read
+`docs/wiki/stack/vue-nuxt.md` first and stay consistent with it. If it is missing or stale,
 create/update it with this app's real choices — rendering mode per route (`routeRules`), the
 `useFetch`/`useAsyncData` conventions, `useState` vs Pinia, the Nitro preset/deploy target, the
 design-system hookup — bump its `Updated` date, and link it from a `## Knowledge map` section in
-the root `CLAUDE.md` (creating that section, and `CLAUDE.md` itself, if absent). No `02-DOCS/`
+the root `CLAUDE.md` (creating that section, and `CLAUDE.md` itself, if absent). No `docs/`
 layer? Skip silently. Technical conventions are *recorded, not gated* — never block the task.
 
 Nuxt 3 → 4 deltas (`app/` move, `compatibilityVersion`, shared-key data, shallowRef payload,

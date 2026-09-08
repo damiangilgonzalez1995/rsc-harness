@@ -39,7 +39,7 @@ capability:
       almost no distribution and earning ~$8/month, asks for a 90-day plan to grow
       and monetize on Medium.
     must_include:
-      - Reads 02-DOCS/wiki/medium/ first (or bootstraps it if empty/absent) before recommending.
+      - Reads docs/wiki/medium/ first (or bootstraps it if empty/absent) before recommending.
       - Explains earnings are driven by member reading time (not views/claps) and notes the $10 payout threshold.
       - Names at least one 2025-2026 change (external +5%, 15% search budget, paywall-join bonus, or editor 25%) WITH its strategic implication.
       - Gives a solo-vs-publication recommendation with rationale (incl. the Boost nomination-path tradeoff).
@@ -47,4 +47,4 @@ capability:
       - A tag/title strategy — 2-3 popular + 2-3 long-tail tags, and a search-intent title for the search budget.
       - A cross-posting decision — canonical import to own profile vs native originals for pub pitches.
       - Corrects the views-equals-distribution confusion.
-      - Writes a dated decision record back to 02-DOCS/wiki/medium/ with a decision, rationale, and a bet-on metric.
+      - Writes a dated decision record back to docs/wiki/medium/ with a decision, rationale, and a bet-on metric.

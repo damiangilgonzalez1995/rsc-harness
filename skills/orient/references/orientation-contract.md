@@ -19,7 +19,7 @@ could leave the user unsure closes with the brújula block.
 
 ## Calibration (the dial)
 
-Read `02-DOCS/wiki/harness/user-profile.md`. Two fields combine: `accompaniment_level` (L0 | L1 | L2 | L3) sets how deep the block goes; `technical_level` (non-technical | mixed | technical) sets the vocabulary.
+Read `docs/wiki/harness/user-profile.md`. Two fields combine: `accompaniment_level` (L0 | L1 | L2 | L3) sets how deep the block goes; `technical_level` (non-technical | mixed | technical) sets the vocabulary.
 
 - **L0 — cavernícola:** only `✅` + `➡️`, one option, yes/no question.
 - **L1 — breve:** the four lines; one line of why.

@@ -110,7 +110,7 @@ const results = await pipeline(
       `- Do NOT read anything under skills/ . You are the "without the skill" arm; if you read the ` +
       `skill under test there is no control and the measurement is void.\n` +
       `- Do NOT read any evals/cases.yaml — that is the rubric you are being graded against.\n` +
-      `- The repository is READ-ONLY. Never write to 02-DOCS/ or to any tracked file.\n` +
+      `- The repository is READ-ONLY. Never write to docs/ or to any tracked file.\n` +
       `- Write every file you produce under ${sandbox(index, 'baseline')} .\n\n` +
       `TASK:\n${sc.scenario}`,
       { label: `baseline:${index}`, phase: 'Execute & Grade' },
@@ -120,11 +120,11 @@ const results = await pipeline(
       `skills/${loaded.skillId}/references/; read them if the skill points you there.\n\n` +
       `=== SKILL: ${loaded.skillId} ===\n${loaded.skillBody}\n=== END SKILL ===\n\n` +
       `Complete this task fully and concretely. Produce the ACTUAL deliverable, not a description.\n\n` +
-      // Both arms once wrote the same path (02-DOCS/wiki/sdd/specs/magic-link-login.md) and one
+      // Both arms once wrote the same path (docs/wiki/sdd/specs/magic-link-login.md) and one
       // clobbered the other mid-run, so the grader scored a file that no longer existed. A distinct
       // sandbox per arm makes that collision impossible by construction rather than by luck.
       `CONSTRAINTS:\n` +
-      `- The repository is READ-ONLY. Never write to 02-DOCS/ or to any tracked file: this is a ` +
+      `- The repository is READ-ONLY. Never write to docs/ or to any tracked file: this is a ` +
       `measurement, and it must not mutate the project it runs inside.\n` +
       `- Write every file you produce under ${sandbox(index, 'treatment')} .\n\n` +
       `TASK:\n${sc.scenario}`,

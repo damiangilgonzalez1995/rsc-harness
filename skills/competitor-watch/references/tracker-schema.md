@@ -1,11 +1,11 @@
 # Tracker schema + a filled example
 
-The tracker of record is three structured files under `02-DOCS/wiki/competitors/`. Raw
-captures (the diffed HTML/JSON snapshots) go under `02-DOCS/raw/competitors/<rival>/`. The
+The tracker of record is three structured files under `docs/wiki/competitors/`. Raw
+captures (the diffed HTML/JSON snapshots) go under `docs/raw/competitors/<rival>/`. The
 rule that overrides everything: **a price or feature cell without a `source_url` + `date` is
 not knowledge — leave it blank and say so.**
 
-`02-DOCS/wiki/` is an OKF v0.1 bundle, so the one `.md` file here (the competitor profile)
+`docs/wiki/` is an OKF v0.1 bundle, so the one `.md` file here (the competitor profile)
 carries YAML frontmatter with a non-empty `type:`; the two CSVs are data files, not OKF
 documents. Any cross-references in the profile body use **standard markdown links** (e.g.
 `[Beta](./beta.md)`), never wikilinks. See `../../harness/references/wiki-protocol.md`
@@ -13,7 +13,7 @@ documents. Any cross-references in the profile body use **standard markdown link
 
 ## 1. Competitor profile (one file per rival)
 
-Markdown front-matter + body. One per rival, named `02-DOCS/wiki/competitors/<rival>.md`.
+Markdown front-matter + body. One per rival, named `docs/wiki/competitors/<rival>.md`.
 The frontmatter is OKF v0.1 conformant: `type:` is the only required field (non-empty);
 `title`/`description`/`tags`/`timestamp` are the recommended standard surface. All the
 domain keys below (`name`, `positioning_source.date`, every `pricing_tiers[].date`, …) are
@@ -55,7 +55,7 @@ have the tier name but not a confirmed price, omit `amount` rather than guess.
 ## 2. Feature matrix (CSV)
 
 Rows = features, columns = competitors, plus a sourcing column pair per competitor so
-`verify.sh` can confirm each asserted cell is dated. Keep it at `02-DOCS/wiki/competitors/feature-matrix.csv`.
+`verify.sh` can confirm each asserted cell is dated. Keep it at `docs/wiki/competitors/feature-matrix.csv`.
 
 ```csv
 feature,acme_value,acme_source_url,acme_date,beta_value,beta_source_url,beta_date
@@ -70,7 +70,7 @@ with a blank source is a violation — that's an invented fact and `verify.sh` f
 ## 3. Change log (CSV, append-only)
 
 The time series. Never overwrite a row; each pass appends. Keep it at
-`02-DOCS/wiki/competitors/change-log.csv`.
+`docs/wiki/competitors/change-log.csv`.
 
 ```csv
 date,competitor,axis,url,old_value,new_value,materiality,action

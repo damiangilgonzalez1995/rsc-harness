@@ -5,7 +5,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // Four rules imported from the old-coder skill after the ago-2026 investigation, each closing a
-// class of claim the harness could not check. See 02-DOCS/wiki/sdd/specs/gate-honesty.md.
+// class of claim the harness could not check. See docs/wiki/sdd/specs/gate-honesty.md.
 //
 // WHAT THIS GUARDS, AND WHAT IT DOES NOT — read this before trusting its green.
 //
@@ -100,7 +100,7 @@ test('B — verify requires a home-grown gate to be watched failing', () => {
   const body = skill('verify');
   // Anchor on the HEADING, not the phrase. A bare /prove it can fail/ also matches the one-line
   // reminder in the anti-patterns table, so it survived a mutant that gutted this whole section —
-  // found by the negative control in 02-DOCS/wiki/sdd/verifications/gate-honesty-2026-08-17.md.
+  // found by the negative control in docs/wiki/sdd/verifications/gate-honesty-2026-08-17.md.
   // The heading gained "— and that it can pass" on 2026-08-18; anchored on the phrase within a
   // heading line rather than at end-of-line, so extending the title does not break the pin.
   assert.match(
@@ -119,7 +119,7 @@ test('B — verify requires a home-grown gate to be watched failing', () => {
 test('B — the rule now requires BOTH controls: can-fail and can-pass', () => {
   // The missing symmetric half, added 2026-08-18 after the integrity gate over-blocked twice on its
   // first real use. Twelve mutants had proven it could fail; none asked whether it could pass, so the
-  // defect shipped. Rule stated at 02-DOCS/wiki/sdd/verifications/eval-run2-2026-08-18.md.
+  // defect shipped. Rule stated at docs/wiki/sdd/verifications/eval-run2-2026-08-18.md.
   const body = prose('verify');
   assert.match(
     body,

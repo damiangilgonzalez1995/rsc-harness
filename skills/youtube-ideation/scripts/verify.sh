@@ -20,7 +20,7 @@
 # HOW TO RUN (inside YOUR project, not the skills repo)
 #   ./verify.sh                      # scan ./ for *ledger*/*idea*.md
 #   ./verify.sh --path ledger.md     # check one ledger
-#   ./verify.sh --path 02-DOCS/      # scan a directory
+#   ./verify.sh --path docs/      # scan a directory
 #   ./verify.sh --strict             # treat warnings (gray-band rows) as failures
 #
 # EXIT CODES

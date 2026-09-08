@@ -319,13 +319,13 @@ equivalent is in `references/secrets-and-supply-chain.md`.
 
 ## Project grounding
 
-In a project with a `02-DOCS/` layer ([`harness`](../harness/SKILL.md)), this
-project's security decisions live in `02-DOCS/wiki/stack/security.md`, indexed
-from `02-DOCS/wiki/index.md` (the Knowledge map; root `CLAUDE.md` keeps only a
+In a project with a `docs/` layer ([`harness`](../harness/SKILL.md)), this
+project's security decisions live in `docs/wiki/stack/security.md`, indexed
+from `docs/wiki/index.md` (the Knowledge map; root `CLAUDE.md` keeps only a
 pointer to it). Read it first and stay consistent; if it is missing or stale,
 create/update it with the real choices — threat model, auth model, secrets
 backend, CI security gates, accepted risks — index it, and bump its `Updated`
-date in the same change. No `02-DOCS/` layer? Skip silently (optionally suggest
+date in the same change. No `docs/` layer? Skip silently (optionally suggest
 `harness`): technical conventions are *recorded, not gated* — never block the
 task on this.
 

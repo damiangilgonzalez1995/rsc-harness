@@ -36,14 +36,14 @@ should_not_trigger:
 capability:
   - scenario: >
       A B2B founder has a near-dead company page and a personal profile with sporadic posting.
-      02-DOCS/wiki/linkedin/ already holds: SSI ~48, the top-2 dwell-time posts are both carousels
+      docs/wiki/linkedin/ already holds: SSI ~48, the top-2 dwell-time posts are both carousels
       on one topic, and a stated cadence of "3/week" that slipped to ~1. Produce a strategy
       decision for the presence.
     must_include:
-      - Reads 02-DOCS/wiki/linkedin/ first (prior positioning, current pillars, whether cadence held, top dwell-time performers, SSI trend, killed experiments) — or bootstraps the dir if empty.
+      - Reads docs/wiki/linkedin/ first (prior positioning, current pillars, whether cadence held, top dwell-time performers, SSI trend, killed experiments) — or bootstraps the dir if empty.
       - Moves distribution to the founder's personal profile with the company page as amplification plus employee advocacy, grounded in the personal-vs-page reach gap (~8x engagement, ~5% vs ~65% feed).
       - Defines or refines 3-5 content pillars aligned to the founder's professional graph, doubling down on the carousel topic that already earns the best dwell time.
       - Gives a cadence recommendation justified by the account's own data (e.g. a holdable 3/week weighted toward carousels/docs for dwell time) with the 8-week sustainability gate, not a generic number.
       - Sets a social-selling rhythm — the ~80/20 engage-vs-create split and SSI as a four-dimension weekly habit with a target (e.g. 48 -> 65).
-      - Writes a dated decision record back to 02-DOCS/wiki/linkedin/ naming the single metric it bets on and a review date.
+      - Writes a dated decision record back to docs/wiki/linkedin/ naming the single metric it bets on and a review date.
       - Routes single-asset work out: post copy -> linkedin-content, carousels -> linkedin-carousels, DMs -> linkedin-outreach, raw metrics -> linkedin-api.

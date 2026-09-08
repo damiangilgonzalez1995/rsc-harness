@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Runs the `specify` exit gate over written specs. Report-only: it never edits a spec.
 //
-// Not wired into `prepublishOnly`, and that is deliberate: specs live under 02-DOCS, which is never
+// Not wired into `prepublishOnly`, and that is deliberate: specs live under docs, which is never
 // tracked (principle 9), so a publish gate depending on them would fail in any clean clone. This is
 // the phase's own instrument, and the author's.
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
@@ -11,7 +11,7 @@ import { execFileSync } from 'node:child_process';
 import { specCompleteness, statusClaims, checkClaims } from './lib/spec-gate.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const DEFAULT_DIR = join(ROOT, '02-DOCS', 'wiki', 'sdd', 'specs');
+const DEFAULT_DIR = join(ROOT, 'docs', 'wiki', 'sdd', 'specs');
 
 function defaultTargets() {
   try {
@@ -128,16 +128,16 @@ function resolveSubject(specPath, claims) {
   return { probe: floor, from: declared ? 'config' : 'spec repo' };
 }
 
-/** `project.root` from the nearest SDD config, resolved against the directory that holds 02-DOCS. */
+/** `project.root` from the nearest SDD config, resolved against the directory that holds docs. */
 function declaredRoot(specPath) {
   let dir = resolve(dirname(specPath));
   for (let i = 0; i < 24; i += 1) {
-    const cfg = join(dir, '02-DOCS', 'wiki', 'sdd', 'config.yaml');
+    const cfg = join(dir, 'docs', 'wiki', 'sdd', 'config.yaml');
     if (existsSync(cfg)) {
       try {
         const block = /^project:[ \t]*\r?\n((?:[ \t]+.*\r?\n?)*)/m.exec(readFileSync(cfg, 'utf8'));
         const m = block && /^[ \t]+root:[ \t]*(.+?)[ \t]*$/m.exec(block[1]);
-        // Relative to the directory that owns 02-DOCS, not to the config file and not to the cwd:
+        // Relative to the directory that owns docs, not to the config file and not to the cwd:
         // the only reading where `.` keeps meaning what it means today and the answer does not change
         // with where the gate was invoked from.
         if (m) return resolve(dir, m[1].replace(/^['"]|['"]$/g, ''));
@@ -170,7 +170,7 @@ function main() {
   const args = process.argv.slice(2);
   const targets = args.length ? args : defaultTargets();
   if (!targets.length) {
-    console.log('no specs found — pass a path, or write one to 02-DOCS/wiki/sdd/specs/');
+    console.log('no specs found — pass a path, or write one to docs/wiki/sdd/specs/');
     return;
   }
 

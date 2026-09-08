@@ -130,7 +130,7 @@ Playtest protocols, metrics/retention definitions, the prototyping ladder, and c
 
 ## Project grounding
 
-If the workspace has a `02-DOCS/` harness, record the design in `02-DOCS/wiki/design/` — a `game-design.md` one-pager (hook, core loop, verbs, pillars, MVP scope, what's out) plus an `economy.md` if there is a currency system. Write each as an OKF v0.1 wiki article per the harness [`wiki-article-template.md`](../harness/references/wiki-article-template.md): YAML frontmatter with a non-empty `type:` (use `type: design`), a `timestamp` in ISO 8601, and standard markdown links — never wikilinks. Index it in `02-DOCS/wiki/index.md`. This is **recorded, not gated** — skip silently if there is no harness.
+If the workspace has a `docs/` harness, record the design in `docs/wiki/design/` — a `game-design.md` one-pager (hook, core loop, verbs, pillars, MVP scope, what's out) plus an `economy.md` if there is a currency system. Write each as an OKF v0.1 wiki article per the harness [`wiki-article-template.md`](../harness/references/wiki-article-template.md): YAML frontmatter with a non-empty `type:` (use `type: design`), a `timestamp` in ISO 8601, and standard markdown links — never wikilinks. Index it in `docs/wiki/index.md`. This is **recorded, not gated** — skip silently if there is no harness.
 
 ## Checklist
 

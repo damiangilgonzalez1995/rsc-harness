@@ -25,8 +25,8 @@ Hand off downstream the moment the deliverable becomes *one video*:
 
 Strategy without memory is just opinion. Before any call, read what the account already learned:
 
-- `02-DOCS/wiki/shortform/` — the compiled strategy, positioning, and dated decisions.
-- `02-DOCS/raw/shortform/` — the per-post metrics ledger (completion %, sends, saves, follows).
+- `docs/wiki/shortform/` — the compiled strategy, positioning, and dated decisions.
+- `docs/raw/shortform/` — the per-post metrics ledger (completion %, sends, saves, follows).
 
 *Why: the account is a feedback loop. If you cannot point to the prior decision and the metric that backs it, you are guessing — and you will re-make a mistake the ledger already recorded.* If the directories are empty, this is a new account: say so explicitly and create the baseline in Step 0's write-back, then proceed to Positioning.
 
@@ -113,7 +113,7 @@ Every decision must end up in the ledger so next month's call is grounded.
 
 ### Decision record format
 
-`02-DOCS/wiki/shortform/decisions.md` is an OKF append-log: write the frontmatter
+`docs/wiki/shortform/decisions.md` is an OKF append-log: write the frontmatter
 header once (a non-empty `type` is the only OKF hard requirement; `title`/`tags`/`timestamp`
 are the recommended surface), then **prepend each new dated block newest-first** so the
 latest call is on top. Use ISO 8601 dates; never edit a past block. Bump the header
@@ -148,14 +148,14 @@ timestamp: 2026-06-02T10:00:00Z
 | No clear lane ("a bit of everything") | Algorithm rewards retention; a fuzzy lane never holds a cohort | One-promise sentence first; narrow before posting |
 | Hashtag-spamming for discovery | Discovery shifted to keywords; hashtags no longer support follows | Keywords in caption/profile/on-screen text; drop the hashtag wall |
 | "Series" with no fixed schedule | No habit forms; it is just a tag, no return-viewer lift | Name + number + fixed slot; pilot via Trial Reels |
-| Deciding from vibes, not the ledger | Re-makes recorded mistakes; nothing compounds | Read `02-DOCS/...` first; every call gets a dated decision record |
+| Deciding from vibes, not the ledger | Re-makes recorded mistakes; nothing compounds | Read `docs/...` first; every call gets a dated decision record |
 
 ## Persist it
 
 Write the account's brain back so it compounds (mirrors the harness Karpathy-wiki convention). The `shortform/` wiki tree is an **OKF v0.1 bundle** shared with the `../tiktok-api/SKILL.md` and `../shortform-packaging/SKILL.md` siblings: every `.md` written here carries YAML frontmatter with a non-empty `type`, cross-references are standard markdown links (never `[[wikilinks]]`), and `decisions.md` follows the OKF newest-first append-log rule.
 
-- `02-DOCS/wiki/shortform/strategy.md` — positioning, cadence/mix, KPI, length bands, current series. Same frontmatter shape as above with `type: shortform-strategy`, then the H1 (`# Shortform account strategy`) and the sections the linter checks.
-- `02-DOCS/wiki/shortform/decisions.md` — the dated decision log, OKF append-log (`type: shortform-decision-log`, newest block on top; format above).
-- `02-DOCS/raw/shortform/metrics.csv` — the per-post ledger (schema in `references/learning-loop-template.md`). This is `raw/`, not `wiki/` — a CSV, no frontmatter.
+- `docs/wiki/shortform/strategy.md` — positioning, cadence/mix, KPI, length bands, current series. Same frontmatter shape as above with `type: shortform-strategy`, then the H1 (`# Shortform account strategy`) and the sections the linter checks.
+- `docs/wiki/shortform/decisions.md` — the dated decision log, OKF append-log (`type: shortform-decision-log`, newest block on top; format above).
+- `docs/raw/shortform/metrics.csv` — the per-post ledger (schema in `references/learning-loop-template.md`). This is `raw/`, not `wiki/` — a CSV, no frontmatter.
 
-Verify a produced strategy doc with `scripts/verify.sh 02-DOCS/wiki/shortform/strategy.md` — a read-only structural lint (positioning, cadence, completion KPI, ride-or-skip rule, ≥1 dated decision, sends/saves logged). The lint reads body content, so the added frontmatter does not affect it.
+Verify a produced strategy doc with `scripts/verify.sh docs/wiki/shortform/strategy.md` — a read-only structural lint (positioning, cadence, completion KPI, ride-or-skip rule, ≥1 dated decision, sends/saves logged). The lint reads body content, so the added frontmatter does not affect it.

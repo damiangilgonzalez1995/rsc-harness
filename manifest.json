@@ -696,7 +696,7 @@
     },
     {
       "id": "code-review",
-      "description": "Use to judge a concrete diff, branch, or GitHub PR on its own merits with no rsc-SDD spec/plan chain to key off — the spec-less giving pass behind /code-review: only findings you can defend, one verdict, read-only unless --comment or --fix. NOT the SDD gate keyed to 02-DOCS/wiki/sdd/ that also processes incoming review comments (that is `review`).",
+      "description": "Use to judge a concrete diff, branch, or GitHub PR on its own merits with no rsc-SDD spec/plan chain to key off — the spec-less giving pass behind /code-review: only findings you can defend, one verdict, read-only unless --comment or --fix. NOT the SDD gate keyed to docs/wiki/sdd/ that also processes incoming review comments (that is `review`).",
       "tags": [
         "code-review",
         "pr-review",
@@ -836,7 +836,7 @@
     },
     {
       "id": "constitution",
-      "description": "Use when setting or amending a project's non-negotiables — stack canon, quality bars, conventions, security/a11y floors — as numbered, testable rules later phases obey. First rsc-sdd phase; writes 02-DOCS/wiki/sdd/constitution.md. NOT a feature spec (that is `specify`), NOT the technical plan (that is `plan`), NOT the wiki itself (that is `harness`).",
+      "description": "Use when setting or amending a project's non-negotiables — stack canon, quality bars, conventions, security/a11y floors — as numbered, testable rules later phases obey. First rsc-sdd phase; writes docs/wiki/sdd/constitution.md. NOT a feature spec (that is `specify`), NOT the technical plan (that is `plan`), NOT the wiki itself (that is `harness`).",
       "tags": [
         "sdd",
         "constitution",
@@ -2307,7 +2307,7 @@
     },
     {
       "id": "harness",
-      "description": "Use when governing a workspace's control plane, code or not — the `01-TOOLS/` tooling layer, the `02-DOCS/` chaos→knowledge wiki, the root Knowledge map. Audits it, migrates legacy `XX-*` folders, scaffolds provider tooling, sweeps the inbox, writes root CLAUDE.md/AGENTS.md. NOT the bootstrap front door (that is `init`, which hands off here).",
+      "description": "Use when governing a workspace's control plane, code or not — the `01-TOOLS/` tooling layer, the `docs/` chaos→knowledge wiki, the root Knowledge map. Audits it, migrates legacy `XX-*` folders, scaffolds provider tooling, sweeps the inbox, writes root CLAUDE.md/AGENTS.md. NOT the bootstrap front door (that is `init`, which hands off here).",
       "tags": [
         "harness",
         "company",
@@ -2454,7 +2454,7 @@
     },
     {
       "id": "init",
-      "description": "Use when starting from nothing or pointing rsc at an existing project — the front door. Gauges technical level and the accompaniment dial first (non-technical by default), discovers what the user wants to build or govern (any stack, or a non-code harness: company/ops, research, knowledge, content), writes the profile to 02-DOCS, and installs the skills discovery justified. NOT the scaffolder (that is `harness`), NOT a stack skill.",
+      "description": "Use when starting from nothing or pointing rsc at an existing project — the front door. Gauges technical level and the accompaniment dial first (non-technical by default), discovers what the user wants to build or govern (any stack, or a non-code harness: company/ops, research, knowledge, content), writes the profile to docs, and installs the skills discovery justified. NOT the scaffolder (that is `harness`), NOT a stack skill.",
       "tags": [
         "init",
         "bootstrap",
@@ -2473,7 +2473,7 @@
     },
     {
       "id": "instagram-api",
-      "description": "Use when wiring an agent into Instagram's Graph API: publishing a Reel through the create/poll/publish container dance, reading per-media insights, checking the 24h publish cap, or ingesting Reel metrics into 02-DOCS/wiki/shortform. NOT TikTok (that is `tiktok-api`), NOT YouTube (that is `youtube-api`), NOT cross-platform cadence (that is `social-publisher`).",
+      "description": "Use when wiring an agent into Instagram's Graph API: publishing a Reel through the create/poll/publish container dance, reading per-media insights, checking the 24h publish cap, or ingesting Reel metrics into docs/wiki/shortform. NOT TikTok (that is `tiktok-api`), NOT YouTube (that is `youtube-api`), NOT cross-platform cadence (that is `social-publisher`).",
       "tags": [
         "instagram",
         "graph-api",
@@ -2597,7 +2597,7 @@
     },
     {
       "id": "knowledge-ops",
-      "description": "Use when an already-running 02-DOCS/ wiki needs gardening judgment — what is worth capturing (default: nothing), where a loose note belongs, whether to split a bloated article or merge near-duplicates, how to link orphans back in, and what retires to _archive (never delete). NOT building or sweeping the wiki engine itself (that is `harness`).",
+      "description": "Use when an already-running docs/ wiki needs gardening judgment — what is worth capturing (default: nothing), where a loose note belongs, whether to split a bloated article or merge near-duplicates, how to link orphans back in, and what retires to _archive (never delete). NOT building or sweeping the wiki engine itself (that is `harness`).",
       "tags": [
         "knowledge-ops",
         "wiki",
@@ -3427,7 +3427,7 @@
     },
     {
       "id": "orient",
-      "description": "Always-on. The brújula: close every turn by situating the person — where they are, what just happened, why it mattered, and the next step as a question, never a dead end. Reads the accompaniment and technical dials from 02-DOCS and calibrates how much it explains, rewriting the dial when the user asks for more or less. NOT the missing-skill installer (that is `suggest`).",
+      "description": "Always-on. The brújula: close every turn by situating the person — where they are, what just happened, why it mattered, and the next step as a question, never a dead end. Reads the accompaniment and technical dials from docs and calibrates how much it explains, rewriting the dial when the user asks for more or less. NOT the missing-skill installer (that is `suggest`).",
       "tags": [
         "orient",
         "guide",
@@ -4132,7 +4132,7 @@
     },
     {
       "id": "review",
-      "description": "Use when a green diff needs adversarial judgment in the rsc SDD chain, between verify and ship — give a review keyed to the spec/plan/constitution in 02-DOCS/wiki/sdd/, or receive one and verify each comment before agreeing. NOT running lint/type/tests (that is `verify`), NOT the spec-less standalone pass (that is `code-review`), NOT merging (that is `ship`).",
+      "description": "Use when a green diff needs adversarial judgment in the rsc SDD chain, between verify and ship — give a review keyed to the spec/plan/constitution in docs/wiki/sdd/, or receive one and verify each comment before agreeing. NOT running lint/type/tests (that is `verify`), NOT the spec-less standalone pass (that is `code-review`), NOT merging (that is `ship`).",
       "tags": [
         "sdd",
         "review",
@@ -4295,7 +4295,7 @@
     },
     {
       "id": "sdd",
-      "description": "Use when you want a disciplined, spec-driven path from a feature idea to shipped, verified software — the SDD dispatcher and front door, in any language. States the method, reads the accompaniment dial from 02-DOCS, and routes to the right phase: constitution -> specify -> clarify -> plan -> tasks -> analyze -> implement -> verify -> review -> ship, with debug / worktrees / parallel on demand. Use it to start a feature, to govern the whole flow, or when unsure which phase you are in. NOT a single phase itself (it dispatches), NOT the workspace harness (that is `harness`), NOT a stack build skill.",
+      "description": "Use when you want a disciplined, spec-driven path from a feature idea to shipped, verified software — the SDD dispatcher and front door, in any language. States the method, reads the accompaniment dial from docs, and routes to the right phase: constitution -> specify -> clarify -> plan -> tasks -> analyze -> implement -> verify -> review -> ship, with debug / worktrees / parallel on demand. Use it to start a feature, to govern the whole flow, or when unsure which phase you are in. NOT a single phase itself (it dispatches), NOT the workspace harness (that is `harness`), NOT a stack build skill.",
       "tags": [
         "sdd",
         "spec",
@@ -4314,7 +4314,7 @@
     },
     {
       "id": "sdd-init",
-      "description": "Use when calibrating an existing repo for the rsc SDD chain: detect stack, package manager, test runners and apply/verify commands, refresh the skill registry, and write the runtime config at 02-DOCS/wiki/sdd/config.yaml. NOT the dispatcher that routes SDD phases (that is `sdd`), NOT first-contact user/workspace bootstrap (that is `init`).",
+      "description": "Use when calibrating an existing repo for the rsc SDD chain: detect stack, package manager, test runners and apply/verify commands, refresh the skill registry, and write the runtime config at docs/wiki/sdd/config.yaml. NOT the dispatcher that routes SDD phases (that is `sdd`), NOT first-contact user/workspace bootstrap (that is `init`).",
       "tags": [
         "sdd",
         "init",
@@ -4469,7 +4469,7 @@
     },
     {
       "id": "shortform-packaging",
-      "description": "Use when a vertical short is shot or scripted and you need the upload-form copy and cover that win the feed — the hook line, the first-frame on-screen text, the search-led caption, a tight hashtag set, and the cover frame; it learns from what performed via the 02-DOCS log. NOT inventing the idea (that is `shortform-ideation`), NOT scripting or directing the cuts (that is `video-shorts`), NOT executing the edit (that is `shortform-editing`), NOT scheduling the post (that is `social-publisher`).",
+      "description": "Use when a vertical short is shot or scripted and you need the upload-form copy and cover that win the feed — the hook line, the first-frame on-screen text, the search-led caption, a tight hashtag set, and the cover frame; it learns from what performed via the docs log. NOT inventing the idea (that is `shortform-ideation`), NOT scripting or directing the cuts (that is `video-shorts`), NOT executing the edit (that is `shortform-editing`), NOT scheduling the post (that is `social-publisher`).",
       "tags": [
         "shortform",
         "packaging",
@@ -5543,7 +5543,7 @@
     },
     {
       "id": "youtube-api",
-      "description": "Use when wiring code to a real YouTube channel: user OAuth 2.0, resumable videos.insert uploads, editing metadata after publish, pulling views/watch time/retention/traffic from the Analytics API v2 into a dated 02-DOCS/wiki/youtube/ feedback log. NOT what to publish or how to title and thumbnail it (that is youtube-strategy / youtube-packaging).",
+      "description": "Use when wiring code to a real YouTube channel: user OAuth 2.0, resumable videos.insert uploads, editing metadata after publish, pulling views/watch time/retention/traffic from the Analytics API v2 into a dated docs/wiki/youtube/ feedback log. NOT what to publish or how to title and thumbnail it (that is youtube-strategy / youtube-packaging).",
       "tags": [
         "youtube",
         "youtube-data-api",

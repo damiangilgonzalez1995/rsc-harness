@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# verify.sh — structural lint for a youtube-strategy wiki under 02-DOCS/wiki/youtube/.
+# verify.sh — structural lint for a youtube-strategy wiki under docs/wiki/youtube/.
 #
 # WHAT IT DOES (read-only; never edits a file)
 #   Static, network-free checks on the decision records the skill writes back.
@@ -21,7 +21,7 @@
 #   Pure bash + grep, no dependencies. It is a lint, not a strategy oracle.
 #
 # HOW TO RUN
-#   ./verify.sh 02-DOCS/wiki/youtube/    # lint a channel's strategy wiki
+#   ./verify.sh docs/wiki/youtube/    # lint a channel's strategy wiki
 #   ./verify.sh                          # no target -> nothing to check, exit 0
 #
 # EXIT CODES

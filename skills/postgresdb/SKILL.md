@@ -12,7 +12,7 @@ Engine-level PostgreSQL 16 guidance: design correct schemas, pick the right inde
 fix slow SQL, run zero-downtime migrations, and operate/secure the database. Tooling-agnostic; every
 example is runnable.
 
-New, non-trivial feature with no approved spec + plan under `02-DOCS/wiki/sdd/`? Hand off to
+New, non-trivial feature with no approved spec + plan under `docs/wiki/sdd/`? Hand off to
 [`specify`](../specify/SKILL.md) before writing feature code (method: [`sdd`](../sdd/SKILL.md)); build
 straight from here only for a genuinely one-line, low-risk change.
 
@@ -345,10 +345,10 @@ are present — checks that `pg_stat_statements` is enabled. It exits non-zero *
 
 ## Project grounding
 
-In a project with a `02-DOCS/` layer (the [`harness`](../harness/SKILL.md) Karpathy wiki), read
-`02-DOCS/wiki/stack/postgresdb.md` first and stay consistent with it. Missing or stale? Write the
+In a project with a `docs/` layer (the [`harness`](../harness/SKILL.md) Karpathy wiki), read
+`docs/wiki/stack/postgresdb.md` first and stay consistent with it. Missing or stale? Write the
 project's real choices there — schema and naming conventions, migration tool, indexing/partitioning
-decisions, pooling setup, RLS policies — index it in `02-DOCS/wiki/index.md` (the Knowledge map; root
+decisions, pooling setup, RLS policies — index it in `docs/wiki/index.md` (the Knowledge map; root
 `CLAUDE.md` keeps only a pointer), and bump its `Updated` date in the same change, so the next agent
-inherits the conventions instead of re-deriving them. No `02-DOCS/` layer? Skip silently (optionally
+inherits the conventions instead of re-deriving them. No `docs/` layer? Skip silently (optionally
 suggest `harness`) — technical conventions are *recorded, not gated*; never block the task on this.

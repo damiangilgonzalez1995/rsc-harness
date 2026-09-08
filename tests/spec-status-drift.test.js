@@ -1,5 +1,5 @@
 // Does a spec's declared status still match the repository? — and the tests that check the checker.
-// Spec: 02-DOCS/wiki/sdd/specs/spec-status-drift.md
+// Spec: docs/wiki/sdd/specs/spec-status-drift.md
 //
 // `spec-gate` has always checked that every section EXISTS. It never checked that what a section
 // CLAIMS is still true, and it never said it didn't. Seven of twenty-five specs drifted: one says

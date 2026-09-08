@@ -4,7 +4,7 @@
 // This file shipped ONE agent with its name, description and body as module constants. Adding a
 // second was therefore not "copy a block": it was turning the file into a registry without breaking
 // the `developer` installs already deployed to users. The registry is the work; the refuters are its
-// first client. See 02-DOCS/wiki/sdd/specs/refuter-agent.md. The agent runs at the `balanced` tier
+// first client. See docs/wiki/sdd/specs/refuter-agent.md. The agent runs at the `balanced` tier
 // (never `light`/Haiku): Sonnet for Anthropic-backed tools, the provider's mid model
 // elsewhere. The chosen tier (balanced default, or heavy) lives in `.rsc/developer.json`,
 // written by `init` at onboarding and read here so re-syncs honor it.
@@ -82,9 +82,9 @@ const AGENTS = [
 
 - Work **test-first**: smallest failing test (RED), least code to pass it (GREEN), then refactor on green. A test that never failed proves nothing.
 - One task at a time; keep the diff to that task's scope — no "while I'm here".
-- Follow the project's spec, plan and constitution under \`02-DOCS/wiki/sdd/\`, and borrow test mechanics from the stack skill (fastapi/go/nextjs/flutter/...).
+- Follow the project's spec, plan and constitution under \`docs/wiki/sdd/\`, and borrow test mechanics from the stack skill (fastapi/go/nextjs/flutter/...).
 - If there is no approved spec + plan for non-trivial feature work, STOP and route to \`specify\` — do not write feature code.
-- Log non-obvious decisions to \`02-DOCS/wiki/sdd/decisions.md\`. Report your diff + test output at the end.
+- Log non-obvious decisions to \`docs/wiki/sdd/decisions.md\`. Report your diff + test output at the end.
 
 Full discipline lives in the \`implement\` skill.`,
   },

@@ -110,7 +110,7 @@ más largo que el actual (~500 bytes) y hay que comprobar que no dispare avisos.
 
 ## 4. Rutas
 
-`02-DOCS/` pasa a `docs/` en **todo** el repo, no solo en lo que se instala: los
+`docs/` pasa a `docs/` en **todo** el repo, no solo en lo que se instala: los
 tests y `doctor` comprueban la ruta, y una mezcla los rompería. Son ~1.050
 menciones repartidas por skills (221 ficheros), scripts (20), targets (8), tests
 (26) y web (3).
@@ -132,7 +132,7 @@ se fusionan con los ADRs de `grill-with-docs`, que viven en su propia carpeta ba
 el mismo techo.
 
 La línea `docs/` del `.gitignore` se elimina (hecho ya, al crear esta spec), junto
-con el bloque de comentarios sobre la migración a la extinta ruta `02-DOCS/`.
+con el bloque de comentarios sobre la migración a la extinta ruta `docs/`.
 
 ## 5. Nombre del paquete
 
@@ -164,8 +164,11 @@ resolvía renombrados correctamente. No había nada que arreglar.
 
 ## Criterio de acabado
 
-- `npm run validate`, `npm test` y `npm run drift:check` pasan.
-- Ninguna mención viva de `02-DOCS` en el repo.
+- `npm run validate` y `npm run drift:check` pasan.
+- `npm test` no supera el baseline de fallos de entorno Windows (symlinks,
+  Python, hooks de git) ni introduce ninguno nuevo: se compara el conjunto de
+  nombres de tests que fallan antes y después, no el recuento total.
+- Ninguna mención viva de `docs` en el repo.
 - Ninguna mención de `@ericrisco/rsc`.
 - Instalación de prueba en un proyecto limpio: recibe el paquete correcto de los
   tres, con superpowers declarado y sin skills duplicadas.

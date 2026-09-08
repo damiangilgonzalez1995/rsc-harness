@@ -1,6 +1,6 @@
 ---
 name: init
-description: "Use when starting from nothing or pointing rsc at an existing project — the front door. Gauges technical level and the accompaniment dial first (non-technical by default), discovers what the user wants to build or govern (any stack, or a non-code harness: company/ops, research, knowledge, content), writes the profile to 02-DOCS, and installs the skills discovery justified. NOT the scaffolder (that is `harness`), NOT a stack skill."
+description: "Use when starting from nothing or pointing rsc at an existing project — the front door. Gauges technical level and the accompaniment dial first (non-technical by default), discovers what the user wants to build or govern (any stack, or a non-code harness: company/ops, research, knowledge, content), writes the profile to docs, and installs the skills discovery justified. NOT the scaffolder (that is `harness`), NOT a stack skill."
 tags: [init, bootstrap, start, new, setup]
 recommends: [harness]
 profiles: [minimal, core, full]
@@ -15,8 +15,8 @@ otherwise — figures out what they actually want, installs the right skills, an
 
 Think of `init` as the receptionist: it learns who you are and what you need, writes that down where
 every other skill can read it, and walks you to the right room. The boundary is fixed: **`init`
-writes only the user-profile and decisions log under `02-DOCS/wiki/harness/`, plus the `CLAUDE.md`
-Knowledge-map link.** Every other `01-TOOLS/` + `02-DOCS/` scaffold belongs to `harness`.
+writes only the user-profile and decisions log under `docs/wiki/harness/`, plus the `CLAUDE.md`
+Knowledge-map link.** Every other `01-TOOLS/` + `docs/` scaffold belongs to `harness`.
 
 It is **domain-agnostic**. The thing being built or governed may be software on any stack, or a
 non-code harness — running a company, an ops desk, a research program, a knowledge base, a content
@@ -58,14 +58,14 @@ talking*. Full rules and file formats → `references/accompaniment-and-profile.
 
 **Step 3 — Persist immediately.** Before discovery, before any recommendation:
 
-- `02-DOCS/wiki/harness/user-profile.md` — the living profile (levels, goals, context, constraints).
-- `02-DOCS/wiki/harness/decisions.md` — append-only. Entries are never edited or deleted.
+- `docs/wiki/harness/user-profile.md` — the living profile (levels, goals, context, constraints).
+- `docs/wiki/harness/decisions.md` — append-only. Entries are never edited or deleted.
 - Root `CLAUDE.md` → a **short** `## Knowledge map` pointer: those two read-first entries plus a
-  "full index → `02-DOCS/wiki/index.md`" line. Keep it tiny; it loads on every turn, and every other
+  "full index → `docs/wiki/index.md`" line. Keep it tiny; it loads on every turn, and every other
   index entry belongs in the wiki index. Create `CLAUDE.md` if absent, additive only — never delete
   user content.
 
-Greenfield? Create just `02-DOCS/wiki/harness/` to hold those two files. That plus the link is
+Greenfield? Create just `docs/wiki/harness/` to hold those two files. That plus the link is
 everything `init` writes.
 
 **Step 4 — Propose the developer model.** rsc installs a `developer` subagent (the implementation
@@ -119,14 +119,14 @@ Establish **the state of the ground** and **what they want**.
 
 Detect greenfield vs brownfield; don't ask blindly. **Brownfield** if the workspace has subproject
 manifests (`package.json`, `pyproject.toml`, `pubspec.yaml`, `go.mod`, `Cargo.toml`), source files,
-legacy `XX-*` folders, or an existing `01-TOOLS/` / `02-DOCS/`. Detect the stack the way `harness`
+legacy `XX-*` folders, or an existing `01-TOOLS/` / `docs/`. Detect the stack the way `harness`
 SCAN does — a read-only walk ignoring `node_modules/`, `.venv/`, `.next/`, `.git/`, `dist/`,
 `build/`, `__pycache__/`, `.dart_tool/`. Summarize what you found and confirm it. **Greenfield** if
 the workspace is empty or holds only stray notes: interview from zero.
 
 Then the domain. Software (backend, frontend, mobile, agents) or a non-code harness (company/ops,
 research, knowledge, content)? Capture goals, audience, constraints, and any tools already in play.
-Record to `02-DOCS/wiki/harness/` as you go. Questionnaires for both cases →
+Record to `docs/wiki/harness/` as you go. Questionnaires for both cases →
 `references/discovery.md`. Ask in batches sized to the dial; never dump every question at once.
 
 ### Phase 3 — INSTALL
@@ -176,7 +176,7 @@ means the user starts clean.
 `init` stops here. It has set the profile, recorded the discovery, and installed the skills.
 
 > "Tu perfil y lo que hemos hablado ya están guardados. Ahora ejecuta `harness` y monto el esqueleto
-> del proyecto (`01-TOOLS/` + `02-DOCS/`) leyendo todo lo que acabamos de decidir."
+> del proyecto (`01-TOOLS/` + `docs/`) leyendo todo lo que acabamos de decidir."
 
 Do not scaffold while you are here, however tempting — `harness` reads this same profile and owns
 that job.
@@ -190,7 +190,7 @@ never fails).
 
 ## See Also
 
-- `harness` — the scaffolder this hands off to; builds `01-TOOLS/` + `02-DOCS/` from the profile.
+- `harness` — the scaffolder this hands off to; builds `01-TOOLS/` + `docs/` from the profile.
 - `deployment` — invoked when the deploy decision above is actually made.
 - `secure-coding` — recommended whenever software is being shipped.
 - Stack skills (`fastapi`, `go`, `nextjs`, `flutter`, `building-agents`…) are recommended at runtime
@@ -201,5 +201,5 @@ never fails).
 ## Orientación (siempre)
 
 Cierra cada turno con el **bloque-brújula** (📍 dónde estás · ✅ qué hiciste · 🧭 por qué · ➡️ siguiente,
-terminando en pregunta), calibrado al dial de `02-DOCS/wiki/harness/user-profile.md`. Nunca termines
+terminando en pregunta), calibrado al dial de `docs/wiki/harness/user-profile.md`. Nunca termines
 en seco. Protocolo completo: skill `orient` → `skills/orient/references/orientation-contract.md`.

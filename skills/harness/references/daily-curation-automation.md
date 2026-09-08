@@ -35,7 +35,7 @@ The **workspace root** (for Auto-Ingest discovery, bounded by `.rscignore`),
 ## Prompt
 
 ```text
-Run the daily curation pass for this 02-DOCS second brain.
+Run the daily curation pass for this docs second brain.
 
 Use the harness wiki-protocol.md as the contract. First run the Auto-Ingest Sweep:
 process inbox/, then scan the workspace (minus .rscignore) for un-ingested documents,

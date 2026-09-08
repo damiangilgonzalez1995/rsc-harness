@@ -177,18 +177,18 @@ without a named volume, a missing `healthcheck:`, or a floating `:latest` tag on
 and confirms the canonical port matrix (8000/80/443/6001/6002) is documented. Read-only, no network, no
 live deploy. Exits 0 on a clean/empty target.
 
-## Project grounding (02-DOCS + CLAUDE.md)
+## Project grounding (docs + CLAUDE.md)
 
-When this skill runs in a project with a `02-DOCS/` layer (the harness Karpathy wiki), record this
-instance's deploy topology there and index it in `02-DOCS/wiki/index.md`, so the next agent inherits it
+When this skill runs in a project with a `docs/` layer (the harness Karpathy wiki), record this
+instance's deploy topology there and index it in `docs/wiki/index.md`, so the next agent inherits it
 instead of re-deriving it.
 
-1. **Find the article** `02-DOCS/wiki/stack/coolify.md`, indexed in `02-DOCS/wiki/index.md` (the Knowledge map index; root `CLAUDE.md` points to it).
+1. **Find the article** `docs/wiki/stack/coolify.md`, indexed in `docs/wiki/index.md` (the Knowledge map index; root `CLAUDE.md` points to it).
 2. **If missing or stale**, create/update it with the real choices — the box (provider/specs), instance
    FQDN, which apps/databases run on it, build packs in use, the backup destination + cron + retention,
-   and the port/firewall decisions — then index it in `02-DOCS/wiki/index.md` (the Knowledge map; root `CLAUDE.md` keeps only a short pointer to it).
+   and the port/firewall decisions — then index it in `docs/wiki/index.md` (the Knowledge map; root `CLAUDE.md` keeps only a short pointer to it).
 3. **Read it first on every use** and stay consistent; when the topology changes, update the article (bump
    its `Updated` date) in the same change. Never commit credentials here — record *where* secrets live,
    not their values.
 
-No `02-DOCS/` layer? Skip silently. Topology is recorded, not gated — never block the task on this.
+No `docs/` layer? Skip silently. Topology is recorded, not gated — never block the task on this.

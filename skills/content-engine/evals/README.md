@@ -9,7 +9,7 @@ phrasing), while each `should_not_trigger` prompt must route to the named siblin
 rather than here — they guard the description's boundary between *the system* and
 *producing/distributing one artifact*. The single `capability` case is rubric-graded,
 not auto-scored: have the skill build the 4-person B2B SaaS Q3 calendar+pipeline and
-check the output against the `must_include` list (grounded in 02-DOCS, 4–6 pillars,
+check the output against the `must_include` list (grounded in docs, 4–6 pillars,
 cadence baseline, slot-mix, a CSV artifact, briefs, stage gates, a ≥10 atomization plan,
 and everything routed out). Run it through whatever runner the skills repo uses. For the
 CSV-artifact subset you can sanity-check a real calendar with

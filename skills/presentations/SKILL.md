@@ -27,10 +27,10 @@ stage: generic slides read as "another AI deck" the moment they hit the projecto
 grounding every headline, claim, and tone choice in a real, persisted brand profile. This is the same
 gate `marketing` and `design` enforce — decks share the study, they do not fork it.
 
-1. **Locate the brand study.** Read the project's root `CLAUDE.md` for a `## Brand & voice` section linking into `02-DOCS/wiki/brand/` (the `harness` Karpathy-wiki convention: compiled brand articles under `02-DOCS/wiki/brand/`, raw inputs the user pastes under `02-DOCS/raw/brand/`). No `CLAUDE.md`, no link, or a link that points nowhere = ABSENT.
+1. **Locate the brand study.** Read the project's root `CLAUDE.md` for a `## Brand & voice` section linking into `docs/wiki/brand/` (the `harness` Karpathy-wiki convention: compiled brand articles under `docs/wiki/brand/`, raw inputs the user pastes under `docs/raw/brand/`). No `CLAUDE.md`, no link, or a link that points nowhere = ABSENT.
 2. **Check completeness** against the checklist in `references/brand-grounding.md` — it extends the shared brand checklist with **deck-specific** dimensions: deck purpose, audience & setting, length, presenter-vs-leave-behind, and must-include slides. Any empty dimension = INCOMPLETE.
-3. **If ABSENT or INCOMPLETE, STOP and interview the user** — one focused batch at a time, never all questions at once. Voice samples are mandatory; never fabricate a voice. Then persist: write/update the brand study under `02-DOCS/wiki/brand/` (raw inputs verbatim under `02-DOCS/raw/brand/`), and add/update the `## Brand & voice` link in root `CLAUDE.md`. Exact format → `references/brand-grounding.md`.
-4. **Only once the study is complete, proceed** — and cite which articles drove the deck (e.g. "narrative grounded in `02-DOCS/wiki/brand/value-proposition.md`, voice in `voice.md`").
+3. **If ABSENT or INCOMPLETE, STOP and interview the user** — one focused batch at a time, never all questions at once. Voice samples are mandatory; never fabricate a voice. Then persist: write/update the brand study under `docs/wiki/brand/` (raw inputs verbatim under `docs/raw/brand/`), and add/update the `## Brand & voice` link in root `CLAUDE.md`. Exact format → `references/brand-grounding.md`.
+4. **Only once the study is complete, proceed** — and cite which articles drove the deck (e.g. "narrative grounded in `docs/wiki/brand/value-proposition.md`, voice in `voice.md`").
 
 Single exception: if the user explicitly says "skip it, rough draft", you may produce a clearly-labelled
 `DRAFT (ungrounded — not brand-checked)` and still recommend running the gate before it ships.
@@ -100,7 +100,7 @@ Deep recipes for each → `references/markdown-decks.md` and `references/pptx-py
 7. **Produce presenter + leave-behind variants** if needed: presenter version is sparse (headline + visual, talk track in notes); leave-behind is self-explanatory (more on-slide text, appendix). (→ `references/storytelling-and-decks.md`)
 8. **Export** to PDF (vector, fonts embedded, 16:9) and/or editable PPTX; handle font-embedding and file-size gotchas. (→ `references/markdown-decks.md`, `references/pptx-python.md`)
 9. **Verify** with `scripts/verify.sh` (lint deck sources, dry export, import check) and the QA gate below.
-10. **Record deck conventions** in `02-DOCS/wiki/stack/presentations.md` (Project grounding, below).
+10. **Record deck conventions** in `docs/wiki/stack/presentations.md` (Project grounding, below).
 
 ## Worked example — storyboard → theme → export (Markdown pipeline)
 
@@ -119,12 +119,12 @@ references for a standard Markdown deck.
 6 The ask: $2M to make this the default path  (CTA — one ask)
 ```
 
-**2. Theme from design tokens.** Pull OKLCH palette + type scale from `02-DOCS/wiki/stack/design.md` into a
+**2. Theme from design tokens.** Pull OKLCH palette + type scale from `docs/wiki/stack/design.md` into a
 Marp CSS theme (full theme → `references/markdown-decks.md`). The load-bearing move is mapping tokens to
 variables *once*, never hand-picking hex per slide:
 
 ```css
-/* @theme brand — generated from 02-DOCS/wiki/stack/design.md */
+/* @theme brand — generated from docs/wiki/stack/design.md */
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@700&family=Inter:wght@400;600&display=swap');
 :root { --brand: oklch(0.62 0.19 264); --ink: oklch(0.18 0.03 264);
         --surface: oklch(0.98 0.005 264); --accent: oklch(0.74 0.17 52); }
@@ -242,17 +242,17 @@ mechanical subset.
 - [ ] File size sane (compressed images, subsetted fonts); ban-list words absent from copy.
 - [ ] Scored ≥ 4/5 on each axis of the design rubric — audience-centered, visual clarity, cognitive load, accessibility (→ `references/slide-design.md`, "Diagnostic rubric").
 
-## Project grounding (02-DOCS)
+## Project grounding (docs)
 
-In a project with a `02-DOCS/` layer (the [`harness`](../harness/SKILL.md) Karpathy wiki), read
-`02-DOCS/wiki/stack/presentations.md` first and stay consistent with it; create or refresh it when
-missing or stale, and index it in `02-DOCS/wiki/index.md`. It records this project's real choices: the
+In a project with a `docs/` layer (the [`harness`](../harness/SKILL.md) Karpathy wiki), read
+`docs/wiki/stack/presentations.md` first and stay consistent with it; create or refresh it when
+missing or stale, and index it in `docs/wiki/index.md`. It records this project's real choices: the
 chosen pipeline (Marp / Slidev / python-pptx) and why, the theme file path and how it maps the design
 tokens, the standard deck arc(s), export commands and the canonical output, the presenter-vs-leave-behind
 convention, and font-embedding / asset-location notes.
 
 The deck theme is downstream of the design tokens: always reconcile that article with
-`02-DOCS/wiki/stack/design.md` so the deck and the product share one palette and type system.
+`docs/wiki/stack/design.md` so the deck and the product share one palette and type system.
 
-No `02-DOCS/` layer? Skip silently (optionally suggest `harness`). Unlike the brand study, deck
+No `docs/` layer? Skip silently (optionally suggest `harness`). Unlike the brand study, deck
 conventions are *recorded, not gated* — never block the task on this.

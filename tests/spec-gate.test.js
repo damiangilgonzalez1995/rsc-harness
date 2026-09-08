@@ -105,7 +105,7 @@ test('the gate declares what it does not check, so its green cannot be oversold'
 // ─────────────────────────────────────────────────────────────────────────────
 // El corte retroactivo de las dos familias nuevas.
 //
-// Spec: 02-DOCS/wiki/sdd/specs/intent-scrutiny.md — una spec no cierra sin decir qué pasa si no se
+// Spec: docs/wiki/sdd/specs/intent-scrutiny.md — una spec no cierra sin decir qué pasa si no se
 // construye ni cuál es la alternativa más barata. Pero el corpus son 34 specs históricas que no
 // pueden rellenarlo a posteriori, así que la exigencia empieza en la fecha de activación y las
 // anteriores quedan exentas. El corte se deriva del `timestamp:` del propio fichero (P3: el

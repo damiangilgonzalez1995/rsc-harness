@@ -108,10 +108,10 @@ should be short and scannable — it doubles as a search jump-to target.
 
 ## 3. Feedback-log entry schema
 
-One markdown table in `02-DOCS/wiki/youtube/packaging-log.md`. One row per A/B
+One markdown table in `docs/wiki/youtube/packaging-log.md`. One row per A/B
 test, appended when Test & Compare resolves (~2 weeks).
 
-`02-DOCS/wiki/` is an **OKF v0.1** bundle, so `packaging-log.md` carries
+`docs/wiki/` is an **OKF v0.1** bundle, so `packaging-log.md` carries
 file-level frontmatter once at the top (a non-empty `type` plus the OKF surface
 shared across all four youtube skills), then the table below it. Refresh
 `timestamp` when you append a row; past rows are immutable.
@@ -162,7 +162,7 @@ low-duration row is a warning, not a win.
 
 ## 4. Persisted package — the wiki file
 
-When you persist a finished package under `02-DOCS/wiki/youtube/` (e.g.
+When you persist a finished package under `docs/wiki/youtube/` (e.g.
 `packages/<video-slug>.md`), wrap it in OKF v0.1 frontmatter — a non-empty `type`
 plus the shared OKF surface — so the wiki bundle stays conformant and the
 strategy/thumbnail siblings can read it. The body holds the human-readable

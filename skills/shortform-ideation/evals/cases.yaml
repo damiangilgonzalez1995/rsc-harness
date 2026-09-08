@@ -48,11 +48,11 @@ should_not_trigger:
     why: "Generic reporting/dashboards live in analytics; this skill only reads the perf log to ground and score ideas."
 
 capability:
-  - scenario: "An account has a 2-month performance log in 02-DOCS where hook patterns A and B won (>60% 3s-hold) and topic C flopped twice. The user asks for next week's idea batch and to fold in this week's trending sounds."
+  - scenario: "An account has a 2-month performance log in docs where hook patterns A and B won (>60% 3s-hold) and topic C flopped twice. The user asks for next week's idea batch and to fold in this week's trending sounds."
     must_include:
-      - "Reads/uses the 02-DOCS performance log to ground ideas (cites winning hooks A/B and the dead topic C; never re-pitches topic C)"
+      - "Reads/uses the docs performance log to ground ideas (cites winning hooks A/B and the dead topic C; never re-pitches topic C)"
       - "Captures at least one trend signal WITH a first-seen date and WITHOUT any scraping command (manual/assisted capture or sanctioned API)"
       - "Produces a ranked backlog table with the required columns (id, idea, hook line, trend signal + date, format, target length, score, status)"
       - "Scores each idea by hook strength and shareability/save (hook weighted highest), not by topic interest alone"
-      - "Writes at least one advanced idea as a dated hypothesis under 02-DOCS/shortform/experiments/ with result fields left pending"
+      - "Writes at least one advanced idea as a dated hypothesis under docs/shortform/experiments/ with result fields left pending"
       - "Does NOT write full scripts or beat timecodes; explicitly hands the chosen idea off to video-shorts"

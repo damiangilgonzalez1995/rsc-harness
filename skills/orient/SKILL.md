@@ -1,6 +1,6 @@
 ---
 name: orient
-description: "Always-on. The brújula: close every turn by situating the person — where they are, what just happened, why it mattered, and the next step as a question, never a dead end. Reads the accompaniment and technical dials from 02-DOCS and calibrates how much it explains, rewriting the dial when the user asks for more or less. NOT the missing-skill installer (that is `suggest`)."
+description: "Always-on. The brújula: close every turn by situating the person — where they are, what just happened, why it mattered, and the next step as a question, never a dead end. Reads the accompaniment and technical dials from docs and calibrates how much it explains, rewriting the dial when the user asks for more or less. NOT the missing-skill installer (that is `suggest`)."
 tags: [orient, guide, compass, dial, meta, always-on]
 recommends: []
 profiles: [minimal, core, full]
@@ -37,7 +37,7 @@ Knowledge map or the repo before writing 📍 — an invented state is worse tha
 
 ## Calibrate to the dial
 
-Read `02-DOCS/wiki/harness/user-profile.md` before writing the block. Two fields combine:
+Read `docs/wiki/harness/user-profile.md` before writing the block. Two fields combine:
 `accompaniment_level` sets the depth, `technical_level` sets the vocabulary.
 
 | accompaniment_level | How the block behaves |

@@ -1,6 +1,6 @@
 # Accompaniment & Profile — the non-technical-first script, the dial, and how it persists
 
-This file holds the runtime detail behind the SKILL.md section "Non-technical-first + the accompaniment dial". It defines: the first-contact script, the dial, the exact `02-DOCS` file formats, and the rules every downstream skill follows to adapt.
+This file holds the runtime detail behind the SKILL.md section "Non-technical-first + the accompaniment dial". It defines: the first-contact script, the dial, the exact `docs` file formats, and the rules every downstream skill follows to adapt.
 
 ## Why this matters
 
@@ -60,9 +60,9 @@ Vocabulary modifier:
 
 ## Persistence format
 
-Both files live under `02-DOCS/wiki/harness/`. `init` creates this directory even on greenfield; the rest of `02-DOCS` is built by the `harness` skill.
+Both files live under `docs/wiki/harness/`. `init` creates this directory even on greenfield; the rest of `docs` is built by the `harness` skill.
 
-### `02-DOCS/wiki/harness/user-profile.md`
+### `docs/wiki/harness/user-profile.md`
 
 A living document — updated whenever the user reveals new goals, context, constraints, or changes the dial. It is the single source of truth other skills read.
 
@@ -102,7 +102,7 @@ A living document — updated whenever the user reveals new goals, context, cons
 - Anything not yet answered, to revisit.
 ```
 
-### `02-DOCS/wiki/harness/decisions.md`
+### `docs/wiki/harness/decisions.md`
 
 **Append-only.** Never edit or delete an entry — if a decision is reversed, append a new entry that supersedes the old one and references it. This is the audit trail of why the project is the way it is.
 
@@ -133,8 +133,8 @@ Add (or update) a `## Knowledge map` section that links BOTH files. Create `CLAU
 ```markdown
 ## Knowledge map
 
-- [User profile](02-DOCS/wiki/harness/user-profile.md) — technical level, accompaniment dial, goals, context, constraints. **Every skill reads this first and adapts its verbosity and questions.**
-- [Decisions log](02-DOCS/wiki/harness/decisions.md) — append-only record of every significant decision and why.
+- [User profile](docs/wiki/harness/user-profile.md) — technical level, accompaniment dial, goals, context, constraints. **Every skill reads this first and adapts its verbosity and questions.**
+- [Decisions log](docs/wiki/harness/decisions.md) — append-only record of every significant decision and why.
 ```
 
-When the `harness` skill later builds the full wiki, it extends this same `## Knowledge map` with links to the rest of `02-DOCS/` — it does not replace the harness entries written here.
+When the `harness` skill later builds the full wiki, it extends this same `## Knowledge map` with links to the rest of `docs/` — it does not replace the harness entries written here.

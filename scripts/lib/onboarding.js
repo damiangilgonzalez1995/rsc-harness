@@ -73,7 +73,7 @@ export function scanProject(root = process.cwd()) {
       const path = join(dir, entry.name);
       const rel = relative(absolute, path).split(sep).join('/');
       if (rel.startsWith('../') || rel === '..') throw new Error('project scan escaped the selected root');
-      if (rel === '02-DOCS/wiki/harness' || rel.startsWith('02-DOCS/wiki/harness/')) continue;
+      if (rel === 'docs/wiki/harness' || rel.startsWith('docs/wiki/harness/')) continue;
       if (entry.isDirectory()) { visit(path); continue; }
       if (!entry.isFile()) continue;
       let isSignal = manifests.has(entry.name) || entry.name.endsWith('.md');
@@ -194,7 +194,7 @@ export function buildOnboardingPlan(record, evidence) {
     ? selected('gitmoji-guard', 'guard', 'Claude Code supports the commit guard and the accepted code policy includes it.')
     : deferred('gitmoji-guard', 'guard', 'No selected target and project policy justify this Claude-only commit guard.', ['Claude Code is selected and a governed software workflow adopts the convention'], [{ type: 'software-trigger-and-claude' }]));
   decisions.push(selected('memory', 'capability', 'Local bounded project memory supports continuity without an external account.'));
-  decisions.push(selected('harness-documents', 'route', 'The accepted profile and plan are persisted under 02-DOCS/wiki/harness/.'));
+  decisions.push(selected('harness-documents', 'route', 'The accepted profile and plan are persisted under docs/wiki/harness/.'));
   decisions.push(excluded('context7', 'integration', 'External MCP connections require a separate, provider-specific consent flow and are outside this local harness plan.'));
   decisions.sort((a, b) => `${a.kind}:${a.id}`.localeCompare(`${b.kind}:${b.id}`));
   const policy = {
@@ -212,13 +212,13 @@ export function buildOnboardingPlan(record, evidence) {
   const governedPaths = root ? [...new Set([
     '.rsc.json', '.rsc/backups/',
     ...(existsSync(join(root, '.git')) ? ['.gitignore'] : []),
-    '02-DOCS/wiki/harness/user-profile.md',
-    '02-DOCS/wiki/harness/decisions.md',
-    '02-DOCS/wiki/harness/installation-plan.md',
+    'docs/wiki/harness/user-profile.md',
+    'docs/wiki/harness/decisions.md',
+    'docs/wiki/harness/installation-plan.md',
     '.rsc/.no-context7',
     ...normalized.targets.flatMap((target) => managedPathsForInstall({ skillIds: skills, target, cwd: root, policy })
       .map((path) => relative(root, path).split(sep).join('/'))),
-  ])].sort() : ['.rsc.json', '.rsc/', '02-DOCS/wiki/harness/'];
+  ])].sort() : ['.rsc.json', '.rsc/', 'docs/wiki/harness/'];
   return {
     schemaVersion: 1,
     record: normalized,

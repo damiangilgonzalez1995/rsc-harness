@@ -12,9 +12,9 @@ This is the **meta skill**: it authors and edits the other skills in the rsc cat
 
 Where the SDD chain (`specify` → `plan` → … → `ship`) builds *product*, `author-skill` builds *the tools that build product*. Use it whenever a skill is born or edited.
 
-**Not this skill — delegate:** a product feature specced or planned → `../specify/SKILL.md`, `../plan/SKILL.md`. An autonomous agent or tool-calling loop → `../building-agents/SKILL.md`. Generic project docs or a wiki article → the `../harness/SKILL.md` 02-DOCS engine. Bootstrapping a workspace or profiling the user → `../init/SKILL.md`.
+**Not this skill — delegate:** a product feature specced or planned → `../specify/SKILL.md`, `../plan/SKILL.md`. An autonomous agent or tool-calling loop → `../building-agents/SKILL.md`. Generic project docs or a wiki article → the `../harness/SKILL.md` docs engine. Bootstrapping a workspace or profiling the user → `../init/SKILL.md`.
 
-Read `02-DOCS/wiki/harness/user-profile.md` and work at the accompaniment dial it records; `../init/SKILL.md` owns that dial and sets it. With no profile, default to non-technical framing and ask for the technical level and the dial before going deep — skill authoring is itself a technical act, so many users want more narration here than they do elsewhere.
+Read `docs/wiki/harness/user-profile.md` and work at the accompaniment dial it records; `../init/SKILL.md` owns that dial and sets it. With no profile, default to non-technical framing and ask for the technical level and the dial before going deep — skill authoring is itself a technical act, so many users want more narration here than they do elsewhere.
 
 ## What a skill is (the anatomy)
 
@@ -84,7 +84,7 @@ Every new skill MUST end with the orientation footer so the harness never leaves
 
 ## Orientación (siempre)
 
-Cierra cada turno con el **bloque-brújula** (📍 dónde estás · ✅ qué hiciste · 🧭 por qué · ➡️ siguiente, terminando en pregunta), calibrado al dial de `02-DOCS/wiki/harness/user-profile.md`. **Nunca termines en seco.** Protocolo completo: skill `orient` → `skills/orient/references/orientation-contract.md`. (Defiere a `suggest` el "¿instalo la skill que falta?".)
+Cierra cada turno con el **bloque-brújula** (📍 dónde estás · ✅ qué hiciste · 🧭 por qué · ➡️ siguiente, terminando en pregunta), calibrado al dial de `docs/wiki/harness/user-profile.md`. **Nunca termines en seco.** Protocolo completo: skill `orient` → `skills/orient/references/orientation-contract.md`. (Defiere a `suggest` el "¿instalo la skill que falta?".)
 ````
 
 The full protocol lives once in the `orient` skill; the footer only references it.
@@ -99,7 +99,7 @@ Run in order. Each step gates the next.
 4. **Write the body** in the rsc voice (see below). Tag every code/example fence with a language. Add a checklist or decision table *only where the flow actually branches* — not as decoration. Add a short anti-patterns table.
 5. **Extract references** for anything long or branch-specific, and link each one inline.
 6. **Write the evals** — `cases.yaml` then `README.md`. → `references/eval-authoring.md`.
-7. **Wire it into the rsc plumbing** (`tags`, `recommends`, `npm run manifest`, and indexing any artifact in `02-DOCS/wiki/index.md` — the Knowledge map; root `CLAUDE.md` keeps only a short pointer). → `references/rsc-conventions.md`.
+7. **Wire it into the rsc plumbing** (`tags`, `recommends`, `npm run manifest`, and indexing any artifact in `docs/wiki/index.md` — the Knowledge map; root `CLAUDE.md` keeps only a short pointer). → `references/rsc-conventions.md`.
 8. **Self-audit against the rubric** (below). Fix every miss or justify it.
 
 ## The rsc voice
@@ -144,7 +144,7 @@ A skill ships only when every box is checked or a miss is consciously justified.
 - [ ] **Every fence language-tagged**; no placeholder/TODO prose; examples concrete.
 - [ ] **Checklist/decision table only where a flow branches**; an **anti-patterns table** present, naming failure modes rather than restating rules.
 - [ ] **Accompaniment dial honored** — reads the profile, adapts verbosity.
-- [ ] **Artifacts under `02-DOCS/wiki/`** and indexed in `02-DOCS/wiki/index.md` (the Knowledge map; root `CLAUDE.md` keeps only a short pointer), if the skill produces any.
+- [ ] **Artifacts under `docs/wiki/`** and indexed in `docs/wiki/index.md` (the Knowledge map; root `CLAUDE.md` keeps only a short pointer), if the skill produces any.
 - [ ] **Concrete tooling delegated** to the stack skills rather than reinvented.
 - [ ] **evals present** — `cases.yaml` (≥5 `should_trigger` incl. non-obvious, ≥4 `should_not_trigger` each with a real-sibling `route_to`, ≥1 `capability` with a `must_include` rubric) + an honest `README.md`. `scripts/eval-lint.sh` passes — but it only checks presence and the counts (≥5/≥4/≥1) and that those keys are lists; the `route_to`-points-at-a-real-sibling, non-obvious phrasings, and `must_include` quality are yours to verify here, not the linter's.
 - [ ] **verify.sh** present iff the skill has a checkable artifact; process skills rely on evals.
@@ -189,6 +189,6 @@ only when **both** are green:
 | `../foo/SKILL.md` linked to something not in this repo | A dead link is a defect. Verify the directory exists under `skills/`. |
 | Another catalog mirrored wholesale ("it's basically superpowers' writing-skills") | Mine the idea, write it in the rsc voice. Copied artifacts or phrasing are a defect. |
 
-## Project grounding (02-DOCS + CLAUDE.md)
+## Project grounding (docs + CLAUDE.md)
 
-When authoring produces a durable design note (a skill's scope decision, a description rationale worth keeping), persist it under `02-DOCS/wiki/sdd/` and index it in `02-DOCS/wiki/index.md` (the Knowledge map; root `CLAUDE.md` keeps only a short pointer), per the `../harness/SKILL.md` convention — never a stray file at the repo root. The skill's own `evals/` is the executable record of intent; the wiki note is the human-readable why.
+When authoring produces a durable design note (a skill's scope decision, a description rationale worth keeping), persist it under `docs/wiki/sdd/` and index it in `docs/wiki/index.md` (the Knowledge map; root `CLAUDE.md` keeps only a short pointer), per the `../harness/SKILL.md` convention — never a stray file at the repo root. The skill's own `evals/` is the executable record of intent; the wiki note is the human-readable why.

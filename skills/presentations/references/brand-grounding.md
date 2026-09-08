@@ -3,7 +3,7 @@
 A deck is the brand on stage, so it grounds in the **same** brand study the `marketing` and `design` skills
 use — it does not fork it. This file holds the **completeness checklist** (the shared brand dimensions plus the
 **deck-specific** ones), the **question script** (how to interview, batched), and the **persistence format**
-(how to write it into `02-DOCS` and link it from `CLAUDE.md`). The runtime hard-STOP that invokes this lives in
+(how to write it into `docs` and link it from `CLAUDE.md`). The runtime hard-STOP that invokes this lives in
 `SKILL.md` under "Brand grounding (read this first)".
 
 ## Where the brand study lives
@@ -11,7 +11,7 @@ use — it does not fork it. This file holds the **completeness checklist** (the
 Following the `harness` Karpathy-wiki convention (identical to `marketing`/`design`):
 
 ```text
-02-DOCS/
+docs/
 ├── raw/brand/         ← immutable: voice samples + raw inputs pasted verbatim by the user
 └── wiki/brand/        ← compiled brand study, one article per dimension
     ├── index.md            ← positioning one-liner + links to every dimension article
@@ -25,7 +25,7 @@ Following the `harness` Karpathy-wiki convention (identical to `marketing`/`desi
 
 Deck-specific facts (purpose, length, presenter-vs-leave-behind, must-include slides) are **per-deck**, not
 brand-permanent — capture them at the start of each deck and record the *convention* in
-`02-DOCS/wiki/stack/presentations.md` (see SKILL.md "Project grounding"). The brand-permanent dimensions are
+`docs/wiki/stack/presentations.md` (see SKILL.md "Project grounding"). The brand-permanent dimensions are
 shared with marketing/design and live in `wiki/brand/`.
 
 ## Completeness checklist
@@ -50,7 +50,7 @@ shared with marketing/design and live in `wiki/brand/`.
 - [ ] **10. Length** — target slide count / time. (5–10 short, 10–20 medium, 20+ long; keynotes time-boxed.)
 - [ ] **11. Presenter vs leave-behind** — are you narrating it live (sparse slides + speaker notes) or is it read unattended (self-contained), or **both** (build presenter, derive leave-behind)?
 - [ ] **12. Must-include & must-avoid** — mandatory slides/sections (a specific metric, a partner logo, a legal disclaimer, a required template), and anything that must NOT appear.
-- [ ] **13. Visual & format constraints** — pipeline preference if any (Marp/Slidev/editable-PPTX); a corporate template (`.potx`) to honor; dark vs light; aspect ratio (default 16:9); the deck theme must reconcile with the design tokens in `02-DOCS/wiki/stack/design.md`.
+- [ ] **13. Visual & format constraints** — pipeline preference if any (Marp/Slidev/editable-PPTX); a corporate template (`.potx`) to honor; dark vs light; aspect ratio (default 16:9); the deck theme must reconcile with the design tokens in `docs/wiki/stack/design.md`.
 
 ## Question script (ask in batches, never all at once)
 
@@ -97,7 +97,7 @@ gaps. Stop the moment every dimension is complete.
 ```text
 14. 3–5 adjectives for how the deck should sound, plus a DO list and a DON'T list of words/phrases.
 15. Paste 3–5 samples of your REAL writing (posts, emails, prior decks/copy) so I match your voice
-    instead of inventing a generic one — I'll save them verbatim under 02-DOCS/raw/brand/.
+    instead of inventing a generic one — I'll save them verbatim under docs/raw/brand/.
 16. What's the single action you want the audience to take by the last slide (the ask)? Any
     secondary action?
 ```
@@ -108,9 +108,9 @@ samples → no voice → don't write the headlines.
 
 ## Persistence format
 
-When a dimension is newly answered, write it as a wiki article under `02-DOCS/wiki/brand/` (shared dimensions)
-and record deck conventions under `02-DOCS/wiki/stack/presentations.md`. Save any pasted raw text verbatim under
-`02-DOCS/raw/brand/` and link it from the article's `> Raw:` line. Article format:
+When a dimension is newly answered, write it as a wiki article under `docs/wiki/brand/` (shared dimensions)
+and record deck conventions under `docs/wiki/stack/presentations.md`. Save any pasted raw text verbatim under
+`docs/raw/brand/` and link it from the article's `> Raw:` line. Article format:
 
 ```markdown
 # Voice
@@ -135,8 +135,8 @@ update) under a `## Brand & voice` heading:
 ## Brand & voice
 
 Brand study (source of truth for all marketing, design, and deck copy):
-`02-DOCS/wiki/brand/` — see `index.md` for positioning and links to every dimension.
-Raw voice samples & inputs: `02-DOCS/raw/brand/`.
+`docs/wiki/brand/` — see `index.md` for positioning and links to every dimension.
+Raw voice samples & inputs: `docs/raw/brand/`.
 ```
 
 And ensure the deck conventions are indexed from the `## Knowledge map` section (create if absent):
@@ -144,8 +144,8 @@ And ensure the deck conventions are indexed from the `## Knowledge map` section 
 ```markdown
 ## Knowledge map
 
-- Deck conventions: `02-DOCS/wiki/stack/presentations.md`
-- Design tokens: `02-DOCS/wiki/stack/design.md`
+- Deck conventions: `docs/wiki/stack/presentations.md`
+- Design tokens: `docs/wiki/stack/design.md`
 ```
 
 Update `wiki/index.md` and `wiki/log.md` per the harness convention. Create any missing directories/files

@@ -234,11 +234,11 @@ the fix is usually the plan, not the config. (Pricing per expo.dev/pricing, veri
 | Putting the API key in `app.config` extra | app config ships in the public bundle; use EAS env vars / a backend. |
 | Reaching for GitHub Actions to call `eas build` | EAS Workflows is the native CI; only reach for github-actions if explicitly required. |
 
-## Project grounding (02-DOCS + CLAUDE.md)
+## Project grounding (docs + CLAUDE.md)
 
-In a project with a `02-DOCS/` layer (the [`harness`](../harness/SKILL.md) wiki),
-read `02-DOCS/wiki/stack/expo.md` first and record this app's shipping decisions
+In a project with a `docs/` layer (the [`harness`](../harness/SKILL.md) wiki),
+read `docs/wiki/stack/expo.md` first and record this app's shipping decisions
 there — managed-vs-bare, runtime-version policy, channel/branch map, SDK/New-Arch
 status — linked from the root `CLAUDE.md` `## Knowledge map`, bumping its `Updated`
-date when a convention changes. No `02-DOCS/`? Skip silently. Conventions are
+date when a convention changes. No `docs/`? Skip silently. Conventions are
 *recorded, not gated* — never block the task on this.

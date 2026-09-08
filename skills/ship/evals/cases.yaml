@@ -40,5 +40,5 @@ capability:
       - "Detects the AI authorship trailer/footer and treats it as a BLOCKER: strips the Co-Authored-By Claude trailer and the 'Generated with Claude Code' footer (amends the commit) before anything is pushed."
       - "Confirms git author is Eric (checks git config user.email) and never passes --author for an agent identity."
       - "Presents exactly THREE landing options (direct merge / pull request / park-or-discard) and recommends the PR option BECAUSE main is protected / the repo has a PR culture (.github + prior PRs)."
-      - "Writes a spec-linked commit message and PR body (What/Why/How/Verification referencing 02-DOCS/wiki/sdd/specs/<slug>.md) that contains NO AI attribution — no Co-Authored-By, no generated-with footer."
-      - "Logs the landing decision to 02-DOCS/wiki/sdd/decisions.md and keeps the sdd/ Knowledge-map rows honest; verifies authorship clean (the git log grep) before claiming the branch is shipped."
+      - "Writes a spec-linked commit message and PR body (What/Why/How/Verification referencing docs/wiki/sdd/specs/<slug>.md) that contains NO AI attribution — no Co-Authored-By, no generated-with footer."
+      - "Logs the landing decision to docs/wiki/sdd/decisions.md and keeps the sdd/ Knowledge-map rows honest; verifies authorship clean (the git log grep) before claiming the branch is shipped."

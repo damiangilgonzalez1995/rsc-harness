@@ -97,17 +97,17 @@ test('purge strips the rsc block from AGENTS.md but keeps the rest (codex)', asy
   assert.ok(doc.includes('My own notes.'), 'user content kept');
 });
 
-test('purge keeps 02-DOCS by default, removes it with withDocs', async () => {
+test('purge keeps docs by default, removes it with withDocs', async () => {
   const cwd = mkdtempSync(join(tmpdir(), 'rsc-purge-'));
   await applyInstall({ skillIds: ['suggest'], target: 'claude', cwd });
-  mkdirSync(join(cwd, '02-DOCS/wiki'), { recursive: true });
-  writeFileSync(join(cwd, '02-DOCS/wiki/note.md'), 'keep me');
+  mkdirSync(join(cwd, 'docs/wiki'), { recursive: true });
+  writeFileSync(join(cwd, 'docs/wiki/note.md'), 'keep me');
 
   await purge({ cwd });
-  assert.ok(existsSync(join(cwd, '02-DOCS/wiki/note.md')), '02-DOCS preserved by default');
+  assert.ok(existsSync(join(cwd, 'docs/wiki/note.md')), 'docs preserved by default');
 
   await purge({ cwd, withDocs: true });
-  assert.ok(!existsSync(join(cwd, '02-DOCS')), '02-DOCS removed with withDocs');
+  assert.ok(!existsSync(join(cwd, 'docs')), 'docs removed with withDocs');
 });
 
 test('purge --dry-run reports without deleting', async () => {

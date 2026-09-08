@@ -1,8 +1,8 @@
 # Voice Guide Template
 
-Fill every slot. Delete the instruction lines in italics before you ship. The finished file lives at `02-DOCS/wiki/brand/voice-guide.md`. A fully worked mini-example follows the blank template — copy its shape, not its content.
+Fill every slot. Delete the instruction lines in italics before you ship. The finished file lives at `docs/wiki/brand/voice-guide.md`. A fully worked mini-example follows the blank template — copy its shape, not its content.
 
-The persisted guide is an OKF v0.1 wiki article: it MUST open with YAML frontmatter carrying a non-empty `type`. Copy the block below verbatim to the top of `02-DOCS/wiki/brand/voice-guide.md`, fill the values, and set `timestamp` to the ISO 8601 datetime of the edit:
+The persisted guide is an OKF v0.1 wiki article: it MUST open with YAML frontmatter carrying a non-empty `type`. Copy the block below verbatim to the top of `docs/wiki/brand/voice-guide.md`, fill the values, and set `timestamp` to the ISO 8601 datetime of the edit:
 
 ```yaml
 ---

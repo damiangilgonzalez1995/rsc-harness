@@ -17,7 +17,7 @@ import { contextBudget, countHookEntries, RSC_HOOKS } from '../scripts/doctor.js
 // guard suppresses the repeated body. Without that guard it is a true 4×. So the report has to name
 // two different costs, and it must not present either as the other.
 //
-// Spec: 02-DOCS/wiki/sdd/specs/doctor-counts-hooks.md · Plan: doctor-counts-hooks.plan.md
+// Spec: docs/wiki/sdd/specs/doctor-counts-hooks.md · Plan: doctor-counts-hooks.plan.md
 const HERE = dirname(fileURLToPath(import.meta.url));
 const CLI = join(HERE, '..', 'scripts', 'rsc.js');
 

@@ -79,7 +79,7 @@ test('detectRepoProfile detects monorepo workspaces', () => {
 // Astro, Angular or Solid repo got no design skill at all, even though the catalog ships a skill
 // for each of those frameworks. The umbrella is meant to be installed in every frontend repo, so
 // the detection has to actually know what a frontend repo is.
-// Spec: 02-DOCS/wiki/sdd/specs/motion-craft-skills.md
+// Spec: docs/wiki/sdd/specs/motion-craft-skills.md
 const FRONTEND_FRAMEWORKS = [
   { dep: 'next', stack: 'nextjs' },
   { dep: 'react', stack: 'nextjs' },

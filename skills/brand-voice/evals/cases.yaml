@@ -53,5 +53,5 @@ capability:
       - "15-20 power words plus an explicit, non-empty ban list including AI tells"
       - "a tone-by-context matrix covering >=4 contexts, with voice held constant and tone shifting per row"
       - "a paste-ready AI voice-DNA block (traits + rules + ratios + lexicon)"
-      - "a note to persist the guide under 02-DOCS/wiki/brand/ so marketing/landing-copy/content-engine can ground against it"
+      - "a note to persist the guide under docs/wiki/brand/ so marketing/landing-copy/content-engine can ground against it"
       - "does NOT write any finished landing copy, email, or article"

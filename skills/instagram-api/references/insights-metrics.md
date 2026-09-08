@@ -52,7 +52,7 @@ Added late 2025 / early 2026; present only on recent versions. Confirm against `
 - **Repost** counts (`reposts`).
 - **Crossposted** Reel views (`crossposted_views`, `facebook_views`).
 
-## Wiki ingest schema — `02-DOCS/wiki/shortform/`
+## Wiki ingest schema — `docs/wiki/shortform/`
 
 One file per published media id. Idempotent: re-pulls overwrite the same file (media id is the key).
 

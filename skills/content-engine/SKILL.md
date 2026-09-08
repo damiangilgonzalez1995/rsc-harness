@@ -16,11 +16,11 @@ Content fails not from one bad post but from **no system**: no documented cadenc
 
 You plan content for a real brand; you do not invent its strategy. Before building anything, read what already exists.
 
-1. Read the brand study and pillars from `02-DOCS/` (the project wiki). If the project uses the harness convention, that is `02-DOCS/wiki/` — see `../harness/SKILL.md`.
+1. Read the brand study and pillars from `docs/` (the project wiki). If the project uses the harness convention, that is `docs/wiki/` — see `../harness/SKILL.md`.
 2. **If voice/tone is missing → STOP.** Route the user to `brand-voice` to codify do/don't words and voice samples. Do not invent a voice; a calendar built on a guessed voice produces off-brand drafts at every station.
 3. **If pillars/clusters/keywords are missing → STOP for the research half.** Route topic-cluster and keyword work to `seo-geo`. You consume pillars and clusters; you do not derive them from search data — that is its job.
-4. Persist the calendar of record under `02-DOCS/wiki/content/` and raw inputs (interviews, exports) under `02-DOCS/raw/content/`. *Why: the calendar must be a durable artifact of record, not a chat message that scrolls away.*
-5. Cite what you grounded in (e.g. "pillars from `02-DOCS/wiki/brand-study.md`"). If you grounded in nothing, say so and stop.
+4. Persist the calendar of record under `docs/wiki/content/` and raw inputs (interviews, exports) under `docs/raw/content/`. *Why: the calendar must be a durable artifact of record, not a chat message that scrolls away.*
+5. Cite what you grounded in (e.g. "pillars from `docs/wiki/brand-study.md`"). If you grounded in nothing, say so and stop.
 
 ## Build the calendar
 
@@ -65,7 +65,7 @@ Slot schema — emit the calendar as CSV (one row per slot) so `scripts/verify.s
 
 ```csv
 date,pillar,cluster,format,owner,stage,brief_link,atomization,mix
-2026-07-07,Onboarding,activation-checklist,flagship-guide,ana,brief,02-DOCS/wiki/content/briefs/onboarding-guide.md,planned,evergreen
+2026-07-07,Onboarding,activation-checklist,flagship-guide,ana,brief,docs/wiki/content/briefs/onboarding-guide.md,planned,evergreen
 2026-07-09,Onboarding,activation-checklist,linkedin-post,ana,idea,,,evergreen
 2026-07-15,Trends,q3-benchmarks,reactive-open,,idea,,,timely
 ```
@@ -74,7 +74,7 @@ date,pillar,cluster,format,owner,stage,brief_link,atomization,mix
 
 ## The brief
 
-A slot **cannot leave the `idea` stage without a brief.** One canonical brief format means consistent output regardless of who writes it. The brief is a `.md` page in the `02-DOCS/wiki/` OKF v0.1 bundle: its YAML frontmatter carries a non-empty `type: content-brief` (plus the OKF-recommended `title`/`description`/`tags`/`timestamp`) alongside the domain fields below, and any body cross-references use standard markdown links, never wikilinks. Required fields (inline minimum):
+A slot **cannot leave the `idea` stage without a brief.** One canonical brief format means consistent output regardless of who writes it. The brief is a `.md` page in the `docs/wiki/` OKF v0.1 bundle: its YAML frontmatter carries a non-empty `type: content-brief` (plus the OKF-recommended `title`/`description`/`tags`/`timestamp`) alongside the domain fields below, and any body cross-references use standard markdown links, never wikilinks. Required fields (inline minimum):
 
 - **objective** — the one outcome this piece drives.
 - **persona** — which of the 2–4 you target.

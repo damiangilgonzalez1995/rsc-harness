@@ -33,9 +33,9 @@ should_not_trigger:
     route_to: "none"
     why: "This is the built-in /init (CLAUDE.md generator), not the rsc-skills front door. init only writes the user-profile + a Knowledge-map link, and it does NOT scaffold or document the codebase — that is harness/other tooling. No rsc sibling owns generic architecture docs, so route to none."
 
-  - prompt: "Run the scaffolding now — create the 01-TOOLS and 02-DOCS folders and wire up the structure."
+  - prompt: "Run the scaffolding now — create the 01-TOOLS and docs folders and wire up the structure."
     route_to: "harness"
-    why: "init explicitly hands off scaffolding to the harness skill. The moment the user asks to actually BUILD 01-TOOLS/02-DOCS, it is harness's job, not init's (init writes only the profile + link)."
+    why: "init explicitly hands off scaffolding to the harness skill. The moment the user asks to actually BUILD 01-TOOLS/docs, it is harness's job, not init's (init writes only the profile + link)."
 
   - prompt: "Set up a FastAPI backend with a Postgres database for my new service."
     why: "User already knows the stack and wants a specific backend built — this is the fastapi/backend stack skill, not the level-gauging front door. init recommends skills; it does not implement stacks."
@@ -58,17 +58,17 @@ capability:
     must_include:
       - "Asks the technical-level question FIRST, before any discovery or recommendation (e.g. 'are you comfortable with code or prefer plain language?'), and records technical_level"
       - "Presents the accompaniment dial L0–L3 and, given a silent non-technical user, defaults to L3 (full accompaniment)"
-      - "Persists the profile to 02-DOCS/wiki/harness/user-profile.md and an append-only 02-DOCS/wiki/harness/decisions.md, and links both from a ## Knowledge map section in root CLAUDE.md (creating CLAUDE.md if absent, additive only)"
+      - "Persists the profile to docs/wiki/harness/user-profile.md and an append-only docs/wiki/harness/decisions.md, and links both from a ## Knowledge map section in root CLAUDE.md (creating CLAUDE.md if absent, additive only)"
       - "Detects greenfield vs brownfield rather than assuming, and runs DISCOVER (goals, audience, constraints, surfaces) before recommending"
       - "Recommends specific rsc skills matched to discovery (at minimum harness; nextjs/flutter + design if app surfaces justify it) and PRINTS the exact install commands (npx @ericrisco/rsc add <skill> ...)"
-      - "Does NOT install anything itself and does NOT scaffold 01-TOOLS/02-DOCS — it hands off to the harness skill as the final step"
+      - "Does NOT install anything itself and does NOT scaffold 01-TOOLS/docs — it hands off to the harness skill as the final step"
       - "Does not recommend speculative skills (e.g. building-agents) unless discovery justified them"
 
   - scenario: "A user with an existing multi-package repo says: 'Point the harness at my project and get me started.' Show the brownfield front-door flow."
     must_include:
       - "Still asks the technical-level question and sets the accompaniment dial first — profile before anything, even on brownfield"
-      - "Detects brownfield via manifests (package.json / pyproject.toml / pubspec.yaml / go.mod / Cargo.toml), source files, legacy XX-* folders, or existing 01-TOOLS/02-DOCS, with a read-only scan that ignores node_modules/.venv/.next/.git/dist/build"
+      - "Detects brownfield via manifests (package.json / pyproject.toml / pubspec.yaml / go.mod / Cargo.toml), source files, legacy XX-* folders, or existing 01-TOOLS/docs, with a read-only scan that ignores node_modules/.venv/.next/.git/dist/build"
       - "Summarizes the detected stack and current state and CONFIRMS with the user instead of assuming"
-      - "Writes profile + decisions log under 02-DOCS/wiki/harness/ and adds the Knowledge-map link to CLAUDE.md without deleting existing content"
+      - "Writes profile + decisions log under docs/wiki/harness/ and adds the Knowledge-map link to CLAUDE.md without deleting existing content"
       - "Recommends skills matched to the detected stack and prints the exact install commands, recommending only what was justified"
-      - "Hands off to the harness skill for the actual 01-TOOLS/02-DOCS scaffolding/migration rather than doing it inside init"
+      - "Hands off to the harness skill for the actual 01-TOOLS/docs scaffolding/migration rather than doing it inside init"

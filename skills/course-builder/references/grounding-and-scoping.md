@@ -27,26 +27,26 @@ Before I design anything, I need three things:
 3. FORMAT: how long, live cohort or self-paced, group size, any prerequisites,
    and does finishing certify anything?
 
-If you have a teaching profile in 02-DOCS/wiki/teaching/, point me at it and I'll reuse it.
+If you have a teaching profile in docs/wiki/teaching/, point me at it and I'll reuse it.
 ```
 
 If any answer is a topic ("they should know React"), push back once: *"What should they be able to
 DO with React that they can't now?"* Topics don't scope; verbs do.
 
-## The shared teaching profile (02-DOCS/wiki/teaching/)
+## The shared teaching profile (docs/wiki/teaching/)
 
 This is the **same persistence convention** `course-storytelling` uses. If the workspace follows the
-project harness, look for `02-DOCS/wiki/teaching/` first:
+project harness, look for `docs/wiki/teaching/` first:
 
-- `02-DOCS/wiki/teaching/learner-profile.md` — WHO + baseline (reusable across both skills).
-- `02-DOCS/wiki/teaching/<course>-outcomes.md` — the outcomes you write here.
-- `02-DOCS/wiki/teaching/<course>-matrix.md` — the alignment matrix you emit.
+- `docs/wiki/teaching/learner-profile.md` — WHO + baseline (reusable across both skills).
+- `docs/wiki/teaching/<course>-outcomes.md` — the outcomes you write here.
+- `docs/wiki/teaching/<course>-matrix.md` — the alignment matrix you emit.
 
 Reuse the learner profile if it exists rather than re-interviewing. When you write outcomes and the
 matrix, persist them there so `course-storytelling` can pick up the same grounding for the hand-off.
 Note in the file that the profile is shared, so neither skill clobbers the other's section.
 
-Each persisted `02-DOCS/wiki/teaching/*.md` file is an OKF v0.1 wiki article: open it with YAML
+Each persisted `docs/wiki/teaching/*.md` file is an OKF v0.1 wiki article: open it with YAML
 frontmatter carrying a non-empty `type:` (`type: course-outline`), then the H1 and body. Use standard
 markdown links between articles (`[Outcomes](./<course>-outcomes.md)`), never wikilinks. Mirror the
 harness `wiki-article-template.md` shape:

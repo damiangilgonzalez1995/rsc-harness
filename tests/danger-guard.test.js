@@ -26,8 +26,8 @@ const RF = `${DASH}rf`;
 // A guarded project: no opt-out file, and a non-technical profile (the default-safe stance).
 function guardedRoot() {
   const root = mkdtempSync(join(tmpdir(), 'rsc-danger-'));
-  mkdirSync(join(root, '02-DOCS', 'wiki', 'harness'), { recursive: true });
-  writeFileSync(join(root, '02-DOCS/wiki/harness/user-profile.md'), 'technical_level: non-technical\n');
+  mkdirSync(join(root, 'docs', 'wiki', 'harness'), { recursive: true });
+  writeFileSync(join(root, 'docs/wiki/harness/user-profile.md'), 'technical_level: non-technical\n');
   return root;
 }
 const ROOT = guardedRoot();
@@ -130,8 +130,8 @@ test('the other rules are untouched by this change', () => {
 
 test('a technical user is never guarded, and the opt-out still works', () => {
   const technical = mkdtempSync(join(tmpdir(), 'rsc-danger-tech-'));
-  mkdirSync(join(technical, '02-DOCS', 'wiki', 'harness'), { recursive: true });
-  writeFileSync(join(technical, '02-DOCS/wiki/harness/user-profile.md'), 'technical_level: technical\n');
+  mkdirSync(join(technical, 'docs', 'wiki', 'harness'), { recursive: true });
+  writeFileSync(join(technical, 'docs/wiki/harness/user-profile.md'), 'technical_level: technical\n');
   assert.equal(decide(`rm ${RF} /tmp/x`, technical).decision, 'allow');
 
   const optedOut = guardedRoot();

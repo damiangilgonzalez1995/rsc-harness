@@ -127,7 +127,7 @@ Tone by context: onboarding=warm; error=plain+reassuring, no humor;
   success=light warmth, no hype; billing=precise+calm; legal=formal+exact.
 ```
 
-**Persist it.** Write the compiled guide under `02-DOCS/wiki/brand/voice-guide.md` and the voice-DNA block beside it, per the `harness` Karpathy-wiki convention (compiled brand articles under `02-DOCS/wiki/brand/`, raw user inputs under `02-DOCS/raw/brand/`). The persisted file is an OKF v0.1 wiki article: open it with YAML frontmatter carrying a non-empty `type:` (use `type: brand-voice`) — see the frontmatter block in [`references/voice-guide-template.md`](references/voice-guide-template.md), which is also the fill-in-the-blanks skeleton for the whole guide (traits → rules → 4-D ratios → word bank → context matrix → voice-DNA block) with one fully worked mini-example brand. This is the exact study `marketing`, `landing-copy`, and `content-engine` read to ground their copy. A guide in a slide deck is invisible to them.
+**Persist it.** Write the compiled guide under `docs/wiki/brand/voice-guide.md` and the voice-DNA block beside it, per the `harness` Karpathy-wiki convention (compiled brand articles under `docs/wiki/brand/`, raw user inputs under `docs/raw/brand/`). The persisted file is an OKF v0.1 wiki article: open it with YAML frontmatter carrying a non-empty `type:` (use `type: brand-voice`) — see the frontmatter block in [`references/voice-guide-template.md`](references/voice-guide-template.md), which is also the fill-in-the-blanks skeleton for the whole guide (traits → rules → 4-D ratios → word bank → context matrix → voice-DNA block) with one fully worked mini-example brand. This is the exact study `marketing`, `landing-copy`, and `content-engine` read to ground their copy. A guide in a slide deck is invisible to them.
 
 ## Auditing for drift
 
@@ -148,7 +148,7 @@ Off-brand reads like everyone else: abstract nouns, hedged claims, AI tells, ene
 | Tone "somewhere in the middle" on every axis | Vague middle = no decision = generic output | Commit to a ratio (80/20) and justify it from a trait |
 | Voice changes per channel | Channel-by-channel voices = no recognizable brand | Voice fixed; tone flexes per context (Step 5) |
 | No ban list | Drift and AI tells creep in unchecked | The ban list is the drift killer — ship it first |
-| Guide lives in a deck or someone's head | Downstream skills and LLMs can't read it | Persist machine-readable under `02-DOCS/wiki/brand/` |
+| Guide lives in a deck or someone's head | Downstream skills and LLMs can't read it | Persist machine-readable under `docs/wiki/brand/` |
 | Writing the actual landing/email/article | That is a finished piece, not the definition | Stop; hand to `landing-copy` / `marketing` / `content-engine` |
 
 ## Verify

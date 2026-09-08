@@ -4,13 +4,13 @@
 // none — `design-loop` phase 1 on `skip`, the closing line of `design`'s brand grounding, and
 // `design-dna`'s REUSE mode — and none of the three had anything behind it. An unbacked promise to
 // propose falls back to the model's prior, which is the AI-template median the area exists to
-// escape. Spec: 02-DOCS/wiki/sdd/specs/design-starting-point.md
+// escape. Spec: docs/wiki/sdd/specs/design-starting-point.md
 //
 // This file is the half that can be an algorithm (P1): listing what is installed, and refusing to
 // propose a colour that fails contrast. The half that needs judgement — which reference is the right
 // bar for what you are building — is prose, in design/references/starting-point.md.
 //
-// Read-only, always. `02-DOCS` is untracked and has no undo (P9), and a discovery pass has no
+// Read-only, always. `docs` is untracked and has no undo (P9), and a discovery pass has no
 // business writing anywhere.
 import { existsSync, lstatSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
@@ -183,7 +183,7 @@ function citedSlugs(harnessRoot) {
  * What this project already owns to start a design from.
  *
  * @param {string[]} roots — skill directories to scan. Defaults to both scopes, both layouts.
- * @param {string} harnessRoot — where `02-DOCS/` lives, for the identity half and the ordering.
+ * @param {string} harnessRoot — where `docs/` lives, for the identity half and the ordering.
  * @returns {{state: 'owned'|'none'|'inconclusive', identity: object, records: object[],
  *            unreadable: Array<{path: string, reason: string}>, reason: string, fix?: string}}
  *   `owned`        — an identity or at least one legible record exists.

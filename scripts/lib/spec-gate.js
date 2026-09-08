@@ -211,7 +211,7 @@ export function specCompleteness(markdown) {
 // The section check above asks whether a spec is COMPLETE. This asks whether it is still TRUE — and
 // nothing asked that before, which is how seven of twenty-five statuses came to contradict the repo:
 // one claiming "sin push ni PR" over work that had been in main for weeks, four sitting in
-// `awaiting-approval` over work already published. Spec: 02-DOCS/wiki/sdd/specs/spec-status-drift.md
+// `awaiting-approval` over work already published. Spec: docs/wiki/sdd/specs/spec-status-drift.md
 //
 // The vocabulary below was extracted from the 25 real statuses, not imagined. That matters: an
 // invented recognizer reaches for the bare word `implementada`, and the bare word is not checkable —

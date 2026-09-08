@@ -344,7 +344,7 @@ dependency for the basics.
 
 ## Project grounding
 
-If the repo has a `02-DOCS/` wiki, record stack decisions (Boot version, security posture,
-test strategy, migration tool) in `02-DOCS/wiki/stack/spring-boot.md` and link it from the
-`CLAUDE.md` Knowledge map. This is recorded, not gated — if there is no `02-DOCS/`, skip
+If the repo has a `docs/` wiki, record stack decisions (Boot version, security posture,
+test strategy, migration tool) in `docs/wiki/stack/spring-boot.md` and link it from the
+`CLAUDE.md` Knowledge map. This is recorded, not gated — if there is no `docs/`, skip
 silently; you may suggest the project harness if the user wants persistent docs.

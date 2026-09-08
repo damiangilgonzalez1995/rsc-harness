@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 // functions. They are NOT covered by the same mechanism, and pretending otherwise would be the
 // decorative-gate pattern this repo has paid for eight times.
 //
-// Spec: 02-DOCS/wiki/sdd/specs/design-tells.md · Plan: design-tells.plan.md
+// Spec: docs/wiki/sdd/specs/design-tells.md · Plan: design-tells.plan.md
 const HERE = dirname(fileURLToPath(import.meta.url));
 const VERIFY = join(HERE, '..', 'skills', 'design', 'scripts', 'verify.sh');
 const SKILL = join(HERE, '..', 'skills', 'design', 'SKILL.md');

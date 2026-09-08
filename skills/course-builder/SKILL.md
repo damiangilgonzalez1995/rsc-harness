@@ -24,7 +24,7 @@ You cannot design a course backward without knowing the destination. Do not writ
 2. **WHAT transformation** — what must they be able to DO at the end that they cannot do now.
 3. **FORMAT + constraints** — duration, modality (live cohort vs self-paced), group size, prerequisites, certification stakes.
 
-If a `02-DOCS/wiki/teaching/` profile exists (the convention shared with `../course-storytelling/SKILL.md`), read it first and reuse it. Otherwise interview in ONE batch — ask all three at once, do not dribble questions. **Incomplete grounding = STOP and ask.** Depth, the interview script, and scope right-sizing by format → `references/grounding-and-scoping.md`.
+If a `docs/wiki/teaching/` profile exists (the convention shared with `../course-storytelling/SKILL.md`), read it first and reuse it. Otherwise interview in ONE batch — ask all three at once, do not dribble questions. **Incomplete grounding = STOP and ask.** Depth, the interview script, and scope right-sizing by format → `references/grounding-and-scoping.md`.
 
 ## The build workflow (one backward pass)
 

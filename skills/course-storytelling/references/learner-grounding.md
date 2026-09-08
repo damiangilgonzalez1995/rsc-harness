@@ -1,13 +1,13 @@
 # Learner Grounding — Checklist, Question Script & Persistence
 
-The learner + audience profile is the source of truth every reframing is grounded in. You cannot make teaching *land* for a student you haven't profiled — you'll default to the AI-median explainer: abstract, jargon-true, emotionally dead. This file holds the **completeness checklist** (what "complete" means), the **question script** (how to interview the user, batched), and the **persistence format** (how to write it into `02-DOCS` and link it from `CLAUDE.md`). The runtime hard STOP that invokes this lives in `SKILL.md` under "Learner grounding (read this first)".
+The learner + audience profile is the source of truth every reframing is grounded in. You cannot make teaching *land* for a student you haven't profiled — you'll default to the AI-median explainer: abstract, jargon-true, emotionally dead. This file holds the **completeness checklist** (what "complete" means), the **question script** (how to interview the user, batched), and the **persistence format** (how to write it into `docs` and link it from `CLAUDE.md`). The runtime hard STOP that invokes this lives in `SKILL.md` under "Learner grounding (read this first)".
 
 ## Where the profile lives
 
 Following the `harness` Karpathy-wiki convention:
 
 ```text
-02-DOCS/
+docs/
 ├── raw/teaching/        ← immutable: transcripts, outlines, existing slides, pasted verbatim
 │   ├── transcript-module-1.md
 │   ├── outline.md
@@ -81,7 +81,7 @@ If the user can't answer a question, that dimension stays incomplete — note th
 
 ### Profile wiki article template
 
-Each `02-DOCS/wiki/teaching/*.md` article follows the harness wiki format. It is an OKF v0.1 article: open it with YAML frontmatter carrying a non-empty `type:` (`teaching-profile`), then the H1 and body:
+Each `docs/wiki/teaching/*.md` article follows the harness wiki format. It is an OKF v0.1 article: open it with YAML frontmatter carrying a non-empty `type:` (`teaching-profile`), then the H1 and body:
 
 ```markdown
 ---
@@ -161,7 +161,7 @@ status: stable
 
 ### Raw inputs
 
-Paste each user-provided transcript / outline / slide deck verbatim into its own `02-DOCS/raw/teaching/<name>.md` with a one-line provenance header:
+Paste each user-provided transcript / outline / slide deck verbatim into its own `docs/raw/teaching/<name>.md` with a one-line provenance header:
 
 ```markdown
 > Source: user-pasted, YYYY-MM-DD, origin: "Module 1 lecture transcript"
@@ -176,19 +176,19 @@ Add (or update) this section in the root `CLAUDE.md`. Additive only — never de
 ```markdown
 ## Knowledge map
 
-Teaching is grounded in the learner + audience profile under `02-DOCS/wiki/teaching/`.
+Teaching is grounded in the learner + audience profile under `docs/wiki/teaching/`.
 Read it before reframing any lesson:
 
-- [Transformation (index)](02-DOCS/wiki/teaching/index.md)
-- [Learner](02-DOCS/wiki/teaching/learner.md)
-- [Audience](02-DOCS/wiki/teaching/audience.md)
-- [Transformation](02-DOCS/wiki/teaching/transformation.md)
-- [False beliefs](02-DOCS/wiki/teaching/false-beliefs.md)
-- [Constraints & format](02-DOCS/wiki/teaching/constraints.md)
+- [Transformation (index)](docs/wiki/teaching/index.md)
+- [Learner](docs/wiki/teaching/learner.md)
+- [Audience](docs/wiki/teaching/audience.md)
+- [Transformation](docs/wiki/teaching/transformation.md)
+- [False beliefs](docs/wiki/teaching/false-beliefs.md)
+- [Constraints & format](docs/wiki/teaching/constraints.md)
 
 Course teaching conventions (narrative spine, named models, Big Dominoes, Attractive Character):
-`02-DOCS/wiki/stack/course-storytelling.md`.
-Raw transcripts / outlines / slides: `02-DOCS/raw/teaching/`.
+`docs/wiki/stack/course-storytelling.md`.
+Raw transcripts / outlines / slides: `docs/raw/teaching/`.
 The `course-storytelling` skill maintains this profile and stops to interview the user
 if any dimension is missing.
 ```
@@ -200,4 +200,4 @@ If a `## Knowledge map` section already exists (e.g. from `marketing`/`design`),
 - `../SKILL.md` — the runtime grounding mechanism (hard STOP) that uses this checklist.
 - `brunson-frameworks.md` — consumes the typed false beliefs and the transformation.
 - `course-analysis.md` — uses the "do after" + transformation to sequence the spine.
-- `../../harness/SKILL.md` — the canonical `02-DOCS` wiki protocol and article templates.
+- `../../harness/SKILL.md` — the canonical `docs` wiki protocol and article templates.

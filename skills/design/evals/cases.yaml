@@ -37,9 +37,9 @@ should_not_trigger:
     why: "Deep motion-code mechanics (springs, AnimatePresence internals) are explicitly deferred to the external motion-ui references; design only sets motion intent + budget."
 
 capability:
-  - scenario: "User asks: 'Design the hero section for our new SaaS landing page and make it look premium.' (No 02-DOCS/wiki/brand/ study exists in the repo yet.)"
+  - scenario: "User asks: 'Design the hero section for our new SaaS landing page and make it look premium.' (No docs/wiki/brand/ study exists in the repo yet.)"
     must_include:
-      - "STOPS before designing and checks for a brand study at 02-DOCS/wiki/brand/ (via root CLAUDE.md ## Brand & voice); on finding it missing/incomplete, asks a focused batch of brand-grounding questions instead of guessing."
+      - "STOPS before designing and checks for a brand study at docs/wiki/brand/ (via root CLAUDE.md ## Brand & voice); on finding it missing/incomplete, asks a focused batch of brand-grounding questions instead of guessing."
       - "Runs (or states it will run) the research-first protocol: WebSearch award galleries / tier-1 sites and synthesize a cited DESIGN DIRECTION before prescribing, rather than shipping from memory."
       - "Enforces the 5-second value-prop test: hero states what it is, who it's for, why it's better, above the fold — and shows the product, not a centered headline over an atmospheric gradient."
       - "Uses design tokens (Tailwind v4 @theme, OKLCH color, modular type scale, 4/8px spacing, radius/shadow tokens) — no magic hex or arbitrary px."

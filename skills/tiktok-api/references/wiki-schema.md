@@ -1,4 +1,4 @@
-# Wiki schema for `02-DOCS/wiki/shortform/`
+# Wiki schema for `docs/wiki/shortform/`
 
 How a TikTok pull becomes durable, queryable account history the shortform siblings
 read. The rule that matters: **append, never overwrite.** A snapshot that replaces
@@ -8,7 +8,7 @@ across pulls.
 ## File tree
 
 ```text
-02-DOCS/wiki/shortform/
+docs/wiki/shortform/
   index.md                       # rolling pointer: latest snapshot per platform + open questions
   tiktok-account-2026-06-02.md   # dated account snapshot, one file per pull
   tiktok-account-2026-06-09.md

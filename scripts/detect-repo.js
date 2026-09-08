@@ -6,7 +6,7 @@ import { join } from 'node:path';
 // all — even though the catalog ships a skill for each of them. Every entry here also earns the
 // `design-eng` umbrella, which is the one skill that routes a UI request to the sibling that owns
 // it. Kept as a table, not a chain of `if`s, so adding a framework is one line and the test
-// iterates it. Spec: 02-DOCS/wiki/sdd/specs/motion-craft-skills.md
+// iterates it. Spec: docs/wiki/sdd/specs/motion-craft-skills.md
 const FRONTEND_DEPS = [
   ['next', 'nextjs'],
   ['react', 'nextjs'],

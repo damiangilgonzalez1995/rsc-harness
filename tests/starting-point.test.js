@@ -1,5 +1,5 @@
 // What does this project already own, and does its colour hold up? — and the tests that check the
-// checker (P2). Spec: 02-DOCS/wiki/sdd/specs/design-starting-point.md
+// checker (P2). Spec: docs/wiki/sdd/specs/design-starting-point.md
 //
 // Three promises in the design area say "I'll propose you a starting point" and none of them had
 // anything behind it. This is the half that can be an algorithm (P1): finding what is already
@@ -72,7 +72,7 @@ test('owned: what the harness cites comes first, and the rest stay listed', () =
   try {
     record(root, 'aaa-first-alphabetically');
     record(root, 'night-shift');
-    const brand = join(harness, '02-DOCS', 'wiki', 'brand');
+    const brand = join(harness, 'docs', 'wiki', 'brand');
     mkdirSync(brand, { recursive: true });
     writeFileSync(join(brand, 'visual-identity.md'), '# Identity\n\nBuilt in the night-shift style.\n');
 

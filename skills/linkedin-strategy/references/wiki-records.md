@@ -1,13 +1,13 @@
-# Wiki records — `02-DOCS/wiki/linkedin/`
+# Wiki records — `docs/wiki/linkedin/`
 
 The read/write loop's storage. Everything is append-only markdown so future strategy sessions compound instead of restarting from generic advice.
 
-Every `.md` file written here is part of the `02-DOCS/wiki/` OKF v0.1 bundle, so each carries YAML frontmatter with a non-empty `type:` (the only required OKF field). Cross-references between files use **standard markdown links** (`[Text](./pillars.md)`) — never wikilinks (`[[...]]`). The domain lines `verify.sh` greps for (the dated heading, `Decision:`, the metric/bet field) stay exactly as below.
+Every `.md` file written here is part of the `docs/wiki/` OKF v0.1 bundle, so each carries YAML frontmatter with a non-empty `type:` (the only required OKF field). Cross-references between files use **standard markdown links** (`[Text](./pillars.md)`) — never wikilinks (`[[...]]`). The domain lines `verify.sh` greps for (the dated heading, `Decision:`, the metric/bet field) stay exactly as below.
 
 ## File layout
 
 ```text
-02-DOCS/wiki/linkedin/
+docs/wiki/linkedin/
   positioning.md        # current POV, niche of authority, who-it's-for; updated in place when it shifts
   pillars.md            # the live 3-5 pillars + any KILLED pillars with the date and reason
   decisions/            # one append-only file per decision (preferred), dated filenames
@@ -20,7 +20,7 @@ A running `decisions.md` log at the root is also accepted instead of `decisions/
 
 ## Bootstrap (empty/absent dir)
 
-When `02-DOCS/wiki/linkedin/` does not exist, create it with `positioning.md`, `pillars.md`, `decisions/`, and `what-worked.md` before you decide. Seed `positioning.md` with whatever the account already implies (title, current posts) so the first decision has a baseline to react to. Each of `positioning.md`, `pillars.md`, and `what-worked.md` gets OKF frontmatter — use `type: linkedin-positioning`, `type: linkedin-pillars`, and `type: linkedin-record` respectively (templates below).
+When `docs/wiki/linkedin/` does not exist, create it with `positioning.md`, `pillars.md`, `decisions/`, and `what-worked.md` before you decide. Seed `positioning.md` with whatever the account already implies (title, current posts) so the first decision has a baseline to react to. Each of `positioning.md`, `pillars.md`, and `what-worked.md` gets OKF frontmatter — use `type: linkedin-positioning`, `type: linkedin-pillars`, and `type: linkedin-record` respectively (templates below).
 
 ## Decision-record template
 
@@ -79,7 +79,7 @@ status: stable
 
 ## What `scripts/verify.sh` checks
 
-Read-only, network-free, pure bash + grep. Given `02-DOCS/wiki/linkedin/`:
+Read-only, network-free, pure bash + grep. Given `docs/wiki/linkedin/`:
 
 1. The target directory exists.
 2. At least one decision record exists (`decisions/*.md` or a root `decisions.md`).

@@ -26,11 +26,11 @@ delegation table below.
 
 ## Model tier — `heavy` (opt-in routing)
 
-This phase's default model tier is **`heavy`** — root-cause diagnosis is deep reasoning. Routing is **off** unless `models.enabled: true` in `02-DOCS/wiki/sdd/config.yaml`. When on: resolve this phase's tier (`models.overrides` wins over `models.phases`), map it to a model via `models.tiers`, and apply per `../sdd/references/model-routing.md` — announce the switch per the accompaniment dial when it differs from the session model, and dispatch any `Task`/`parallel` subagents on that model. Routing off or no profile → honor the session model silently. Never fake a switch a tool can't make; skip routing on a one-line change.
+This phase's default model tier is **`heavy`** — root-cause diagnosis is deep reasoning. Routing is **off** unless `models.enabled: true` in `docs/wiki/sdd/config.yaml`. When on: resolve this phase's tier (`models.overrides` wins over `models.phases`), map it to a model via `models.tiers`, and apply per `../sdd/references/model-routing.md` — announce the switch per the accompaniment dial when it differs from the session model, and dispatch any `Task`/`parallel` subagents on that model. Routing off or no profile → honor the session model silently. Never fake a switch a tool can't make; skip routing on a one-line change.
 
 ## Read the room first (accompaniment dial)
 
-Before diagnosing, read `02-DOCS/wiki/harness/user-profile.md` for the technical + accompaniment
+Before diagnosing, read `docs/wiki/harness/user-profile.md` for the technical + accompaniment
 level and match it; with no profile yet, assume non-technical — narrate the reasoning plainly and
 never apply a behavior-changing fix without a quick confirm. The *method* never changes with the
 dial — the volume does.
@@ -124,11 +124,11 @@ that gate, not this skill, is what licenses the word "done".
 If the failure spans two stacks (a Next.js call into a FastAPI endpoint), reproduce at the boundary
 first — isolate which side actually fails before you open either stack's debugger.
 
-## Log the diagnosis (the 02-DOCS trail)
+## Log the diagnosis (the docs trail)
 
 When the cause is non-obvious — a race, an order dependency, an environment-only failure, a
 regression a reviewer would otherwise have to rediscover — append a short entry to
-`02-DOCS/wiki/sdd/decisions.md` (append-only; create it if absent and add a row to the root
+`docs/wiki/sdd/decisions.md` (append-only; create it if absent and add a row to the root
 `CLAUDE.md` `## Knowledge map` under the `sdd/` topic). One entry:
 
 ```text
@@ -176,7 +176,7 @@ Skip the trivial ones (a typo'd variable). Log the cause a future debugger would
 - [ ] HYPOTHESIZE: one falsifiable cause stated ("X because Y; changing Z flips it")
 - [ ] FIX: bug encoded as a failing test (red for the RIGHT reason); smallest change to the CAUSE
 - [ ] VERIFY: repro no longer fires; new test green; surrounding suite still green; flake rate → 0
-- [ ] Non-obvious cause logged to 02-DOCS/wiki/sdd/decisions.md
+- [ ] Non-obvious cause logged to docs/wiki/sdd/decisions.md
 - [ ] Handed the whole-gate re-run back to verify; resumed implement where the failure interrupted it
 ```
 

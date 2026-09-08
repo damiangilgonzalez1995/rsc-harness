@@ -39,10 +39,10 @@ should_not_trigger:
 capability:
   - scenario: "User asks: 'Build a 6-slide seed pitch deck. Thesis: onboarding v2 is why we can raise now. We have churn and activation numbers. Export to PDF, and we may need an editable PPTX for the CFO.'"
     must_include:
-      - "Runs the brand-grounding gate FIRST — locate brand study in 02-DOCS/wiki/brand/ via root CLAUDE.md; STOP and interview if absent/incomplete; never fabricate voice; cite which brand articles grounded the deck."
+      - "Runs the brand-grounding gate FIRST — locate brand study in docs/wiki/brand/ via root CLAUDE.md; STOP and interview if absent/incomplete; never fabricate voice; cite which brand articles grounded the deck."
       - "Storyboards an assertion-headline spine (one assertion per slide, e.g. 'Onboarding v2 cut churn 40%'), not topic labels, with one idea per slide and a single locked thesis."
       - "Picks a pipeline deliberately: Markdown (Marp/Slidev) when a stunning PDF is the hero vs python-pptx when the CFO must edit in PowerPoint; asks the disambiguating question or builds Markdown + warns Marp/Slidev PPTX is image-per-slide, not editable text."
-      - "Themes from design tokens (OKLCH palette, type scale, spacing from 02-DOCS/wiki/stack/design.md) mapped once into the theme — no hand-picked hex per slide."
+      - "Themes from design tokens (OKLCH palette, type scale, spacing from docs/wiki/stack/design.md) mapped once into the theme — no hand-picked hex per slide."
       - "Enforces projection legibility: body >= 24pt (28-32pt for a talk), ~6 words/line, ~6 lines/slide ceiling, contrast >= 4.5:1, 16:9."
       - "Requires every metric to trace to a source and marks gaps [[NEEDS PROOF]] — never invents numbers to fill a chart."
       - "Exports verified: PDF vector with fonts embedded (e.g. pdffonts shows 'emb yes'), runs scripts/verify.sh / the Deck QA gate before claiming done."

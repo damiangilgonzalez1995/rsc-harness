@@ -44,5 +44,5 @@ capability:
       - Enforces hard constraints — 1280x720, 16:9, under 2MB, 320x180 legibility, bottom-right safe zone
       - Applies face+emotion and the ~30% contrast/luminance guidance concretely
       - Sets up Test & Compare correctly — up to 3 variants, winner by watch-time share not CTR, ~2-week window, auto-promote
-      - Writes/updates a log row under 02-DOCS/wiki/youtube/thumbnail-experiments.md and states the next-concept rule
+      - Writes/updates a log row under docs/wiki/youtube/thumbnail-experiments.md and states the next-concept rule
       - Defers title wording and the title<->thumbnail promise to youtube-packaging rather than rewriting the title

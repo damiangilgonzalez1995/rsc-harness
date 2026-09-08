@@ -10,7 +10,7 @@ import { holdoutGate, scoreFromRaw, LIFT_MIN } from '../scripts/lib/behavior-sco
 // scenario, ran it, scored it, and threw the result away, while the rubric promised "the hold-out
 // score must also improve". Ninth appearance of the pattern constitution P2 exists to kill, and the
 // most expensive one — the affected mechanism decides what enters a 258-skill catalog.
-// See 02-DOCS/wiki/sdd/specs/generalization-gate.md.
+// See docs/wiki/sdd/specs/generalization-gate.md.
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const workflow = readFileSync(join(ROOT, 'scripts/skill-harden.workflow.js'), 'utf8');
 const rubric = readFileSync(join(ROOT, 'scripts/skill-harden-rubric.md'), 'utf8');

@@ -7,7 +7,7 @@
 //
 // --transcripts runs the integrity check (scripts/lib/eval-integrity.js) over the workflow's agent
 // transcripts: did the "without the skill" arm read the skill, or its grading rubric, or write into
-// 02-DOCS? Any of those and the verdict is BLOCKED and the numbers are withheld, because a lift
+// docs? Any of those and the verdict is BLOCKED and the numbers are withheld, because a lift
 // measured against a contaminated control is not a measurement.
 //
 // Without --transcripts the scorecard says "integrity NOT CHECKED" on the verdict line. That is

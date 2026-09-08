@@ -44,9 +44,9 @@ should_not_trigger:
     route_to: "init"
     why: "Profiling the user and recommending bundles is the front door (init). author-skill assumes a skill is being written; it does not gauge the user or recommend bundles to install."
 
-  - prompt: "Consolidate my scattered project notes into a wiki article under 02-DOCS."
+  - prompt: "Consolidate my scattered project notes into a wiki article under docs."
     route_to: "harness"
-    why: "Generic docs/wiki consolidation is the harness 02-DOCS engine. author-skill writes SKILL.md + evals, not project knowledge articles, even though it persists the occasional design note via harness."
+    why: "Generic docs/wiki consolidation is the harness docs engine. author-skill writes SKILL.md + evals, not project knowledge articles, even though it persists the occasional design note via harness."
 
   - prompt: "Turn this fuzzy product idea into a clear spec of what and why."
     route_to: "specify"
@@ -55,7 +55,7 @@ should_not_trigger:
 capability:
   - scenario: "A user says: 'I keep telling the agent how to write our PR descriptions. Make that into a skill called pr-describe.' Show how author-skill produces it to the rsc bar."
     must_include:
-      - "Reads 02-DOCS/wiki/harness/user-profile.md for the accompaniment dial (or asks the two gauging questions if absent) and adapts verbosity"
+      - "Reads docs/wiki/harness/user-profile.md for the accompaniment dial (or asks the two gauging questions if absent) and adapts verbosity"
       - "Confirms scope is one job and checks no existing sibling already owns PR-description authoring before creating a new skill"
       - "Drafts the description FIRST: third-person, 'Use when…' lead, only the capabilities that discriminate it from its nearest sibling, a 'NOT … (that is `sibling`)' boundary, valid single-line quoted YAML aiming <=350 chars (1024 hard limit), with origin: risco"
       - "Produces the smallest body that still routes (400 lines is a ceiling, not a target) with progressive disclosure — long/branch-specific detail pushed to references/ and pointed to inline, not an orphaned references/ folder"

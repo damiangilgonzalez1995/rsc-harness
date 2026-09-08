@@ -93,7 +93,7 @@ export function doctor({ target, home, cwd }) {
   );
   if (state.memory && !['unsupported', 'disabled'].includes(memory.mode)) {
     const hasStore = existsSync(join(root, '.rsc', 'memory', 'sessions'))
-      || existsSync(join(root, '02-DOCS', 'raw', 'worklog', '.rsc-memory', 'sessions'));
+      || existsSync(join(root, 'docs', 'raw', 'worklog', '.rsc-memory', 'sessions'));
     try {
       memory.metrics = hasStore
         ? metricsSummary({ cwd: root })

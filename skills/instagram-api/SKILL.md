@@ -1,6 +1,6 @@
 ---
 name: instagram-api
-description: "Use when wiring an agent into Instagram's Graph API: publishing a Reel through the create/poll/publish container dance, reading per-media insights, checking the 24h publish cap, or ingesting Reel metrics into 02-DOCS/wiki/shortform. NOT TikTok (that is `tiktok-api`), NOT YouTube (that is `youtube-api`), NOT cross-platform cadence (that is `social-publisher`)."
+description: "Use when wiring an agent into Instagram's Graph API: publishing a Reel through the create/poll/publish container dance, reading per-media insights, checking the 24h publish cap, or ingesting Reel metrics into docs/wiki/shortform. NOT TikTok (that is `tiktok-api`), NOT YouTube (that is `youtube-api`), NOT cross-platform cadence (that is `social-publisher`)."
 tags: [instagram, graph-api, content-publishing, reels, insights, shortform]
 recommends: [tiktok-api, youtube-api, social-publisher, shortform-strategy, api-connector-builder]
 origin: risco
@@ -177,13 +177,13 @@ Requesting any retired metric does not return null — it **400s the entire insi
 
 If a previously-working call started erroring, this table is almost certainly why: a metric you used to request was retired on a version boundary. Swap to `views` and drop the dead names.
 
-Complete current metric tables per media type, the full deprecated→replacement map with dates, version-gated 2025–2026 additions, and the `02-DOCS/wiki/shortform/` ingest schema spec → `references/insights-metrics.md`.
+Complete current metric tables per media type, the full deprecated→replacement map with dates, version-gated 2025–2026 additions, and the `docs/wiki/shortform/` ingest schema spec → `references/insights-metrics.md`.
 
-## Ingest into 02-DOCS/wiki/shortform/
+## Ingest into docs/wiki/shortform/
 
 This is the checkable deliverable. One file per media id, idempotent overwrite (re-running a pull refreshes `pulled_at` and metrics, never duplicates).
 
-- **Path:** `02-DOCS/wiki/shortform/ig-reel-<media_id>.md`
+- **Path:** `docs/wiki/shortform/ig-reel-<media_id>.md`
 - **Naming:** always `ig-reel-` prefix + the published media id (not the container id).
 - **Re-runs:** overwrite the same file in place — the media id is the natural key.
 

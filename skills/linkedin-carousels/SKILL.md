@@ -28,7 +28,7 @@ a block of feed copy, you are in the wrong skill — see the handoffs table.
 
 A carousel inherits an identity; it does not invent one. Read the brand kit (colors, type,
 logo — owned by [`../brand-identity/SKILL.md`](../brand-identity/SKILL.md)) and the voice
-([`../brand-voice/SKILL.md`](../brand-voice/SKILL.md)) from `02-DOCS/` if they exist; don't pick
+([`../brand-voice/SKILL.md`](../brand-voice/SKILL.md)) from `docs/` if they exist; don't pick
 arbitrary fonts. Pull the angle from any plan or post already produced by
 [`../linkedin-strategy/SKILL.md`](../linkedin-strategy/SKILL.md) or
 [`../linkedin-content/SKILL.md`](../linkedin-content/SKILL.md) — reuse the hook, don't reopen

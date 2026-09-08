@@ -6,7 +6,7 @@ Before you can make teaching land, you have to *see* what's there: what the mate
 
 ## Step 1 — Ingest the material
 
-Accept whatever the user has: slides, a transcript, lecture notes, a one-line outline, a notebook. Save anything pasted verbatim into `02-DOCS/raw/teaching/` (see `learner-grounding.md`), then read for structure, not polish.
+Accept whatever the user has: slides, a transcript, lecture notes, a one-line outline, a notebook. Save anything pasted verbatim into `docs/raw/teaching/` (see `learner-grounding.md`), then read for structure, not polish.
 
 ```text
 INGEST CHECKLIST
@@ -61,7 +61,7 @@ Good (belief arc)   — "A 4am failure (hook) -> why retries scared us (false be
                        do next incident (future-pace)."
 ```
 
-Write the extracted spine into `02-DOCS/wiki/stack/course-storytelling.md` so the rework is diffable against the original.
+Write the extracted spine into `docs/wiki/stack/course-storytelling.md` so the rework is diffable against the original.
 
 ---
 

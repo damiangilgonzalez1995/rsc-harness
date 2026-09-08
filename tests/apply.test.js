@@ -33,8 +33,8 @@ test('session-start: emits suggest body + banner when no profile and no opt-out'
 
 test('session-start: no banner once user-profile.md exists', () => {
   const root = mkdtempSync(join(tmpdir(), 'rsc-ss-'));
-  mkdirSync(join(root, '02-DOCS/wiki/harness'), { recursive: true });
-  writeFileSync(join(root, '02-DOCS/wiki/harness/user-profile.md'), 'technical_level: technical\n');
+  mkdirSync(join(root, 'docs/wiki/harness'), { recursive: true });
+  writeFileSync(join(root, 'docs/wiki/harness/user-profile.md'), 'technical_level: technical\n');
   const out = runSessionStart(root);
   assert.ok(out.includes('detect & install'), 'still cats suggest body');
   assert.ok(!out.includes('rsc onboarding'), 'no banner when profile exists');
@@ -53,7 +53,7 @@ test('session-start: nudges when CLAUDE.md exceeds the line budget', () => {
   writeFileSync(join(root, 'CLAUDE.md'), `# CLAUDE\n${'x\n'.repeat(250)}`);
   const out = runSessionStart(root);
   assert.ok(out.includes('CLAUDE.md hygiene'), 'over-budget CLAUDE.md triggers the nudge');
-  assert.ok(out.includes('02-DOCS/wiki/index.md'), 'nudge names the offload target');
+  assert.ok(out.includes('docs/wiki/index.md'), 'nudge names the offload target');
 });
 
 test('session-start: no CLAUDE.md nudge under budget or with opt-out', () => {
@@ -70,26 +70,26 @@ test('session-start: no CLAUDE.md nudge under budget or with opt-out', () => {
 
 test('session-start: auto-ingest nudge when wiki exists and inbox has a real file', () => {
   const root = mkdtempSync(join(tmpdir(), 'rsc-ss-'));
-  mkdirSync(join(root, '02-DOCS/wiki'), { recursive: true });
-  mkdirSync(join(root, '02-DOCS/inbox'), { recursive: true });
-  writeFileSync(join(root, '02-DOCS/inbox/invoice.pdf'), '%PDF-1.4');
+  mkdirSync(join(root, 'docs/wiki'), { recursive: true });
+  mkdirSync(join(root, 'docs/inbox'), { recursive: true });
+  writeFileSync(join(root, 'docs/inbox/invoice.pdf'), '%PDF-1.4');
   const out = runSessionStart(root);
   assert.ok(out.includes('rsc auto-ingest'), 'nudges the Auto-Ingest Sweep');
 });
 
 test('session-start: no auto-ingest nudge when inbox holds only README', () => {
   const root = mkdtempSync(join(tmpdir(), 'rsc-ss-'));
-  mkdirSync(join(root, '02-DOCS/wiki'), { recursive: true });
-  mkdirSync(join(root, '02-DOCS/inbox'), { recursive: true });
-  writeFileSync(join(root, '02-DOCS/inbox/README.md'), 'drop zone');
+  mkdirSync(join(root, 'docs/wiki'), { recursive: true });
+  mkdirSync(join(root, 'docs/inbox'), { recursive: true });
+  writeFileSync(join(root, 'docs/inbox/README.md'), 'drop zone');
   const out = runSessionStart(root);
   assert.ok(!out.includes('rsc auto-ingest'), 'README alone is not un-ingested material');
 });
 
 test('session-start: no auto-ingest nudge without a harness wiki', () => {
   const root = mkdtempSync(join(tmpdir(), 'rsc-ss-'));
-  mkdirSync(join(root, '02-DOCS/inbox'), { recursive: true });
-  writeFileSync(join(root, '02-DOCS/inbox/invoice.pdf'), '%PDF-1.4');
+  mkdirSync(join(root, 'docs/inbox'), { recursive: true });
+  writeFileSync(join(root, 'docs/inbox/invoice.pdf'), '%PDF-1.4');
   const out = runSessionStart(root);
   assert.ok(!out.includes('rsc auto-ingest'), 'no wiki → nothing to ingest into yet');
 });
@@ -683,8 +683,8 @@ test('session-start: .rsc/.no-git silences the git banner', () => {
 // ---- session-start: context7 MCP banner (active rsc projects only) -----------
 
 function withProfile(root) {
-  mkdirSync(join(root, '02-DOCS/wiki/harness'), { recursive: true });
-  writeFileSync(join(root, '02-DOCS/wiki/harness/user-profile.md'), 'technical_level: technical\n');
+  mkdirSync(join(root, 'docs/wiki/harness'), { recursive: true });
+  writeFileSync(join(root, 'docs/wiki/harness/user-profile.md'), 'technical_level: technical\n');
 }
 
 test('session-start: context7 banner when a profile exists and no MCP is wired', () => {
@@ -761,8 +761,8 @@ function denied(root, command) {
 function profileDir(level) {
   const root = mkdtempSync(join(tmpdir(), 'rsc-dg-'));
   if (level) {
-    mkdirSync(join(root, '02-DOCS/wiki/harness'), { recursive: true });
-    writeFileSync(join(root, '02-DOCS/wiki/harness/user-profile.md'), `technical_level: ${level}\n`);
+    mkdirSync(join(root, 'docs/wiki/harness'), { recursive: true });
+    writeFileSync(join(root, 'docs/wiki/harness/user-profile.md'), `technical_level: ${level}\n`);
   }
   return root;
 }

@@ -3,20 +3,20 @@
 // `design` has declared for a long time that without a brand study it STOPS and does not design.
 // Nothing checked it: `grep -rln "wiki/brand" scripts/` returned nothing before this file existed.
 // That is P2 — a rule declared binding with no mechanism is a decorative gate. Spec:
-// 02-DOCS/wiki/sdd/specs/design-area-cleanup.md
+// docs/wiki/sdd/specs/design-area-cleanup.md
 //
 // Three states, and the third is the whole point. A checker that cannot look must never report
 // green: that exact defect was found and fixed in the design-dna style checker two days earlier,
 // where regex probes ran against empty text and returned vacuous passes. Absence of evidence is
 // reported as absence of evidence.
 //
-// Read-only. It never writes: 02-DOCS is untracked (P9) and there is no undo there.
+// Read-only. It never writes: docs is untracked (P9) and there is no undo there.
 import { existsSync, lstatSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 // Where the harness keeps durable design knowledge, and the section in the root instructions file
 // that points at it. Both are the `design`/`harness` convention, not invented here.
-export const BRAND_DIR = join('02-DOCS', 'wiki', 'brand');
+export const BRAND_DIR = join('docs', 'wiki', 'brand');
 export const BRAND_SECTION = '## Brand & voice';
 
 /**

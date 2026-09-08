@@ -109,15 +109,15 @@ SUBTITLE: The fix was three lines of cache config — but finding them took a we
 
 Tell the author plainly: in Medium's editor, type the kicker line first and format it small "t", then the title as the large "T" line, then the subtitle small "t" directly under it.
 
-## Learn from the author's stats (02-DOCS)
+## Learn from the author's stats (docs)
 
-If `02-DOCS/` exists, learn before you write:
+If `docs/` exists, learn before you write:
 
-- Read raw exports under `02-DOCS/raw/medium/` and any compiled patterns under `02-DOCS/wiki/medium/`.
+- Read raw exports under `docs/raw/medium/` and any compiled patterns under `docs/wiki/medium/`.
 - Bias toward the title/subtitle patterns and topics that historically beat a 50% read ratio for *this* author; avoid angles that drew clicks but bounced.
-- After a notable result, append the learned pattern to `02-DOCS/wiki/medium/read-ratio-patterns.md` so the next draft inherits it.
+- After a notable result, append the learned pattern to `docs/wiki/medium/read-ratio-patterns.md` so the next draft inherits it.
 
-`read-ratio-patterns.md` lives in the `02-DOCS/wiki/` OKF v0.1 bundle, so it carries YAML frontmatter with a non-empty `type:` — one block at the top, with new pattern blocks prepended newest-first below it. Use `type: medium-record` (the same type the `medium-strategy` skill writes under `02-DOCS/wiki/medium/`, keeping the two skills' wiki content consistent). Create it with this header if it does not yet exist:
+`read-ratio-patterns.md` lives in the `docs/wiki/` OKF v0.1 bundle, so it carries YAML frontmatter with a non-empty `type:` — one block at the top, with new pattern blocks prepended newest-first below it. Use `type: medium-record` (the same type the `medium-strategy` skill writes under `docs/wiki/medium/`, keeping the two skills' wiki content consistent). Create it with this header if it does not yet exist:
 
 ```markdown
 ---
@@ -136,7 +136,7 @@ status: stable
 
 Cross-references use standard markdown links (`[Text](./what-worked.md)`), never wikilinks (`[[...]]`).
 
-If `02-DOCS/` is absent, proceed from the craft defaults above and say so in one line, rather than inventing stats.
+If `docs/` is absent, proceed from the craft defaults above and say so in one line, rather than inventing stats.
 
 ## Anti-patterns
 

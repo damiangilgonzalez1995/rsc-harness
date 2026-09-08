@@ -15,7 +15,7 @@ test('post-apply verification names a missing managed artifact and prevents a re
   const plan = buildOnboardingPlan(record, scanProject(cwd));
   const id = identifyPlan(plan);
   await applyAcceptedOnboarding({ cwd, plan, planId: id });
-  rmSync(join(cwd, '02-DOCS/wiki/harness/user-profile.md'));
+  rmSync(join(cwd, 'docs/wiki/harness/user-profile.md'));
   const differences = verifyOnboarding(cwd, plan, id);
   assert.ok(differences.some((difference) => difference.includes('user-profile.md')));
 });
@@ -35,7 +35,7 @@ test('post-apply verification rejects changed governed file content', async () =
   const plan = buildOnboardingPlan(record, scanProject(cwd));
   const id = identifyPlan(plan);
   await applyAcceptedOnboarding({ cwd, plan, planId: id });
-  writeFileSync(join(cwd, '02-DOCS/wiki/harness/user-profile.md'), '# corrupted\n');
+  writeFileSync(join(cwd, 'docs/wiki/harness/user-profile.md'), '# corrupted\n');
   assert.ok(verifyOnboarding(cwd, plan, id).some((d) => d.includes('content differs')));
 });
 
@@ -58,13 +58,13 @@ test('verification requires every persisted decision reason and reevaluation con
   const plan = buildOnboardingPlan(record, scanProject(cwd));
   const id = identifyPlan(plan);
   await applyAcceptedOnboarding({ cwd, plan, planId: id });
-  const path = join(cwd, '02-DOCS/wiki/harness/installation-plan.md');
+  const path = join(cwd, 'docs/wiki/harness/installation-plan.md');
   writeFileSync(path, readFileSync(path, 'utf8').replace(/\| ([^|]+) \| ([^|]+) \| (selected|deferred) \| [^|]+ \| [^|]+ \|/g, '| $1 | $2 | $3 | omitted | omitted |'));
   const manifestPath = join(cwd, '.rsc.json');
   const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
   // Simulate a faulty renderer that blessed its own output after writing it.
   const { createHash } = await import('node:crypto');
-  manifest.onboarding.artifactDigests['02-DOCS/wiki/harness/installation-plan.md'] = createHash('sha256').update(readFileSync(path)).digest('hex');
+  manifest.onboarding.artifactDigests['docs/wiki/harness/installation-plan.md'] = createHash('sha256').update(readFileSync(path)).digest('hex');
   writeFileSync(manifestPath, JSON.stringify(manifest));
   assert.ok(verifyOnboarding(cwd, plan, id).some((d) => d.includes('installation plan content differs')));
 });
@@ -72,7 +72,7 @@ test('verification requires every persisted decision reason and reevaluation con
 test('onboarding refuses a governed path whose symlink leaves the project root', async () => {
   const cwd = mkdtempSync(join(tmpdir(), 'rsc-onboard-root-'));
   const outside = mkdtempSync(join(tmpdir(), 'rsc-onboard-outside-'));
-  symlinkSync(outside, join(cwd, '02-DOCS'), 'dir');
+  symlinkSync(outside, join(cwd, 'docs'), 'dir');
   const record = normalizeOnboarding({ technicalLevel: 'mixed', accompaniment: 'L1', projectKind: 'operations', goal: 'Run ops', targets: ['codex'] });
   const plan = buildOnboardingPlan(record, scanProject(cwd));
   await assert.rejects(applyAcceptedOnboarding({ cwd, plan, planId: identifyPlan(plan) }), /symlink outside project root/);
@@ -115,12 +115,12 @@ test('RSC-owned output does not change the accepted project-evidence identity', 
 
 test('decisions are append-only across onboarding applications', async () => {
   const cwd = mkdtempSync(join(tmpdir(), 'rsc-decisions-'));
-  mkdirSync(join(cwd, '02-DOCS/wiki/harness'), { recursive: true });
-  writeFileSync(join(cwd, '02-DOCS/wiki/harness/decisions.md'), '# Decisions\n\n- Human decision survives.\n');
+  mkdirSync(join(cwd, 'docs/wiki/harness'), { recursive: true });
+  writeFileSync(join(cwd, 'docs/wiki/harness/decisions.md'), '# Decisions\n\n- Human decision survives.\n');
   const record = normalizeOnboarding({ technicalLevel: 'mixed', accompaniment: 'L1', projectKind: 'operations', goal: 'Ops', targets: ['codex'] });
   const plan = buildOnboardingPlan(record, scanProject(cwd));
   await applyAcceptedOnboarding({ cwd, plan, planId: identifyPlan(plan) });
-  assert.match(readFileSync(join(cwd, '02-DOCS/wiki/harness/decisions.md'), 'utf8'), /Human decision survives/);
+  assert.match(readFileSync(join(cwd, 'docs/wiki/harness/decisions.md'), 'utf8'), /Human decision survives/);
 });
 
 test('verification checks governed paths on disk, not only the state claim', async () => {
@@ -169,7 +169,7 @@ test('a failure while finalizing the receipt rolls back every applied artifact',
     mkdirSync(join(cwd, '.rsc.json'));
   } }), /RSC_ONBOARDING_INCOMPLETE/);
   assert.equal(existsSync(join(cwd, 'AGENTS.md')), false);
-  assert.equal(existsSync(join(cwd, '02-DOCS/wiki/harness/user-profile.md')), false);
+  assert.equal(existsSync(join(cwd, 'docs/wiki/harness/user-profile.md')), false);
   assert.equal(existsSync(join(cwd, '.rsc.json')), false);
 });
 

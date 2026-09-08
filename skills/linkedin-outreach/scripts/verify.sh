@@ -18,7 +18,7 @@
 #   false failure.
 #
 # HOW TO RUN (inside YOUR project, not the skills repo)
-#   ./verify.sh                                  # default 02-DOCS/linkedin-outreach/touches.csv
+#   ./verify.sh                                  # default docs/linkedin-outreach/touches.csv
 #   ./verify.sh path/to/touches.csv              # explicit path
 #
 # EXIT CODES
@@ -41,7 +41,7 @@ ok()   { printf '%s[ ok ]%s %s\n' "$GREEN"  "$NC" "$*"; }
 warn() { printf '%s[warn]%s %s\n' "$YELLOW" "$NC" "$*"; }
 fail() { printf '%s[fail]%s %s\n' "$RED"    "$NC" "$*"; fail_count=$((fail_count + 1)); }
 
-FILE="${1:-02-DOCS/linkedin-outreach/touches.csv}"
+FILE="${1:-docs/linkedin-outreach/touches.csv}"
 HEADER='date,name,profile_url,channel,trigger,action,stage,outcome,next_touch'
 
 if [ -d "$FILE" ]; then

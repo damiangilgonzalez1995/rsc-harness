@@ -48,10 +48,10 @@ should_not_trigger:
 capability:
   - scenario: >
       We're a 4-person B2B SaaS team. We have a brand study and content pillars in
-      02-DOCS but no calendar and no pipeline. Build a Q3 editorial calendar and a
+      docs but no calendar and no pipeline. Build a Q3 editorial calendar and a
       production pipeline.
     must_include:
-      - "Grounds in the 02-DOCS brand study and pillars (or STOPs and routes to brand-voice / seo-geo if missing) before building"
+      - "Grounds in the docs brand study and pillars (or STOPs and routes to brand-voice / seo-geo if missing) before building"
       - "Uses 4–6 pillars mapped to 3–5 clusters each, top-down (no bottom-up pile of post ideas)"
       - "Applies the cadence baseline: ~1 flagship/month + 4–8 supporting/week + ~1 proof/month"
       - "Honors the slot-mix rule: ~70/20/10, 20–30% slots left open/reactive, 15–25% capacity for updates"

@@ -24,7 +24,7 @@ Five concrete text artifacts plus one feedback entry, every time:
 3. **A tag list** — 5-8 tags, first = exact target phrase.
 4. **A hashtag line** — 3-5 hashtags inside the description.
 5. **A chapter list** — timestamps that obey four exact rules.
-6. **A feedback-log update** in `02-DOCS` — what you tried, what won, the numbers.
+6. **A feedback-log update** in `docs` — what you tried, what won, the numbers.
 
 **Co-ownership note, up front:** YouTube tests the title+thumbnail pair as ONE
 unit. The *title hypothesis to test* is co-owned with
@@ -37,7 +37,7 @@ here.
 Before you write a single title, read the channel. Skipping this is how you
 produce generic copy in someone else's voice.
 
-- Read `02-DOCS/wiki/youtube/` for the channel's **brand voice**, prior packages,
+- Read `docs/wiki/youtube/` for the channel's **brand voice**, prior packages,
   and the **performance feedback log** (winners and losers from past tests).
 - Pull the decided **idea/angle** from [youtube-ideation](../youtube-ideation/SKILL.md)
   output if it exists.
@@ -45,8 +45,8 @@ produce generic copy in someone else's voice.
   topic here.** (Why: packaging a video with no settled angle is guessing at the
   hook, the keyword, and the audience all at once.)
 
-Persist what you write under `02-DOCS/wiki/youtube/` (the package) and raw test
-results under `02-DOCS/raw/youtube/`. `02-DOCS/wiki/` is an **OKF v0.1** bundle:
+Persist what you write under `docs/wiki/youtube/` (the package) and raw test
+results under `docs/raw/youtube/`. `docs/wiki/` is an **OKF v0.1** bundle:
 every package or log file persisted there carries YAML frontmatter with a
 non-empty `type` (`youtube-package`) plus the OKF surface (`title`, `description`,
 `tags`, `timestamp`) shared with the strategy/thumbnail/api siblings, and all
@@ -159,12 +159,12 @@ Different fields, different rules — and one of them barely matters:
 This is what makes the skill *learn* instead of guess. Because Test & Compare
 measures variant performance directly, every package is logged and graded.
 
-**Read before you write.** Open the feedback log in `02-DOCS/wiki/youtube/` and
+**Read before you write.** Open the feedback log in `docs/wiki/youtube/` and
 carry forward what won as priors: if numeric titles beat curiosity titles 3 tests
 running on this channel, the new set leans numeric. If a hashtag set tanked, drop
 it.
 
-**Append after you test.** One row per test, into `02-DOCS/wiki/youtube/packaging-log.md`
+**Append after you test.** One row per test, into `docs/wiki/youtube/packaging-log.md`
 (OKF v0.1: file-level `type: youtube-package` frontmatter at the top, the table
 below it, newest rows appended, past rows immutable):
 

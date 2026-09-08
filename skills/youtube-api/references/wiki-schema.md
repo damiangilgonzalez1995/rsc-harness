@@ -1,13 +1,13 @@
-# Wiki schema — `02-DOCS/wiki/youtube/`
+# Wiki schema — `docs/wiki/youtube/`
 
-The point of this skill is not to print stats once; it is to grow a **feedback log** the strategy/packaging siblings can read. The log lives under `02-DOCS/wiki/youtube/` and every pull **appends** to it.
+The point of this skill is not to print stats once; it is to grow a **feedback log** the strategy/packaging siblings can read. The log lives under `docs/wiki/youtube/` and every pull **appends** to it.
 
-`02-DOCS/wiki/` is an **OKF v0.1** bundle, so every non-reserved `.md` file written here carries YAML frontmatter with a non-empty `type`. This skill writes `type: youtube-metrics` on its snapshots/logs and keeps the domain keys (`date`, `range`, `channel`, `source`) that the strategy/packaging siblings parse literally — `type` and `timestamp` are added *alongside* them, never replacing them. OKF allows arbitrary extra keys, so the shared keys stay stable. Links between wiki files are standard markdown links (`[text](./file.md)`), never Obsidian wikilinks.
+`docs/wiki/` is an **OKF v0.1** bundle, so every non-reserved `.md` file written here carries YAML frontmatter with a non-empty `type`. This skill writes `type: youtube-metrics` on its snapshots/logs and keeps the domain keys (`date`, `range`, `channel`, `source`) that the strategy/packaging siblings parse literally — `type` and `timestamp` are added *alongside* them, never replacing them. OKF allows arbitrary extra keys, so the shared keys stay stable. Links between wiki files are standard markdown links (`[text](./file.md)`), never Obsidian wikilinks.
 
 ## File tree
 
 ```text
-02-DOCS/wiki/youtube/
+docs/wiki/youtube/
   index.md                  # rolling: pointer to latest snapshot + open questions
   channel-2026-05-31.md     # one dated channel snapshot per pull
   channel-2026-05-24.md

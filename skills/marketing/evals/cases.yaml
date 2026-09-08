@@ -66,7 +66,7 @@ should_not_trigger:
 capability:
   - scenario: "Write the hero (headline + subhead + primary CTA) for a tool that spins up a live preview URL on every pull request. No brand study exists in the repo yet."
     must_include:
-      - "STOPS on the brand-grounding gate first: notes there is no complete brand study under 02-DOCS/wiki/brand/ and interviews the user (ICP, positioning, voice samples) before writing — or, only if the user explicitly says draft rough, labels output 'DRAFT (ungrounded — not brand-checked)'."
+      - "STOPS on the brand-grounding gate first: notes there is no complete brand study under docs/wiki/brand/ and interviews the user (ICP, positioning, voice samples) before writing — or, only if the user explicitly says draft rough, labels output 'DRAFT (ungrounded — not brand-checked)'."
       - "Headline built from the value-prop canvas using a concrete formula (outcome+timeframe, 'X without Y', or JTBD), e.g. specificity like '30 seconds' rather than adjectives."
       - "Passes the 5-second test: a stranger can tell what it is, who it's for, and why it's better."
       - "Specificity over adjectives — no 'fast/powerful/seamless'; uses a number or mechanism, and marks any unverifiable metric as [[NEEDS PROOF]] rather than inventing it."

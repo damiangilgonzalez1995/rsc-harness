@@ -2,12 +2,12 @@
 
 This is the persistence layer that makes medium-strategy compound. Read SKILL.md §1 and §9 first; this file is the exact format.
 
-Every `.md` file written under `02-DOCS/wiki/medium/` is part of the OKF v0.1 bundle: it carries YAML frontmatter with a non-empty `type:` (the only required OKF field), and any cross-references use **standard markdown links** (`[Text](./pubs.md)`), never wikilinks (`[[...]]`). The domain lines `verify.sh` greps for (the dated heading, `Decision:`, the metric/bet field) stay exactly as shown below.
+Every `.md` file written under `docs/wiki/medium/` is part of the OKF v0.1 bundle: it carries YAML frontmatter with a non-empty `type:` (the only required OKF field), and any cross-references use **standard markdown links** (`[Text](./pubs.md)`), never wikilinks (`[[...]]`). The domain lines `verify.sh` greps for (the dated heading, `Decision:`, the metric/bet field) stay exactly as shown below.
 
-## Layout under `02-DOCS/wiki/medium/`
+## Layout under `docs/wiki/medium/`
 
 ```text
-02-DOCS/wiki/medium/
+docs/wiki/medium/
 ├── decisions/                # one file per strategy decision (append, never rewrite history)
 │   ├── 2026-06-02-solo-vs-pub-ai-series.md
 │   └── 2026-09-01-q3-review-double-down.md
@@ -87,7 +87,7 @@ status: stable
 `scripts/verify.sh` is a **structural lint, not a craft judge.** Run it after a session:
 
 ```bash
-./scripts/verify.sh 02-DOCS/wiki/medium/
+./scripts/verify.sh docs/wiki/medium/
 ```
 
 It checks, read-only:

@@ -110,7 +110,7 @@ has not gone away. Never mention it when the harness is healthy.
 
 Before handling the first request of a session, check the workspace:
 
-- No `02-DOCS/wiki/harness/user-profile.md` **and** no `.rsc/.no-harness` → the harness has never
+- No `docs/wiki/harness/user-profile.md` **and** no `.rsc/.no-harness` → the harness has never
   been set up here. Invoke `init` first; it opens with the two gauging questions (technical level +
   accompaniment dial). Do not start the user's task before first contact is done.
 - The user declines a harness here ("sin harness", "solo código") → create an empty
@@ -120,6 +120,6 @@ Before handling the first request of a session, check the workspace:
 ## Orientación (siempre)
 
 Cierra cada turno con el **bloque-brújula** (📍 dónde estás · ✅ qué hiciste · 🧭 por qué · ➡️ siguiente,
-terminando en pregunta), calibrado al dial de `02-DOCS/wiki/harness/user-profile.md`. Nunca termines
+terminando en pregunta), calibrado al dial de `docs/wiki/harness/user-profile.md`. Nunca termines
 en seco. Protocolo completo: skill `orient` → `skills/orient/references/orientation-contract.md`.
 (Defiere a este mismo cuerpo, §2, el "¿instalo la skill que falta?".)

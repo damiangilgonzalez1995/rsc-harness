@@ -283,12 +283,12 @@ function flag(name) {
 }
 
 // Remove everything rsc installed in this project (skills, hooks, .rsc/), across
-// every assistant. Keeps 02-DOCS/ unless --with-docs. `purge` / `uninstall --all`.
+// every assistant. Keeps docs/ unless --with-docs. `purge` / `uninstall --all`.
 async function runPurge(dryRun, withDocs) {
   const removed = await purge({ cwd: process.cwd(), withDocs, dryRun });
   say(`${dryRun ? 'Would remove' : 'Removed'} ${removed.length} path(s):`);
   for (const r of removed) say(`  - ${r}`);
-  if (!withDocs) say('\nKept 02-DOCS/ (your knowledge base). Add --with-docs to remove it too.');
+  if (!withDocs) say('\nKept docs/ (your knowledge base). Add --with-docs to remove it too.');
 }
 
 async function recommendIds(query, { labeledOnly = false } = {}) {
@@ -351,7 +351,7 @@ function printNextSteps(targets, ids) {
   if (hasHarness) {
     say(`   ${n++}. Set up the second brain — tell it:`);
     say('        "set up the harness for this project"');
-    say('      → creates 01-TOOLS/ (connections) + 02-DOCS/ (wiki) + CLAUDE.md/AGENTS.md.');
+    say('      → creates 01-TOOLS/ (connections) + docs/ (wiki) + CLAUDE.md/AGENTS.md.');
   }
   if (hasSdd) {
     say(`   ${n++}. For a new feature, tell it:`);

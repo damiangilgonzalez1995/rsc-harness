@@ -2,8 +2,8 @@
 # verify.sh — structurally lint emitted shortform-ideation artifacts.
 #
 # Usage:
-#   bash scripts/verify.sh 02-DOCS/shortform/            # lint a directory tree
-#   bash scripts/verify.sh 02-DOCS/shortform/backlog.md  # lint one file
+#   bash scripts/verify.sh docs/shortform/            # lint a directory tree
+#   bash scripts/verify.sh docs/shortform/backlog.md  # lint one file
 #   bash scripts/verify.sh                               # no target -> exit 0
 #
 # It checks STRUCTURE and LEGALITY, never idea quality (that is the capability eval):
@@ -43,7 +43,7 @@ ok()   { printf '%s\n' "${GREEN}OK: $1${RESET}"; }
 
 # --- collect targets -------------------------------------------------------
 if [ "$#" -eq 0 ]; then
-  printf '%s\n' "${YELLOW}Nothing to check (no path given). Pass a backlog/experiment .md or the 02-DOCS/shortform/ dir.${RESET}"
+  printf '%s\n' "${YELLOW}Nothing to check (no path given). Pass a backlog/experiment .md or the docs/shortform/ dir.${RESET}"
   exit 0
 fi
 

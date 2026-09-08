@@ -90,7 +90,7 @@ export function behavioralGate(agg, integrity) {
 // The bar is deliberately NOT the main gate's LIFT_MIN. One fresh scenario graded once is noisy, so
 // only the unambiguous signal acts: the edited skill failing to beat the bare agent on unseen work.
 // Anything positive transfers. Raising this to LIFT_MIN would reject good fixes on variance alone
-// (see 02-DOCS/wiki/sdd/specs/generalization-gate.md).
+// (see docs/wiki/sdd/specs/generalization-gate.md).
 export function holdoutGate(scored) {
   const agg = scored && scored.aggregate;
   if (!agg || agg.n === 0 || typeof agg.lift !== 'number') {

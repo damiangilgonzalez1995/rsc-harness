@@ -36,7 +36,7 @@ should_not_trigger:
     route_to: "analyze"
     why: "Depth audit of a specific change, not breadth orientation of an unfamiliar repo."
 
-  - prompt: "Set up 01-TOOLS and 02-DOCS and generate the root CLAUDE.md for this workspace."
+  - prompt: "Set up 01-TOOLS and docs and generate the root CLAUDE.md for this workspace."
     route_to: "harness"
     why: "Operational tooling/wiki scaffolding, not understanding — onboarding produces a map, not a tooling layer."
 

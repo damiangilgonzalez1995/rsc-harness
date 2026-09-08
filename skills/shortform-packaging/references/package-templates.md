@@ -2,11 +2,11 @@
 
 Depth offloaded from `SKILL.md`. Use this when you need the full package file format,
 the hook/on-screen-text pattern library, the cover-frame safe-area in pixels, or the
-filled `02-DOCS` feedback-log schema.
+filled `docs` feedback-log schema.
 
 ## The package file format
 
-Emit one markdown file per short under `02-DOCS/wiki/shortform/`. The `shortform/`
+Emit one markdown file per short under `docs/wiki/shortform/`. The `shortform/`
 wiki tree is an **OKF v0.1 bundle** shared with the `tiktok-api` and
 `shortform-strategy` siblings, so the file leads with YAML frontmatter (a non-empty
 `type` is the only OKF hard requirement; `title`/`tags`/`timestamp` are the recommended
@@ -103,9 +103,9 @@ Checklist:
 - [ ] Overlay sits inside the 1:1 centre square (the intersection that survives the 3:4 grid, 4:5 feed, and 9:16 tab crops)
 - [ ] Text clears top ~120px and bottom ~250px UI bands
 
-## 02-DOCS feedback-log schema
+## docs feedback-log schema
 
-Append one entry per shipped short under `02-DOCS/raw/shortform/`. Key on distribution
+Append one entry per shipped short under `docs/raw/shortform/`. Key on distribution
 metrics, never likes. Read the log before writing the next package and mirror the
 winning shape.
 

@@ -8,7 +8,7 @@
 // four stacks" when there are 189 and only 2 run coverage.
 //
 // A wiki with stale claims does not read badly. It reads with the same confidence and occasionally
-// lies — and `02-DOCS/` is untracked (P9), so there is no git log to reconstruct when a sentence
+// lies — and `docs/` is untracked (P9), so there is no git log to reconstruct when a sentence
 // stopped being true.
 //
 // THIS DETECTS, IT DOES NOT CURE. `knowledge-ops` already owns the gardening (prune, archive never
@@ -31,7 +31,7 @@ export const NOT_LOOKED_AT = [
   // claim inside the tool built to find stale claims. Rewritten to name the mechanism that actually
   // ships — the 75% dominant-share threshold — and its real blind spot.
   'Un tipo con pocos documentos: una carpeta solo se reconoce como el hogar de un `type:` cuando concentra el 75% de sus documentos, así que un tipo con 3 o menos ejemplares no tiene hogar y su ubicación nunca se juzga. Deliberado — la alternativa es marcar trabajo correcto (`article` vive legítimamente en tres carpetas).',
-  'Documentos alcanzados por symlink: el recorrido usa `withFileTypes` y salta los enlaces, así que un `.md` enlazado dentro del wiki no se audita. Es el precio de impedir que el recorrido se escape de `02-DOCS/` siguiendo un enlace.',
+  'Documentos alcanzados por symlink: el recorrido usa `withFileTypes` y salta los enlaces, así que un `.md` enlazado dentro del wiki no se audita. Es el precio de impedir que el recorrido se escape de `docs/` siguiendo un enlace.',
   'Contradicción general entre documentos (exige comparación semántica; fuera por clarify 18-08).',
   'Obsolescencia semántica de prosa: si un párrafo sobre arquitectura sigue siendo cierto.',
   'La memoria del proyecto: drift-check ya resuelve sus rutas vía memoryDir(); su auditoría semántica queda fuera.',

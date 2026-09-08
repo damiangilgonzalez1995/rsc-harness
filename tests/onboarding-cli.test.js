@@ -71,7 +71,7 @@ test('acceptance recomputes the plan: wrong id writes nothing; exact id persists
   const manifest = JSON.parse(readFileSync(join(cwd, '.rsc.json'), 'utf8'));
   assert.equal(manifest.onboarding.acceptedPlanId, id);
   assert.equal(manifest.onboarding.plan.policy.baseAgents, false);
-  assert.ok(existsSync(join(cwd, '02-DOCS/wiki/harness/user-profile.md')));
+  assert.ok(existsSync(join(cwd, 'docs/wiki/harness/user-profile.md')));
   assert.ok(!existsSync(join(cwd, '.codex/agents/developer.toml')));
   assert.ok(existsSync(join(cwd, 'AGENTS.md')), 'operations retains the always-on profile/orient surface');
   assert.ok(existsSync(join(cwd, '.rsc', '.no-context7')), 'deferred external MCPs stay silent until a separate consent flow');
@@ -142,7 +142,7 @@ test('preview inventories every RSC-owned applied route', () => {
   assert.match(preview.stdout, /Managed paths:/);
   assert.match(preview.stdout, /\.rsc\.json/);
   assert.match(preview.stdout, /AGENTS\.md/);
-  assert.match(preview.stdout, /02-DOCS\/wiki\/harness\/user-profile\.md/);
+  assert.match(preview.stdout, /docs\/wiki\/harness\/user-profile\.md/);
   assert.doesNotMatch(preview.stdout, /\/Volumes\/|\/private\/tmp\//);
 });
 

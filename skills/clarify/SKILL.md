@@ -13,9 +13,9 @@ A spec written in one sitting always lies a little. It states what the author *t
 
 This is the fourth phase of the rsc SDD chain (`constitution` → `specify` → **`clarify`** → `plan` → `tasks` → `analyze` → `implement` → `verify` → `review` → `ship`); the method itself lives in `../sdd/SKILL.md`. `specify` turned a fuzzy intent into a spec; clarify interrogates that spec, asks the user the questions that actually change the build, and writes the answers back so the spec becomes safe to plan from. It produces **no new artifact** — it sharpens the existing one in place. The line is **specify creates, clarify de-risks, plan designs**: if you find yourself proposing how to *build* it, you have left clarify.
 
-**Model tier: `balanced`** — this phase ranks and asks the few high-leverage questions, it does not design architecture. Resolve and apply it per `../sdd/references/model-routing.md`; routing is off unless `models.enabled: true` in `02-DOCS/wiki/sdd/config.yaml`.
+**Model tier: `balanced`** — this phase ranks and asks the few high-leverage questions, it does not design architecture. Resolve and apply it per `../sdd/references/model-routing.md`; routing is off unless `models.enabled: true` in `docs/wiki/sdd/config.yaml`.
 
-**Accompaniment dial.** Read the level from `02-DOCS/wiki/harness/user-profile.md` (the dial and the `02-DOCS/wiki/` convention are owned by `../harness/SKILL.md`). Clarify is question-heavy, so the dial matters here more than almost anywhere — it sets **how many questions you ask and how you frame them**. With no profile: default to non-technical framing, ask the two gauging questions (technical level + accompaniment) first, then proceed at the stated level.
+**Accompaniment dial.** Read the level from `docs/wiki/harness/user-profile.md` (the dial and the `docs/wiki/` convention are owned by `../harness/SKILL.md`). Clarify is question-heavy, so the dial matters here more than almost anywhere — it sets **how many questions you ask and how you frame them**. With no profile: default to non-technical framing, ask the two gauging questions (technical level + accompaniment) first, then proceed at the stated level.
 
 | Dial | Ask |
 | --- | --- |
@@ -28,9 +28,9 @@ This is the fourth phase of the rsc SDD chain (`constitution` → `specify` → 
 
 Clarify never works blind. Before asking a single question, load three things:
 
-1. **The spec.** Read the target spec under `02-DOCS/wiki/sdd/specs/<slug>.md` end to end. If the path wasn't given, find the most recently touched spec or ask which one. Its *Points to clarify* is a **typed** handoff, not a question list — read the types before you plan a single question (below).
-2. **The constitution.** Read `02-DOCS/wiki/sdd/constitution.md` if it exists. Its principles (stack canon, quality bars, conventions) resolve a surprising number of "ambiguities" without bothering the user — if the constitution already fixes the auth method or the data region, that's answered, not open.
-3. **The harness profile.** `02-DOCS/wiki/harness/user-profile.md`, for the dial above.
+1. **The spec.** Read the target spec under `docs/wiki/sdd/specs/<slug>.md` end to end. If the path wasn't given, find the most recently touched spec or ask which one. Its *Points to clarify* is a **typed** handoff, not a question list — read the types before you plan a single question (below).
+2. **The constitution.** Read `docs/wiki/sdd/constitution.md` if it exists. Its principles (stack canon, quality bars, conventions) resolve a surprising number of "ambiguities" without bothering the user — if the constitution already fixes the auth method or the data region, that's answered, not open.
+3. **The harness profile.** `docs/wiki/harness/user-profile.md`, for the dial above.
 
 Citing what you read ("checked the constitution — auth is already fixed to OAuth, so that's not an open question") shows your work and prevents re-litigating settled decisions.
 
@@ -146,7 +146,7 @@ interpreting prose (contract: `../sdd/SKILL.md`):
 {
   "status": "complete|blocked|failed",
   "executive_summary": "Open points resolved; the spec is de-risked and ready to plan against.",
-  "artifact": "02-DOCS/wiki/sdd/specs/<slug>.md",
+  "artifact": "docs/wiki/sdd/specs/<slug>.md",
   "next_recommended": "plan",
   "risk": "low|medium|high",
   "skill_resolution": {
@@ -165,4 +165,4 @@ Hand off to **`plan`** — turn the now-sharp spec into a technical implementati
 
 ## Orientación (siempre)
 
-Cierra cada turno con el **bloque-brújula** (📍 dónde estás · ✅ qué hiciste · 🧭 por qué · ➡️ siguiente, terminando en pregunta), calibrado al dial de `02-DOCS/wiki/harness/user-profile.md`. **Nunca termines en seco.** Protocolo completo: skill `orient` → `skills/orient/references/orientation-contract.md`. (Defiere a `suggest` el "¿instalo la skill que falta?".)
+Cierra cada turno con el **bloque-brújula** (📍 dónde estás · ✅ qué hiciste · 🧭 por qué · ➡️ siguiente, terminando en pregunta), calibrado al dial de `docs/wiki/harness/user-profile.md`. **Nunca termines en seco.** Protocolo completo: skill `orient` → `skills/orient/references/orientation-contract.md`. (Defiere a `suggest` el "¿instalo la skill que falta?".)

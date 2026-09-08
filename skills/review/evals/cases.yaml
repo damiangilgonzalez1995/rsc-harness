@@ -14,7 +14,7 @@ should_trigger:
   - prompt: "My teammate said I should rewrite this whole module, but I think the current code already handles the case they're worried about. What do I do?"
     why: "Receiving a review that may be a false finding; the user wants to push back with evidence rather than blindly comply. The skill's pushback-with-a-trace discipline applies."
   - prompt: "Critique my implementation against the spec — did I actually build what we specified or did I drift?"
-    why: "Spec-fidelity pass (pass 1) explicitly invoked: checking the diff against 02-DOCS/wiki/sdd specs for scope drift. A giving-a-review trigger keyed to the SDD artifacts."
+    why: "Spec-fidelity pass (pass 1) explicitly invoked: checking the diff against docs/wiki/sdd specs for scope drift. A giving-a-review trigger keyed to the SDD artifacts."
 
 should_not_trigger:
   - prompt: "Run lint, type-check and the test suite on my branch and tell me if it's green."
@@ -44,7 +44,7 @@ capability:
       - "Declines to change the working code (no performative 'good catch' edit)."
       - "Replies to the reviewer with the evidence/trace (require_auth raises 401), not just an assertion of disagreement."
       - "Adds or proposes a regression test (e.g. unauthenticated request asserts 401) so the guarantee stays true, strengthening the diff while declining the change."
-      - "Logs the declined finding + reasoning to 02-DOCS/wiki/sdd/decisions.md."
+      - "Logs the declined finding + reasoning to docs/wiki/sdd/decisions.md."
   - scenario: "Giving review: review this diff before ship — `@router.get('/invoices/{invoice_id}') def get(invoice_id: int, db=Depends(get_db)): return db.get(Invoice, invoice_id)`, behind login. Spec said 'a user can view their own invoices'."
     must_include:
       - "Flags a [blocker]: authenticated != authorized — any logged-in user reads any invoice by id (IDOR / broken access control), and ties it to the spec ('their OWN invoices') as a fidelity failure."

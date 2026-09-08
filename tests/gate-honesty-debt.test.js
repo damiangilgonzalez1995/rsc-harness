@@ -5,7 +5,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // The four debts gate-honesty (1.0.12) declared and did not pay. See
-// 02-DOCS/wiki/sdd/specs/gate-honesty-debt.md.
+// docs/wiki/sdd/specs/gate-honesty-debt.md.
 //
 // WHAT THIS GUARDS, AND WHAT IT DOES NOT — same honesty as gate-honesty.test.js.
 //
@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 //   * neither GAP summary block may exit.
 // The live proof that those hold end-to-end (exit 0 with a GAP present, exit 1 when a real check
 // fails alongside a GAP) was run against toy projects and is recorded in
-// 02-DOCS/wiki/sdd/verifications/gate-honesty-debt-2026-08-17.md with the commands. It is not
+// docs/wiki/sdd/verifications/gate-honesty-debt-2026-08-17.md with the commands. It is not
 // re-run here: it needs pytest/ruff/go installed, and a test that silently skips when a tool is
 // missing is the exact fail-open this whole spec is about.
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -250,7 +250,7 @@ test('E — the mutation rule is gradeable where it DISCRIMINATES (testing-go on
   // concrete procedure rather than a tool name. It stays, and is pinned here.
   //
   // The mutation RULE itself is still required in all three skill bodies — that is the test above.
-  // What changed is only the claim that the eval measures it. See 02-DOCS/wiki/sdd/specs/eval-integrity.md.
+  // What changed is only the claim that the eval measures it. See docs/wiki/sdd/specs/eval-integrity.md.
   const go = capabilityBlock('testing-go');
   assert.match(go, /proof the suite detects bugs/i, 'testing-go must grade coverage-is-not-detection');
   assert.match(go, /no mature mutation tool/, "testing-go must grade Go's honest no-tool answer");

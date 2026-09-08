@@ -4,7 +4,7 @@
 #
 # WHAT IT DOES (read-only; never edits, writes, or hits the network)
 #   Static checks over ONE strategy/decisions file you point it at
-#   (markdown — e.g. 02-DOCS/wiki/shortform/strategy.md):
+#   (markdown — e.g. docs/wiki/shortform/strategy.md):
 #     1. Required structure -> FAIL each missing:
 #        - a positioning / one-promise statement,
 #        - a cadence number (a per-week figure),
@@ -20,7 +20,7 @@
 #   --strict promotes warnings to a failure (for a CI gate).
 #
 # HOW TO RUN (inside YOUR project, not the skills repo)
-#   ./verify.sh 02-DOCS/wiki/shortform/strategy.md
+#   ./verify.sh docs/wiki/shortform/strategy.md
 #   ./verify.sh strategy.md --strict
 #
 # EXIT CODES

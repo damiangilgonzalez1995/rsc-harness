@@ -51,7 +51,7 @@ capability:
 
   - scenario: "Mid-project, the user says 'explícame menos'. The profile shows accompaniment_level L2. Show how orient responds."
     must_include:
-      - "Updates accompaniment_level in 02-DOCS/wiki/harness/user-profile.md to a lower level"
+      - "Updates accompaniment_level in docs/wiki/harness/user-profile.md to a lower level"
       - "Confirms the change in one line"
       - "Re-renders guidance at the reduced depth from this turn on"
       - "Still closes with a next-step question (no seco)"
