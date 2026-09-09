@@ -9,28 +9,6 @@ import { execFileSync } from 'node:child_process';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.join(here, '..');
 
-const ENTRYPOINT_GUARD_MODULES = [
-  'scripts/build-manifest.js',
-  'scripts/install-apply.js',
-  'scripts/originality-check.js',
-  'scripts/routing-audit.js',
-  'targets/gitmoji-guard.mjs',
-  'targets/session-memory-adapter.mjs',
-];
-
-for (const rel of ENTRYPOINT_GUARD_MODULES) {
-  test(`importing ${rel} does not throw when process.argv[1] is absent`, () => {
-    const fileUrl = pathToFileURL(join(repoRoot, rel)).href;
-    assert.doesNotThrow(() => {
-      execFileSync(
-        process.execPath,
-        ['--input-type=module', '-e', `import(${JSON.stringify(fileUrl)})`],
-        { stdio: 'pipe' },
-      );
-    });
-  });
-}
-
 function collectFiles(dir) {
   const out = [];
   for (const entry of readdirSync(dir)) {
@@ -45,6 +23,31 @@ function collectFiles(dir) {
   return out;
 }
 
+// Discovered, not hand-maintained: any file under scripts/ or targets/ that references
+// `process.argv[1]` is claiming to guard its own entrypoint, so it must survive being
+// imported with no argv[1] at all (e.g. `node -e`). A hand-written list silently stops
+// covering a file the day someone adds a new guarded script — this sweep cannot.
+const ENTRYPOINT_GUARD_MODULES = ['scripts', 'targets']
+  .map((d) => join(repoRoot, d))
+  .flatMap((dir) => {
+    try { return collectFiles(dir); } catch { return []; }
+  })
+  .filter((file) => readFileSync(file, 'utf8').includes('process.argv[1]'))
+  .map((file) => file.slice(repoRoot.length + 1).split(path.sep).join('/'));
+
+for (const rel of ENTRYPOINT_GUARD_MODULES) {
+  test(`importing ${rel} does not throw when process.argv[1] is absent`, () => {
+    const fileUrl = pathToFileURL(join(repoRoot, rel)).href;
+    assert.doesNotThrow(() => {
+      execFileSync(
+        process.execPath,
+        ['--input-type=module', '-e', `import(${JSON.stringify(fileUrl)})`],
+        { stdio: 'pipe' },
+      );
+    });
+  });
+}
+
 // Strips // line comments and /* */ block comments well enough to avoid false
 // positives from a comment that merely discusses the broken pattern (as in
 // scripts/drift-check.js, which documents this very failure mode in prose).
@@ -54,7 +57,11 @@ function stripComments(src) {
     .replace(/(^|[^:])\/\/.*$/gm, '$1');
 }
 
-const BROKEN_PATTERN = /file:\/\/\$\{process\.argv\[1\]\}/;
+// Three shapes of the same Windows-unsafe mistake: a literal `file://` template (produces
+// `file://C:\...`, which no URL parser accepts), and `new URL(import.meta.url).pathname`
+// (on Windows this is `/C:/Users/...` — a POSIX-shaped string that breaks `resolve()`/`join()`
+// comparisons against `process.argv[1]`, so the guard never matches and the entrypoint never runs).
+const BROKEN_PATTERN = /file:\/\/\$\{process\.argv\[1\]\}|new URL\(import\.meta\.url\)\.pathname/;
 
 // Any use of pathToFileURL(process.argv[1]) must be preceded on the same line
 // by the existence guard `process.argv[1] &&` — otherwise argv[1] being

@@ -17,6 +17,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, rmSync, symlinkSync, chmodSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   ownedStartingPoints,
   contrastRatio,
@@ -268,7 +269,7 @@ test('summary stays compact — a report field is paid by every user who runs do
 // must exist in exactly one place, and it must not offer as a candidate something the area's own
 // trend record already marks as reading like a template.
 
-const REPO = new URL('..', import.meta.url).pathname;
+const REPO = fileURLToPath(new URL('..', import.meta.url));
 const MATERIAL = join(REPO, 'skills', 'design', 'references', 'starting-point.md');
 
 test('the mapping lives in exactly one file (P5 — the area just paid down its duplication)', () => {

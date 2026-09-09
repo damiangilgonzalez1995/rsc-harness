@@ -4,8 +4,9 @@ import { mkdtempSync, readdirSync, readFileSync, writeFileSync, existsSync } fro
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = new URL('..', import.meta.url).pathname;
+const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const CLI = join(ROOT, 'scripts/rsc.js');
 const fresh = () => mkdtempSync(join(tmpdir(), 'rsc-onboard-cli-'));
 const run = (cwd, args, input) => spawnSync(process.execPath, [CLI, ...args], { cwd, input, encoding: 'utf8' });

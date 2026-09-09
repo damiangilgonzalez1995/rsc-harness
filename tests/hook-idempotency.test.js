@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { wireHook, unwireHook, hookWiringOf } from '../targets/claude.js';
 
 // On Windows every install APPENDED a hook instead of replacing it. Reported from a real Windows
@@ -21,7 +22,7 @@ import { wireHook, unwireHook, hookWiringOf } from '../targets/claude.js';
 // These tests run on POSIX and must be able to FAIL there: the Windows-shaped entries are written by
 // hand, so the separator under test never depends on the host. That is the whole point — a test that
 // only reproduces this on Windows could not run in this repo's CI at all.
-const HERE = new URL('.', import.meta.url).pathname;
+const HERE = fileURLToPath(new URL('.', import.meta.url));
 
 // A settings.json as a Windows install would have left it: backslash separators throughout.
 const WINDOWS_ENTRY = (script) => ({
