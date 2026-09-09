@@ -3,7 +3,7 @@ name: harness
 description: "Use when governing a workspace's control plane, code or not — the `01-TOOLS/` tooling layer, the `docs/` chaos→knowledge wiki, the root Knowledge map. Audits it, migrates legacy `XX-*` folders, scaffolds provider tooling, sweeps the inbox, writes root CLAUDE.md/AGENTS.md. NOT the bootstrap front door (that is `init`, which hands off here)."
 tags: [harness, company, ops, docs, wiki, connect, tools, knowledge]
 recommends: [init]
-profiles: [minimal, core, full]
+profiles: [minimal, core, ui, full]
 origin: risco
 ---
 

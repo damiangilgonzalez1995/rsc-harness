@@ -12,9 +12,8 @@ origin: risco
 
 > **SDD gate — read before writing code.** If this fired on a **new, non-trivial feature or
 > behaviour change** and there is **no approved spec + plan** under `docs/wiki/sdd/`, STOP and
-> hand off to `../specify/SKILL.md` (brainstorm → spec → plan → tasks); it routes back here once the
-> plan is approved. Build directly only for a genuinely one-line / low-risk change. Method:
-> `../sdd/SKILL.md`.
+> hand off to `../grill-with-docs/SKILL.md` (it sharpens the plan before any code); it routes back here once the
+> plan is approved. Build directly only for a genuinely one-line / low-risk change.
 
 **Not this skill:** Pages Router (`pages/`) — note the difference, defer to the Next.js Pages docs.
 A pure React SPA (Vite/CRA) → `../react/SKILL.md`; React Native / Expo → `../react-native/SKILL.md`;

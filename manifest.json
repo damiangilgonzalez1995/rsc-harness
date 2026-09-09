@@ -480,6 +480,7 @@
       "profiles": [
         "minimal",
         "core",
+        "ui",
         "full"
       ]
     },
@@ -1578,6 +1579,7 @@
       "profiles": [
         "minimal",
         "core",
+        "ui",
         "full"
       ]
     },
@@ -2333,6 +2335,7 @@
       "profiles": [
         "minimal",
         "core",
+        "ui",
         "full"
       ]
     },
@@ -2470,6 +2473,7 @@
       "profiles": [
         "minimal",
         "core",
+        "ui",
         "full"
       ]
     },
@@ -3566,6 +3570,7 @@
       "profiles": [
         "minimal",
         "core",
+        "ui",
         "full"
       ]
     },
@@ -4622,6 +4627,7 @@
       "profiles": [
         "minimal",
         "core",
+        "ui",
         "full"
       ]
     },
@@ -4893,6 +4899,7 @@
       "profiles": [
         "minimal",
         "core",
+        "ui",
         "full"
       ]
     },
@@ -5389,6 +5396,7 @@
       "profiles": [
         "minimal",
         "core",
+        "ui",
         "full"
       ]
     },

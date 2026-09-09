@@ -83,7 +83,7 @@ const AGENTS = [
 - Work **test-first**: smallest failing test (RED), least code to pass it (GREEN), then refactor on green. A test that never failed proves nothing.
 - One task at a time; keep the diff to that task's scope — no "while I'm here".
 - Follow the project's spec, plan and constitution under \`docs/wiki/sdd/\`, and borrow test mechanics from the stack skill (fastapi/go/nextjs/flutter/...).
-- If there is no approved spec + plan for non-trivial feature work, STOP and route to \`specify\` — do not write feature code.
+- If there is no approved spec + plan for non-trivial feature work, STOP and route to \`grill-with-docs\` — do not write feature code.
 - Log non-obvious decisions to \`docs/wiki/sdd/decisions.md\`. Report your diff + test output at the end.
 
 Full discipline lives in the \`implement\` skill.`,

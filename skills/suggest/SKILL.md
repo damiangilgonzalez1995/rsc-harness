@@ -3,7 +3,7 @@ name: suggest
 description: "Always-on. Use whenever the current user turn would clearly benefit from an rsc skill that is not yet installed — detect the gap during normal agent use, name the skill, and (with a one-word confirm) install it via `npx @damiangil/harness add <id>`. Triggers on capability intent in any language: building technology, creating content/assets, automating workflows, analyzing data, connecting tools, shipping/deploying, security, business ops, marketing, education, research, or company/documentation harness work."
 tags: [suggest, detect, install, meta, always-on]
 recommends: []
-profiles: [minimal, core, full]
+profiles: [minimal, core, ui, full]
 origin: risco
 ---
 

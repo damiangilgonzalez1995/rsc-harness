@@ -3,7 +3,7 @@ name: init
 description: "Use when starting from nothing or pointing rsc at an existing project — the front door. Gauges technical level and the accompaniment dial first (non-technical by default), discovers what the user wants to build or govern (any stack, or a non-code harness: company/ops, research, knowledge, content), writes the profile to docs, and installs the skills discovery justified. NOT the scaffolder (that is `harness`), NOT a stack skill."
 tags: [init, bootstrap, start, new, setup]
 recommends: [harness]
-profiles: [minimal, core, full]
+profiles: [minimal, core, ui, full]
 origin: risco
 ---
 

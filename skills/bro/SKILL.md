@@ -3,7 +3,7 @@ name: bro
 description: "Use whenever the user asks to make an answer or draft sound human, natural, plain-spoken or less AI-written — including a terse bro after the last response. Rewrites or drafts in the same language while preserving meaning, facts and channel. NOT a reusable brand voice (that is `brand-voice`), NOT translation (that is `translation-l10n`)."
 tags: [bro, human-writing, humano, plain-language, natural-language, rewrite, no-jargon]
 recommends: [unslop, brand-voice, technical-writing, translation-l10n]
-profiles: [minimal, core, full]
+profiles: [minimal, core, ui, full]
 origin: risco
 ---
 
