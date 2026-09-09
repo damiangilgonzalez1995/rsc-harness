@@ -6,7 +6,7 @@
 
 [![npm](https://img.shields.io/npm/v/@damiangil/harness?color=63d68a&labelColor=12161c&label=npm)](https://www.npmjs.com/package/@damiangil/harness)
 [![downloads](https://img.shields.io/npm/dm/@damiangil/harness?color=63d68a&labelColor=12161c&label=downloads)](https://www.npmjs.com/package/@damiangil/harness)
-[![skills](https://img.shields.io/badge/skills-253-63d68a?labelColor=12161c)](#the-catalog)
+[![skills](https://img.shields.io/badge/skills-290-63d68a?labelColor=12161c)](#the-catalog)
 [![license](https://img.shields.io/badge/license-MIT-63d68a?labelColor=12161c)](LICENSE)
 [![stars](https://img.shields.io/github/stars/ericrisco/rsc-harness?color=63d68a&labelColor=12161c)](https://github.com/ericrisco/rsc-harness/stargazers)
 
@@ -199,7 +199,7 @@ $ rsc onboard
  ██████╗ ███████╗ ██████╗     ← animated gradient wordmark
  ██╔══██╗██╔════╝██╔════╝
  ██████╔╝███████╗██║
-  253 skills · one CLI · zero bloat
+  290 skills · one CLI · zero bloat
 
 How technical should the conversation be?
 How much accompaniment do you want?
@@ -233,7 +233,7 @@ rsc add youtube-api remotion-video   # …grow a channel, edit with Remotion
 rsc add fastapi --target claude,codex   # install into several assistants at once
 rsc install --profile minimal        # the base: orient + suggest + bro + unslop + show-me + eli5 + harness + init
 rsc install --profile core           # floor + the full SDD workflow
-rsc install --profile full           # everything (all 253 skills)
+rsc install --profile full           # everything (all 290 skills)
 rsc install --profile full --without go
 rsc consult "I want to launch a SaaS"  # recommend only, no install
 rsc registry refresh                 # write .rsc/skill-registry.{json,md}
@@ -375,7 +375,7 @@ just asks in plain language.
 
 ## The catalog
 
-253 skills, grouped by what you're trying to do. Click any skill to read its
+290 skills, grouped by what you're trying to do. Click any skill to read its
 `SKILL.md`. It fires on its own when a task matches.
 
 ### 🧭 Core & control plane
@@ -507,6 +507,14 @@ Three engines + engine-agnostic disciplines. Every engine skill pins the current
 ### 🧠 Knowledge & meta
 
 [knowledge-ops](skills/knowledge-ops/) · [codebase-onboarding](skills/codebase-onboarding/) · [research-ops](skills/research-ops/) · [decision-records](skills/decision-records/) · [continuous-learning](skills/continuous-learning/) · [skill-scout](skills/skill-scout/) · [context-budget](skills/context-budget/) · [roast-me](skills/roast-me/) · [show-me](skills/show-me/) · [eli5](skills/eli5/) · [fable-operator](skills/fable-operator/)
+
+### 🇪🇸 Personal catalog (Spanish)
+
+The user's own 37-skill catalog, brought in as-is: bodies stay in Spanish, only each
+`description` was translated to English so Claude can still decide when to
+fire them.
+
+[claude-project-setup](skills/claude-project-setup/) · [domain-modeling](skills/domain-modeling/) · [grill-me](skills/grill-me/) · [grill-with-docs](skills/grill-with-docs/) · [grilling](skills/grilling/) · [prototype](skills/prototype/) · [research](skills/research/) · [to-questionnaire](skills/to-questionnaire/) · [to-spec](skills/to-spec/) · [to-tickets](skills/to-tickets/) · [wayfinder](skills/wayfinder/) · [implement](skills/implement/) · [animar](skills/animar/) · [diseno-apple](skills/diseno-apple/) · [diseno-landing](skills/diseno-landing/) · [ingeniero-diseno-web](skills/ingeniero-diseno-web/) · [leyes-de-percepcion](skills/leyes-de-percepcion/) · [leyes-de-retencion](skills/leyes-de-retencion/) · [mejor-accesibilidad](skills/mejor-accesibilidad/) · [mejor-colores](skills/mejor-colores/) · [mejor-layout](skills/mejor-layout/) · [mejor-redaccion](skills/mejor-redaccion/) · [mejor-tipografia](skills/mejor-tipografia/) · [mejor-ui](skills/mejor-ui/) · [sitios-calidad-premio](skills/sitios-calidad-premio/) · [tastemaker](skills/tastemaker/) · [video-a-superprompt](skills/video-a-superprompt/) · [vocabulario-animacion](skills/vocabulario-animacion/) · [code-review](skills/code-review/) · [handoff](skills/handoff/) · [revision-de-cambios](skills/revision-de-cambios/) · [revision-interfaz](skills/revision-interfaz/) · [muscle-memory](skills/muscle-memory/) · [teach](skills/teach/) · [wait-what](skills/wait-what/) · [writing-for-agents](skills/writing-for-agents/) · [write-adr](skills/write-adr/)
 
 ---
 

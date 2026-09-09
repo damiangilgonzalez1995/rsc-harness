@@ -27,6 +27,7 @@ export const DOMAINS = [
   { title: 'Motion & interface craft', ids: ['motion-craft', 'ui-engineering', 'variant-explorer'] },
   { title: 'Design & content craft', ids: ['design-loop', 'design', 'design-dna', 'presentations', 'course-storytelling', 'course-builder', 'technical-writing', 'translation-l10n'] },
   { title: 'Knowledge & meta', ids: ['knowledge-ops', 'codebase-onboarding', 'research-ops', 'continuous-learning', 'skill-scout', 'context-budget', 'roast-me', 'show-me', 'eli5', 'fable-operator'] },
+  { title: 'Personal catalog (Spanish)', ids: ['claude-project-setup', 'domain-modeling', 'grill-me', 'grill-with-docs', 'grilling', 'prototype', 'research', 'to-questionnaire', 'to-spec', 'to-tickets', 'wayfinder', 'implement', 'animar', 'diseno-apple', 'diseno-landing', 'ingeniero-diseno-web', 'leyes-de-percepcion', 'leyes-de-retencion', 'mejor-accesibilidad', 'mejor-colores', 'mejor-layout', 'mejor-redaccion', 'mejor-tipografia', 'mejor-ui', 'sitios-calidad-premio', 'tastemaker', 'video-a-superprompt', 'vocabulario-animacion', 'code-review', 'handoff', 'revision-de-cambios', 'revision-interfaz', 'muscle-memory', 'teach', 'wait-what', 'writing-for-agents', 'write-adr'] },
 ];
 
 export function allDomainIds() {
