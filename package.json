@@ -53,13 +53,13 @@
   ],
   "license": "MIT",
   "author": "Damián Gil González",
-  "homepage": "https://github.com/ericrisco/rsc-harness#readme",
+  "homepage": "https://github.com/damiangilgonzalez1995/rsc-harness#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/damiangilgonzalez1995/rsc-harness.git"
   },
   "bugs": {
-    "url": "https://github.com/ericrisco/rsc-harness/issues"
+    "url": "https://github.com/damiangilgonzalez1995/rsc-harness/issues"
   },
   "publishConfig": {
     "access": "public"

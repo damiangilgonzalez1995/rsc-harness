@@ -431,14 +431,14 @@ async function wizard(flagTargets) {
   for (;;) {
     const choice = await select('What do you want to do?', [
       { key: 'base', label: `Base install — the essentials (${baseIds.length} skills)` },
-      { key: 'sdd', label: 'Base + Spec-Driven Development — the specify → plan → implement → ship flow' },
+      { key: 'workflow', label: 'Base + tu flujo de trabajo — grill-with-docs → to-spec → plan o tickets' },
       { key: 'manual', label: 'Pick skills by hand, by area' },
     ]);
     if (choice === null) { say('\nOK — nothing installed. Anytime: npx @damiangil/harness'); return; }
 
     let ids;
     if (choice === 'base') ids = baseIds;
-    else if (choice === 'sdd') ids = skillsForProfile(m, 'core');
+    else if (choice === 'workflow') ids = skillsForProfile(m, 'core');
     else if (choice === 'manual') {
       const picked = await manualSelect();
       if (picked === null) continue;          // backed out → re-show this menu
@@ -461,8 +461,12 @@ async function wizard(flagTargets) {
       say('Cancelled — back to the menu.');
       continue;                                // "no" / esc → back to menu, not quit
     }
+    // Base installs none of the gate's named skills (grill-with-docs, to-spec, write-adr,
+    // to-tickets, implement) — wiring the full code-hooks gate anyway leaves it referencing
+    // skills that were never installed. Only a choice that actually installs that flow gets it.
+    const policy = { codeHooks: choice !== 'base' };
     for (const target of targets) {
-      await applyInstall({ skillIds: ids, target });
+      await applyInstall({ skillIds: ids, target, policy });
       say(`   ✅ ${target}`);
     }
     say(`\n✅ Installed ${ids.length} skills for ${targets.length} assistant(s).`);
