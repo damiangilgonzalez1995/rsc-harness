@@ -2,6 +2,7 @@
 name: to-tickets
 description: "Breaks down a plan, a spec, or the current conversation into a set of \\"tracer bullet\\" tickets (vertical slices), each declaring which tickets block it, and publishes them to the configured tracker — as local files (one per ticket) or as issues with native blocking links in a real tracker."
 tags: ["tickets", "planning", "issue-tracker"]
+disable-model-invocation: true
 ---
 
 

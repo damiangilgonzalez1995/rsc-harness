@@ -2,6 +2,7 @@
 name: revision-de-cambios
 description: "Reviews a CHANGE (uncommitted work, a branch, a commit range, or a pull request) rather than a screen. Resolves the scope, expands the touched files to the surfaces they affect, reads both sides of the diff, and classifies each finding as introduced, a regression, or pre-existing."
 tags: ["code-review", "diff-review", "regression"]
+disable-model-invocation: true
 ---
 
 # Revision de cambios
