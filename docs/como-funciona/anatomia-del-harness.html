@@ -1,0 +1,305 @@
+<title>Anatomía del harness rsc</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f6f7f9;--paper:#ffffff;--ink:#1c2230;--ink-2:#4a5468;--ink-3:#7c8597;
+  --line:#dde1e8;--line-2:#eceff3;
+  --acc:#b8600f;--acc-bg:#fbf1e6;
+  --blue:#2b5fa8;--blue-bg:#e9f0fb;
+  --green:#2f7d4f;--green-bg:#e8f4ec;
+  --code-bg:#f0f2f5;--inject-bg:#fffbf3;--inject-line:#e8c99a;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141821;--paper:#1b202b;--ink:#e8ebf0;--ink-2:#b4bccb;--ink-3:#7f8899;
+  --line:#2c3341;--line-2:#242a36;
+  --acc:#e0913a;--acc-bg:#2c2318;
+  --blue:#7fa6e6;--blue-bg:#1d2739;
+  --green:#6fbf8a;--green-bg:#1a2b21;
+  --code-bg:#11151d;--inject-bg:#221d14;--inject-line:#5a4526;
+}}
+:root[data-theme="dark"]{
+  --bg:#141821;--paper:#1b202b;--ink:#e8ebf0;--ink-2:#b4bccb;--ink-3:#7f8899;
+  --line:#2c3341;--line-2:#242a36;
+  --acc:#e0913a;--acc-bg:#2c2318;
+  --blue:#7fa6e6;--blue-bg:#1d2739;
+  --green:#6fbf8a;--green-bg:#1a2b21;
+  --code-bg:#11151d;--inject-bg:#221d14;--inject-line:#5a4526;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,sans-serif}
+main{max-width:860px;margin:0 auto;padding:48px 24px 96px}
+h1{font-size:2.2rem;line-height:1.15;margin:0 0 8px;text-wrap:balance;font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.45rem;margin:56px 0 12px;padding-top:20px;border-top:2px solid var(--ink);text-wrap:balance}
+h3{font-size:1.05rem;margin:28px 0 8px;font-weight:600}
+p{margin:0 0 14px;max-width:68ch}
+.lede{color:var(--ink-2);font-size:1.1rem;max-width:62ch}
+.eyebrow{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);font-weight:600;margin-bottom:12px}
+.meta{font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--ink-3);margin-top:12px}
+code{font-family:"IBM Plex Mono",monospace;font-size:.86em;background:var(--code-bg);padding:1px 5px;border-radius:3px}
+pre{font-family:"IBM Plex Mono",monospace;font-size:.8rem;line-height:1.5;background:var(--code-bg);padding:14px 16px;border-radius:6px;overflow-x:auto;margin:10px 0 18px;border:1px solid var(--line-2)}
+pre code{background:none;padding:0;font-size:inherit}
+pre.inject{background:var(--inject-bg);border:1px solid var(--inject-line);border-left:4px solid var(--acc);white-space:pre-wrap}
+.label{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;font-weight:500}
+.l-inject{background:var(--acc-bg);color:var(--acc)}
+.l-you{background:var(--blue-bg);color:var(--blue)}
+.l-silent{background:var(--green-bg);color:var(--green)}
+table{border-collapse:collapse;width:100%;font-size:.9rem;margin:10px 0 20px}
+th{text-align:left;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding:6px 10px;border-bottom:2px solid var(--line)}
+td{padding:9px 10px;border-bottom:1px solid var(--line-2);vertical-align:top}
+td:first-child{white-space:nowrap;font-family:"IBM Plex Mono",monospace;font-size:.8rem}
+.wrap{overflow-x:auto}
+.note{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:14px 18px;margin:16px 0 22px}
+.note strong{color:var(--acc)}
+.timeline{list-style:none;padding:0;margin:14px 0 24px;border-left:2px solid var(--line)}
+.timeline li{padding:0 0 18px 22px;position:relative}
+.timeline li::before{content:"";position:absolute;left:-7px;top:9px;width:12px;height:12px;border-radius:50%;background:var(--paper);border:2px solid var(--acc)}
+.timeline b{display:block;font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--acc);margin-bottom:2px}
+.timeline span{color:var(--ink-2)}
+ul{padding-left:20px}li{margin-bottom:6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:640px){.two{grid-template-columns:1fr}}
+.box{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.box h4{margin:0 0 6px;font-size:.95rem}
+.box p{font-size:.9rem;margin:0;color:var(--ink-2)}
+.toc{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:14px 18px;margin:24px 0 8px;font-size:.92rem}
+.toc ol{margin:6px 0 0;padding-left:20px}
+.toc a{color:var(--blue);text-decoration:none}
+</style>
+
+<main>
+<div class="eyebrow">Proyecto prompt-injection-patterns · rsc 1.3.2 · target Claude Code</div>
+<h1>Anatomía del harness rsc</h1>
+<p class="lede">Qué ficheros ejecuta Claude Code sin que nadie lo pida, en qué momento, y el texto exacto que cada uno le mete al modelo en el contexto. Todo verificado ejecutando los scripts instalados el 7 de septiembre de 2026.</p>
+<div class="meta">Leyenda: <span class="label l-inject">inyecta texto</span> el modelo lo lee · <span class="label l-silent">silencioso</span> escribe en disco, el modelo no ve nada · <span class="label l-you">lo lanzas tú</span> slash command</div>
+
+<div class="toc">
+<strong>Contenido</strong>
+<ol>
+<li><a href="#idea">La idea en tres líneas</a></li>
+<li><a href="#donde">Dónde está cableado: dos ficheros de settings</a></li>
+<li><a href="#ciclo">El ciclo de vida de una sesión</a></li>
+<li><a href="#h1">Hook 1: session-start.mjs</a></li>
+<li><a href="#h2">Hook 2: worklog-checkpoint.mjs</a></li>
+<li><a href="#h3">Hook 3: session-memory-adapter.mjs</a></li>
+<li><a href="#brujula">Por qué el agente lee user-profile.md</a></li>
+<li><a href="#commands">Los cuatro slash commands</a></li>
+<li><a href="#doctor">rsc doctor y rsc repair</a></li>
+<li><a href="#grandes">Lo que añade un proyecto grande</a></li>
+<li><a href="#resumen">Tabla resumen</a></li>
+</ol>
+</div>
+
+<h2 id="idea">1. La idea en tres líneas</h2>
+<p>Un <strong>hook</strong> en Claude Code es un comando de terminal que Claude Code ejecuta solo cuando ocurre un evento: se abre la sesión, el usuario envía un mensaje, se va a ejecutar una herramienta, se cierra la sesión.</p>
+<p>Lo que ese comando <strong>imprime por pantalla</strong> se añade al contexto del modelo como si fuera una instrucción más. Así es como el harness "habla" con Claude sin tocar el CLAUDE.md.</p>
+<p>rsc instala scripts de Node en <code>.rsc/</code> y los registra en los settings. Ningún script llama a una IA. Son reglas fijas: si existe tal fichero, imprime tal texto.</p>
+
+<h2 id="donde">2. Dónde está cableado</h2>
+<p>Hay <strong>dos</strong> ficheros de settings, y esto despista. Cada uno registra hooks distintos.</p>
+<div class="two">
+<div class="box"><h4>.claude/settings.json</h4><p>Se comparte con el equipo (va en git). Registra 3 hooks: SessionStart, PreCompact, SessionEnd. Son los que <em>inyectan texto</em>.</p></div>
+<div class="box"><h4>.claude/settings.local.json</h4><p>Solo tu máquina (no va en git). Registra 7 hooks de memoria de sesión, todos al mismo script con un argumento distinto. Son <em>silenciosos</em>: escriben un diario local.</p></div>
+</div>
+<p>Los scripts a los que apuntan viven en <code>.rsc/</code> dentro de tu proyecto. Son copias; el paquete npm ya no hace falta para que funcionen.</p>
+<pre><code>.rsc/
+  session-start.mjs            ← hook 1 (279 líneas)
+  suggest-always-on.md         ← el texto que inyecta el hook 1
+  worklog-checkpoint.mjs       ← hook 2 (26 líneas)
+  session-memory-adapter.mjs   ← hook 3, punto de entrada (131 líneas)
+  session-memory-core.mjs      ← hook 3, la lógica del diario (477 líneas)
+  hook-once.mjs                ← evita duplicados si rsc está cableado dos veces
+  worktree-reaper.mjs          ← detecta worktrees ya mergeados (lo usa el hook 1)
+  memory/                      ← aquí se escribirá el diario (aún no existe)
+  backups/                     ← copias de seguridad de cada instalación</code></pre>
+
+<h2 id="ciclo">3. El ciclo de vida de una sesión</h2>
+<p>Orden real en el que Claude Code dispara los hooks de este proyecto. Los dos settings se fusionan: en un mismo evento corren los hooks de ambos.</p>
+<ul class="timeline">
+<li><b>SessionStart</b><span>Abres Claude Code. Corren <code>session-start.mjs</code> <span class="label l-inject">inyecta</span> y <code>session-memory-adapter.mjs claude start</code> <span class="label l-inject">inyecta solo si hay checkpoint previo</span>.</span></li>
+<li><b>UserPromptSubmit</b><span>Envías un mensaje. Corre <code>adapter claude request</code> <span class="label l-silent">silencioso</span>. Anota que hubo actividad.</span></li>
+<li><b>PostToolUse (Edit|Write|NotebookEdit)</b><span>Claude edita un fichero. Corre <code>adapter claude edit</code> <span class="label l-silent">silencioso</span>. Suma 1 al contador de ediciones.</span></li>
+<li><b>PostToolUse (Bash)</b><span>Claude ejecuta un comando. Corre <code>adapter claude boundary</code> <span class="label l-silent">silencioso</span>. Refresca la foto de git (un commit es una "frontera").</span></li>
+<li><b>Stop</b><span>Claude termina su respuesta. Corre <code>adapter claude turn</code> <span class="label l-silent">silencioso</span>. Guarda el checkpoint si hubo trabajo.</span></li>
+<li><b>PreCompact</b><span>El contexto se va a resumir. Corren <code>worklog-checkpoint.mjs</code> <span class="label l-inject">inyecta</span> y <code>adapter claude compact</code> <span class="label l-silent">silencioso</span>.</span></li>
+<li><b>SessionEnd</b><span>Cierras. Corren <code>worklog-checkpoint.mjs</code> <span class="label l-inject">inyecta</span> y <code>adapter claude end</code> <span class="label l-silent">silencioso</span>. Marca la sesión como completada.</span></li>
+</ul>
+<div class="note"><strong>Lo que NO tienes.</strong> En proyectos grandes rsc añade también PreToolUse con tres guardas (danger-guard, gitmoji-guard, ship-guard) y un UserPromptSubmit que reafirma la regla "spec antes de código". En tu plan quedaron <em>diferidos</em> porque dijiste proyecto pequeño. Por eso no ves `.mjs` de guardas en tu `.rsc/`.</div>
+
+<h2 id="h1">4. Hook 1: session-start.mjs <span class="label l-inject">inyecta</span></h2>
+<p><strong>Comando registrado</strong> en settings.json:</p>
+<pre><code>node ".rsc/session-start.mjs" ".rsc/suggest-always-on.md" "&lt;raíz del proyecto&gt;"</code></pre>
+<p>Recibe dos argumentos: el fichero Markdown a inyectar y la raíz. Luego hace una cadena de <strong>diez comprobaciones</strong>, cada una con su condición y su bloque de texto. Solo imprime los que aplican.</p>
+
+<h3>4.1 El cuerpo siempre activo</h3>
+<p>Lee <code>.rsc/suggest-always-on.md</code> y lo imprime tal cual. Son <strong>tres líneas</strong>. Este es el texto que hace que Claude vaya a buscar el perfil de usuario:</p>
+<pre class="inject"># rsc-suggest — always-on operations layer
+
+Read `docs/wiki/harness/user-profile.md` before acting. Use `orient` to keep the user situated and `suggest` to offer a missing skill only when the current task needs it. Close with the configured orientation block.</pre>
+<p>Antes de imprimirlo pasa por <code>hook-once.mjs</code>: si rsc está cableado a la vez en tu home y en el proyecto, ambos hooks correrían y el texto entraría dos veces. Usa el <code>session_id</code> que Claude Code pasa por stdin como llave y escribe un marcador en la carpeta temporal del sistema. El primero que llega imprime; el segundo calla. Si algo falla, imprime igualmente (fail-open).</p>
+
+<h3>4.2 Cómo está escrito cada aviso: el patrón</h3>
+<p>Los nueve avisos siguen el mismo esqueleto: un <code>if</code> con condiciones sobre ficheros del disco, y un <code>process.stdout.write</code> con el texto. Lo que el script imprime, Claude Code lo pega en el contexto. Ejemplo real, el aviso de auditoría, tal cual está en <code>.rsc/session-start.mjs</code>:</p>
+<pre><code>// línea 13: la constante
+const STALE_AUDIT_DAYS = 14;
+
+// líneas 39-43: la pregunta "¿toca auditar?"
+function auditDue() {
+  try {
+    const { lastRun } = JSON.parse(readFileSync(join(root, '.rsc', 'audit.json'), 'utf8'));
+    return (Date.now() - new Date(lastRun).getTime()) / 86400000 &gt;= STALE_AUDIT_DAYS;
+  } catch { return true; }   // no existe audit.json → nunca se auditó → toca
+}
+
+// líneas 180-187: la inserción
+if (profileExists &amp;&amp; auditDue() &amp;&amp; !has('.rsc', '.no-audit')) {
+  process.stdout.write(`
+===== rsc skill audit =====
+A skill audit is due (runs at most every ${STALE_AUDIT_DAYS} days). It flags overlapping
+skills and skills with no footprint in this project.
+ACTION: run \`npx @damiangil/harness audit\`. Opt out with .rsc/.no-audit.
+===========================
+`);
+}</code></pre>
+<p>Tres condiciones en el <code>if</code>: hay perfil, han pasado 14 días desde la fecha guardada en <code>.rsc/audit.json</code> (o el fichero no existe), y no existe el fichero de apagado. Si las tres se cumplen, se imprime. Ejecutar <code>rsc audit</code> escribe la fecha de hoy en <code>audit.json</code> y el aviso calla otros 14 días.</p>
+
+<h3>4.3 Los nueve avisos, uno a uno</h3>
+<div class="wrap"><table>
+<tr><th>Aviso</th><th>Qué problema detecta</th><th>Qué mira en disco</th><th>Qué recibe Claude</th><th>Cómo se apaga</th></tr>
+<tr><td>duplicate scope</td><td>rsc instalado en tu usuario (<code>~/.claude</code>) y en el proyecto a la vez, con uno desactualizado. Claude recibe las instrucciones dos veces y gasta contexto.</td><td><code>.rsc/.version</code> en ambos sitios; si <code>~/.claude/settings.json</code> menciona <code>.rsc/</code>.</td><td>Ruta del scope atrasado y el comando para actualizarlo. Máximo cada 7 días.</td><td>Actualizar el scope viejo, o <code>.rsc/.no-scope-check</code>.</td></tr>
+<tr><td>onboarding</td><td>Hay harness pero nadie respondió las preguntas de perfil.</td><td>Falta <code>docs/wiki/harness/user-profile.md</code>.</td><td>"Invoca la skill <code>init</code> antes de la tarea", que hace las preguntas por chat.</td><td>Se apaga al crear el perfil, o con <code>.rsc/.no-harness</code>.</td></tr>
+<tr><td>auto-ingest</td><td>Dejaste documentos en la bandeja de entrada de la documentación y no están en la wiki.</td><td>Existe <code>docs/inbox/</code> con algún fichero real (no README, no ocultos).</td><td>"Ejecuta el Auto-Ingest Sweep": leer cada documento, escribir artículos en <code>docs/wiki/</code>, anotarlo en <code>wiki/.ingested.json</code>. Copia, nunca mueve.</td><td>Procesar el inbox.</td></tr>
+<tr><td>git required</td><td>El proyecto no está en git. Sin git no funcionan la memoria de sesión ni el flujo de entrega.</td><td>No existe <code>.git/</code>.</td><td>"Ofrece hacer <code>git init</code>".</td><td><code>git init</code>, o <code>.rsc/.no-git</code>.</td></tr>
+<tr><td>context7 MCP</td><td>Claude usa documentación de librerías memorizada en su entrenamiento, que puede estar desfasada. Context7 es un servicio externo (vía MCP, el estándar de "enchufes" de Claude Code) que le da la doc real de la versión que usas.</td><td><code>.mcp.json</code> no tiene un servidor llamado <code>context7</code>.</td><td>El comando <code>claude mcp add ... context7</code>.</td><td>Instalarlo, o <code>.rsc/.no-context7</code>. Tú marcaste opt-out en el onboarding.</td></tr>
+<tr><td>skill audit</td><td>Con el tiempo se acumulan skills solapadas o que nadie usa en este repo.</td><td><code>.rsc/audit.json</code> no existe o su fecha tiene más de 14 días.</td><td>"Ejecuta <code>rsc audit</code>". Lista skills sin huella y solapes.</td><td>Ejecutar la auditoría, o <code>.rsc/.no-audit</code>. <strong>Hoy encendido en tu proyecto.</strong></td></tr>
+<tr><td>CLAUDE.md hygiene</td><td><code>CLAUDE.md</code> se lee en cada turno. Si crece mucho, cada línea cuesta contexto y Claude obedece peor.</td><td>Cuenta líneas de <code>CLAUDE.md</code>. Más de 200.</td><td>"Mueve las secciones largas a <code>docs/wiki/index.md</code> y deja un puntero corto".</td><td>Recortarlo, o <code>.rsc/.no-claudemd-check</code>.</td></tr>
+<tr><td>worktree cleanup</td><td>En equipos con muchas ramas quedan worktrees de git cuyo trabajo ya se mergeó a main.</td><td><code>worktree-reaper.mjs</code> compara cada worktree con la rama principal.</td><td>Lista de worktrees retirables y el comando <code>rsc worktrees reap</code>. Solo propone; nunca borra sin un sí.</td><td>Retirarlos, o <code>.rsc/.no-worktree-cleanup</code>.</td></tr>
+<tr><td>update available</td><td>Versión vieja de rsc; las skills tienen mejoras.</td><td>Compara <code>.rsc/.version</code> con la respuesta de <code>registry.npmjs.org</code>. Timeout 1,5 s. Única llamada de red del harness.</td><td>"Hay versión X, tienes Y, ¿actualizo?".</td><td>Actualizar, o variable <code>RSC_NO_UPDATE_CHECK=1</code>.</td></tr>
+</table></div>
+
+<h3>4.4 Salida real en tu proyecto hoy</h3>
+<p>Esto es, byte a byte, lo que Claude recibió al arrancar la sesión en la que le pediste "explícame la estructura del repo":</p>
+<pre class="inject"># rsc-suggest — always-on operations layer
+
+Read `docs/wiki/harness/user-profile.md` before acting. Use `orient` to keep the user situated and `suggest` to offer a missing skill only when the current task needs it. Close with the configured orientation block.
+
+===== rsc skill audit =====
+A skill audit is due (runs at most every 14 days). It flags overlapping
+skills and skills with no footprint in this project.
+ACTION: run `npx @damiangil/harness audit`. Opt out with .rsc/.no-audit.
+===========================</pre>
+<p>Peso: <strong>6,9 KB</strong> por arranque según <code>rsc doctor</code>. Ese dato incluye el cuerpo completo de la skill <code>suggest</code> que Claude carga por su cuenta al ver el nombre.</p>
+
+<h2 id="h2">5. Hook 2: worklog-checkpoint.mjs <span class="label l-inject">inyecta</span></h2>
+<p><strong>Comando registrado</strong> en PreCompact y SessionEnd:</p>
+<pre><code>node ".rsc/worklog-checkpoint.mjs" "&lt;raíz del proyecto&gt;"</code></pre>
+<p>Una sola condición: si no existe <code>docs/wiki/</code>, no imprime nada. Si existe, imprime siempre este texto:</p>
+<pre class="inject">===== rsc worklog checkpoint =====
+If this session did meaningful work (files changed, a decision made, a commit),
+run a WORKLOG SWEEP before context is lost:
+  1. Write docs/raw/worklog/&lt;YYYY-MM-DD&gt;-&lt;slug&gt;.md using the harness
+     wiki-worklog-template.md (what we did · why · files touched · outcome · next).
+  2. Compile it into wiki/ (update existing articles first; wikilinks + Related);
+     append significant decisions to docs/wiki/harness/decisions.md.
+Skip entirely if this was a pure read/answer turn with no changes.
+==================================</pre>
+<p>El hook solo recuerda. Quien escribe el worklog es el agente, y solo si hubo cambios. La plantilla está en <code>.claude/skills/harness/references/wiki-worklog-template.md</code>.</p>
+
+<h2 id="h3">6. Hook 3: session-memory-adapter.mjs <span class="label l-silent">silencioso</span></h2>
+<p>Un solo script, siete cableados en settings.local.json, cada uno con un evento como argumento:</p>
+<pre><code>node ".rsc/session-memory-adapter.mjs" claude start      ← SessionStart
+node ".rsc/session-memory-adapter.mjs" claude request    ← UserPromptSubmit
+node ".rsc/session-memory-adapter.mjs" claude edit       ← PostToolUse Edit|Write|NotebookEdit
+node ".rsc/session-memory-adapter.mjs" claude boundary   ← PostToolUse Bash
+node ".rsc/session-memory-adapter.mjs" claude turn       ← Stop
+node ".rsc/session-memory-adapter.mjs" claude compact    ← PreCompact
+node ".rsc/session-memory-adapter.mjs" claude end        ← SessionEnd</pre>
+<p>Cada uno tiene un timeout de 5 segundos. El adaptador lee el JSON que Claude Code le pasa por stdin (session_id, evento, cwd), sube por las carpetas hasta encontrar <code>.rsc.json</code> para saber cuál es el proyecto, y llama a <code>session-memory-core.mjs</code>.</p>
+
+<h3>6.1 Qué guarda</h3>
+<p>Solo metadatos de git, nunca contenido:</p>
+<ul>
+<li>Rama, worktree, HEAD actual y HEAD de referencia al empezar la sesión.</li>
+<li>Rutas de ficheros modificados y una huella (hash) de cada uno, para saber si cambiaron.</li>
+<li>Lista de commits hechos durante la sesión.</li>
+<li>Contador de ediciones y marcas de tiempo.</li>
+</ul>
+<p>Lo escribe en <code>.rsc/memory/anchors/claude--&lt;session&gt;.json</code> (la foto inicial) y <code>.rsc/memory/sessions/claude--&lt;session&gt;.json</code> (el estado). Retención 30 días. Esa carpeta está excluida de git.</p>
+
+<h3>6.2 Por qué hoy no hay nada</h3>
+<p>El core tiene una regla: <strong>si no hubo trabajo, no escribe registro</strong>. Trabajo significa una edición, un fichero nuevo sucio, un fichero que cambió de huella, o un commit. Tu sesión fue de solo lectura, así que <code>.rsc/memory/</code> ni siquiera se ha creado. Lo confirmé ejecutando el adaptador: devuelve <code>record: null</code>.</p>
+
+<h3>6.3 Aviso: en Windows los hooks de memoria no se ejecutan</h3>
+<p>Comprobado el 8 de septiembre lanzando el adaptador tal como lo lanza Claude Code: no escribe nada. La última línea del script decide si ejecutar el bloque principal comparando <code>import.meta.url</code> con <code>file://</code> más la ruta del argumento. En Windows uno es <code>file:///C:/Users/...</code> y el otro <code>C:\Users\...</code>, nunca coinciden, y el bloque no corre. En Mac y Linux funciona. Llamando a la función <code>handleLifecycle</code> directamente, el diario se escribe bien; es solo el arranque por línea de comandos lo que falla. Los comandos manuales (<code>/save-session</code>, <code>rsc memory save</code>) sí funcionan porque no pasan por esa línea.</p>
+<h3>6.4 El único momento en que inyecta</h3>
+<p>En <code>start</code>, si existe un registro de la misma rama y worktree, lo devuelve a Claude Code como <code>additionalContext</code>. Tiene este formato (máximo 4.096 bytes):</p>
+<pre class="inject">rsc memory: continuation for this branch and worktree
+branch: main
+worktree: C:\...\prompt-injection-patterns
+head: &lt;sha&gt;
+changed: blueprint/patterns/dual_llm.py, tests/test_dual_llm.py
+commits: 2 since baseline
+completed: 2026-09-07T18:02:11Z</pre>
+<p>Si el registro es de otra rama pero mismo worktree, lo etiqueta como "nearby" y le dice al agente que no lo mezcle en silencio.</p>
+
+<h2 id="brujula">7. Por qué el agente lee user-profile.md</h2>
+<p>Para seguir esta cadena hay que saber cómo carga Claude Code las skills:</p>
+<ol>
+<li><strong>Al arrancar, Claude Code escanea <code>.claude/skills/</code></strong> y de cada SKILL.md lee solo la cabecera: <code>name</code> y <code>description</code>. Mete esas descripciones en el contexto como catálogo. Son los 3,3 KB de "descripciones de skills" que reporta <code>doctor</code>. El cuerpo completo aún no está cargado.</li>
+<li><strong>El hook 1 inyecta</strong> <em>"Read docs/wiki/harness/user-profile.md before acting. Use orient..."</em>.</li>
+<li><strong>Claude carga el cuerpo de <code>orient</code></strong> usando la herramienta Skill, porque el hook se lo pide y la descripción dice "Always-on". Ahí lee la regla: "No turn ends in seco" y el bloque de cuatro intenciones:</li>
+</ol>
+<pre class="inject">📍 Dónde estás — the project phase/state (the map)
+✅ Qué acabas de hacer — one line, in the user's language
+🧭 Por qué — the technical why, scaled to the dial
+➡️ Siguiente — 1-3 concrete options, ending in a question</pre>
+<ol start="4">
+<li><strong>El SKILL.md apunta a <code>references/orientation-contract.md</code></strong> (línea 63) para el detalle: qué significa cada nivel L0 a L3 y cómo combinarlo con el nivel técnico. Claude lo lee si necesita el detalle.</li>
+<li><strong>Claude lee tu perfil</strong>, ve <code>accompaniment: L0</code> y <code>technical_level: non-technical</code>, y aplica L0 ("cavernícola"): solo ✅ y ➡️, una opción, pregunta de sí o no.</li>
+</ol>
+<p>Las cuatro líneas son intenciones, no texto fijo: Claude las redacta cada vez en tu idioma. Lo que no cambia es el orden ni que la última sea una pregunta. Ejemplo de cierre en L0: <em>"✅ He leído el repo. ➡️ ¿Empiezo por los notebooks?"</em></p>
+<p>El perfil lo escribió <code>onboard</code> con tus respuestas. Edítalo a mano, cambia L0 por L2, y verás cambiar el tono al instante sin tocar código.</p>
+
+<h2 id="commands">8. Los cuatro slash commands <span class="label l-you">los lanzas tú</span></h2>
+<p>Cada fichero de <code>.claude/commands/</code> es un prompt. Escribes <code>/nombre</code>, Claude recibe el texto, y él ejecuta el comando <code>rsc</code> que se le indica.</p>
+<div class="wrap"><table>
+<tr><th>Command</th><th>Texto que recibe Claude</th><th>Comando rsc que acaba ejecutando</th></tr>
+<tr><td>/save-session</td><td>"Invoke memory:save with the current local session identifiers. Persist only allowed git and SDD ledger metadata; never include conversation or file content."</td><td><code>rsc memory save --session &lt;id&gt;</code></td></tr>
+<tr><td>/resume-session</td><td>"Invoke memory:resume for the current branch and worktree. Label a nearby branch result as nearby; never merge it silently."</td><td><code>rsc memory resume</code></td></tr>
+<tr><td>/learn "texto"</td><td>"Invoke memory:learn for exactly one proposed lesson. After individual explicit approval, run rsc memory learn... Without that approval, write nothing."</td><td><code>rsc memory learn --text ... --approve</code></td></tr>
+<tr><td>/checkpoint</td><td>"Run sello freeze, complete the required review, then run sello approve only with the observed lenses. Do not treat freeze as approval."</td><td><code>rsc sello freeze</code> / <code>approve</code></td></tr>
+</table></div>
+<p><code>/checkpoint</code> pertenece al sistema "sello", que en tu proyecto está desactivado (<code>rsc doctor</code> lo reporta como <code>enabled: false</code>). Está instalado porque el comando existe en el catálogo, pero no hará nada útil hasta activar sello.</p>
+
+<h2 id="doctor">9. rsc doctor y rsc repair</h2>
+<div class="two">
+<div class="box"><h4>rsc doctor: diagnostica, no toca nada</h4><p>Compara lo que <code>.rsc.json</code> declara con lo que hay en disco. Comprueba que cada hook registrado apunta a un fichero que existe (un clon fresco trae settings.json pero no <code>.rsc/</code>, y sin este chequeo parecería sano). Lista skills instaladas y faltantes, comandos sin respaldo, backups, estado de sello, modo de memoria, y un presupuesto de contexto: cuántos KB entran por sesión y por turno.</p></div>
+<div class="box"><h4>rsc repair: arregla, con una frontera clara</h4><p>Cada hallazgo nace clasificado como <em>restore</em> o <em>change</em>. Restore es devolver el harness a lo ya declarado: un enlace roto, un hook duplicado, una carpeta de un layout viejo. Eso lo hace solo, tras crear un backup. Change es alterar una decisión: cambiar de asistente, adoptar una skill que añadió un compañero, desarmar una guarda. Eso lo pregunta uno a uno.</p></div>
+</div>
+<p>Salida de <code>rsc doctor</code> en tu proyecto hoy: 9 skills instaladas, 0 faltantes, hooks cableados, 4 backups, sello desactivado, memoria en modo full y lista. Presupuesto: 6,9 KB por arranque, 0 KB por turno, 3,3 KB de descripciones de skills siempre en contexto.</p>
+<p>El hook 1 tiene una sección "un harness roto se arregla solo": si Claude detecta síntomas (no ve skills, un hook se repite, <code>.rsc.json</code> no cuadra), debe ejecutar <code>doctor</code>, describir el síntoma en una línea y ofrecer <code>repair</code> una sola vez por sesión.</p>
+
+<h2 id="grandes">10. Lo que añade un proyecto grande</h2>
+<p>Tu plan dejó varias piezas <em>diferidas</em> por ser un proyecto pequeño. Con un plan mediano o grande, el mismo <code>targets/claude.js</code> cablea además estos hooks. La diferencia clave: <strong>no imprimen avisos, bloquean</strong>. Devuelven una decisión <code>deny</code> por stdout y Claude Code cancela el comando antes de ejecutarlo.</p>
+<div class="wrap"><table>
+<tr><th>Script</th><th>Evento</th><th>Qué hace</th></tr>
+<tr><td>danger-guard.mjs</td><td>PreToolUse (Bash)</td><td>Lee el comando que Claude va a ejecutar. Si es irreversible (<code>rm -rf</code>, <code>git push --force</code>, <code>git reset --hard</code>, <code>git clean</code>...), responde <code>deny</code> con el motivo. Claude ve el rechazo y tiene que pedirte permiso.</td></tr>
+<tr><td>gitmoji-guard.mjs</td><td>PreToolUse (Bash)</td><td>Si el comando es <code>git commit</code> y el mensaje no empieza por un emoji de la convención gitmoji, lo rechaza.</td></tr>
+<tr><td>ship-guard.mjs</td><td>PreToolUse (Bash)</td><td>Impide cambiar a main o mergear a main fuera del flujo <code>ship</code>. Con <code>sello.mjs</code> activado, además exige que los bytes que se commitean sean exactamente los que se revisaron: un "sello" firma el contenido revisado y el guard compara.</td></tr>
+<tr><td>userprompt-gate.mjs</td><td>UserPromptSubmit</td><td>En cada mensaje tuyo reinyecta la regla "una feature nueva pasa por <code>grill-with-docs</code> y <code>to-spec</code> antes de escribir código". Se inyecta en cada turno porque en sesiones largas la instrucción del arranque queda lejos y el modelo la olvida.</td></tr>
+</table></div>
+<p>Además instala cuatro agentes base en <code>.claude/agents/</code> (revisor, depurador, resolutor de builds, planificador) y un revisor específico por stack. Se activan cuando el proyecto desarrolla la necesidad: <code>rsc reassess</code> comprueba la evidencia y propone un plan nuevo que tú tienes que aceptar.</p>
+
+<h2 id="resumen">11. Tabla resumen</h2>
+<div class="wrap"><table>
+<tr><th>Fichero</th><th>Evento</th><th>Tipo</th><th>Condición</th><th>Efecto</th></tr>
+<tr><td>session-start.mjs</td><td>SessionStart</td><td>Inyecta</td><td>Siempre el cuerpo; 9 avisos condicionales</td><td>Claude lee el perfil y cierra con brújula</td></tr>
+<tr><td>worklog-checkpoint.mjs</td><td>PreCompact, SessionEnd</td><td>Inyecta</td><td>Existe docs/wiki/</td><td>Pide escribir el worklog si hubo trabajo</td></tr>
+<tr><td>adapter start</td><td>SessionStart</td><td>Inyecta si hay registro</td><td>Registro previo de la rama</td><td>Claude sabe dónde se quedó</td></tr>
+<tr><td>adapter request/edit/boundary/turn/compact/end</td><td>Los seis restantes</td><td>Silencioso</td><td>Hubo trabajo real</td><td>Actualiza el diario en .rsc/memory/</td></tr>
+<tr><td>hook-once.mjs</td><td>Interno</td><td>Silencioso</td><td>Dos scopes cableados</td><td>Evita inyección doble</td></tr>
+<tr><td>worktree-reaper.mjs</td><td>Interno (lo llama el hook 1)</td><td>Silencioso</td><td>Hay .git</td><td>Lista worktrees ya mergeados</td></tr>
+<tr><td>commands/*.md</td><td>Cuando escribes /nombre</td><td>Prompt</td><td>Tú lo pides</td><td>Claude ejecuta el comando rsc indicado</td></tr>
+</table></div>
+
+<div class="note"><strong>Corrección sobre lo dicho antes.</strong> En la conversación te mostré el SKILL.md completo de <code>suggest</code> (130 líneas) como "lo que inyecta el hook". No es exacto: el hook inyecta el fichero corto de tres líneas. El SKILL.md completo lo carga Claude después, por su cuenta, porque el texto corto le dice "use suggest". El resultado es parecido, pero la mecánica es distinta y conviene explicarla bien.</div>
+</main>
