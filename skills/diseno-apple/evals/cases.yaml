@@ -1,0 +1,32 @@
+skill: diseno-apple
+
+should_trigger:
+  - prompt: "Quiero que esta interfaz se sienta como una app de Apple, con muelles y gestos."
+    why: "Disparador directo de diseno-apple."
+  - prompt: "Revisa esta hoja deslizante con criterios de diseno estilo Apple."
+    why: "Disparador directo de diseno-apple."
+  - prompt: "Necesito animaciones de muelle e inercia como en iOS."
+    why: "Disparador directo de diseno-apple."
+  - prompt: "Make this drag interaction feel like Apple's fluid, physical motion."
+    why: "Disparador directo de diseno-apple."
+  - prompt: "Ajusta la tipografia y el tracking al estilo de las interfaces de Apple."
+    why: "Disparador directo de diseno-apple."
+
+should_not_trigger:
+  - prompt: "Construye una landing de conversion generica."
+    route_to: "none"
+    why: "Fuera del alcance de diseno-apple."
+  - prompt: "Revisa la accesibilidad de este formulario."
+    route_to: "none"
+    why: "Fuera del alcance de diseno-apple."
+  - prompt: "Escribe los textos de este boton."
+    route_to: "none"
+    why: "Fuera del alcance de diseno-apple."
+  - prompt: "Elige la paleta de colores del sistema de diseno."
+    route_to: "none"
+    why: "Fuera del alcance de diseno-apple."
+
+capability:
+  - scenario: "El usuario quiere una interfaz con el movimiento fluido estilo Apple."
+    must_include:
+      - "gesto"

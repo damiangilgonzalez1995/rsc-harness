@@ -1,0 +1,32 @@
+skill: to-tickets
+
+should_trigger:
+  - prompt: "Descompon este plan en tickets bala trazadora y publicalos."
+    why: "Disparador directo de to-tickets."
+  - prompt: "Convierte esta spec en un conjunto de tickets con bloqueos."
+    why: "Disparador directo de to-tickets."
+  - prompt: "Necesito tickets a partir de la conversacion actual."
+    why: "Disparador directo de to-tickets."
+  - prompt: "Break this spec down into tracer-bullet tickets in the tracker."
+    why: "Disparador directo de to-tickets."
+  - prompt: "Genera los tickets de este plan con sus dependencias."
+    why: "Disparador directo de to-tickets."
+
+should_not_trigger:
+  - prompt: "Escribe la spec original antes de descomponerla."
+    route_to: "none"
+    why: "Fuera del alcance de to-tickets."
+  - prompt: "Implementa uno de los tickets ya creados."
+    route_to: "none"
+    why: "Fuera del alcance de to-tickets."
+  - prompt: "Revisa el codigo de un ticket cerrado."
+    route_to: "none"
+    why: "Fuera del alcance de to-tickets."
+  - prompt: "Interrogame sobre este plan antes de descomponerlo."
+    route_to: "none"
+    why: "Fuera del alcance de to-tickets."
+
+capability:
+  - scenario: "El usuario quiere descomponer un plan en tickets publicados."
+    must_include:
+      - "ticket"

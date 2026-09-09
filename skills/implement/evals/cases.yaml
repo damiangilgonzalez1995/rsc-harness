@@ -1,0 +1,32 @@
+skill: implement
+
+should_trigger:
+  - prompt: "Implementa esta pieza de trabajo a partir de la spec."
+    why: "Disparador directo de implement."
+  - prompt: "Coge este conjunto de tickets y empieza a implementarlos."
+    why: "Disparador directo de implement."
+  - prompt: "Necesito que se escriba el codigo de esta spec."
+    why: "Disparador directo de implement."
+  - prompt: "Implement this piece of work from the spec we just wrote."
+    why: "Disparador directo de implement."
+  - prompt: "Pon en marcha la implementacion de este ticket."
+    why: "Disparador directo de implement."
+
+should_not_trigger:
+  - prompt: "Escribe la spec antes de implementar nada."
+    route_to: "none"
+    why: "Fuera del alcance de implement."
+  - prompt: "Revisa el codigo que ya se implemento."
+    route_to: "none"
+    why: "Fuera del alcance de implement."
+  - prompt: "Descompon el plan en tickets primero."
+    route_to: "none"
+    why: "Fuera del alcance de implement."
+  - prompt: "Documenta la decision de arquitectura tomada."
+    route_to: "none"
+    why: "Fuera del alcance de implement."
+
+capability:
+  - scenario: "El usuario quiere implementar una pieza de trabajo a partir de una spec o tickets."
+    must_include:
+      - "implementa"

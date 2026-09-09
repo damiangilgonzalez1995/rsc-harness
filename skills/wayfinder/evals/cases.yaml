@@ -1,0 +1,32 @@
+skill: wayfinder
+
+should_trigger:
+  - prompt: "Este bloque de trabajo es enorme, planificalo como un mapa de tickets."
+    why: "Disparador directo de wayfinder."
+  - prompt: "Necesito resolver este trabajo de decision en decision hasta terminarlo."
+    why: "Disparador directo de wayfinder."
+  - prompt: "Ayudame a planificar algo que no cabe en una sola sesion."
+    why: "Disparador directo de wayfinder."
+  - prompt: "Plan this huge chunk of work as a shared map of decision tickets."
+    why: "Disparador directo de wayfinder."
+  - prompt: "Quiero un mapa compartido de tickets para este proyecto grande."
+    why: "Disparador directo de wayfinder."
+
+should_not_trigger:
+  - prompt: "Implementa un ticket pequeno que ya esta bien definido."
+    route_to: "none"
+    why: "Fuera del alcance de wayfinder."
+  - prompt: "Escribe un solo ticket para una tarea concreta."
+    route_to: "none"
+    why: "Fuera del alcance de wayfinder."
+  - prompt: "Revisa los cambios de una rama."
+    route_to: "none"
+    why: "Fuera del alcance de wayfinder."
+  - prompt: "Documenta una decision de arquitectura puntual."
+    route_to: "none"
+    why: "Fuera del alcance de wayfinder."
+
+capability:
+  - scenario: "El usuario tiene un bloque de trabajo demasiado grande para una sesion."
+    must_include:
+      - "ticket"

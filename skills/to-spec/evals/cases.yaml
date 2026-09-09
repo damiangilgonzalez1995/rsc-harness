@@ -1,0 +1,32 @@
+skill: to-spec
+
+should_trigger:
+  - prompt: "Convierte esta conversacion en una spec y publicala en el tracker."
+    why: "Disparador directo de to-spec."
+  - prompt: "Necesito un PRD con lo que ya hemos discutido, sin entrevistarme de nuevo."
+    why: "Disparador directo de to-spec."
+  - prompt: "Sintetiza esta charla en una spec formal."
+    why: "Disparador directo de to-spec."
+  - prompt: "Turn this conversation into a spec and publish it to the issue tracker."
+    why: "Disparador directo de to-spec."
+  - prompt: "Escribe el PRD de lo que acabamos de acordar."
+    why: "Disparador directo de to-spec."
+
+should_not_trigger:
+  - prompt: "Entrevistame desde cero sobre una idea nueva."
+    route_to: "none"
+    why: "Fuera del alcance de to-spec."
+  - prompt: "Descompon esta spec en tickets."
+    route_to: "none"
+    why: "Fuera del alcance de to-spec."
+  - prompt: "Implementa el codigo de esta funcionalidad."
+    route_to: "none"
+    why: "Fuera del alcance de to-spec."
+  - prompt: "Interrogame sobre este plan."
+    route_to: "none"
+    why: "Fuera del alcance de to-spec."
+
+capability:
+  - scenario: "El usuario quiere convertir la conversacion en una spec publicada."
+    must_include:
+      - "spec"
