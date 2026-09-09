@@ -6,7 +6,7 @@ import { readState } from './lib/state.js';
 import { divergence } from './lib/divergence.js';
 import { loadManifest } from './lib/manifest.js';
 import { listBackups } from './lib/backups.js';
-import { SDD_GATE_TEXT } from '../targets/hook-once.mjs';
+import { WORKFLOW_GATE_TEXT } from '../targets/hook-once.mjs';
 import { isEnabled, checkSello, readSello, countFindings, readEffectiveConfig, validateRiskConfig } from '../targets/sello.mjs';
 import { designIdentity } from './lib/design-identity.js';
 import { startingPointSummary } from './lib/starting-point.js';
@@ -286,7 +286,7 @@ function readScope(scopeRoot, label) {
     hookCountsUnknown: indeterminate.length ? indeterminate : null,
     dedupeGuard,
     alwaysOnBytes: wired ? alwaysOnBytesFor(scopeRoot, raw) * bodyCopies : 0,
-    perTurnBytes: wired && raw.includes('userprompt-gate') ? Buffer.byteLength(SDD_GATE_TEXT) * gateCopies : 0,
+    perTurnBytes: wired && raw.includes('userprompt-gate') ? Buffer.byteLength(WORKFLOW_GATE_TEXT) * gateCopies : 0,
   };
 }
 

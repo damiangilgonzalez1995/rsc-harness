@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { SDD_GATE_TEXT } from '../targets/hook-once.mjs';
+import { WORKFLOW_GATE_TEXT } from '../targets/hook-once.mjs';
 
 // The always-on body is the single most expensive piece of context rsc owns: it is injected at
 // every session start and again after every compaction. These are the invariants that let it stay
@@ -21,9 +21,9 @@ test('always-on body: stays under its context ceiling', () => {
 });
 
 test('always-on body: still states the SDD routing rule and its exceptions', () => {
-  assert.match(body, /`specify`/, 'names the destination');
+  assert.match(body, /`grill-with-docs`/, 'names the clarity route');
   assert.match(body, /one-line, low-risk change/i, 'names the trivial-change exception');
-  assert.match(body, /`debug`/, 'names the bug-fix route');
+  assert.match(body, /`superpowers:systematic-debugging`/, 'names the bug route');
   // Hookless assistants (AGENTS.md family, Cursor) have no per-turn gate: this body is the ONLY
   // place the rule exists for them. Shortening it is fine; removing it is a silent regression.
   assert.match(body, /before any\s+code is written/i, 'the rule itself, not just a pointer');
@@ -52,7 +52,7 @@ test('always-on body: keeps the jobs only it can do', () => {
 test('always-on body: does not re-elaborate what the per-turn gate already emits', () => {
   // The gate text is emitted verbatim every turn on Claude Code. The body may point at the rule;
   // reproducing its wording is the duplication this spec removes.
-  const gateLines = SDD_GATE_TEXT.split('\n')
+  const gateLines = WORKFLOW_GATE_TEXT.split('\n')
     .map((l) => l.trim())
     .filter((l) => l.length > 40 && !l.startsWith('='));
   const echoed = gateLines.filter((l) => body.includes(l));

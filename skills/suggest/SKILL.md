@@ -12,7 +12,7 @@ origin: risco
 Your body is injected at the start of **every** session and again after every compaction, so you
 are the one piece guaranteed to be present before any other skill is matched. Two jobs, in order:
 
-1. **Route feature intent into SDD** before any code is written.
+1. **Route feature intent into the right workflow** before any code is written.
 2. **Keep the session equipped** — spot the skill the task needs but the user does not have.
 
 Everything below is what only this layer can do. The method behind each rule lives in the skill that
@@ -20,34 +20,41 @@ owns it; this is the pointer, not the manual.
 
 ---
 
-## 1. Routing: feature intent goes through SDD first
+## 1. Routing: feature intent goes through the chain first
 
 The moment someone wants something to **exist or behave differently** — build, add, change,
-integrate, "it should also…", "¿y si…?", in any language — route the turn to `specify` before any
-code is written. No skill outranks this. The stack and builder skills that match the same request
-(`nextjs`, `react`, `fastapi`, `flutter`, `go`, `postgresdb`, `building-agents`, `design`,
-`chatbot`, `course-builder`, `marketing`…) run **inside** the chain, after the plan is approved —
-matching strongly is not a reason to skip ahead.
+integrate, "it should also…", "¿y si…?", in any language — the request earns a clear *what* and
+the user's go-ahead before any line of code lands. No skill outranks this, stack and builder
+skills included (`nextjs`, `react`, `fastapi`, `flutter`, `go`, `postgresdb`, `building-agents`,
+`design`, `chatbot`, `course-builder`, `marketing`…): they run **inside** the chain, once the plan
+is approved — matching strongly is not a reason to skip ahead.
+
+The shape of the chain:
+
+- Still fuzzy, or an open question? Open with `grill-with-docs`; reach for `wayfinder` instead
+  when the effort will not fit one sitting.
+- Once the shape is known, capture it as a spec, noting any call that would be costly to undo.
+- Size the build: a single sitting runs straight through its own plan-then-build pair; anything
+  bigger, or anything that grew out of the wayfinding step, gets broken into tickets first.
 
 Two exceptions, and say out loud when you take one:
 
 - a genuinely one-line, low-risk change (typo, copy tweak, config bump, non-breaking bump) — just do it;
-- a bug fix restoring intended behaviour — that is `debug`, then resume.
+- fixing a regression to restore behaviour that already existed — hand that to
+  `superpowers:systematic-debugging` instead, then resume.
 
-When you cannot tell, choose `specify`. A skipped spec is where drift hides.
+When you cannot tell, take the clarifying step. A skipped one is where drift hides.
 
 Judge the **meaning**, not the wording: the trigger is semantic, so it holds in any language,
 including ones with no example here. A URL plus a description of desired behaviour is a feature
-request. If the user engaged **SDD autopilot**, that one consent covers the whole run — advance
-through the phases without re-asking.
+request. If the user already engaged an autopilot over this chain, that one consent covers the
+whole run — advance through the phases without re-asking.
 
-If `specify` / `sdd` are not installed, offer to add them (§2) before routing.
-When `.rsc.json` records SDD as deferred, first run `npx @damiangil/harness@latest reassess`.
-Stay silent on `RSC_REASSESSMENT_NO_CHANGE`. If it reports new evidence, explain what changed and
-show the new plan command; SDD still needs a newly accepted plan id and is never added silently.
+If a step's skill is not installed, offer to add it (§2) before routing. `implement` always
+pairs with test-driven development and a verification pass before anything is called done.
 
-Method, phase map and full decision table: `../sdd/SKILL.md`. On Claude Code this rule also arrives
-as a per-turn hook; the brevity here is deduplication, not relaxation.
+Exact skill names and order: `../sdd/SKILL.md`. On Claude Code this rule also arrives as a
+per-turn hook; the brevity here is deduplication, not relaxation.
 
 ---
 

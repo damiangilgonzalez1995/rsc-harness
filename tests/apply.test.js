@@ -255,7 +255,7 @@ test('claude: install wires the UserPromptSubmit new-feature gate (idempotent, o
 
   // The materialized script emits the gate; the opt-out marker silences it.
   const emit = spawnSync('node', [join(cwd, '.rsc/userprompt-gate.mjs'), cwd], { encoding: 'utf8' });
-  assert.ok(emit.stdout.includes('new-feature gate'), 'script emits the gate reminder');
+  assert.ok(emit.stdout.includes('workflow gate'), 'script emits the gate reminder');
   writeFileSync(join(cwd, '.rsc/.no-feature-gate'), '');
   const silenced = spawnSync('node', [join(cwd, '.rsc/userprompt-gate.mjs'), cwd], { encoding: 'utf8' });
   assert.equal(silenced.stdout.trim(), '', 'opt-out marker silences the gate');
@@ -312,8 +312,8 @@ test('userprompt-gate: two scopes in one turn emit the gate exactly once', async
   const first = spawnSync('node', [gate, cwd], { encoding: 'utf8', env, input: turn });
   const second = spawnSync('node', [gate, cwd], { encoding: 'utf8', env, input: turn });
 
-  assert.equal(countOf(first.stdout, 'new-feature gate'), 1, 'first scope emits the gate');
-  assert.equal(countOf(second.stdout, 'new-feature gate'), 0, 'second scope stays silent');
+  assert.equal(countOf(first.stdout, 'workflow gate'), 1, 'first scope emits the gate');
+  assert.equal(countOf(second.stdout, 'workflow gate'), 0, 'second scope stays silent');
 });
 
 test('userprompt-gate: the next turn emits the gate again', async () => {
@@ -330,8 +330,8 @@ test('userprompt-gate: the next turn emits the gate again', async () => {
     encoding: 'utf8', env, input: JSON.stringify({ session_id: 'sess-4', prompt_id: 'turn-2' }),
   });
 
-  assert.equal(countOf(t1.stdout, 'new-feature gate'), 1);
-  assert.equal(countOf(t2.stdout, 'new-feature gate'), 1, 'a new prompt_id is a new turn');
+  assert.equal(countOf(t1.stdout, 'workflow gate'), 1);
+  assert.equal(countOf(t2.stdout, 'workflow gate'), 1, 'a new prompt_id is a new turn');
 });
 
 // De-dup only works when BOTH scopes run an updated hook. A scope left on an older version keeps
@@ -635,7 +635,7 @@ test('cross-target: onboarding gate text rides suggest into a non-claude target'
   assert.ok(agents.includes('catalog --available'), 'capability detector injected cross-target');
   assert.ok(agents.includes('by meaning'), 'detector matches semantically, not by keyword');
   // A hookless target has no per-turn gate, so the routing rule must be IN this block.
-  assert.ok(agents.includes('specify'), 'SDD routing rule survives into a hookless assistant');
+  assert.ok(agents.includes('grill-with-docs'), 'workflow routing rule survives into a hookless assistant');
 });
 
 test('unknown target throws', async () => {
