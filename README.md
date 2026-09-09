@@ -93,7 +93,8 @@ npx @damiangil/harness@latest onboard --technical-level mixed --accompaniment L1
 
 From then on it's self-driving: `rsc-suggest` proposes the next skill as tasks appear, and in
 Claude Code a hook re-asserts the spec-first **new-feature gate** on every turn — so a feature
-request routes through `specify` before any skill writes code.
+request routes through `to-spec` (or `grill-with-docs`/`wayfinder` first, when the shape is still
+fuzzy) before any skill writes code.
 
 ---
 
@@ -383,7 +384,7 @@ just asks in plain language.
 ### 🧭 Core & control plane
 The front door and the workspace brain.
 
-[init](skills/init/) · [harness](skills/harness/) · [orient](skills/orient/) · [suggest](skills/suggest/) · [bro](skills/bro/) · [unslop](skills/unslop/) · [author-skill](skills/author-skill/) · [sdd-init](skills/sdd-init/)
+[init](skills/init/) · [harness](skills/harness/) · [orient](skills/orient/) · [suggest](skills/suggest/) · [bro](skills/bro/) · [unslop](skills/unslop/) · [author-skill](skills/author-skill/)
 
 > **harness** is the Karpathy *chaos→knowledge* engine — a `01-TOOLS/` layer (one
 > folder per provider, each with a working `test_connection`) and a `docs/`
@@ -415,9 +416,16 @@ The front door and the workspace brain.
 ### 📐 Spec-Driven Development
 Take a fuzzy intent to a shipped, verified change — phase by phase. `npx @damiangil/harness install --profile core`.
 
-[sdd](skills/sdd/) · [constitution](skills/constitution/) · [idea-refinement](skills/idea-refinement/) · [specify](skills/specify/) · [clarify](skills/clarify/) · [plan](skills/plan/) · [tasks](skills/tasks/) · [analyze](skills/analyze/) · [decision-challenge](skills/decision-challenge/) · [implement](skills/implement/) · [source-grounded-development](skills/source-grounded-development/) · [verify](skills/verify/) · [review](skills/review/) · [simplify-code](skills/simplify-code/) · [ship](skills/ship/) · [debug](skills/debug/) · [worktrees](skills/worktrees/) · [parallel](skills/parallel/)
+[source-grounded-development](skills/source-grounded-development/) · [simplify-code](skills/simplify-code/)
 
-> Two of those are not phases the chain walks on its own. `idea-refinement` **is** invoked — `specify` runs its FRAME block before the first question round. `decision-challenge` is **on-demand**: it exists, it is good, and no phase calls it yet. Listed so you can reach for it, not because the chain will. And the limit of what FRAME buys you, stated rather than implied: a second reading by the same model breaks correlation of **framing**, not of model — it shares the priors it is checking.
+> The actual spec-first chain — clarify, specify, plan, break into tickets, build, verify, debug,
+> ship — now lives in the personal catalog below: `grill-with-docs`/`wayfinder` → `to-spec`
+> (+ `write-adr` for decisions) → `superpowers:writing-plans` → `superpowers:executing-plans`, or
+> `to-tickets` → `implement`, with `superpowers:systematic-debugging` for bugs and
+> `superpowers:verification-before-completion` before calling anything done. This section keeps
+> the two skills that stay stack-agnostic in-phase regardless of which chain built the code:
+> grounding an implementation or review in current version-specific docs, and simplifying working
+> code without changing its behaviour.
 
 ### 💼 Run a business
 
@@ -508,7 +516,7 @@ Three engines + engine-agnostic disciplines. Every engine skill pins the current
 
 ### 🧠 Knowledge & meta
 
-[knowledge-ops](skills/knowledge-ops/) · [codebase-onboarding](skills/codebase-onboarding/) · [research-ops](skills/research-ops/) · [decision-records](skills/decision-records/) · [continuous-learning](skills/continuous-learning/) · [skill-scout](skills/skill-scout/) · [context-budget](skills/context-budget/) · [roast-me](skills/roast-me/) · [show-me](skills/show-me/) · [eli5](skills/eli5/) · [fable-operator](skills/fable-operator/)
+[knowledge-ops](skills/knowledge-ops/) · [codebase-onboarding](skills/codebase-onboarding/) · [research-ops](skills/research-ops/) · [continuous-learning](skills/continuous-learning/) · [skill-scout](skills/skill-scout/) · [context-budget](skills/context-budget/) · [roast-me](skills/roast-me/) · [show-me](skills/show-me/) · [eli5](skills/eli5/) · [fable-operator](skills/fable-operator/)
 
 ### 🇪🇸 Personal catalog — workflow (Spanish)
 
