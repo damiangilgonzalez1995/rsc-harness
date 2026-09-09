@@ -2,6 +2,7 @@
 name: domain-modeling
 description: "Build and refine the project's domain model. Use when the user wants to pin down domain terminology or a ubiquitous language, record an architectural decision, or when another skill needs to keep the domain model up to date."
 tags: ["domain-modeling", "glossary", "architecture"]
+profiles: [core, ui, full]
 ---
 
 # Modelado de Dominio

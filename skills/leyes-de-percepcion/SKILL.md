@@ -2,6 +2,7 @@
 name: leyes-de-percepcion
 description: "Use when composing or reviewing a screen and you need to decide what the eye sees first and how things are grouped — proximity, similarity, common region, closure, continuity, figure-ground, the Von Restorff effect, and visual hierarchy. This is the package of Gestalt laws applied to interface design."
 tags: ["gestalt", "visual-perception", "ui-design"]
+profiles: [ui, full]
 ---
 
 # Leyes de percepcion

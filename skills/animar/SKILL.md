@@ -2,6 +2,7 @@
 name: animar
 description: "Use when asked to animate something, add motion, make a component feel alive, or build a transition. Builds the animation from scratch, making the decisions in the order that determines whether it feels right — whether it should animate at all, for what purpose, with which tool, which properties, which curve and duration, how it is interrupted, and how it exits. Writes the implementation. For critiquing existing motion use revisar-animaciones."
 tags: ["animation", "motion", "transitions"]
+profiles: [ui, full]
 ---
 
 # Construir animaciones

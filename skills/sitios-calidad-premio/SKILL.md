@@ -2,6 +2,7 @@
 name: sitios-calidad-premio
 description: "Art-direct and implement marketing, editorial, portfolio, and landing sites that are distinctive and motion-rich, with original imagery inspired by references, standout heroes, GSAP choreography, a single smooth-scroll engine, optional Three.js shaders, honest icon and logo sourcing, photographic avatars, accessibility, and performance safeguards. Use when asked for an award-quality, premium, cinematic, interactive, high-concept, or motion-driven website."
 tags: ["award-site", "gsap", "webgl", "art-direction"]
+profiles: [ui, full]
 ---
 
 # Construir sitios de calidad de premio

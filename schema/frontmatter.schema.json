@@ -7,6 +7,6 @@
     "description": { "type": "string", "minLength": 10, "maxLength": 1024 },
     "tags": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
     "recommends": { "type": "array", "items": { "type": "string" } },
-    "profiles": { "type": "array", "items": { "enum": ["minimal", "core", "full"] } }
+    "profiles": { "type": "array", "items": { "enum": ["minimal", "core", "ui", "full"] } }
   }
 }

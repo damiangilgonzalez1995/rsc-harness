@@ -205,6 +205,11 @@ export function wireHook(paths, sourceMd, policy = {}) {
     written.push(operationsSuggest);
   }
 
+  if (policy.plugins?.length) {
+    settings.enabledPlugins ||= {};
+    for (const id of policy.plugins) settings.enabledPlugins[id] = true;
+  }
+
   mkdirSync(dirname(file), { recursive: true });
   writeFileSync(file, JSON.stringify(settings, null, 2) + '\n');
   return written;

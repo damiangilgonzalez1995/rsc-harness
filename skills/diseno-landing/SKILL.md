@@ -2,6 +2,7 @@
 name: diseno-landing
 description: "Complete system for building high-conversion landing pages: intake questions, page structure, layout choice, conversion copy, SEO, plus strict visual rules for typography, spacing, radii, backgrounds, hero, icons, and motion. Use whenever building, editing, styling, reviewing, or writing copy for ANY landing page, marketing site, web UI, page section, component, or prototype, even if the user does not mention design, conversion, tokens, or a design system. Always consult it before choosing sections, headlines, CTAs, fonts, text sizes, spacing values, radii, background colors, icons, or transitions."
 tags: ["landing-page", "conversion", "design-system", "copywriting"]
+profiles: [ui, full]
 ---
 
 # Diseno de landing page

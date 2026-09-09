@@ -3,7 +3,7 @@ name: ui-engineering
 description: "Use when the question is how interface should be BUILT — component boundaries, state that belongs in the URL vs the component, loading/empty/error states, forms, optimistic updates, build vs adopt. NOT the visual system (`design`), NOT framework mechanics (`react`/`nextjs`)."
 tags: [interface, frontend, architecture, components, state, craft]
 recommends: [design, motion-craft]
-profiles: [core, full]
+profiles: [ui, full]
 origin: risco
 ---
 

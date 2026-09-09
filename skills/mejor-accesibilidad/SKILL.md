@@ -2,6 +2,7 @@
 name: mejor-accesibilidad
 description: "Use to bring the project up to accessibility standards and best practices — native elements vs. ARIA, focus rings, full keyboard support, focus trapping, tap target sizes, form labels, announced errors, accessible names, reduced motion, live regions, alt text, heading structure, and zoom."
 tags: ["accessibility", "a11y", "aria", "keyboard-navigation"]
+profiles: [ui, full]
 ---
 
 # Accesibilidad

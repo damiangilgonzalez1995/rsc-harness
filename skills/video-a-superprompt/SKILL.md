@@ -2,6 +2,7 @@
 name: video-a-superprompt
 description: "Turns a reference video into a highly detailed recreation or inspiration prompt. Use when the user provides, mentions, uploads, links, or points to a video and asks to analyze the design, UI, animations, transitions, scroll interactions, typography, colors, assets, WebGL/Three.js, narrative, or section-by-section behavior, or to create a prompt or article that recreates the page, app, interaction, or motion system."
 tags: ["video-analysis", "prompt-engineering", "design"]
+profiles: [ui, full]
 ---
 
 # De video a superprompt

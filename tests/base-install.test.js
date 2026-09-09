@@ -16,7 +16,7 @@ const rscCli = readFileSync(join(ROOT, 'scripts/rsc.js'), 'utf8');
 const readme = readFileSync(join(ROOT, 'README.md'), 'utf8');
 
 // The set, spelled out once. Changing the base install means changing this line ON PURPOSE.
-const BASE = ['bro', 'eli5', 'harness', 'init', 'orient', 'show-me', 'suggest', 'unslop'];
+const BASE = ['bro', 'eli5', 'harness', 'init', 'orient', 'show-me', 'suggest', 'teach', 'unslop'];
 
 test('the base install is exactly the declared set', () => {
   assert.deepEqual(skillsForProfile(manifest, 'minimal').sort(), [...BASE].sort());
@@ -73,4 +73,26 @@ test('the boundary between the two writing skills is declared on both sides', ()
   const unslopCases = readFileSync(join(ROOT, 'skills/unslop/evals/cases.yaml'), 'utf8');
   assert.match(broCases, /route_to: "unslop"/, 'bro has a negative that routes to unslop');
   assert.match(unslopCases, /route_to: "bro"/, 'unslop has a negative that routes to bro');
+});
+
+test('a policy with plugins writes enabledPlugins into .claude/settings.json', async () => {
+  const { mkdtempSync, mkdirSync, existsSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  const { wireHook } = await import('../targets/claude.js');
+
+  const root = mkdtempSync(join(tmpdir(), 'rsc-base-install-'));
+  mkdirSync(join(root, '.claude'), { recursive: true });
+  const hookTarget = join(root, '.claude', 'settings.json');
+  const paths = {
+    projectRoot: root,
+    hookTarget,
+    skillDir: (id) => join(root, '.claude', 'skills', id),
+  };
+  mkdirSync(paths.skillDir('suggest'), { recursive: true });
+
+  wireHook(paths, undefined, { codeHooks: true, plugins: ['superpowers@claude-plugins-official'] });
+
+  assert.ok(existsSync(hookTarget), 'settings.json was written');
+  const settings = JSON.parse(readFileSync(hookTarget, 'utf8'));
+  assert.deepEqual(settings.enabledPlugins, { 'superpowers@claude-plugins-official': true });
 });

@@ -2,6 +2,7 @@
 name: leyes-de-retencion
 description: "Use when diagnosing why people abandon a flow halfway through, or when designing decisions, forms, steps, response times, and closing moments — Hick's law, Fitts's law, Miller's law, Jakob's law, the Doherty threshold, the Zeigarnik effect, the serial position effect, the peak-end rule, and Tesler's law."
 tags: ["retention", "ux-laws", "behavioral-design"]
+profiles: [ui, full]
 ---
 
 # Leyes de retencion

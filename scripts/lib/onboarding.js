@@ -156,19 +156,21 @@ export function buildOnboardingPlan(record, evidence) {
   if (/database|persistence|persistencia|base de datos/.test(goal)) goalSignals.push('persistence');
   if (/integration|integración|webhook|third-party|tercero/.test(goal)) goalSignals.push('external-integrations');
   const complexitySignals = [...new Set([...(evidence.complexitySignals || []), ...goalSignals])].sort();
-  const needsSdd = isSoftware && (normalized.softwareScope !== 'small' || complexitySignals.length > 0);
-  const profile = needsSdd ? 'core' : 'minimal';
+  const UI_STACKS = new Set(['nextjs', 'react', 'vue', 'svelte']);
+  const needsWorkflow = isSoftware && (normalized.softwareScope !== 'small' || complexitySignals.length > 0);
+  const hasInterface = needsWorkflow && (evidence.stacks || []).some((stack) => UI_STACKS.has(stack));
+  const profile = !needsWorkflow ? 'minimal' : (hasInterface ? 'ui' : 'core');
   const catalog = loadManifest();
   const catalogIds = new Set(catalog.skills.map((skill) => skill.id));
   const detectedSkills = (evidence.stacks || []).filter((stack) => catalogIds.has(stack));
   const skills = [...new Set([...skillsForProfile(catalog, profile), ...detectedSkills])].sort();
-  const baseAgents = needsSdd;
-  const hooks = needsSdd;
+  const baseAgents = needsWorkflow;
+  const hooks = needsWorkflow;
   const agents = baseAgents ? resolveAgentNames(skills, []).sort() : [];
   const gitmojiGuard = hooks && normalized.targets.includes('claude');
   const decisions = skills.map((id) => detectedSkills.includes(id)
     ? selected(id, 'skill', `Detected ${id} evidence inside the selected project root.`, 'workspace-evidence')
-    : selected(id, 'skill', needsSdd
+    : selected(id, 'skill', needsWorkflow
       ? (id === 'sdd' && complexitySignals.length
         ? `Included because the accepted work has ${complexitySignals.join(', ')} complexity.`
         : `Included in the development workflow for ${normalized.softwareScope} software.`)
@@ -179,7 +181,7 @@ export function buildOnboardingPlan(record, evidence) {
     { type: 'complexity-added', atLeast: 1 },
     { type: 'manifest-with-implementation' },
   ];
-  if (!needsSdd) {
+  if (!needsWorkflow) {
     decisions.push(deferred('sdd', 'workflow', isSoftware
       ? 'The software scope is small, so specification overhead is not justified yet.'
       : 'SDD applies to substantial software work, which is not the declared project purpose.', sddTriggers, softwareTriggers));
@@ -202,6 +204,10 @@ export function buildOnboardingPlan(record, evidence) {
   decisions.push(selected('memory', 'capability', 'Local bounded project memory supports continuity without an external account.'));
   decisions.push(selected('harness-documents', 'route', 'The accepted profile and plan are persisted under docs/wiki/harness/.'));
   decisions.push(excluded('context7', 'integration', 'External MCP connections require a separate, provider-specific consent flow and are outside this local harness plan.'));
+  if (needsWorkflow) {
+    decisions.push(selected('superpowers', 'plugin',
+      'The planning and execution chain lives in the superpowers plugin, kept current by Claude Code.'));
+  }
   decisions.sort((a, b) => `${a.kind}:${a.id}`.localeCompare(`${b.kind}:${b.id}`));
   const policy = {
     skills,
@@ -209,10 +215,11 @@ export function buildOnboardingPlan(record, evidence) {
     baseAgents,
     agents,
     alwaysOn: true,
-    codeHooks: needsSdd,
+    codeHooks: needsWorkflow,
     gitmojiGuard,
     memory: true,
     context7: false,
+    plugins: needsWorkflow ? ['superpowers@claude-plugins-official'] : [],
   };
   const root = evidence.root;
   const governedPaths = root ? [...new Set([

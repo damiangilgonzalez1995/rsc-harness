@@ -178,7 +178,10 @@
         "transitions"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "api-connector-builder",
@@ -614,7 +617,11 @@
         "project-init"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "clickhouse-analytics",
@@ -693,7 +700,11 @@
         "spec-compliance"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "codebase-onboarding",
@@ -1299,7 +1310,10 @@
         "interface"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "diseno-landing",
@@ -1311,7 +1325,10 @@
         "copywriting"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "django",
@@ -1380,7 +1397,11 @@
         "architecture"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "domains-dns",
@@ -2241,7 +2262,11 @@
         "decision-making"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "grill-with-docs",
@@ -2253,7 +2278,11 @@
         "adr"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "grilling",
@@ -2264,7 +2293,11 @@
         "decision-making"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "handoff",
@@ -2275,7 +2308,11 @@
         "continuity"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "harness",
@@ -2396,7 +2433,11 @@
         "tickets"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "ingeniero-diseno-web",
@@ -2408,7 +2449,10 @@
         "qa"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "init",
@@ -2712,7 +2756,10 @@
         "ui-design"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "leyes-de-retencion",
@@ -2723,7 +2770,10 @@
         "behavioral-design"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "linkedin-api",
@@ -3053,7 +3103,10 @@
         "keyboard-navigation"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "mejor-colores",
@@ -3065,7 +3118,10 @@
         "dark-mode"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "mejor-layout",
@@ -3076,7 +3132,10 @@
         "ui-design"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "mejor-redaccion",
@@ -3087,7 +3146,10 @@
         "content-design"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "mejor-tipografia",
@@ -3098,7 +3160,10 @@
         "readability"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "mejor-ui",
@@ -3109,7 +3174,10 @@
         "motion"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "modal",
@@ -3195,7 +3263,11 @@
         "katas"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "mysql",
@@ -3849,7 +3921,11 @@
         "exploration"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "python",
@@ -4122,7 +4198,11 @@
         "background-agent"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "research-ops",
@@ -4202,7 +4282,11 @@
         "regression"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "revision-interfaz",
@@ -4213,7 +4297,10 @@
         "design-audit"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "roast-me",
@@ -4567,7 +4654,10 @@
         "art-direction"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "skill-scout",
@@ -4878,7 +4968,10 @@
         "visual-design"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "tauri",
@@ -4909,7 +5002,12 @@
         "mentoring"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "minimal",
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "technical-writing",
@@ -5058,7 +5156,11 @@
         "decision-making"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "to-spec",
@@ -5069,7 +5171,11 @@
         "issue-tracker"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "to-tickets",
@@ -5080,7 +5186,11 @@
         "issue-tracker"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "together-fireworks",
@@ -5185,7 +5295,7 @@
         "motion-craft"
       ],
       "profiles": [
-        "core",
+        "ui",
         "full"
       ]
     },
@@ -5368,7 +5478,10 @@
         "design"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "video-shorts",
@@ -5446,7 +5559,10 @@
         "reference"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "vue-nuxt",
@@ -5473,7 +5589,11 @@
         "communication"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "wayfinder",
@@ -5484,7 +5604,11 @@
         "large-scale-work"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "webhooks",
@@ -5581,7 +5705,11 @@
         "documentation"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "writing-for-agents",
@@ -5592,7 +5720,11 @@
         "agents"
       ],
       "recommends": [],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "youtube-api",

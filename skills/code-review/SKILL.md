@@ -2,6 +2,7 @@
 name: code-review
 description: "Reviews changes from a fixed point (commit, branch, tag, or merge-base) along two axes — Standards (does the code follow the repo's documented coding standards?) and Spec (does the code match what the source issue/PRD asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work in progress, or asks to \\"review from X\\"."
 tags: ["code-review", "standards", "spec-compliance"]
+profiles: [core, ui, full]
 ---
 
 Revisión en dos ejes del diff entre `HEAD` y un punto fijo que proporciona el usuario:

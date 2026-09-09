@@ -2,6 +2,7 @@
 name: diseno-apple
 description: "Apple's approach to interface design and fluid, physical motion, translated to the web. Use when building or reviewing gesture-driven UI, spring animations, drag/swipe/sheet interactions, inertia and interruptible transitions, translucent materials and depth, typography (optical size, tracking, line height), reduced motion, or the design fundamentals (feedback, spatial consistency, containment) behind Apple-style interfaces."
 tags: ["design", "apple", "motion", "interface"]
+profiles: [ui, full]
 ---
 
 # Diseno Apple

@@ -2,6 +2,7 @@
 name: claude-project-setup
 description: "Use when starting a new project, initializing a repository for Claude Code, or when the user asks to configure CLAUDE.md, rules, commands, skills, or agents for a project."
 tags: ["setup", "claude-code", "project-init"]
+profiles: [core, ui, full]
 ---
 
 # Claude Project Setup

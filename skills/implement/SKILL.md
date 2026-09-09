@@ -3,6 +3,7 @@ name: implement
 description: "Implements a piece of work from a spec or a set of tickets."
 tags: ["implementation", "spec", "tickets"]
 disable-model-invocation: true
+profiles: [core, ui, full]
 ---
 
 

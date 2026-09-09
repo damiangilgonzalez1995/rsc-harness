@@ -2,6 +2,7 @@
 name: mejor-tipografia
 description: "Use when building or reviewing typography — size scale, spacing, line height, variable fonts, OpenType features, wrapping, truncation, tabular numbers, punctuation, and all the details that make text read well across a product."
 tags: ["typography", "design-system", "readability"]
+profiles: [ui, full]
 ---
 
 # Tipografia

@@ -2,6 +2,7 @@
 name: writing-for-agents
 description: "Write documents that an agent will consume. Use when creating or editing skills, or when modifying AGENTS.md or CLAUDE.md."
 tags: ["writing", "documentation", "agents"]
+profiles: [core, ui, full]
 ---
 
 Referencia para escribir cualquier documento que consume un agente: una skill, un `AGENTS.md` / `CLAUDE.md`, un documento al que se llega por un puntero. El empaquetado cambia; la escritura no: las mismas palancas hacen predecible cada uno, porque el agente sigue el mismo *proceso* en cada ejecución en lugar de producir el mismo resultado.

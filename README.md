@@ -231,7 +231,7 @@ rsc reassess                        # check persisted deferral triggers; never i
 rsc add fastapi postgresdb           # install specific skills, by name
 rsc add youtube-api remotion-video   # …grow a channel, edit with Remotion
 rsc add fastapi --target claude,codex   # install into several assistants at once
-rsc install --profile minimal        # the base: orient + suggest + bro + unslop + show-me + eli5 + harness + init
+rsc install --profile minimal        # the base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach
 rsc install --profile core           # floor + the full SDD workflow
 rsc install --profile full           # everything (all 290 skills)
 rsc install --profile full --without go

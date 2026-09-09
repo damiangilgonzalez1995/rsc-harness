@@ -2,6 +2,7 @@
 name: tastemaker
 description: "Generates genuinely beautiful, on-brand UI instead of generic AI slop. Use whenever asked to build, design, style, or improve a UI, landing page, dashboard, app screen, or component; when a PRD needs a design pass before implementation; when the user pastes reference images or links and wants the app to look like them; or when they complain the generated UI looks generic, boring, templated, or like every other AI app. Also triggers without the word \\"design\\", with phrases like \\"make this look good\\", \\"build me the frontend for X\\", \\"this looks like just another SaaS site\\", or \\"pick up the look of this\\". Also with the verbs study or extract the look from a screenshot or URL, and audit or review why something looks AI-made."
 tags: ["ui-design", "branding", "visual-design"]
+profiles: [ui, full]
 ---
 
 # Tastemaker

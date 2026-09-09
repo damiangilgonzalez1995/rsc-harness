@@ -2,6 +2,7 @@
 name: vocabulario-animacion
 description: "Use when someone describes a web motion effect without knowing its name (\\"that bouncy thing when a popover opens\\", \\"the iOS rubber-band scroll\\") and asks \\"what's it called when...\\". Returns the exact term so it can be requested from an AI or a designer. This is for NAMING an effect, not designing or building one."
 tags: ["animation", "vocabulary", "reference"]
+profiles: [ui, full]
 ---
 
 # Vocabulario de animacion

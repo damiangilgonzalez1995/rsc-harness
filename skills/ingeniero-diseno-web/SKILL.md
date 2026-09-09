@@ -2,6 +2,7 @@
 name: ingeniero-diseno-web
 description: "Build or redesign polished visual artifacts that render in a browser with HTML/CSS/JavaScript/React — pages, dashboards, prototypes, presentations, animations, UI mockups, and data visualizations. Use for visual front-end creation, design-system exploration, design critique, or explicit browser-based acceptance/QA. Not for back-end, CLI, non-visual code, or converting sources into long-form articles."
 tags: ["frontend", "web-design", "prototyping", "qa"]
+profiles: [ui, full]
 ---
 
 # Ingeniero de diseno web

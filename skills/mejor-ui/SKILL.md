@@ -2,6 +2,7 @@
 name: mejor-ui
 description: "Use to polish and improve a project's UI — concentric border radii, optical alignment, surface depth, shadows vs. borders, interruptible animations, staggered entrances, icon transitions, press scaling, theme-switch transition suppression, and motion containment."
 tags: ["ui-polish", "visual-design", "motion"]
+profiles: [ui, full]
 ---
 
 # Acabado de UI

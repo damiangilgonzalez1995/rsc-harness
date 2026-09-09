@@ -2,6 +2,7 @@
 name: muscle-memory
 description: "Python practice gym — generates short katas from the user's recent code, tracks progress, and reviews solutions. Use when the user wants to practice/keep their coding sharp, review a kata solution, or check practice progress."
 tags: ["practice", "python", "katas"]
+profiles: [core, ui, full]
 ---
 
 # Muscle Memory

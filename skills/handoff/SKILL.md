@@ -2,6 +2,7 @@
 name: handoff
 description: "Compacts the current conversation into a handoff document so another agent can continue the work."
 tags: ["handoff", "documentation", "continuity"]
+profiles: [core, ui, full]
 ---
 
 Redacta un documento de traspaso que resuma la conversación actual para que un agente nuevo pueda continuar con el trabajo. 

@@ -2,6 +2,7 @@
 name: prototype
 description: "Builds a throwaway prototype to answer a design question. Use when the user wants to check whether a state model or logic \\"feels right\\", or explore what a UI should look like."
 tags: ["prototyping", "design", "exploration"]
+profiles: [core, ui, full]
 ---
 
 # Prototipo

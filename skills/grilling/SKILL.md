@@ -2,6 +2,7 @@
 name: grilling
 description: "Interrogates the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their reasoning, or when they use any trigger phrase like \\"grill\\" / \\"interrogate me\\" / \\"put me to the test\\"."
 tags: ["planning", "questioning", "decision-making"]
+profiles: [core, ui, full]
 ---
 
 Interroga al usuario sin tregua hasta llegar a un entendimiento compartido. Represéntalo como un **árbol de decisión**: cada decisión se ramifica en las decisiones que cuelgan de ella.

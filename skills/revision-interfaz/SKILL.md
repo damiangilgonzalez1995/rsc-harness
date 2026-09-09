@@ -2,6 +2,7 @@
 name: revision-interfaz
 description: "Combines all the `mejor-*` skills into a single interface review covering accessibility, layout, copy, typography, color, and visual polish, and consolidates a verdict ordered by impact."
 tags: ["ui-review", "accessibility", "design-audit"]
+profiles: [ui, full]
 ---
 
 # Revision de interfaz

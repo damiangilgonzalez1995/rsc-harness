@@ -2,6 +2,7 @@
 name: mejor-colores
 description: "Use to build a color system or answer anything about color in the project — generating palettes, using semantic tokens, converting between formats, measuring contrast, choosing a gradient's interpolation space, and setting up dark mode."
 tags: ["color", "design-tokens", "contrast", "dark-mode"]
+profiles: [ui, full]
 ---
 
 # Colores

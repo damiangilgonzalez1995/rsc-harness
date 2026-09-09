@@ -2,6 +2,7 @@
 name: research
 description: "Researches a question against high-confidence primary sources and captures the findings as a Markdown file in the repo. Use when the person wants to research a topic, gather facts from documentation or an API, or delegate the reading work to a background agent."
 tags: ["research", "documentation", "background-agent"]
+profiles: [core, ui, full]
 ---
 
 Levanta un **agente en segundo plano** para hacer la investigación, así sigues trabajando mientras él lee.
