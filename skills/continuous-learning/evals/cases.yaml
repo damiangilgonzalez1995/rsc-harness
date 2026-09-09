@@ -14,14 +14,14 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Document why we chose Postgres over Mongo, with the options we rejected."
-    route_to: decision-records
-    why: "Forward choice with alternatives, not a backward lesson from a mistake."
+    route_to: write-adr
+    why: "Forward choice with alternatives belongs in write-adr, not a backward lesson from a mistake."
   - prompt: "Write the SKILL.md and the evals for a new pr-describe skill."
     route_to: author-skill
     why: "Skill craft; continuous-learning only decides a lesson belongs in a skill and hands the edit over."
   - prompt: "Find why the checkout endpoint is returning 500."
-    route_to: debug
-    why: "In-the-moment diagnosis; capture comes after the root cause is found."
+    route_to: external:superpowers-systematic-debugging
+    why: "In-the-moment diagnosis is superpowers' systematic-debugging; capture comes after the root cause is found."
   - prompt: "Set up a recurring weekly job that runs our retro automatically."
     route_to: harness
     why: "Scheduling cadence is the harness/loop CLI; this skill is not a scheduler, it only recommends a cadence."

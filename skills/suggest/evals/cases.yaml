@@ -47,8 +47,8 @@ should_not_trigger:
     why: "A concrete database task owned by the postgresdb skill — the detector does not fire over a skill that already owns the work."
 
   - prompt: "Arregla este bug del test que falla."
-    route_to: "debug"
-    why: "Root-cause debugging is the debug skill's job; no new install is implied, so the detector stays quiet."
+    route_to: "external:superpowers-systematic-debugging"
+    why: "Root-cause debugging is superpowers' systematic-debugging's job; no new install is implied, so the detector stays quiet."
 
 capability:
   - scenario: "Mid-conversation, the user says 'ayúdame a guardar los pedidos en una base de datos' and no database skill is installed. Show how rsc-suggest behaves."

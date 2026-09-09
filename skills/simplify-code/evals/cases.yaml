@@ -16,14 +16,14 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "The parser throws on valid quoted values; reproduce the bug and fix it."
-    route_to: debug
-    why: "Behaviour is incorrect, so diagnosis precedes any cleanup."
+    route_to: external:superpowers-systematic-debugging
+    why: "Behaviour is incorrect, so diagnosis via superpowers' systematic-debugging precedes any cleanup."
   - prompt: "Review this pull request and list correctness issues, but do not edit it."
     route_to: code-review
     why: "Read-only spec-less diff judgment."
   - prompt: "Verify the finished SDD implementation against every acceptance criterion."
-    route_to: verify
-    why: "Evidence gate rather than code editing."
+    route_to: external:superpowers-verification-before-completion
+    why: "Evidence gate via superpowers' verification-before-completion rather than code editing."
   - prompt: "The page is slow; profile Core Web Vitals and fix the measured bottleneck."
     route_to: performance
     why: "Measured speed work owns the task."

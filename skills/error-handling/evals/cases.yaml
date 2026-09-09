@@ -18,8 +18,8 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Find out why this specific endpoint throws a NullPointer intermittently — it only happens under load."
-    route_to: debug
-    why: "Root-causing one specific intermittent crash is debug. error-handling designs the reaction to a CLASS of failure, not the diagnosis of this one."
+    route_to: external:superpowers-systematic-debugging
+    why: "Root-causing one specific intermittent crash is superpowers' systematic-debugging. error-handling designs the reaction to a CLASS of failure, not the diagnosis of this one."
   - prompt: "Wire up OpenTelemetry traces so we can see where requests fail across services."
     route_to: observability
     why: "Making failures visible after the fact (traces/metrics/logs) is observability. error-handling decides the runtime reaction, not the telemetry pipeline."

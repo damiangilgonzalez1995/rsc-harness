@@ -33,20 +33,20 @@ should_trigger:
 # building breadth-first orientation.
 should_not_trigger:
   - prompt: "Review this PR diff for correctness bugs before we merge."
-    route_to: "analyze"
-    why: "Depth audit of a specific change, not breadth orientation of an unfamiliar repo."
+    route_to: "none"
+    why: "Depth audit of a specific change, not breadth orientation of an unfamiliar repo; no dedicated skill owns this generic diff review."
 
   - prompt: "Set up 01-TOOLS and docs and generate the root CLAUDE.md for this workspace."
     route_to: "harness"
     why: "Operational tooling/wiki scaffolding, not understanding — onboarding produces a map, not a tooling layer."
 
   - prompt: "Write an ADR for why we picked Postgres over Mongo."
-    route_to: "decision-records"
-    why: "Capturing the 'why' of a decision; the map captures 'what is', not the rationale."
+    route_to: "write-adr"
+    why: "Capturing the 'why' of a decision is write-adr's job; the map captures 'what is', not the rationale."
 
   - prompt: "The login flow throws a 500 intermittently — find the bug."
-    route_to: "debug"
-    why: "Chasing a specific failure through the system; onboarding builds the map you debug with, it does not root-cause."
+    route_to: "external:superpowers-systematic-debugging"
+    why: "Chasing a specific failure through the system is superpowers' systematic-debugging; onboarding builds the map you debug with, it does not root-cause."
 
   - prompt: "Create the initial CLAUDE.md memory file for this repo."
     route_to: "init"

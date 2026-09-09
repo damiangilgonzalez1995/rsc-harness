@@ -27,11 +27,11 @@ should_not_trigger:
     route_to: accessibility
     why: Auditing a11y/contrast as the goal, not authoring component tests (which merely use role queries).
   - prompt: "Why does this React component re-render so many times and slow down the page?"
-    route_to: debug
-    why: Runtime performance diagnosis, not writing or fixing a test.
+    route_to: external:superpowers-systematic-debugging
+    why: Runtime performance diagnosis is superpowers' systematic-debugging's job, not writing or fixing a test.
   - prompt: "Review this PR diff for correctness bugs before I merge."
-    route_to: review
-    why: Code review of a diff, not authoring frontend tests.
+    route_to: code-review
+    why: Code review of a diff is code-review's job, not authoring frontend tests.
   - prompt: "Write Go table-driven tests for my handler package."
     route_to: testing-go
     why: Go test suite, outside the web/DOM scope of this skill.

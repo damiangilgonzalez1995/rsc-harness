@@ -39,8 +39,8 @@ should_not_trigger:
     why: "A general tutorial on prompting technique is prompt-engineering. roast-me reads live transcripts and produces a personalised score, not a tutorial."
 
   - prompt: "Summarise what our agent did in yesterday's session."
-    route_to: "analyze"
-    why: "Summarising what an agent did (output review) is analyse or a generic task. roast-me looks at how the USER prompted, not what the agent produced."
+    route_to: "none"
+    why: "Summarising what an agent did (output review) has no dedicated destination in this catalog. roast-me looks at how the USER prompted, not what the agent produced."
 
   - prompt: "I need a system prompt template for a customer-support chatbot."
     route_to: "chatbot"

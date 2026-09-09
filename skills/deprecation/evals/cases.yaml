@@ -28,8 +28,8 @@ should_not_trigger:
     route_to: deployment
     why: "Authorized live rollout execution."
   - prompt: "Write an ADR explaining why the team chose v2 over extending v1."
-    route_to: decision-records
-    why: "Durable decision rationale, not consumer migration execution."
+    route_to: write-adr
+    why: "Durable decision rationale belongs in write-adr, not consumer migration execution."
 
 capability:
   - scenario: "Deprecate a v1 REST API used by 200 organizations; v2 is live, current telemetry sees 173 active keys, twelve accounts are reseller-managed, and the largest contract requires 90 days' notice."

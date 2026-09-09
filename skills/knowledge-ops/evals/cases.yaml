@@ -22,8 +22,8 @@ should_not_trigger:
     route_to: meeting-notes
     why: "One-shot extraction from a transcript, not wiki curation."
   - prompt: "Write a decision record for why we chose Postgres over Mongo, with alternatives and status."
-    route_to: decision-records
-    why: "ADR authoring discipline. knowledge-ops may file an ADR but does not author it."
+    route_to: write-adr
+    why: "ADR authoring discipline lives in write-adr. knowledge-ops may file an ADR but does not author it."
   - prompt: "Document our newsletter publishing process step by step so anyone can run it."
     route_to: sop-builder
     why: "Procedure authoring, not gardening a knowledge wiki."

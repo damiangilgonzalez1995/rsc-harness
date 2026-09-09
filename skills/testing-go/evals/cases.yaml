@@ -30,8 +30,8 @@ should_not_trigger:
     route_to: testing-web
     why: Frontend/component unit tests, different runtime.
   - prompt: "Review this Go diff for bugs before I merge it."
-    route_to: review
-    why: General code review of a diff, not authoring test code.
+    route_to: code-review
+    why: General code review of a diff is code-review's job, not authoring test code.
 
 capability:
   - scenario: "Given a Go RateLimiter that uses a time.Ticker and exposes fetch(ctx context.Context) (Resp, error) calling an HTTP backend, write a test suite for it."

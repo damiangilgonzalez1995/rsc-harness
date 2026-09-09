@@ -16,8 +16,8 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Write up the architecture decision to adopt Postgres over DynamoDB, with the alternatives we weighed and how we'd revisit it."
-    route_to: decision-records
-    why: Durable ADR with full alternatives and review cadence, not a meeting recap.
+    route_to: write-adr
+    why: Durable ADR with full alternatives and review cadence belongs in write-adr, not a meeting recap.
   - prompt: "Document the step-by-step process for onboarding a new vendor so anyone can repeat it."
     route_to: sop-builder
     why: A reusable repeatable procedure, not a point-in-time meeting record.

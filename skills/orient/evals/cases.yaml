@@ -37,8 +37,8 @@ should_not_trigger:
     why: "A concrete task owned by another skill; orient adds the closing block but does not drive the work."
 
   - prompt: "Arregla el test que falla."
-    route_to: "debug"
-    why: "Root-cause work owned by debug; orient does not take over the task itself."
+    route_to: "external:superpowers-systematic-debugging"
+    why: "Root-cause work owned by superpowers' systematic-debugging; orient does not take over the task itself."
 
 capability:
   - scenario: "The user just ran `npx @damiangil/harness add postgresdb` and says 'ya está, ¿y ahora qué?'. The profile shows accompaniment_level L0. Show how orient closes the turn."

@@ -19,11 +19,11 @@ should_not_trigger:
     route_to: research-ops
     why: "The artifact is a standalone research memo, not an implementation grounded in an installed version."
   - prompt: "The checkout test fails on every third retry; reproduce it and find the root cause."
-    route_to: debug
-    why: "A concrete failure needs diagnosis; documentation may support but does not own the workflow."
+    route_to: external:superpowers-systematic-debugging
+    why: "A concrete failure needs diagnosis via superpowers' systematic-debugging; documentation may support but does not own the workflow."
   - prompt: "Record why we selected Kafka over SQS and preserve the rejected alternatives."
-    route_to: decision-records
-    why: "Durable decision rationale is an ADR."
+    route_to: write-adr
+    why: "Durable decision rationale is write-adr's job."
   - prompt: "Write the public setup guide for our SDK users."
     route_to: technical-writing
     why: "The deliverable is documentation, not source-grounded implementation."

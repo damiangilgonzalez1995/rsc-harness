@@ -21,8 +21,8 @@ should_not_trigger:
     route_to: course-storytelling
     why: "Narrative landing of a single concept (epiphany, sticky name), not the skeleton/structure."
   - prompt: "Audit module 14 of my finished course for gaps, redundancy, and outdated references, with a written report."
-    route_to: review
-    why: "Diagnostic content-audit pass over finished material, not design-from-intent."
+    route_to: code-review
+    why: "Diagnostic audit pass over finished material maps to the generic code-review skill, not design-from-intent."
   - prompt: "Turn my designed module into a polished slide deck with speaker notes."
     route_to: presentations
     why: "Slides/visuals from an already-designed module, not the learning structure."

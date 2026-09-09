@@ -25,8 +25,8 @@ should_not_trigger:
     why: "Casual, low-cost-if-wrong — §0 says applying the full method here is rigor theater; answer directly and briefly."
 
   - prompt: "Run the verification gate on this branch: tests, lint, types, and the acceptance criteria."
-    route_to: "verify"
-    why: "This is the SDD post-build gate, which the verify skill owns; fable-operator is the reasoning discipline beneath it, not the gate runner."
+    route_to: "external:superpowers-verification-before-completion"
+    why: "This is the SDD post-build gate, which superpowers' verification-before-completion owns; fable-operator is the reasoning discipline beneath it, not the gate runner."
 
   - prompt: "Set up a new Next.js 15 app with the app router and a Postgres connection."
     route_to: "nextjs"
@@ -37,8 +37,8 @@ should_not_trigger:
     why: "A single settled fact with no decision riding on it — standard/casual, not consequential; no method needed."
 
   - prompt: "Reproduce and root-cause this specific null-pointer crash, then fix it."
-    route_to: "debug"
-    why: "A dedicated debugging engagement is the debug phase skill's job; fable-operator informs the diagnostic posture but debug owns the reproduce→isolate→fix→verify loop."
+    route_to: "external:superpowers-systematic-debugging"
+    why: "A dedicated debugging engagement is superpowers' systematic-debugging's job; fable-operator informs the diagnostic posture but debugging owns the reproduce->isolate->fix->verify loop."
 
 capability:
   - scenario: "A founder asks whether to migrate their production database to a new engine this weekend, citing a benchmark that shows it is '3x faster'. They will act on the answer."
