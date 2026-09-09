@@ -4,6 +4,8 @@
 
 # `rsc-harness` — You decide what to build. It builds your agent's harness.
 
+> Este proyecto es un fork del trabajo original de Eric Risco: [github.com/ericrisco/rsc-harness](https://github.com/ericrisco/rsc-harness).
+
 [![npm](https://img.shields.io/npm/v/@damiangil/harness?color=63d68a&labelColor=12161c&label=npm)](https://www.npmjs.com/package/@damiangil/harness)
 [![downloads](https://img.shields.io/npm/dm/@damiangil/harness?color=63d68a&labelColor=12161c&label=downloads)](https://www.npmjs.com/package/@damiangil/harness)
 [![skills](https://img.shields.io/badge/skills-290-63d68a?labelColor=12161c)](#the-catalog)

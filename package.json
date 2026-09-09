@@ -52,11 +52,11 @@
     "ai"
   ],
   "license": "MIT",
-  "author": "Eric Risco",
+  "author": "Damián Gil González",
   "homepage": "https://github.com/ericrisco/rsc-harness#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ericrisco/rsc-harness.git"
+    "url": "git+https://github.com/damiangilgonzalez1995/rsc-harness.git"
   },
   "bugs": {
     "url": "https://github.com/ericrisco/rsc-harness/issues"
