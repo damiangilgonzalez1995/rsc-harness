@@ -6,7 +6,7 @@
 
 [![npm](https://img.shields.io/npm/v/@damiangil/harness?color=63d68a&labelColor=12161c&label=npm)](https://www.npmjs.com/package/@damiangil/harness)
 [![downloads](https://img.shields.io/npm/dm/@damiangil/harness?color=63d68a&labelColor=12161c&label=downloads)](https://www.npmjs.com/package/@damiangil/harness)
-[![skills](https://img.shields.io/badge/skills-272-63d68a?labelColor=12161c)](#the-catalog)
+[![skills](https://img.shields.io/badge/skills-253-63d68a?labelColor=12161c)](#the-catalog)
 [![license](https://img.shields.io/badge/license-MIT-63d68a?labelColor=12161c)](LICENSE)
 [![stars](https://img.shields.io/github/stars/ericrisco/rsc-harness?color=63d68a&labelColor=12161c)](https://github.com/ericrisco/rsc-harness/stargazers)
 
@@ -199,7 +199,7 @@ $ rsc onboard
  ██████╗ ███████╗ ██████╗     ← animated gradient wordmark
  ██╔══██╗██╔════╝██╔════╝
  ██████╔╝███████╗██║
-  272 skills · one CLI · zero bloat
+  253 skills · one CLI · zero bloat
 
 How technical should the conversation be?
 How much accompaniment do you want?
@@ -233,7 +233,7 @@ rsc add youtube-api remotion-video   # …grow a channel, edit with Remotion
 rsc add fastapi --target claude,codex   # install into several assistants at once
 rsc install --profile minimal        # the base: orient + suggest + bro + unslop + show-me + eli5 + harness + init
 rsc install --profile core           # floor + the full SDD workflow
-rsc install --profile full           # everything (all 272 skills)
+rsc install --profile full           # everything (all 253 skills)
 rsc install --profile full --without go
 rsc consult "I want to launch a SaaS"  # recommend only, no install
 rsc registry refresh                 # write .rsc/skill-registry.{json,md}
@@ -375,7 +375,7 @@ just asks in plain language.
 
 ## The catalog
 
-272 skills, grouped by what you're trying to do. Click any skill to read its
+253 skills, grouped by what you're trying to do. Click any skill to read its
 `SKILL.md`. It fires on its own when a task matches.
 
 ### 🧭 Core & control plane
@@ -554,7 +554,7 @@ The richer surfaces are intentionally narrower than skill support:
 | Antigravity, Zed, Continue, Amp, Jules, Aider | unsupported | unsupported | unsupported |
 
 `manifest.json` is the generated public inventory: 33 agents (4 base + 29
-selective specialists) and 53 command entries (20 fixed + 33 stack aliases).
+selective specialists) and 43 command entries (10 fixed + 33 stack aliases).
 Unsupported means rsc writes nothing for that surface; it does not emulate a
 provider feature with an unverified file.
 

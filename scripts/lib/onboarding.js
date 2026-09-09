@@ -179,9 +179,15 @@ export function buildOnboardingPlan(record, evidence) {
     { type: 'complexity-added', atLeast: 1 },
     { type: 'manifest-with-implementation' },
   ];
-  if (!needsSdd) decisions.push(deferred('sdd', 'workflow', isSoftware
-    ? 'The software scope is small, so specification overhead is not justified yet.'
-    : 'SDD applies to substantial software work, which is not the declared project purpose.', sddTriggers, softwareTriggers));
+  if (!needsSdd) {
+    decisions.push(deferred('sdd', 'workflow', isSoftware
+      ? 'The software scope is small, so specification overhead is not justified yet.'
+      : 'SDD applies to substantial software work, which is not the declared project purpose.', sddTriggers, softwareTriggers));
+  } else {
+    decisions.push(selected('sdd', 'workflow', complexitySignals.length
+      ? `Included because the accepted work has ${complexitySignals.join(', ')} complexity.`
+      : `Included in the development workflow for ${normalized.softwareScope} software.`));
+  }
   if (baseAgents) {
     for (const id of agents) decisions.push(selected(id, 'agent', 'The accepted substantial software workflow requires this implementation or review role.'));
   } else {

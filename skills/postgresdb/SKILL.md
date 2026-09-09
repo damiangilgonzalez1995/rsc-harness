@@ -13,7 +13,7 @@ fix slow SQL, run zero-downtime migrations, and operate/secure the database. Too
 example is runnable.
 
 New, non-trivial feature with no approved spec + plan under `docs/wiki/sdd/`? Hand off to
-[`specify`](../specify/SKILL.md) before writing feature code (method: [`sdd`](../sdd/SKILL.md)); build
+the `to-spec` skill before writing feature code (or `superpowers:writing-plans`); build
 straight from here only for a genuinely one-line, low-risk change.
 
 Deep dives: [schema-and-indexing](references/schema-and-indexing.md) (types, constraints, every index

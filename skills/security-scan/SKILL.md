@@ -185,8 +185,8 @@ Emit one `security-scan-report.json` — the machine-checkable contract CI gates
 
 - Upload SARIF to code scanning; gate the merge on `verify.sh`, not on a human
   reading logs. See [`github-actions`](../github-actions/SKILL.md) for the
-  pipeline shell and [`verify`](../verify/SKILL.md) for the broader green gate
-  this feeds.
+  pipeline shell and `superpowers:verification-before-completion` for the broader
+  green gate this feeds.
 
 ## Anti-patterns
 
@@ -214,6 +214,6 @@ Conventions are recorded, not gated — never block the scan on this.
 
 ## See Also
 
-Reviewing a diff rather than scanning a repo: [`code-review`](../code-review/SKILL.md)
-for correctness and quality, [`review`](../review/SKILL.md) for adversarial review
-against a spec.
+Reviewing a diff rather than scanning a repo: the `code-review` skill
+for correctness and quality, or `superpowers:requesting-code-review` for adversarial
+review against a spec.

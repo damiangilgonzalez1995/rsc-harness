@@ -220,5 +220,5 @@ New surface: Liquid Glass via `.glassEffect()` (no `UIVisualEffectView`), the `@
 - One codebase for iOS + Android via KMP/CMP → [../compose-multiplatform/SKILL.md](../compose-multiplatform/SKILL.md)
 - Cross-platform Dart → [../flutter/SKILL.md](../flutter/SKILL.md)
 - React Native runtime / native modules → [../react-native/SKILL.md](../react-native/SKILL.md); the EAS/OTA shipping pipeline → [../expo/SKILL.md](../expo/SKILL.md)
-- Store submission / release process → [../ship/SKILL.md](../ship/SKILL.md)
+- Store submission / release process → App Store Connect / TestFlight docs, not this skill
 - Cloud CI build/sign and the non-Swift test stack are siblings (`github-actions`, `testing-web`) — see `recommends`.

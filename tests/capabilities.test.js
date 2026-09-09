@@ -37,11 +37,11 @@ test('capabilities: enumerates installed skills, catalog skills and agents', () 
   const cwd = tmp(); const home = tmp();
   // Installed must be proven ALIVE, not merely an empty array — a hardcoded []
   // used to satisfy the old assertion (mutation M8 survived).
-  installSkill(cwd, 'review');
+  installSkill(cwd, 'error-handling');
   installSkill(home, 'nextjs');
   const caps = capabilities({ target: 'claude', home, cwd });
   const ids = caps.installed.map((s) => `${s.scope}:${s.id}`).sort();
-  assert.deepEqual(ids, ['project:review', 'user:nextjs'], `got ${ids}`);
+  assert.deepEqual(ids, ['project:error-handling', 'user:nextjs'], `got ${ids}`);
   assert.ok(caps.installed.every((s) => s.description), 'installed skills carry their description');
   assert.ok(caps.available.length > 200, `expected the catalog, got ${caps.available.length}`);
   assert.ok(Array.isArray(caps.agents));
@@ -51,20 +51,20 @@ test('capabilities: enumerates installed skills, catalog skills and agents', () 
 test('capabilities: an installed skill is never advertised as available', () => {
   // M16: dropping the exclusion filter used to keep the suite green.
   const cwd = tmp(); const home = tmp();
-  installSkill(cwd, 'review');
+  installSkill(cwd, 'error-handling');
   const caps = capabilities({ target: 'claude', home, cwd });
-  assert.ok(caps.installed.some((s) => s.id === 'review'));
-  assert.ok(!caps.available.some((s) => s.id === 'review'), 'review is installed; it cannot be "available"');
+  assert.ok(caps.installed.some((s) => s.id === 'error-handling'));
+  assert.ok(!caps.available.some((s) => s.id === 'error-handling'), 'review is installed; it cannot be "available"');
 });
 
 test('capabilities: installed comes from DISK, so a stale state file cannot claim coverage', () => {
   const cwd = tmp(); const home = tmp();
   mkdirSync(join(cwd, '.claude', 'skills'), { recursive: true });
   writeFileSync(join(cwd, '.claude', 'skills', '.rsc-state.json'),
-    JSON.stringify({ skills: { review: { files: ['/definitely/not/here/SKILL.md'] } } }));
+    JSON.stringify({ skills: { 'error-handling': { files: ['/definitely/not/here/SKILL.md'] } } }));
   const caps = capabilities({ target: 'claude', home, cwd });
-  assert.ok(!caps.installed.some((s) => s.id === 'review'), 'a skill whose files are gone is not coverage');
-  assert.ok(caps.available.some((s) => s.id === 'review'), 'and it is offered again instead');
+  assert.ok(!caps.installed.some((s) => s.id === 'error-handling'), 'a skill whose files are gone is not coverage');
+  assert.ok(caps.available.some((s) => s.id === 'error-handling'), 'and it is offered again instead');
 });
 
 test('capabilities: user-scope skills are found and tagged, not reported as missing', () => {
@@ -183,11 +183,11 @@ test('capabilities CLI: prints all kinds, honors --full, and says when agents do
   const cwd = tmp();
   mkdirSync(join(cwd, '.claude', 'agents'), { recursive: true });
   writeFileSync(join(cwd, '.claude', 'agents', 'migrator.md'), '# migrator\n');
-  installSkill(cwd, 'review');
+  installSkill(cwd, 'error-handling');
   const env = { ...process.env, HOME: tmp('rsc-caps-home-') };
   const r = spawnSync('node', [RSC, 'capabilities', '--target', 'claude'], { cwd, encoding: 'utf8', env });
   assert.equal(r.status, 0, r.stderr);
-  assert.match(r.stdout, /^skill\treview\tinstalled-project\t/m);
+  assert.match(r.stdout, /^skill\terror-handling\tinstalled-project\t/m);
   assert.match(r.stdout, /^skill\t\S+\tavailable$/m, 'ids only without --full');
   assert.match(r.stdout, /^agent\tmigrator\tproject\t/m);
   const full = spawnSync('node', [RSC, 'capabilities', '--target', 'claude', '--full'], { cwd, encoding: 'utf8', env });

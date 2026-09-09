@@ -35,7 +35,7 @@ Rules:
 
 - **The structured output of step N is the input contract of step N+1.** Validate it (Pydantic / JSON Schema) at the seam. A schema-valid object that fails validation here never poisons the next call.
 - **Keep steps small and single-purpose.** "Extract entities" and "classify sentiment" are two steps, not one prompt doing both. Smaller steps route to cheaper models and cache better.
-- **Mark independent steps for parallel fan-out.** If step B and step C both only need step A's output, run them concurrently — see [../parallel/SKILL.md](../parallel/SKILL.md). Sequential only where there is a real data dependency.
+- **Mark independent steps for parallel fan-out.** If step B and step C both only need step A's output, run them concurrently — see `superpowers:dispatching-parallel-agents`. Sequential only where there is a real data dependency.
 - **Tag each step idempotent or side-effecting.** Retries and replays must be safe; a step that writes to a DB or sends an email is not safe to blindly retry.
 
 ```python

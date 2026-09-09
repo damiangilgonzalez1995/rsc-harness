@@ -22,7 +22,7 @@ Browser Mode at component granularity. The moment scope crosses a boundary, swit
 - Real browser driving a whole app, page navigation, multi-page login-to-dashboard journeys -> [`../e2e-testing/SKILL.md`](../e2e-testing/SKILL.md).
 - pytest / fixtures / Python suites -> [`../testing-py/SKILL.md`](../testing-py/SKILL.md).
 - axe runs, contrast ratios, keyboard-nav auditing as the *goal* -> [`../accessibility/SKILL.md`](../accessibility/SKILL.md). (You will use role queries here; auditing is not the job.)
-- Render/runtime perf, re-render counts, web vitals -> [`../debug/SKILL.md`](../debug/SKILL.md) for diagnosis.
+- Render/runtime perf, re-render counts, web vitals -> `superpowers:systematic-debugging` for diagnosis.
 - How to build the component in the first place -> [`../react/SKILL.md`](../react/SKILL.md) or [`../nextjs/SKILL.md`](../nextjs/SKILL.md).
 
 ## Pick the runner (do this once, never run both)

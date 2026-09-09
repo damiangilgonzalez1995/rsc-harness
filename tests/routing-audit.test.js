@@ -6,7 +6,7 @@ import { loadManifest } from '../scripts/lib/manifest.js';
 
 test('loads every local trigger and negative routing prompt', () => {
   const cases = loadRoutingCases();
-  assert.ok(cases.length >= 2996);
+  assert.ok(cases.length >= 2900);
   assert.ok(cases.some(({ skill, section }) => skill === 'performance' && section === 'positive'));
   assert.ok(cases.some(({ routeTo }) => routeTo === 'scaling'));
 });

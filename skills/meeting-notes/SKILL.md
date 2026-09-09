@@ -16,7 +16,7 @@ You own the **point-in-time meeting record**: take a transcript or raw notes, se
 
 | If the ask is… | Route to |
 |---|---|
-| The **durable decision record** — full rationale, alternatives weighed, reversibility argued, review cadence | [`decision-records`](../decision-records/SKILL.md). This skill *captures* a decision in its meeting context and hands the heavy ADR off; it does not maintain the long-lived artifact |
+| The **durable decision record** — full rationale, alternatives weighed, reversibility argued, review cadence | the `write-adr` skill. This skill *captures* a decision in its meeting context and hands the heavy ADR off; it does not maintain the long-lived artifact |
 | A **reusable step-by-step procedure / runbook** | [`sop-builder`](../sop-builder/SKILL.md). A SOP is a repeatable how-to; meeting notes are a point-in-time record |
 | **Tracking the emitted tasks across a board / sprint** | [`project-ops`](../project-ops/SKILL.md). This skill *emits* action items; their lifecycle is not its job |
 | **Scheduling the meeting, finding a slot, sending the invite** | [`calendar-scheduling`](../calendar-scheduling/SKILL.md) |
@@ -105,7 +105,7 @@ Bad → Good:
 |---|---|
 | "Decided to use Postgres." | "Adopt Postgres over DynamoDB for the events store. *Why:* relational queries we need; team already knows it. *Reversibility:* partially-reversible. Dissent: none." |
 
-When a decision needs the full ADR — alternatives weighed, reversibility argued, a review date — that is [`decision-records`](../decision-records/SKILL.md)' job. Capture it here in context, then hand it off. Don't grow an ADR inside the meeting notes.
+When a decision needs the full ADR — alternatives weighed, reversibility argued, a review date — that is the `write-adr` skill's job. Capture it here in context, then hand it off. Don't grow an ADR inside the meeting notes.
 
 ## Working with AI transcripts
 
@@ -135,7 +135,7 @@ Ship within **24–48h while memory is fresh**. (VoiceType / Wrike, accessed 202
 2. **Invite corrections** — let attendees fix attribution and dates; this is your accuracy pass.
 3. **Finalize** — lock it once corrections land, still inside 48h.
 
-Then route, don't fork. Action items → a tracker via [`project-ops`](../project-ops/SKILL.md) (or pushed by [`automation-flows`](../automation-flows/SKILL.md) / [`notion-connector`](../notion-connector/SKILL.md)). Durable decisions → [`decision-records`](../decision-records/SKILL.md). Keep **one canonical home** for the record and link to it — don't paste three diverging copies into Slack, Notion, and email.
+Then route, don't fork. Action items → a tracker via [`project-ops`](../project-ops/SKILL.md) (or pushed by [`automation-flows`](../automation-flows/SKILL.md) / [`notion-connector`](../notion-connector/SKILL.md)). Durable decisions → the `write-adr` skill. Keep **one canonical home** for the record and link to it — don't paste three diverging copies into Slack, Notion, and email.
 
 ## Anti-patterns
 

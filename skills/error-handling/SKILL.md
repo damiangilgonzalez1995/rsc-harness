@@ -9,7 +9,7 @@ origin: risco
 # Error handling — classify, contain, surface
 
 You are designing what happens *whenever anything in a class breaks*, not chasing
-one crash (that is [`debug`](../debug/SKILL.md)). Every failure gets classified,
+one crash (that is `superpowers:systematic-debugging`). Every failure gets classified,
 contained, and surfaced — never swallowed. The deliverable, in that order: a typed
 error taxonomy, a retry policy with caps and jitter, boundary placement, and a
 two-audience message contract — never a pile of `try { … } catch {}`.

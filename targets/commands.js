@@ -27,7 +27,6 @@ const skillCommand = (name, backing = name) => ({
 });
 
 const FIXED_COMMANDS = Object.freeze([
-  ...['specify', 'clarify', 'plan', 'tasks', 'analyze', 'implement', 'verify', 'review', 'ship', 'debug'].map((name) => skillCommand(name)),
   {
     name: 'build-fix', kind: 'resolver-selector', backing: 'build-resolver',
     description: 'Route a build failure to the installed stack resolver without guessing.',

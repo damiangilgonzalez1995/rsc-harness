@@ -6,7 +6,7 @@ import { stackAgents } from '../targets/agent-catalog.js';
 test('new agent and command prose shares no normalized eight-token phrase with ECC', () => {
   const result = checkCatalogOriginality();
   assert.equal(result.ngramSize, 8);
-  assert.equal(result.documents, stackAgents().length + 53);
+  assert.equal(result.documents, stackAgents().length + 43);
   assert.equal(result.corpusRevision, '90430ab3a716e12a9c6770802efa352098735f24');
   assert.deepEqual(result.matches, []);
 });

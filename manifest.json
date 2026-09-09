@@ -1,10 +1,10 @@
 {
   "version": "1.3.2",
   "counts": {
-    "skills": 272,
+    "skills": 253,
     "agents": 33,
-    "commands": 53,
-    "fixedCommands": 20
+    "commands": 43,
+    "fixedCommands": 10
   },
   "skills": [
     {
@@ -152,22 +152,6 @@
       "profiles": []
     },
     {
-      "id": "analyze",
-      "description": "Use when constitution, spec, plan and tasks all exist and you want them cross-read against each other before any code is written — the rsc-sdd pre-implementation gate. Reports coverage gaps, contradictions, duplication, ambiguity and scope drift; edits nothing. NOT the task breakdown (that is `tasks`), NOT the coding (that is `implement`), NOT the post-code test gate (that is `verify`), NOT resolving ambiguity (that is `clarify`).",
-      "tags": [
-        "sdd",
-        "analyze",
-        "consistency"
-      ],
-      "recommends": [
-        "implement"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
       "id": "angular",
       "description": "Use when building, refactoring, or debugging Angular (v20/21+): standalone components, signals, zoneless change detection, @if/@for/@defer control flow, inject() DI, resource()/httpResource(), RxJS interop, NgRx SignalStore, ng CLI. NOT React (that is react), NOT Next.js (that is nextjs), NOT a TypeScript language question (that is typescript).",
       "tags": [
@@ -231,8 +215,7 @@
         "nodejs",
         "secure-coding",
         "webhooks",
-        "api-connector-builder",
-        "code-review"
+        "api-connector-builder"
       ],
       "profiles": []
     },
@@ -611,22 +594,6 @@
       "profiles": []
     },
     {
-      "id": "clarify",
-      "description": "Use when a spec exists and must be de-risked before planning — hunt its ambiguities, unstated assumptions and edge cases, ask the few build-changing questions, bake the answers back into the spec. The rsc SDD gate between `specify` (writes the spec) and `plan` (designs the build). NOT the cross-artifact consistency check (that is `analyze`).",
-      "tags": [
-        "sdd",
-        "clarify",
-        "questions"
-      ],
-      "recommends": [
-        "plan"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
       "id": "clickhouse-analytics",
       "description": "Use when running a ClickHouse server for high-volume OLAP: choosing a MergeTree engine and ORDER BY/PARTITION BY keys, ingesting billions of event/log/metric rows, pre-aggregating with materialized views, or fixing a query that scans instead of pruning. NOT in-process file analytics (that is `duckdb`), NOT OLTP CRUD indexing (that is `postgresdb`).",
       "tags": [
@@ -695,22 +662,6 @@
       "profiles": []
     },
     {
-      "id": "code-review",
-      "description": "Use to judge a concrete diff, branch, or GitHub PR on its own merits with no rsc-SDD spec/plan chain to key off — the spec-less giving pass behind /code-review: only findings you can defend, one verdict, read-only unless --comment or --fix. NOT the SDD gate keyed to docs/wiki/sdd/ that also processes incoming review comments (that is `review`).",
-      "tags": [
-        "code-review",
-        "pr-review",
-        "quality",
-        "correctness"
-      ],
-      "recommends": [
-        "review",
-        "secure-coding",
-        "verify"
-      ],
-      "profiles": []
-    },
-    {
       "id": "codebase-onboarding",
       "description": "Use when you land in an unfamiliar or inherited codebase and must get productive fast: a breadth-first map of entry points, request flow, module ownership, hidden side effects (cron, webhooks, workers) and churn hotspots, committed as CODEBASE-MAP.md. NOT a deep audit of one module (that is `analyze`) or chasing one failure (that is `debug`).",
       "tags": [
@@ -723,9 +674,6 @@
         "hotspots"
       ],
       "recommends": [
-        "analyze",
-        "debug",
-        "decision-records",
         "harness",
         "init",
         "knowledge-ops"
@@ -835,22 +783,6 @@
       "profiles": []
     },
     {
-      "id": "constitution",
-      "description": "Use when setting or amending a project's non-negotiables — stack canon, quality bars, conventions, security/a11y floors — as numbered, testable rules later phases obey. First rsc-sdd phase; writes docs/wiki/sdd/constitution.md. NOT a feature spec (that is `specify`), NOT the technical plan (that is `plan`), NOT the wiki itself (that is `harness`).",
-      "tags": [
-        "sdd",
-        "constitution",
-        "principles"
-      ],
-      "recommends": [
-        "specify"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
       "id": "content-engine",
       "description": "Use when a content operation needs a SYSTEM: a dated editorial calendar built top-down from pillars, plus the stage gates, briefs, WIP limits and 1:10 atomization plan that move each slot to publish-ready. NOT writing the pieces (that is `article-writing`), NOT publishing them (that is `social-publisher`), NOT keyword research (that is `seo-geo`).",
       "tags": [
@@ -886,7 +818,6 @@
       "recommends": [
         "cost-tracking",
         "rag",
-        "parallel",
         "building-agents",
         "harness"
       ],
@@ -904,9 +835,7 @@
         "meta"
       ],
       "recommends": [
-        "decision-records",
         "author-skill",
-        "debug",
         "harness",
         "knowledge-ops"
       ],
@@ -1178,65 +1107,6 @@
         "backups",
         "sql",
         "planetscale"
-      ],
-      "profiles": []
-    },
-    {
-      "id": "debug",
-      "description": "Use when something is broken — a failing or flaky test, crash, wrong result or regression — and the root cause must be reproduced and proven before any fix. On-demand; callable mid-`implement`. NOT a feature to spec or build (that is `specify`/`implement`), NOT the lint/test gate (that is `verify`), NOT adversarial diff reading (that is `review`).",
-      "tags": [
-        "debug",
-        "bug",
-        "troubleshoot"
-      ],
-      "recommends": [],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
-      "id": "decision-challenge",
-      "description": "Use when a high-impact plan, migration or architecture claim needs a bounded adversarial challenge before commitment. Isolates claims from persuasion, attacks assumptions, reconciles doubts with evidence and emits proceed/hold/stop. NOT a finished-diff review (`review`/`code-review`), NOT SDD artifact consistency (`analyze`).",
-      "tags": [
-        "adversarial-review",
-        "decision-quality",
-        "assumptions",
-        "risk",
-        "preflight"
-      ],
-      "recommends": [
-        "analyze",
-        "review",
-        "code-review",
-        "decision-records",
-        "security-scan"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
-      "id": "decision-records",
-      "description": "Use when a hard-to-reverse choice (database, framework, vendor, auth model) must be frozen as an immutable numbered ADR — the context that forced it, the options weighed, the decision, consequences both ways — or superseded without erasing history. NOT a meeting recap (that is meeting-notes), NOT standing project principles (that is constitution).",
-      "tags": [
-        "decision-records",
-        "adr",
-        "architecture-decisions",
-        "rationale",
-        "decision-log",
-        "madr",
-        "knowledge-ops"
-      ],
-      "recommends": [
-        "meeting-notes",
-        "constitution",
-        "sop-builder",
-        "knowledge-ops",
-        "codebase-onboarding",
-        "plan",
-        "specify"
       ],
       "profiles": []
     },
@@ -1573,8 +1443,7 @@
         "testing-web",
         "accessibility",
         "performance",
-        "github-actions",
-        "debug"
+        "github-actions"
       ],
       "profiles": []
     },
@@ -1722,7 +1591,6 @@
         "fault-tolerance"
       ],
       "recommends": [
-        "debug",
         "observability",
         "monitoring",
         "api-design",
@@ -1746,7 +1614,6 @@
       "recommends": [
         "react-native",
         "github-actions",
-        "ship",
         "deployment",
         "secure-coding"
       ],
@@ -1764,12 +1631,7 @@
         "decision-making",
         "epistemics"
       ],
-      "recommends": [
-        "sdd",
-        "verify",
-        "debug",
-        "review"
-      ],
+      "recommends": [],
       "profiles": [
         "core",
         "full"
@@ -1951,7 +1813,6 @@
         "financial-model",
         "unit-economics",
         "data-cleaning",
-        "analyze",
         "duckdb"
       ],
       "profiles": []
@@ -2193,8 +2054,6 @@
         "pull-request"
       ],
       "recommends": [
-        "ship",
-        "worktrees",
         "deployment",
         "github-actions"
       ],
@@ -2213,7 +2072,6 @@
       "recommends": [
         "docker",
         "git-workflow",
-        "ship",
         "deployment",
         "secure-coding",
         "aws-essentials",
@@ -2416,43 +2274,6 @@
       "profiles": []
     },
     {
-      "id": "idea-refinement",
-      "description": "Use when a rough product, service, workflow or feature idea needs divergent options and assumption pressure-testing before it becomes a spec. Produces a decision brief with alternatives, evidence gaps, Not Now and a cheap experiment. NOT requirements or acceptance criteria (`specify`), NOT market sizing (`market-research`).",
-      "tags": [
-        "ideation",
-        "idea-refinement",
-        "product-discovery",
-        "assumptions",
-        "decision-brief"
-      ],
-      "recommends": [
-        "specify",
-        "market-research",
-        "competitor-watch",
-        "ab-testing"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
-      "id": "implement",
-      "description": "Use when an approved plan and task list exist and it is time to turn them into working, tested code — the SDD phase after `analyze` and before `verify`. Enforces TDD: a failing test comes before the code that makes it pass, one task at a time, appended to a progress ledger that survives compaction. Delegates test tooling to the stack skill and fans disjoint tasks out via `parallel`. NOT spec writing (that is `specify`), NOT planning (that is `plan`), NOT the final lint/test/audit gate (that is `verify`).",
-      "tags": [
-        "sdd",
-        "implement",
-        "code"
-      ],
-      "recommends": [
-        "verify"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
       "id": "init",
       "description": "Use when starting from nothing or pointing rsc at an existing project — the front door. Gauges technical level and the accompaniment dial first (non-technical by default), discovers what the user wants to build or govern (any stack, or a non-code harness: company/ops, research, knowledge, content), writes the profile to docs, and installs the skills discovery justified. NOT the scaffolder (that is `harness`), NOT a stack skill.",
       "tags": [
@@ -2610,7 +2431,6 @@
       ],
       "recommends": [
         "harness",
-        "decision-records",
         "meeting-notes",
         "sop-builder",
         "research-ops",
@@ -2845,8 +2665,7 @@
         "linkedin-content",
         "linkedin-outreach",
         "linkedin-api",
-        "content-engine",
-        "decision-records"
+        "content-engine"
       ],
       "profiles": []
     },
@@ -2869,8 +2688,7 @@
         "cost-tracking",
         "agent-eval",
         "rag",
-        "observability",
-        "parallel"
+        "observability"
       ],
       "profiles": []
     },
@@ -3017,8 +2835,7 @@
         "medium-writing",
         "medium-publishing",
         "content-engine",
-        "seo-geo",
-        "decision-records"
+        "seo-geo"
       ],
       "profiles": []
     },
@@ -3058,7 +2875,6 @@
         "business-ops"
       ],
       "recommends": [
-        "decision-records",
         "sop-builder",
         "project-ops",
         "calendar-scheduling",
@@ -3444,20 +3260,6 @@
       ]
     },
     {
-      "id": "parallel",
-      "description": "Use when two or more pieces of work are genuinely independent — disjoint files, no shared state, no ordering edge — and should fan out across subagents, then be gathered and reconciled under a combined test suite. Decides WHAT can run concurrently; NOT the isolation it runs in (that is `worktrees`), NOT the per-unit TDD loop (that is `implement`).",
-      "tags": [
-        "parallel",
-        "subagents",
-        "fanout"
-      ],
-      "recommends": [],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
       "id": "people-ops",
       "description": "Use when the offer is signed and you now have to run the person — an onboarding plan from preboarding through the 30/60/90 ramp, drafting or auditing an internal policy or handbook section, standing up the recurring people rhythm (1:1s, review and goal cycles, headcount), or offboarding a leaver. NOT sourcing, interviewing or the offer itself (that is `hiring`).",
       "tags": [
@@ -3562,22 +3364,6 @@
         "marketing"
       ],
       "profiles": []
-    },
-    {
-      "id": "plan",
-      "description": "Use when an approved, clarified spec must become a technical blueprint before any code — the SDD phase between clarify and tasks: architecture, contracts, data flow, testing strategy, sequencing and risks, at structure altitude, never framework syntax. NOT the what/why spec (that is `specify`), NOT the ambiguity sweep (that is `clarify`), NOT the task breakdown (that is `tasks`), NOT the code (that is `implement`).",
-      "tags": [
-        "sdd",
-        "plan",
-        "design"
-      ],
-      "recommends": [
-        "tasks"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
     },
     {
       "id": "planetscale",
@@ -3774,8 +3560,6 @@
         "status-tracking"
       ],
       "recommends": [
-        "tasks",
-        "decision-records",
         "meeting-notes",
         "sop-builder",
         "dashboard"
@@ -3940,7 +3724,6 @@
         "react",
         "flutter",
         "design",
-        "debug",
         "performance"
       ],
       "profiles": []
@@ -4098,7 +3881,6 @@
         "competitor-watch",
         "data-scraper",
         "knowledge-ops",
-        "decision-records",
         "structured-extraction",
         "technical-writing"
       ],
@@ -4129,22 +3911,6 @@
         "review-management"
       ],
       "profiles": []
-    },
-    {
-      "id": "review",
-      "description": "Use when a green diff needs adversarial judgment in the rsc SDD chain, between verify and ship — give a review keyed to the spec/plan/constitution in docs/wiki/sdd/, or receive one and verify each comment before agreeing. NOT running lint/type/tests (that is `verify`), NOT the spec-less standalone pass (that is `code-review`), NOT merging (that is `ship`).",
-      "tags": [
-        "sdd",
-        "review",
-        "code-review"
-      ],
-      "recommends": [
-        "ship"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
     },
     {
       "id": "review-management",
@@ -4179,7 +3945,6 @@
       ],
       "recommends": [
         "prompt-engineering",
-        "code-review",
         "context-budget"
       ],
       "profiles": [
@@ -4294,46 +4059,6 @@
       "profiles": []
     },
     {
-      "id": "sdd",
-      "description": "Use when you want a disciplined, spec-driven path from a feature idea to shipped, verified software — the SDD dispatcher and front door, in any language. States the method, reads the accompaniment dial from docs, and routes to the right phase: constitution -> specify -> clarify -> plan -> tasks -> analyze -> implement -> verify -> review -> ship, with debug / worktrees / parallel on demand. Use it to start a feature, to govern the whole flow, or when unsure which phase you are in. NOT a single phase itself (it dispatches), NOT the workspace harness (that is `harness`), NOT a stack build skill.",
-      "tags": [
-        "sdd",
-        "spec",
-        "workflow",
-        "plan"
-      ],
-      "recommends": [
-        "sdd-init",
-        "constitution",
-        "specify"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
-      "id": "sdd-init",
-      "description": "Use when calibrating an existing repo for the rsc SDD chain: detect stack, package manager, test runners and apply/verify commands, refresh the skill registry, and write the runtime config at docs/wiki/sdd/config.yaml. NOT the dispatcher that routes SDD phases (that is `sdd`), NOT first-contact user/workspace bootstrap (that is `init`).",
-      "tags": [
-        "sdd",
-        "init",
-        "config",
-        "testing",
-        "registry"
-      ],
-      "recommends": [
-        "sdd",
-        "specify",
-        "implement",
-        "verify"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
       "id": "secure-coding",
       "description": "Use when securing application code: threat-modeling a feature, security-reviewing a diff, hardening auth/authz, secrets, CORS/CSP, or fixing OWASP-class bugs (access control, injection, SSRF, supply chain) in FastAPI, Next.js, Go or Flutter. NOT running the scanners (that is security-scan), NOT agent prompt-injection guardrails (that is agent-safety).",
       "tags": [
@@ -4361,8 +4086,7 @@
       ],
       "recommends": [
         "secure-coding",
-        "github-actions",
-        "verify"
+        "github-actions"
       ],
       "profiles": []
     },
@@ -4388,21 +4112,6 @@
         "analytics"
       ],
       "profiles": []
-    },
-    {
-      "id": "ship",
-      "description": "Use when a verified, review-approved branch has to land — the close of the rsc SDD chain: safety checks, then three landing options (merge, PR, park/discard), authorship always Eric and never an AI trailer. NOT running the gates (that is `verify`), NOT reading the diff for defects (that is `review`), NOT shipping to a server (that is `deployment`).",
-      "tags": [
-        "sdd",
-        "ship",
-        "release",
-        "pr"
-      ],
-      "recommends": [],
-      "profiles": [
-        "core",
-        "full"
-      ]
     },
     {
       "id": "shopify",
@@ -4557,10 +4266,6 @@
         "behavior-preservation"
       ],
       "recommends": [
-        "code-review",
-        "review",
-        "verify",
-        "debug",
         "performance"
       ],
       "profiles": [
@@ -4657,26 +4362,7 @@
       ],
       "recommends": [
         "research-ops",
-        "decision-records",
-        "debug",
         "technical-writing"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
-      "id": "specify",
-      "description": "Use when a feature, change, or product idea is still fuzzy and must become an approved WHAT/WHY spec before any planning or code — the brainstorming front door of SDD. Turns a one-line intent into problem, goals, users, scope, behaviour and acceptance criteria, via frontier-round dialogue and 2-3 approaches with a recommendation, carrying zero implementation detail. Fires whenever someone jumps to HOW before WHAT is agreed, in any language. NOT the technical plan (that is `plan`), NOT the de-risking ambiguity sweep (that is `clarify`), NOT project-wide principles (that is `constitution`).",
-      "tags": [
-        "sdd",
-        "spec",
-        "requirements"
-      ],
-      "recommends": [
-        "clarify",
-        "plan"
       ],
       "profiles": [
         "core",
@@ -4883,27 +4569,9 @@
         "react-native",
         "expo",
         "testing-web",
-        "github-actions",
-        "ship"
+        "github-actions"
       ],
       "profiles": []
-    },
-    {
-      "id": "tasks",
-      "description": "Use when an approved plan needs slicing into an ordered task list before any code — the SDD `tasks` phase. Each row carries a literal done-check, dependencies, a parallel-safe marker and a spec trace, appended to the plan artifact. NOT writing the plan (that is `plan`), NOT the consistency gate (that is `analyze`), NOT executing the tasks (that is `implement`).",
-      "tags": [
-        "sdd",
-        "tasks",
-        "breakdown"
-      ],
-      "recommends": [
-        "analyze",
-        "implement"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
     },
     {
       "id": "tauri",
@@ -5005,7 +4673,6 @@
       ],
       "recommends": [
         "python",
-        "code-review",
         "github-actions",
         "e2e-testing"
       ],
@@ -5030,8 +4697,7 @@
         "accessibility",
         "testing-py",
         "react",
-        "nextjs",
-        "debug"
+        "nextjs"
       ],
       "profiles": []
     },
@@ -5342,22 +5008,6 @@
       "profiles": []
     },
     {
-      "id": "verify",
-      "description": "Use when implementation is finished and about to be called done or merged — the rsc-sdd evidence gate: runs the stack's scripts/verify.sh (lint, type, test, audit), walks every task done-check and acceptance criterion, records a dated verdict. NOT judging the diff by eye (that is `review`, spec-less `code-review`), NOT diagnosis (that is `debug`).",
-      "tags": [
-        "sdd",
-        "verify",
-        "test"
-      ],
-      "recommends": [
-        "review"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
       "id": "video-shorts",
       "description": "Use when scripting or directing the edit of a single vertical short that has to hold attention from the first frame — turning a topic, a clip or a long video into a shot-by-shot script and an edit decision sheet, fixing a hook that dies in second three, generating hook variants to test, and planning cuts and on-screen text. NOT scheduling or cross-platform cadence (that is `social-publisher`), NOT running the editorial calendar (that is `content-engine`), NOT defining the durable brand tone (that is `brand-voice`).",
       "tags": [
@@ -5528,20 +5178,6 @@
       "profiles": []
     },
     {
-      "id": "worktrees",
-      "description": "Use when work is about to become commits and needs isolation first — check the tree state, then branch or cut a git worktree off a clean base (native EnterWorktree first, git fallback) so implement never runs on main. NOT what may run concurrently inside those workspaces (that is `parallel`), NOT the merge/cleanup after (that is `ship`).",
-      "tags": [
-        "git",
-        "worktree",
-        "isolation"
-      ],
-      "recommends": [],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
       "id": "youtube-api",
       "description": "Use when wiring code to a real YouTube channel: user OAuth 2.0, resumable videos.insert uploads, editing metadata after publish, pulling views/watch time/retention/traffic from the Analytics API v2 into a dated docs/wiki/youtube/ feedback log. NOT what to publish or how to title and thumbnail it (that is youtube-strategy / youtube-packaging).",
       "tags": [
@@ -5623,8 +5259,7 @@
         "youtube-ideation",
         "youtube-packaging",
         "youtube-api",
-        "content-engine",
-        "decision-records"
+        "content-engine"
       ],
       "profiles": []
     },
@@ -6107,12 +5742,6 @@
   ],
   "commands": [
     {
-      "id": "analyze",
-      "description": "Run the analyze skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "analyze"
-    },
-    {
       "id": "build-fix",
       "description": "Route a build failure to the installed stack resolver without guessing.",
       "kind": "resolver-selector",
@@ -6123,12 +5752,6 @@
       "description": "Freeze the current candidate for review and seal it only after the required lenses approve.",
       "kind": "capability",
       "backing": "sello"
-    },
-    {
-      "id": "clarify",
-      "description": "Run the clarify skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "clarify"
     },
     {
       "id": "cpp-build",
@@ -6147,12 +5770,6 @@
       "description": "Delegate csharp-dotnet review work to the installed csharp-reviewer agent.",
       "kind": "agent",
       "backing": "csharp-reviewer"
-    },
-    {
-      "id": "debug",
-      "description": "Run the debug skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "debug"
     },
     {
       "id": "django-build",
@@ -6201,12 +5818,6 @@
       "description": "Run the harness skill through a short, non-duplicating entry point.",
       "kind": "skill",
       "backing": "harness"
-    },
-    {
-      "id": "implement",
-      "description": "Run the implement skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "implement"
     },
     {
       "id": "java-build",
@@ -6275,12 +5886,6 @@
       "backing": "php-reviewer"
     },
     {
-      "id": "plan",
-      "description": "Run the plan skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "plan"
-    },
-    {
       "id": "postgresdb-review",
       "description": "Delegate postgresdb review work to the installed postgres-reviewer agent.",
       "kind": "agent",
@@ -6323,12 +5928,6 @@
       "backing": "memory:resume"
     },
     {
-      "id": "review",
-      "description": "Run the review skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "review"
-    },
-    {
       "id": "rust-build",
       "description": "Delegate rust build work to the installed rust-build-resolver agent.",
       "kind": "agent",
@@ -6351,18 +5950,6 @@
       "description": "Run the security-scan skill through a short, non-duplicating entry point.",
       "kind": "skill",
       "backing": "security-scan"
-    },
-    {
-      "id": "ship",
-      "description": "Run the ship skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "ship"
-    },
-    {
-      "id": "specify",
-      "description": "Run the specify skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "specify"
     },
     {
       "id": "spring-boot-build",
@@ -6389,12 +5976,6 @@
       "backing": "swift-reviewer"
     },
     {
-      "id": "tasks",
-      "description": "Run the tasks skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "tasks"
-    },
-    {
       "id": "test-coverage",
       "description": "Delegate coverage work to the installed stack testing skill.",
       "kind": "testing-skill",
@@ -6411,12 +5992,6 @@
       "description": "Run the knowledge-ops skill through a short, non-duplicating entry point.",
       "kind": "skill",
       "backing": "knowledge-ops"
-    },
-    {
-      "id": "verify",
-      "description": "Run the verify skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "verify"
     },
     {
       "id": "vue-nuxt-review",

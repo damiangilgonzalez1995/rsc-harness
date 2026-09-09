@@ -179,4 +179,4 @@ Adjacent concerns you do **not** own:
 - Auth hardening, OWASP, CORS/CSP threat-modeling → [`../secure-coding/SKILL.md`](../secure-coding/SKILL.md) (you only place 401/403/scopes in the contract)
 - Receiving inbound webhooks (HMAC verify, replay, dedupe) → [`../webhooks/SKILL.md`](../webhooks/SKILL.md)
 - Building an outbound client to a third-party API → [`../api-connector-builder/SKILL.md`](../api-connector-builder/SKILL.md)
-- Reviewing handler code (not the design) → [`../code-review/SKILL.md`](../code-review/SKILL.md)
+- Reviewing handler code (not the design) → the code-review skill

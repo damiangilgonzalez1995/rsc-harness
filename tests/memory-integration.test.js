@@ -27,7 +27,7 @@ function repo() {
 
 test('install makes memory, its commands and its capability report agree', async () => {
   const cwd = repo();
-  await applyInstall({ skillIds: ['go', 'plan'], target: 'cursor', home: cwd, cwd });
+  await applyInstall({ skillIds: ['go', 'security-scan'], target: 'cursor', home: cwd, cwd });
   const state = JSON.parse(readFileSync(targetPaths('cursor', cwd, cwd).stateFile, 'utf8'));
   assert.equal(state.memory.mode, 'assisted');
   for (const name of ['learn', 'save-session', 'resume-session']) assert.ok(state.commands.includes(name));
@@ -47,12 +47,12 @@ test('install makes memory, its commands and its capability report agree', async
 
 test('doctor reports a command whose agent backing disappeared and a command file deleted by hand', async () => {
   const cwd = repo();
-  await applyInstall({ skillIds: ['go', 'plan'], target: 'cursor', home: cwd, cwd });
+  await applyInstall({ skillIds: ['go', 'security-scan'], target: 'cursor', home: cwd, cwd });
   rmSync(agentPath('cursor', cwd, 'go-reviewer'));
-  rmSync(commandPath('cursor', cwd, 'plan'));
+  rmSync(commandPath('cursor', cwd, 'security-scan'));
   const report = doctor({ target: 'cursor', home: cwd, cwd });
   assert.ok(report.commandOrphans.some((entry) => entry.id === 'go-review' && /install|sync/.test(entry.action)));
-  assert.ok(report.missingCommands.some((entry) => entry.id === 'plan' && /sync/.test(entry.action)));
+  assert.ok(report.missingCommands.some((entry) => entry.id === 'security-scan' && /sync/.test(entry.action)));
 });
 
 test('a tracked lifecycle config degrades honestly and installs no memory commands', async () => {
@@ -61,7 +61,7 @@ test('a tracked lifecycle config degrades honestly and installs no memory comman
   writeFileSync(join(cwd, '.gemini', 'settings.json'), '{"theme":"mine"}\n');
   git(cwd, ['add', '.gemini/settings.json']);
   git(cwd, ['commit', '-qm', 'tracked settings']);
-  await applyInstall({ skillIds: ['plan'], target: 'gemini', home: cwd, cwd });
+  await applyInstall({ skillIds: ['security-scan'], target: 'gemini', home: cwd, cwd });
   const state = JSON.parse(readFileSync(targetPaths('gemini', cwd, cwd).stateFile, 'utf8'));
   assert.equal(state.memory.mode, 'degraded');
   assert.ok(!state.commands.includes('learn'));
@@ -70,7 +70,7 @@ test('a tracked lifecycle config degrades honestly and installs no memory comman
 
 test('doctor summarizes nullable cost without turning unknown into zero', async () => {
   const cwd = repo();
-  await applyInstall({ skillIds: ['plan'], target: 'claude', home: cwd, cwd });
+  await applyInstall({ skillIds: ['security-scan'], target: 'claude', home: cwd, cwd });
   capture({ cwd, sessionId: 'metric', target: 'claude', event: 'start' });
   writeFileSync(join(cwd, 'README.md'), 'changed\n');
   capture({ cwd, sessionId: 'metric', target: 'claude', event: 'edit', editDelta: 1, cost: null, toolCalls: null });
@@ -82,7 +82,7 @@ test('doctor summarizes nullable cost without turning unknown into zero', async 
 
 test('doctor degrades a wired adapter whose local script disappears', async () => {
   const cwd = repo();
-  await applyInstall({ skillIds: ['plan'], target: 'claude', home: cwd, cwd });
+  await applyInstall({ skillIds: ['security-scan'], target: 'claude', home: cwd, cwd });
   rmSync(join(cwd, '.rsc', 'session-memory-adapter.mjs'));
   const memory = doctor({ target: 'claude', home: cwd, cwd }).memory;
   assert.equal(memory.status, 'degraded');
@@ -92,7 +92,7 @@ test('doctor degrades a wired adapter whose local script disappears', async () =
 
 test('doctor degrades when the lifecycle config remains but its managed hook is removed', async () => {
   const cwd = repo();
-  await applyInstall({ skillIds: ['plan'], target: 'claude', home: cwd, cwd });
+  await applyInstall({ skillIds: ['security-scan'], target: 'claude', home: cwd, cwd });
   writeFileSync(join(cwd, '.claude', 'settings.local.json'), '{}\n');
   const memory = doctor({ target: 'claude', home: cwd, cwd }).memory;
   assert.equal(memory.status, 'degraded');
@@ -102,7 +102,7 @@ test('doctor degrades when the lifecycle config remains but its managed hook is 
 
 test('one project option disables and re-enables every memory surface through the CLI', async () => {
   const cwd = repo();
-  await applyInstall({ skillIds: ['plan'], target: 'claude', home: cwd, cwd });
+  await applyInstall({ skillIds: ['security-scan'], target: 'claude', home: cwd, cwd });
   const env = { ...process.env, HOME: cwd };
   const off = spawnSync(process.execPath, [CLI, 'memory', 'off', '--target', 'claude'], { cwd, env, encoding: 'utf8' });
   assert.equal(off.status, 0, off.stdout + off.stderr);
@@ -122,10 +122,10 @@ test('one project option disables and re-enables every memory surface through th
 
 test('dry-run and backup inventory include memory files created by a real install', async () => {
   const cwd = repo();
-  const preview = await applyInstall({ skillIds: ['plan'], target: 'codex', home: cwd, cwd, dryRun: true });
+  const preview = await applyInstall({ skillIds: ['security-scan'], target: 'codex', home: cwd, cwd, dryRun: true });
   assert.ok(preview.paths.some((path) => path.endsWith('.codex/hooks.json')));
   assert.ok(preview.paths.some((path) => path.endsWith('.rsc/session-memory-adapter.mjs')));
-  const state = await applyInstall({ skillIds: ['plan'], target: 'codex', home: cwd, cwd });
+  const state = await applyInstall({ skillIds: ['security-scan'], target: 'codex', home: cwd, cwd });
   const backup = JSON.parse(readFileSync(join(cwd, '.rsc', 'backups', state.backup.id, 'manifest.json'), 'utf8'));
   assert.ok(backup.entries.some((entry) => entry.path === '.codex/hooks.json'));
   assert.ok(backup.entries.some((entry) => entry.path === '.rsc/session-memory-adapter.mjs'));
@@ -133,7 +133,7 @@ test('dry-run and backup inventory include memory files created by a real instal
 
 test('memory CLI save/resume works and learn needs an explicit approval flag', async () => {
   const cwd = repo();
-  await applyInstall({ skillIds: ['plan'], target: 'codex', home: cwd, cwd });
+  await applyInstall({ skillIds: ['security-scan'], target: 'codex', home: cwd, cwd });
   const env = { ...process.env, HOME: cwd };
   const save = spawnSync(process.execPath, [CLI, 'memory', 'save', '--session', 'manual-checkpoint', '--target', 'codex'], { cwd, env, encoding: 'utf8' });
   assert.equal(save.status, 0, save.stdout + save.stderr);
