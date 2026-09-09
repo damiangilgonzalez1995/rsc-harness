@@ -1,0 +1,32 @@
+skill: mejor-tipografia
+
+should_trigger:
+  - prompt: "Revisa la escala de tamanos de este sistema tipografico."
+    why: "Disparador directo de mejor-tipografia."
+  - prompt: "Necesito numeros tabulares en esta tabla de precios."
+    why: "Disparador directo de mejor-tipografia."
+  - prompt: "Ajusta el interlineado y el tracking de este titular."
+    why: "Disparador directo de mejor-tipografia."
+  - prompt: "Fix the wrapping and truncation of this long product title."
+    why: "Disparador directo de mejor-tipografia."
+  - prompt: "Elige las caracteristicas OpenType de esta fuente variable."
+    why: "Disparador directo de mejor-tipografia."
+
+should_not_trigger:
+  - prompt: "Elige la paleta de colores de la marca."
+    route_to: "none"
+    why: "Fuera del alcance de mejor-tipografia."
+  - prompt: "Revisa el soporte de teclado de este formulario."
+    route_to: "none"
+    why: "Fuera del alcance de mejor-tipografia."
+  - prompt: "Escribe el copy del boton de enviar."
+    route_to: "none"
+    why: "Fuera del alcance de mejor-tipografia."
+  - prompt: "Anade una transicion a este menu desplegable."
+    route_to: "none"
+    why: "Fuera del alcance de mejor-tipografia."
+
+capability:
+  - scenario: "El usuario construye o revisa la tipografia de un producto."
+    must_include:
+      - "tipografia"

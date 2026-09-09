@@ -1,0 +1,32 @@
+skill: mejor-redaccion
+
+should_trigger:
+  - prompt: "Revisa el texto de este boton y del flujo de pago."
+    why: "Disparador directo de mejor-redaccion."
+  - prompt: "Necesito escribir el mensaje de error de este formulario."
+    why: "Disparador directo de mejor-redaccion."
+  - prompt: "Ayudame con la voz y el tono de este producto."
+    why: "Disparador directo de mejor-redaccion."
+  - prompt: "Write the copy for this empty state and placeholder."
+    why: "Disparador directo de mejor-redaccion."
+  - prompt: "Revisa la capitalizacion de estos textos de la interfaz."
+    why: "Disparador directo de mejor-redaccion."
+
+should_not_trigger:
+  - prompt: "Elige la tipografia de este texto."
+    route_to: "none"
+    why: "Fuera del alcance de mejor-redaccion."
+  - prompt: "Anade una animacion a este boton."
+    route_to: "none"
+    why: "Fuera del alcance de mejor-redaccion."
+  - prompt: "Revisa el contraste de color de este texto."
+    route_to: "none"
+    why: "Fuera del alcance de mejor-redaccion."
+  - prompt: "Ajusta el layout de esta pantalla."
+    route_to: "none"
+    why: "Fuera del alcance de mejor-redaccion."
+
+capability:
+  - scenario: "El usuario escribe o revisa los textos de un producto."
+    must_include:
+      - "texto"

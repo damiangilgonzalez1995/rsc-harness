@@ -1,0 +1,32 @@
+skill: video-a-superprompt
+
+should_trigger:
+  - prompt: "Analiza este video de referencia y crea un prompt de recreacion."
+    why: "Disparador directo de video-a-superprompt."
+  - prompt: "Quiero un articulo que recree la interaccion de scroll de este video."
+    why: "Disparador directo de video-a-superprompt."
+  - prompt: "Extrae la tipografia y los colores de este video de una web."
+    why: "Disparador directo de video-a-superprompt."
+  - prompt: "Turn this reference video into a detailed recreation prompt."
+    why: "Disparador directo de video-a-superprompt."
+  - prompt: "Analiza seccion a seccion el comportamiento de esta pagina en el video."
+    why: "Disparador directo de video-a-superprompt."
+
+should_not_trigger:
+  - prompt: "Construye la landing sin ningun video de referencia."
+    route_to: "none"
+    why: "Fuera del alcance de video-a-superprompt."
+  - prompt: "Escribe el copy de esta pagina desde cero."
+    route_to: "none"
+    why: "Fuera del alcance de video-a-superprompt."
+  - prompt: "Revisa la accesibilidad de este formulario."
+    route_to: "none"
+    why: "Fuera del alcance de video-a-superprompt."
+  - prompt: "Genera la paleta de colores del sistema."
+    route_to: "none"
+    why: "Fuera del alcance de video-a-superprompt."
+
+capability:
+  - scenario: "El usuario aporta un video de referencia y pide recrear su diseno."
+    must_include:
+      - "video"

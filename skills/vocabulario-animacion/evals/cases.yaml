@@ -1,0 +1,32 @@
+skill: vocabulario-animacion
+
+should_trigger:
+  - prompt: "Como se llama ese efecto que rebota al abrirse un popover."
+    why: "Disparador directo de vocabulario-animacion."
+  - prompt: "Necesito el nombre exacto del scroll elastico de iOS."
+    why: "Disparador directo de vocabulario-animacion."
+  - prompt: "Que termino uso para pedirle a un disenador ese efecto de movimiento."
+    why: "Disparador directo de vocabulario-animacion."
+  - prompt: "What's it called when a card springs back after you release it."
+    why: "Disparador directo de vocabulario-animacion."
+  - prompt: "Dame el nombre tecnico de esta animacion de entrada."
+    why: "Disparador directo de vocabulario-animacion."
+
+should_not_trigger:
+  - prompt: "Construye esta animacion desde cero, no necesito el nombre."
+    route_to: "none"
+    why: "Fuera del alcance de vocabulario-animacion."
+  - prompt: "Critica la animacion que ya existe en este componente."
+    route_to: "none"
+    why: "Fuera del alcance de vocabulario-animacion."
+  - prompt: "Revisa la accesibilidad del movimiento reducido."
+    route_to: "none"
+    why: "Fuera del alcance de vocabulario-animacion."
+  - prompt: "Escribe el copy de este boton."
+    route_to: "none"
+    why: "Fuera del alcance de vocabulario-animacion."
+
+capability:
+  - scenario: "El usuario quiere el nombre exacto de un efecto de movimiento que no sabe nombrar."
+    must_include:
+      - "nombre"

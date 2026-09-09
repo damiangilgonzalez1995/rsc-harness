@@ -1,0 +1,32 @@
+skill: mejor-ui
+
+should_trigger:
+  - prompt: "Pule los radios de borde y las sombras de esta tarjeta."
+    why: "Disparador directo de mejor-ui."
+  - prompt: "Necesito animaciones interrumpibles en este boton."
+    why: "Disparador directo de mejor-ui."
+  - prompt: "Ajusta la escala al pulsar de estos elementos interactivos."
+    why: "Disparador directo de mejor-ui."
+  - prompt: "Polish this component's optical alignment and surface depth."
+    why: "Disparador directo de mejor-ui."
+  - prompt: "Suprime las transiciones raras al cambiar de tema."
+    why: "Disparador directo de mejor-ui."
+
+should_not_trigger:
+  - prompt: "Escribe el copy de este mensaje de error."
+    route_to: "none"
+    why: "Fuera del alcance de mejor-ui."
+  - prompt: "Genera la paleta de colores del sistema."
+    route_to: "none"
+    why: "Fuera del alcance de mejor-ui."
+  - prompt: "Revisa el contraste de este texto."
+    route_to: "none"
+    why: "Fuera del alcance de mejor-ui."
+  - prompt: "Documenta el modelo de dominio."
+    route_to: "none"
+    why: "Fuera del alcance de mejor-ui."
+
+capability:
+  - scenario: "El usuario quiere pulir y mejorar la UI de un proyecto."
+    must_include:
+      - "pule"
