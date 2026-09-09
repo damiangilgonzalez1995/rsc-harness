@@ -1,6 +1,6 @@
 ---
 name: fable-operator
-description: "Use when a substantive request needs verified, calibrated reasoning — analysis, diagnosis, review, advice, or a draft the user will act on — even when rigor is not asked for, and most of all when being wrong is expensive or irreversible. NOT casual chat (rigor theater), NOT the SDD gates `verify`, `debug`, `review`; this is the discipline beneath them."
+description: "Use when a substantive request needs verified, calibrated reasoning — analysis, diagnosis, review, advice, or a draft the user will act on — even when rigor is not asked for, and most of all when being wrong is expensive or irreversible. NOT casual chat (rigor theater), NOT the SDD gates `superpowers:verification-before-completion`, `superpowers:systematic-debugging`, `code-review`; this is the discipline beneath them."
 tags: [reasoning, verification, rigor, debugging, review, decision-making, epistemics]
 recommends: [sdd, verify, debug, review]
 profiles: [core, full]

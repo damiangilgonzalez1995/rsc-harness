@@ -1,6 +1,6 @@
 ---
 name: simplify-code
-description: "Use when correct working code is unnecessarily hard to read, change or verify and needs behaviour-preserving simplification in a bounded scope. Characterizes the observable contract, removes accidental complexity one concept at a time and proves equivalence. NOT fixing a failure (`debug`), NOT read-only diff judgment (`review`/`code-review`)."
+description: "Use when correct working code is unnecessarily hard to read, change or verify and needs behaviour-preserving simplification in a bounded scope. Characterizes the observable contract, removes accidental complexity one concept at a time and proves equivalence. NOT fixing a failure (`superpowers:systematic-debugging`), NOT read-only diff judgment (`code-review`)."
 tags: [code-simplification, refactoring, readability, complexity, behavior-preservation]
 recommends: [code-review, review, verify, debug, performance]
 profiles: [core, full]
@@ -42,7 +42,7 @@ Tests are necessary but may be incomplete. Write down what must remain the same:
 - async/concurrency semantics;
 - hot-path allocations or latency when performance is part of the contract.
 
-If the behaviour cannot be stated or observed, add characterization tests before refactoring. When the current behaviour is a bug, stop and route to `../debug/SKILL.md`; simplification must not smuggle in a fix.
+If the behaviour cannot be stated or observed, add characterization tests before refactoring. When the current behaviour is a bug, stop and route to `superpowers:systematic-debugging`; simplification must not smuggle in a fix.
 
 ### 3. BASELINE current evidence
 
@@ -90,8 +90,8 @@ Stop when another edit would trade one defensible style for another without lowe
 
 | Smell | Correction |
 |---|---|
-| A failing behaviour is “cleaned up” | Diagnose with `debug`; simplification must not smuggle in a fix. |
-| A read-only review starts editing | Keep verdict work in `review`/`code-review`. |
+| A failing behaviour is “cleaned up” | Diagnose with `superpowers:systematic-debugging`; simplification must not smuggle in a fix. |
+| A read-only review starts editing | Keep verdict work in `code-review`. |
 | A speed hunch justifies a refactor | `performance` measures first; preserve a benchmark when speed is contractual. |
 | An odd public behaviour is silently normalized | Preserve it until a behaviour change is explicitly authorized. |
 | Cleanup commits, pushes, resets or deploys on its own | These are separate authorized operations; use targeted edits only. |
