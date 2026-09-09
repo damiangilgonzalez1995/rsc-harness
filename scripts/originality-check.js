@@ -134,4 +134,4 @@ function main() {
   console.log(`originality OK (${result.documents} documents vs ${fingerprintCorpus().metadata.fingerprintCount} corpus fingerprints; ${result.exemptions} exemptions)`);
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) main();
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main();

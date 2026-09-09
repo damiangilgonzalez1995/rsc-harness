@@ -222,7 +222,7 @@ export function denyMessage(message) {
 
 // ---- hook entrypoint -----------------------------------------------------------
 // Skipped when imported by a test (P2: the mechanism is testable without a subprocess).
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const root = process.argv[2] || process.cwd();
   const allow = () => process.exit(0);
 

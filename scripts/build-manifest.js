@@ -149,4 +149,4 @@ function main() {
   console.log(`wrote manifest.json (${manifest.counts.skills} skills, ${manifest.counts.agents} agents, ${manifest.counts.commands} commands)`);
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) main();
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main();

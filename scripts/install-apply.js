@@ -552,7 +552,7 @@ export async function purge({ home, cwd = process.cwd(), withDocs = false, dryRu
   return [...new Set(removed)];
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const ids = process.argv.slice(2);
   applyInstall({ skillIds: ids, target: 'claude' }).then(() => console.log('installed', ids.join(', ')));
 }

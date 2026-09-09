@@ -126,7 +126,7 @@ function stdinJson() {
   }
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const result = handleLifecycle({ target: process.argv[2], event: process.argv[3], native: stdinJson() });
   process.stdout.write(`${JSON.stringify(result.output)}\n`);
 }
