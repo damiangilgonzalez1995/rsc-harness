@@ -1,0 +1,9 @@
+{
+  "concept": "generators",
+  "level": 2,
+  "title_en": "Build a lazy error_lines generator",
+  "spec_html_en": "<p>Write generator function <code>error_lines(lines)</code> that yields each string in <code>lines</code> containing the substring <code>'ERROR'</code>, in order, using <code>yield</code> (not building an intermediate list).</p>",
+  "stub": "def error_lines(lines):\n    # TODO: implement per spec, using yield\n    ...\n",
+  "test": "def test_yields_only_error_lines():\n    lines = ['INFO: start', 'ERROR: disk full', 'INFO: ok', 'ERROR: timeout']\n    result = list(error_lines(lines))\n    assert result == ['ERROR: disk full', 'ERROR: timeout'], 'must yield only lines containing ERROR, in order'\n\ndef test_returns_a_generator():\n    import types\n    gen = error_lines(['ERROR: x'])\n    assert isinstance(gen, types.GeneratorType), 'error_lines must be a generator function (use yield, not return a list)'\n\ndef test_no_errors_yields_nothing():\n    result = list(error_lines(['INFO: fine', 'DEBUG: noop']))\n    assert result == [], 'if no line contains ERROR, nothing is yielded'",
+  "canonical": "def error_lines(lines):\n    for line in lines:\n        if 'ERROR' in line:\n            yield line\n"
+}

@@ -285,7 +285,7 @@ read-only, never connects to a server, and exits 0 when no Redis usage is found.
 
 ## Project grounding
 
-Record this project's Redis decisions in `02-DOCS/wiki/stack/redis.md` (recorded, not gated — same
+Record this project's Redis decisions in `docs/wiki/stack/redis.md` (recorded, not gated — same
 convention `postgresdb` uses): which primitive(s) you run, the `maxmemory-policy`, persistence
 (RDB/AOF/none), the client library, and any lock/rate-limit Lua you depend on. Future agents read
 this before touching the cache.

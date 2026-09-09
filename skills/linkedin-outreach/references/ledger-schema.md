@@ -1,7 +1,7 @@
 # Ledger schema
 
 The touch/outcome ledger is the artifact `scripts/verify.sh` checks. One file:
-`02-DOCS/linkedin-outreach/touches.csv`.
+`docs/linkedin-outreach/touches.csv`.
 
 ## Header (verbatim — verify.sh asserts this exact row)
 

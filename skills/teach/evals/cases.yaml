@@ -1,0 +1,32 @@
+skill: teach
+
+should_trigger:
+  - prompt: "Ensename como funciona este concepto a lo largo de varias sesiones."
+    why: "Disparador directo de teach."
+  - prompt: "Quiero aprender esta habilidad dentro de este workspace."
+    why: "Disparador directo de teach."
+  - prompt: "Explicame este tema poco a poco en sesiones sucesivas."
+    why: "Disparador directo de teach."
+  - prompt: "Teach me this concept over several sessions in this workspace."
+    why: "Disparador directo de teach."
+  - prompt: "Ayudame a entender este area del proyecto como quien aprende."
+    why: "Disparador directo de teach."
+
+should_not_trigger:
+  - prompt: "Ponme ejercicios de practica de Python."
+    route_to: "muscle-memory"
+    why: "Generar katas de practica es el trabajo de muscle-memory, no de teach."
+  - prompt: "Implementa esta funcionalidad directamente."
+    route_to: "implement"
+    why: "Implementar la funcionalidad es el trabajo de implement, no de teach."
+  - prompt: "Revisa mi solucion a este kata."
+    route_to: "muscle-memory"
+    why: "Revisar la solucion a un kata es el trabajo de muscle-memory, no de teach."
+  - prompt: "Documenta la decision de arquitectura."
+    route_to: "write-adr"
+    why: "Documentar una decision de arquitectura es el trabajo de write-adr, no de teach."
+
+capability:
+  - scenario: "El usuario quiere aprender un tema a lo largo de varias sesiones."
+    must_include:
+      - "aprender"

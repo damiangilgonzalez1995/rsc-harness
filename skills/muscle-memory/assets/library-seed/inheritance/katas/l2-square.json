@@ -1,0 +1,9 @@
+{
+  "concept": "inheritance",
+  "level": 2,
+  "title_en": "Build Shape and an overriding Square",
+  "spec_html_en": "<p>The base class <code>Shape</code> (given below) has <code>__init__(self, name)</code> storing <code>name</code> and method <code>describe()</code> returning <code>f\"{name}: no area defined\"</code>. Implement subclass <code>Square(Shape)</code> with <code>__init__(self, side)</code> calling <code>super().__init__(\"square\")</code>, storing <code>side</code>, and overriding <code>describe()</code> to return <code>f\"square: area is {side * side}\"</code>.</p>",
+  "stub": "class Shape:\n    def __init__(self, name: str):\n        self.name = name\n\n    def describe(self) -> str:\n        return f'{self.name}: no area defined'\n\n\n# TODO: define Square(Shape) that calls super().__init__('square'), stores side,\n# and overrides describe() to return f'square: area is {side * side}'\n",
+  "test": "def test_shape_describe():\n    s = Shape('triangle')\n    assert s.describe() == 'triangle: no area defined', 'base Shape.describe must use the generic message'\n\ndef test_square_overrides_describe():\n    sq = Square(4)\n    assert sq.describe() == 'square: area is 16', 'Square.describe must override with the computed area'\n\ndef test_square_stores_side_and_name():\n    sq = Square(5)\n    assert sq.side == 5, 'Square must store side'\n    assert sq.name == 'square', 'Square must call super().__init__ to set name'",
+  "canonical": "class Shape:\n    def __init__(self, name):\n        self.name = name\n\n    def describe(self):\n        return f'{self.name}: no area defined'\n\n\nclass Square(Shape):\n    def __init__(self, side):\n        super().__init__('square')\n        self.side = side\n\n    def describe(self):\n        return f'square: area is {self.side * self.side}'\n"
+}

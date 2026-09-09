@@ -8,7 +8,7 @@ origin: risco
 
 # Linkedin Outreach — The Loop and Its Ledger
 
-*You run the LinkedIn social-selling motion and keep its score: **who** to touch, **when**, through **what** warm-up, and **how** the loop is run and logged. The thesis is warm-first — engagement before connection, signal before send, ledger before "I'll remember it." The output is a running system plus a touch ledger under `02-DOCS/`, never a finished line of copy: when prose is needed you write the brief and hand it off, then stay in the loop.*
+*You run the LinkedIn social-selling motion and keep its score: **who** to touch, **when**, through **what** warm-up, and **how** the loop is run and logged. The thesis is warm-first — engagement before connection, signal before send, ledger before "I'll remember it." The output is a running system plus a touch ledger under `docs/`, never a finished line of copy: when prose is needed you write the brief and hand it off, then stay in the loop.*
 
 ## Boundary
 
@@ -27,7 +27,7 @@ Five phases, in order. Each has a *why* and yields one artifact; the artifact ga
 2. **Warm** — *why:* a cold, context-free request is the worst-accepting move you can make; engaging first is what fixes it. → Yields a logged pre-touch (profile view + one genuine comment/like 1–2 days prior).
 3. **Connect** — *why:* the request is the smallest, most rate-limited move; spend it deliberately. → Yields a sent request inside the weekly budget, note-or-no-note chosen by goal.
 4. **Convert** — *why:* an accept is not a conversation; the choreography turns a signal into a warm 1:1. → Yields a thread with a real reply, copy delegated to cold-outreach when needed.
-5. **Log** — *why:* a motion you can't measure you can't repeat or fix. → Yields a row in the `02-DOCS/` ledger with the outcome.
+5. **Log** — *why:* a motion you can't measure you can't repeat or fix. → Yields a row in the `docs/` ledger with the outcome.
 
 Each phase gets a section below; the last one compresses all five into a day.
 
@@ -107,9 +107,9 @@ Buying-signal tells in a thread: they ask about price/timeline, mention an activ
 2. Log the outcome (`call_booked`) in the ledger.
 3. Hand the thread + context to `../sales-pipeline/SKILL.md` — the moment a deal exists it is theirs, and you set no stages or forecasts.
 
-## The ledger (02-DOCS)
+## The ledger (docs)
 
-One file. Path: `02-DOCS/linkedin-outreach/touches.csv`. The header row is fixed (verify.sh checks it verbatim):
+One file. Path: `docs/linkedin-outreach/touches.csv`. The header row is fixed (verify.sh checks it verbatim):
 
 ```csv
 date,name,profile_url,channel,trigger,action,stage,outcome,next_touch
@@ -139,7 +139,7 @@ If acceptance < ~30%, warm harder (phase 2). If reply < ~10%, your hooks are wea
 | Automation that ignores the rolling limit | Bursts trip LinkedIn's detection; account at risk | Pace within the budget; warm-up beats volume |
 | Read "notes don't help" as "context never helps" | Notes don't lift *accept*, but context doubles *reply* | Decide note by goal: accept→none, reply→context |
 | Chase SSI as the goal | SSI is a lagging proxy; high SSI ≠ pipeline | Track acceptance/reply/calls; let SSI follow |
-| Run outreach with no ledger | No measurement → no repeatable motion | Log every touch + outcome to `02-DOCS/` |
+| Run outreach with no ledger | No measurement → no repeatable motion | Log every touch + outcome to `docs/` |
 
 ## Daily 30-minute routine
 
@@ -149,6 +149,6 @@ Run this as a checklist; it is the loop compressed into a day.
 - [ ] **Connect (5 min):** send today's requests from the saved search / trigger alerts, inside the weekly budget; note-or-no-note by goal (phase 3).
 - [ ] **Convert (10 min):** progress 2–3 warm threads — accepted connections, profile viewers, post engagers — using the signal→play table; delegate any copy to cold-outreach.
 - [ ] **Hand off (2 min):** any buying signal → book/intro, then route to sales-pipeline.
-- [ ] **Log (3 min):** write every touch and outcome to `02-DOCS/linkedin-outreach/touches.csv`.
+- [ ] **Log (3 min):** write every touch and outcome to `docs/linkedin-outreach/touches.csv`.
 
 Weekly, run the review ritual and adjust the next week's targeting. That closes the loop back to phase 1.

@@ -16,7 +16,7 @@ import { targetPaths } from '../targets/index.js';
 //
 // This file also guards the thing that made it possible: agents.js shipped ONE agent as module
 // constants, so the registry was the actual work and `developer` is already deployed in user repos.
-// Spec: 02-DOCS/wiki/sdd/specs/refuter-agent.md
+// Spec: docs/wiki/sdd/specs/refuter-agent.md
 const REFUTERS = ['refuter-correctness', 'refuter-security', 'refuter-tests'];
 const tmp = (p) => mkdtempSync(join(tmpdir(), `ra-${p}-`));
 const flat = (s) => s.replace(/\s+/g, ' ');

@@ -86,14 +86,14 @@ count_lines() {
 }
 
 # find curriculum source files (markdown / text). Prints one path per line.
-# Excludes the conventional 02-DOCS wiki/raw so we lint the CURRICULUM, not the profile.
+# Excludes the conventional docs wiki/raw so we lint the CURRICULUM, not the profile.
 list_curricula() {
   find "$SCAN_PATH" \
     \( -name '*.md' -o -name '*.mdx' -o -name '*.txt' \) \
     -type f \
     ! -path '*/node_modules/*' \
     ! -path '*/.git/*' \
-    ! -path '*/02-DOCS/*' \
+    ! -path '*/docs/*' \
     2>/dev/null || true
 }
 

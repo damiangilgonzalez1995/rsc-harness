@@ -92,7 +92,7 @@ test('drift-check: every noise class is skipped', () => {
     'skills/a/SKILL.md': [
       '[a](skills/<ID>/SKILL.md)',        // placeholder — a shape, not a path
       '[b](references/*.md)',             // placeholder
-      '[c](02-DOCS/wiki/brand/voice.md)', // the installed user's project
+      '[c](docs/wiki/brand/voice.md)', // the installed user's project
       '[d](../../raw/brand/sample.md)',   // the installed user's project
       '[e](.rsc/sello.json)',             // born at runtime
       '[f](~/.rsc/sello-config.json)',    // runtime, home-relative
@@ -110,19 +110,19 @@ test('drift-check: ANTI-SWALLOW — near-misses of each noise class stay real cl
     'skills/a/SKILL.md': [
       '[a](./.rsc-notes.md)',   // not `.rsc/` — a file whose name merely starts with .rsc
       '[b](./rawdata/x.md)',    // not `raw/`
-      '[c](./02-DOCSX/y.md)',   // not `02-DOCS/`
+      '[c](./docsX/y.md)',   // not `docs/`
       '[d](./notes.md)',        // plain and gone
     ].join('\n\n') + '\n',
   });
   assert.deepEqual(
     targets(checkCatalog({ root })),
-    ['./.rsc-notes.md', './02-DOCSX/y.md', './notes.md', './rawdata/x.md'],
+    ['./.rsc-notes.md', './docsX/y.md', './notes.md', './rawdata/x.md'],
   );
 });
 
-test('drift-check: 02-DOCS is the user\'s project in catalog mode and a real claim in knowledge mode', () => {
-  assert.equal(classify('02-DOCS/wiki/x.md', { mode: 'catalog' }), 'user-project');
-  assert.equal(classify('02-DOCS/wiki/x.md', { mode: 'knowledge' }), 'real');
+test('drift-check: docs is the user\'s project in catalog mode and a real claim in knowledge mode', () => {
+  assert.equal(classify('docs/wiki/x.md', { mode: 'catalog' }), 'user-project');
+  assert.equal(classify('docs/wiki/x.md', { mode: 'knowledge' }), 'real');
 });
 
 test('drift-check: a site route is not a missing file', () => {
@@ -137,7 +137,7 @@ test('drift-check: knowledge mode reads a generic per-skill path as a shape, not
   // The authoring standards say "every skill carries `evals/cases.yaml`" — a claim about 258
   // directories at once. Five findings came from reading it as one broken path.
   const root = tree({
-    '02-DOCS/wiki/standard.md': 'Every skill carries `evals/cases.yaml` and `references/guide.md`.\n',
+    'docs/wiki/standard.md': 'Every skill carries `evals/cases.yaml` and `references/guide.md`.\n',
     'skills/alpha/evals/cases.yaml': 'x: 1\n',
   });
   assert.deepEqual(
@@ -165,6 +165,17 @@ test('drift-check: the wrong-depth bug is caught (the shape of both real ones)',
   assert.deepEqual(checkCatalog({ root: fixed }).findings, []);
 });
 
+test('drift-check: a real, existing multi-segment link resolves on every platform', () => {
+  // `existsExact` walks `relative(root, absTarget)` one path segment at a time. `relative()`
+  // returns platform-native separators (`\` on Windows), so a target two-or-more directories
+  // deep must resolve there too, not just on Linux where `sep` happens to be `/`.
+  const root = tree({
+    'skills/a/references/x.md': 'See [c](../../c/deep/SKILL.md).\n',
+    'skills/c/deep/SKILL.md': '# C\n',
+  });
+  assert.deepEqual(checkCatalog({ root }).findings, []);
+});
+
 test('drift-check: catalog mode resolves ONLY from the document\'s directory', () => {
   // Being generous here (repo root as a fallback) would resolve `../b/SKILL.md` via some other
   // base and hide the wrong-depth bug. This asserts the strictness on purpose.
@@ -178,7 +189,7 @@ test('drift-check: catalog mode resolves ONLY from the document\'s directory', (
 
 test('drift-check: knowledge mode resolves shorthand against several bases', () => {
   const root = tree({
-    '02-DOCS/wiki/a.md': 'See [x](orient/references/x.md) and [y](scripts/y.js).\n',
+    'docs/wiki/a.md': 'See [x](orient/references/x.md) and [y](scripts/y.js).\n',
     'skills/orient/references/x.md': '# x\n',
     'scripts/y.js': '// y\n',
   });
@@ -189,14 +200,14 @@ test('drift-check: knowledge mode resolves shorthand against several bases', () 
 test('drift-check: knowledge mode also reads paths asserted in inline code', () => {
   // The wiki's worst finding lived in backticks: a plan marked "implementada" naming three
   // files that never existed. Prose-links-only extraction would have missed it entirely.
-  const root = tree({ '02-DOCS/wiki/plan.md': 'Shipped as `targets/lib/once.mjs` and `tests/once.test.js`.\n' });
+  const root = tree({ 'docs/wiki/plan.md': 'Shipped as `targets/lib/once.mjs` and `tests/once.test.js`.\n' });
   const r = checkKnowledge({ root, home: join(root, 'nohome') });
   assert.deepEqual(targets(r), ['targets/lib/once.mjs', 'tests/once.test.js']);
   assert.ok(r.findings.every((f) => f.kind === 'inline'));
 });
 
 test('drift-check: inline extraction ignores bare filenames and prose in backticks', () => {
-  const root = tree({ '02-DOCS/wiki/a.md': 'Run `npm test`, edit `README.md`, see `some words here`.\n' });
+  const root = tree({ 'docs/wiki/a.md': 'Run `npm test`, edit `README.md`, see `some words here`.\n' });
   assert.deepEqual(checkKnowledge({ root, home: join(root, 'nohome') }).findings, [],
     'a mention without a directory is not a location claim');
 });
@@ -227,7 +238,7 @@ test('drift-check: no input artifact is modified by a run', () => {
   const root = tree({
     'skills/a/SKILL.md': 'See [x](./gone.md).\n',
     'skills/a/references/r.md': '# r\n',
-    '02-DOCS/wiki/w.md': 'See `scripts/gone.js`.\n',
+    'docs/wiki/w.md': 'See `scripts/gone.js`.\n',
   });
   const hash = (dir) => {
     const h = createHash('sha256');
@@ -299,7 +310,7 @@ test('drift-check CLI: a missing catalog exits 2 and never reports PASS', () => 
 });
 
 test('drift-check CLI: --knowledge reports without blocking', () => {
-  const { run } = cliIn({ '02-DOCS/wiki/w.md': 'Shipped as `scripts/gone.js`.\n' });
+  const { run } = cliIn({ 'docs/wiki/w.md': 'Shipped as `scripts/gone.js`.\n' });
   const r = run('--knowledge');
   assert.equal(r.status, 0, 'advisory: findings never fail the run');
   assert.match(r.stdout, /scripts\/gone\.js/);
@@ -346,7 +357,7 @@ test('drift-check: extraction helpers are exported and behave in isolation', () 
 //
 // These tests must be able to FAIL on macOS, which is the whole point — a test that only proves
 // the fix on Linux proves it where the bug never was.
-// Spec: 02-DOCS/wiki/sdd/specs/drift-check-case.md
+// Spec: docs/wiki/sdd/specs/drift-check-case.md
 test('a link that differs from the real file only in case does NOT resolve', () => {
   const root = tree({
     'skills/a/SKILL.md': 'Pull the values from [AUDIT.md](AUDIT.md).\n',

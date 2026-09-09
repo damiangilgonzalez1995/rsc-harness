@@ -1,0 +1,32 @@
+skill: tastemaker
+
+should_trigger:
+  - prompt: "Haz que esta UI genere que quede bien, no generica."
+    why: "Disparador directo de tastemaker."
+  - prompt: "Diseñame el frontend de este producto, que no parezca otra web de SaaS mas."
+    why: "Disparador directo de tastemaker."
+  - prompt: "Estudia el look de esta captura y aplicalo a mi app."
+    why: "Disparador directo de tastemaker."
+  - prompt: "Audit why this generated UI looks like AI slop and fix it."
+    why: "Disparador directo de tastemaker."
+  - prompt: "Coge el rollo de esta referencia y aplicalo a mi landing."
+    why: "Disparador directo de tastemaker."
+
+should_not_trigger:
+  - prompt: "Escribe la logica de negocio del backend."
+    route_to: "none"
+    why: "Fuera del alcance de tastemaker."
+  - prompt: "Documenta el modelo de dominio del proyecto."
+    route_to: "domain-modeling"
+    why: "Documentar el modelo de dominio es el trabajo de domain-modeling, no de tastemaker."
+  - prompt: "Configura el pipeline de despliegue."
+    route_to: "none"
+    why: "Fuera del alcance de tastemaker."
+  - prompt: "Escribe tests de integracion para la API."
+    route_to: "none"
+    why: "Fuera del alcance de tastemaker."
+
+capability:
+  - scenario: "El usuario pide una UI genuinamente bonita y coherente con la marca."
+    must_include:
+      - "marca"

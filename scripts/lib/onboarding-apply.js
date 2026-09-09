@@ -53,7 +53,7 @@ function digestGovernedPaths(cwd, paths) {
 function recoveryCommand(plan, planId) {
   const record = plan.record;
   return [
-    'npx @ericrisco/rsc@latest onboard',
+    'npx @damiangil/harness@latest onboard',
     `--technical-level ${record.technicalLevel}`,
     `--accompaniment ${record.accompaniment}`,
     `--project-kind ${record.projectKind}`,
@@ -73,7 +73,7 @@ export function renderOnboardingDocuments(plan, planId) {
 }
 
 export function writeOnboardingDocuments(cwd, plan, planId) {
-  const dir = join(cwd, '02-DOCS', 'wiki', 'harness');
+  const dir = join(cwd, 'docs', 'wiki', 'harness');
   mkdirSync(dir, { recursive: true });
   const docs = renderOnboardingDocuments(plan, planId);
   writeFileSync(join(dir, 'user-profile.md'), docs.profile);
@@ -98,7 +98,7 @@ export function verifyOnboarding(cwd, plan, planId) {
     if (state.policy?.context7 !== plan.policy.context7) differences.push(`${target}: context7 policy differs`);
   }
   for (const name of ['user-profile.md', 'installation-plan.md', 'decisions.md']) {
-    if (!existsSync(join(cwd, '02-DOCS', 'wiki', 'harness', name))) differences.push(`missing ${name}`);
+    if (!existsSync(join(cwd, 'docs', 'wiki', 'harness', name))) differences.push(`missing ${name}`);
   }
   for (const path of plan.governedPaths || []) {
     if (!existsSync(join(cwd, path.replace(/\/$/, '')))) differences.push(`missing governed path ${path}`);
@@ -114,7 +114,7 @@ export function verifyOnboarding(cwd, plan, planId) {
       if (digestPath(join(cwd, path.replace(/\/$/, ''))) !== expectedDigests[path]) differences.push(`governed content differs at ${path}`);
     }
   }
-  const docsDir = join(cwd, '02-DOCS', 'wiki', 'harness');
+  const docsDir = join(cwd, 'docs', 'wiki', 'harness');
   const profile = existsSync(join(docsDir, 'user-profile.md')) ? readFileSync(join(docsDir, 'user-profile.md'), 'utf8') : '';
   for (const line of [
     `technical_level: ${plan.record.technicalLevel}`,

@@ -8,7 +8,7 @@
 // report tolerates noise an automatic one does not. Accepted cost, stated here so nobody has to
 // rediscover it: drift is not detected on its own. Somebody has to run this.
 //
-// It NEVER writes. Not a file, not a mkdir. `02-DOCS/` is untracked (P9): there is no undo here.
+// It NEVER writes. Not a file, not a mkdir. `docs/` is untracked (P9): there is no undo here.
 
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
@@ -17,7 +17,7 @@ import { execFileSync } from 'node:child_process';
 import { diagnose, CLASSES } from './lib/knowledge-doctor.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..');
-const WIKI = join(REPO, '02-DOCS', 'wiki');
+const WIKI = join(REPO, 'docs', 'wiki');
 
 // withFileTypes, NOT statSync — this matches scripts/drift-check.js:167, the precedent the plan cited
 // as exact and then diverged from. statSync FOLLOWS symlinks, so a symlink under the wiki let the walk
@@ -48,7 +48,7 @@ function main() {
   const asJson = process.argv.includes('--json');
   if (!existsSync(WIKI)) {
     // Not a failure: a repo without the harness has nothing to audit.
-    console.log('knowledge-doctor: no hay 02-DOCS/wiki/ — nada que auditar.');
+    console.log('knowledge-doctor: no hay docs/wiki/ — nada que auditar.');
     process.exit(0);
   }
   const files = walk(WIKI);

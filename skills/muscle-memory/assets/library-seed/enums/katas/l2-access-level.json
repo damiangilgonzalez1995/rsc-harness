@@ -1,0 +1,9 @@
+{
+  "concept": "enums",
+  "level": 2,
+  "title_en": "Build an Enum with its own method",
+  "spec_html_en": "<p>Write <code>Enum</code> <code>AccessLevel</code> with members <code>GUEST = 1</code>, <code>MEMBER = 2</code>, <code>ADMIN = 3</code>. Add method <code>can_edit(self)</code> returning <code>True</code> if the member's value is 2 or higher, <code>False</code> otherwise.</p>",
+  "stub": "from enum import Enum\n\n\nclass AccessLevel(Enum):\n    # TODO: define members GUEST=1, MEMBER=2, ADMIN=3, and method can_edit() per spec\n    pass\n",
+  "test": "def test_guest_cannot_edit():\n    assert AccessLevel.GUEST.can_edit() is False, 'GUEST must not be able to edit'\n\ndef test_member_can_edit():\n    assert AccessLevel.MEMBER.can_edit() is True, 'MEMBER must be able to edit'\n\ndef test_admin_can_edit():\n    assert AccessLevel.ADMIN.can_edit() is True, 'ADMIN must be able to edit'",
+  "canonical": "from enum import Enum\n\n\nclass AccessLevel(Enum):\n    GUEST = 1\n    MEMBER = 2\n    ADMIN = 3\n\n    def can_edit(self):\n        return self.value >= 2\n"
+}

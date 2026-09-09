@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve, join, dirname } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { capture, resume } from './session-memory-core.mjs';
 
 const LOCAL_TARGETS = new Set(['claude', 'codex', 'cursor', 'gemini', 'opencode']);
@@ -125,7 +126,7 @@ function stdinJson() {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const result = handleLifecycle({ target: process.argv[2], event: process.argv[3], native: stdinJson() });
   process.stdout.write(`${JSON.stringify(result.output)}\n`);
 }

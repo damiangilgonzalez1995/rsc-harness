@@ -1,6 +1,6 @@
 # Idea ledger + hypothesis/outcome log — templates and a worked example
 
-Two artifacts, both Markdown, both in `02-DOCS/`. The ledger is rewritten each run (it is
+Two artifacts, both Markdown, both in `docs/`. The ledger is rewritten each run (it is
 the current shortlist). The log is **append-only** — it is the audit trail and must never
 be overwritten.
 

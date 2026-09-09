@@ -1,0 +1,32 @@
+skill: mejor-layout
+
+should_trigger:
+  - prompt: "Revisa la disposicion de esta pantalla, el agrupamiento y el orden de lectura."
+    why: "Disparador directo de mejor-layout."
+  - prompt: "Necesito definir los breakpoints de este layout responsive."
+    why: "Disparador directo de mejor-layout."
+  - prompt: "Ayudame con la divulgacion progresiva de esta pagina."
+    why: "Disparador directo de mejor-layout."
+  - prompt: "Review this screen's alignment, spacing and reading order."
+    why: "Disparador directo de mejor-layout."
+  - prompt: "Como deberia crecer este layout cuando el texto se traduce."
+    why: "Disparador directo de mejor-layout."
+
+should_not_trigger:
+  - prompt: "Elige la paleta de colores de esta pantalla."
+    route_to: "mejor-colores"
+    why: "Elegir la paleta de colores es el trabajo de mejor-colores, no de mejor-layout."
+  - prompt: "Escribe el texto del boton principal."
+    route_to: "mejor-redaccion"
+    why: "Escribir el texto de un boton es el trabajo de mejor-redaccion, no de mejor-layout."
+  - prompt: "Anade una animacion de entrada a esta tarjeta."
+    route_to: "animar"
+    why: "Anadir una animacion es el trabajo de animar, no de mejor-layout."
+  - prompt: "Revisa la accesibilidad del formulario."
+    route_to: "mejor-accesibilidad"
+    why: "Revisar la accesibilidad es el trabajo de mejor-accesibilidad, no de mejor-layout."
+
+capability:
+  - scenario: "El usuario construye o revisa la disposicion de una pantalla."
+    must_include:
+      - "layout"

@@ -3,7 +3,7 @@ name: deprecation
 description: "Use when retiring a public API, feature, integration, service or legacy path without abandoning consumers. Inventories usage, classifies advisory vs compulsory migration, ships compatibility/tooling, assigns owners and gates removal on evidence. NOT live schema expand-contract (`db-migrations`), NOT replacement API design (`api-design`)."
 tags: [deprecation, migration, compatibility, consumer-migration, removal]
 recommends: [api-design, db-migrations, deployment, git-workflow, monitoring]
-profiles: [core, full]
+profiles: [core, ui, full]
 origin: risco
 ---
 
@@ -120,4 +120,4 @@ Disabled · observed · deleted · residual artifacts.
 
 ## Orientación (siempre)
 
-Cierra cada turno con el **bloque-brújula** (📍 dónde estás · ✅ qué hiciste · 🧭 por qué · ➡️ siguiente, terminando en pregunta), calibrado al dial de `02-DOCS/wiki/harness/user-profile.md`. **Nunca termines en seco.** Protocolo completo: skill `orient` → `skills/orient/references/orientation-contract.md`. (Defiere a `suggest` el “¿instalo la skill que falta?”.)
+Cierra cada turno con el **bloque-brújula** (📍 dónde estás · ✅ qué hiciste · 🧭 por qué · ➡️ siguiente, terminando en pregunta), calibrado al dial de `docs/wiki/harness/user-profile.md`. **Nunca termines en seco.** Protocolo completo: skill `orient` → `skills/orient/references/orientation-contract.md`. (Defiere a `suggest` el “¿instalo la skill que falta?”.)

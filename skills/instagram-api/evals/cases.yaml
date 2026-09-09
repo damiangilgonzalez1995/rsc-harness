@@ -10,7 +10,7 @@ should_trigger:
   - prompt: "How many posts do we have left in the 24-hour Instagram publish window?"
     why: content_publishing_limit check before a batch; the 50/24h cap.
   - prompt: "Ingesta el rendimiento de los Reels en el wiki de shortform"
-    why: Spanish — ingest IG performance into 02-DOCS/wiki/shortform, the checkable artifact.
+    why: Spanish — ingest IG performance into docs/wiki/shortform, the checkable artifact.
   - prompt: "My media container is stuck IN_PROGRESS and never publishes"
     why: Non-obvious — status_code polling and the EXPIRED/ERROR branch, IG-specific.
 
@@ -31,7 +31,7 @@ should_not_trigger:
 capability:
   - scenario: >
       Given a public video_url, a caption, and an IG_USER_ID, produce the end-to-end
-      publish-then-measure flow plus a wiki artifact under 02-DOCS/wiki/shortform/.
+      publish-then-measure flow plus a wiki artifact under docs/wiki/shortform/.
     must_include:
       - "container create with media_type=REELS and the public video_url"
       - "poll status_code until FINISHED (with ERROR/EXPIRED handling and a ~5min ceiling)"
@@ -40,4 +40,4 @@ capability:
       - "no deprecated metrics requested (no plays / impressions / clips_replays_count)"
       - "content_publishing_limit check before batch publishing"
       - "GRAPH_VERSION pinned to v25.0 in every call"
-      - "artifact written to 02-DOCS/wiki/shortform/ig-reel-<media_id>.md with front-matter (media_id, permalink, published_at, graph_version, pulled_at, metrics)"
+      - "artifact written to docs/wiki/shortform/ig-reel-<media_id>.md with front-matter (media_id, permalink, published_at, graph_version, pulled_at, metrics)"

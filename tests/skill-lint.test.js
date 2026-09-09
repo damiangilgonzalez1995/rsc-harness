@@ -45,10 +45,10 @@ test('an indented delimiter inside a block is not counted as a boundary', () => 
   assert.equal(fenceBalance(body).balanced, true);
 });
 
-test('the real specify body is balanced', () => {
-  const body = readFileSync(new URL('../skills/specify/SKILL.md', import.meta.url), 'utf8');
+test('the real harness body is balanced', () => {
+  const body = readFileSync(new URL('../skills/harness/SKILL.md', import.meta.url), 'utf8');
   const r = fenceBalance(body);
-  assert.equal(r.balanced, true, `specify has ${r.fences} delimiters, unpaired at line ${r.opened}`);
+  assert.equal(r.balanced, true, `harness has ${r.fences} delimiters, unpaired at line ${r.opened}`);
 });
 
 // The function above is one half of principle 2; the wiring is the other. A gate nobody has seen

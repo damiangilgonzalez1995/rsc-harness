@@ -1,0 +1,32 @@
+skill: sitios-calidad-premio
+
+should_trigger:
+  - prompt: "Quiero una web premium con coreografia de scroll y GSAP."
+    why: "Disparador directo de sitios-calidad-premio."
+  - prompt: "Construye un sitio editorial cinematografico con heroes que destacan."
+    why: "Disparador directo de sitios-calidad-premio."
+  - prompt: "Necesito un portafolio interactivo de alto concepto."
+    why: "Disparador directo de sitios-calidad-premio."
+  - prompt: "Art-direct an award-quality marketing site with original imagery and motion."
+    why: "Disparador directo de sitios-calidad-premio."
+  - prompt: "Anade shaders de Three.js opcionales a esta landing."
+    why: "Disparador directo de sitios-calidad-premio."
+
+should_not_trigger:
+  - prompt: "Construye un formulario interno sencillo sin enfasis visual."
+    route_to: "none"
+    why: "Fuera del alcance de sitios-calidad-premio."
+  - prompt: "Escribe tests unitarios para el backend."
+    route_to: "none"
+    why: "Fuera del alcance de sitios-calidad-premio."
+  - prompt: "Revisa la accesibilidad basica de un dashboard interno."
+    route_to: "mejor-accesibilidad"
+    why: "Revisar la accesibilidad es el trabajo de mejor-accesibilidad, no de sitios-calidad-premio."
+  - prompt: "Genera un CRUD simple sin diseno especial."
+    route_to: "none"
+    why: "Fuera del alcance de sitios-calidad-premio."
+
+capability:
+  - scenario: "El usuario pide un sitio de calidad de premio, cinematografico o guiado por movimiento."
+    must_include:
+      - "GSAP"

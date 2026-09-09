@@ -42,7 +42,7 @@ capability:
       mixed niches, running no series, and tracking only likes and views.
       Produce a strategy.
     must_include:
-      - "Reads 02-DOCS/wiki/shortform + 02-DOCS/raw/shortform first (Step 0), then writes the strategy/decision/ledger back."
+      - "Reads docs/wiki/shortform + docs/raw/shortform first (Step 0), then writes the strategy/decision/ledger back."
       - "Diagnoses positioning: mixed niches = no lane; narrows to one one-promise sentence."
       - "Corrects cadence to 3–5 (TikTok) / 4–7 (Reels) and flags the daily-posting dilution / ceiling."
       - "Sets completion % and sends/saves as the KPI, explicitly over likes/views."

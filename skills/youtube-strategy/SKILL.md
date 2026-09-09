@@ -2,7 +2,7 @@
 name: youtube-strategy
 description: "Use when a YouTube channel needs a system-level decision — positioning and niche, upload cadence, how videos chain into playlists and series, end-screen routing, or a what-is-working review — read from and written back to the channel's own learning wiki rather than one video's choices. NOT generating next-video topics (that is `youtube-ideation`), NOT per-video titles or thumbnail text (that is `youtube-packaging`), NOT designing the thumbnail image (that is `youtube-thumbnails`), NOT fetching metrics from the Data API (that is `youtube-api`)."
 tags: [youtube, channel-strategy, positioning, cadence, playlists, retention]
-recommends: [youtube-ideation, youtube-packaging, youtube-api, content-engine, decision-records]
+recommends: [youtube-ideation, youtube-packaging, youtube-api, content-engine, write-adr]
 origin: risco
 ---
 
@@ -27,7 +27,7 @@ You are the only YouTube skill that works at channel/portfolio altitude and pers
 
 ## The wiki loop comes FIRST (this is the spine)
 
-Before any strategy decision, **READ** `02-DOCS/wiki/youtube/`. *Why: a strategy decision made without the channel's own retention/CTR history regresses to generic advice that ignores what this specific audience rewards.*
+Before any strategy decision, **READ** `docs/wiki/youtube/`. *Why: a strategy decision made without the channel's own retention/CTR history regresses to generic advice that ignores what this specific audience rewards.*
 
 Extract, in order:
 1. **Prior positioning** — what the channel claimed to be, and whether it held.
@@ -35,9 +35,9 @@ Extract, in order:
 3. **Top retention/CTR performers** — which videos/playlists earned the watch time, and what they share.
 4. **Killed experiments** — series or formats already sunset, so you do not re-propose a dead bet.
 
-If `02-DOCS/wiki/youtube/` is empty or absent → **bootstrap it**: create the directory and a positioning stub, then proceed. Do not skip the loop because the dir is missing — create it and start the record now. Layout and templates are in `references/wiki-records.md`.
+If `docs/wiki/youtube/` is empty or absent → **bootstrap it**: create the directory and a positioning stub, then proceed. Do not skip the loop because the dir is missing — create it and start the record now. Layout and templates are in `references/wiki-records.md`.
 
-Cite what you grounded in (e.g. "cadence held at 2/wk per `02-DOCS/wiki/youtube/decisions/2026-03-cadence.md`"). If you grounded in nothing because the wiki was empty, say so and say you are bootstrapping.
+Cite what you grounded in (e.g. "cadence held at 2/wk per `docs/wiki/youtube/decisions/2026-03-cadence.md`"). If you grounded in nothing because the wiki was empty, say so and say you are bootstrapping.
 
 ## Positioning & niche
 
@@ -125,7 +125,7 @@ Read CTR (>~6% is healthy for new channels) and AVD/retention from the wiki to c
 
 ## Write the decision back (on exit, always)
 
-A strategy session that does not write back does not compound — the next session starts from zero. On exit, append a **dated decision record** under `02-DOCS/wiki/youtube/` and, when reviewing, a **what-worked** entry tied to specific videos/playlists. Minimal record inline; full templates in `references/wiki-records.md`:
+A strategy session that does not write back does not compound — the next session starts from zero. On exit, append a **dated decision record** under `docs/wiki/youtube/` and, when reviewing, a **what-worked** entry tied to specific videos/playlists. Minimal record inline; full templates in `references/wiki-records.md`:
 
 ```markdown
 ---
@@ -142,7 +142,7 @@ timestamp: 2026-06-02T00:00:00Z
 - Review date: 2026-09-02
 ```
 
-`02-DOCS/wiki/` is an OKF v0.1 bundle: every record carries a non-empty `type` (`youtube-strategy-record`) above the body, and cross-references use standard markdown links (never `[[wikilinks]]`). Every record names **the metric it is betting on** and a **review date**. A decision with no metric is an opinion, not a bet you can later check. Run `scripts/verify.sh 02-DOCS/wiki/youtube/` after writing to confirm the records are structurally complete (date, `Decision:`, metric, and `type`). Full templates in `references/wiki-records.md`.
+`docs/wiki/` is an OKF v0.1 bundle: every record carries a non-empty `type` (`youtube-strategy-record`) above the body, and cross-references use standard markdown links (never `[[wikilinks]]`). Every record names **the metric it is betting on** and a **review date**. A decision with no metric is an opinion, not a bet you can later check. Run `scripts/verify.sh docs/wiki/youtube/` after writing to confirm the records are structurally complete (date, `Decision:`, metric, and `type`). Full templates in `references/wiki-records.md`.
 
 ## Anti-patterns
 
@@ -152,13 +152,13 @@ timestamp: 2026-06-02T00:00:00Z
 | Copying another channel's cadence | Their data is not yours; their audience rewards different things | Set cadence from your own wiki retention |
 | Treating playlists as storage folders | No binge promise, no session lift | Build titled binge paths and series in watch order |
 | Positioning as an industry ("a tech channel") | Competes with everyone, recommended to no one | Niche down 2–3 levels to a defensible angle |
-| Deciding without reading the wiki | Regresses to generic blog advice that ignores this audience | READ `02-DOCS/wiki/youtube/` before any decision |
+| Deciding without reading the wiki | Regresses to generic blog advice that ignores this audience | READ `docs/wiki/youtube/` before any decision |
 | Never writing the decision back | No compounding; every session restarts from zero | Append a dated record + the metric it bets on |
 | "Post more" to fix falling retention | Accelerates the decline; the problem is idea/structure | Diagnose CTR vs AVD; fix the weak half |
 | Jumping industries to grow | Breaks the audience graph; old subs churn | Widen only into adjacent angles |
 
 ## References & routing
 
-- `references/wiki-records.md` — file layout under `02-DOCS/wiki/youtube/`, the decision-record and what-worked templates, and what `verify.sh` checks.
+- `references/wiki-records.md` — file layout under `docs/wiki/youtube/`, the decision-record and what-worked templates, and what `verify.sh` checks.
 - `references/channel-architecture.md` — deeper playlist/Series-Playlist/end-screen patterns, session-time mechanics, and binge-sequence examples.
 - Route out: next-video ideas → `../youtube-ideation/SKILL.md`; per-video packaging → `youtube-packaging`; raw metrics → `youtube-api`; decision-record discipline → `decision-records`.

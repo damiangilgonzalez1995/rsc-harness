@@ -1,0 +1,32 @@
+skill: mejor-colores
+
+should_trigger:
+  - prompt: "Genera la paleta de colores de este sistema de diseno."
+    why: "Disparador directo de mejor-colores."
+  - prompt: "Necesito tokens semanticos de color para modo claro y oscuro."
+    why: "Disparador directo de mejor-colores."
+  - prompt: "Mide el contraste de este texto sobre este fondo."
+    why: "Disparador directo de mejor-colores."
+  - prompt: "Build a color system with semantic tokens and check contrast ratios."
+    why: "Disparador directo de mejor-colores."
+  - prompt: "Elige el espacio de interpolacion de este degradado."
+    why: "Disparador directo de mejor-colores."
+
+should_not_trigger:
+  - prompt: "Revisa el soporte de teclado de este formulario."
+    route_to: "mejor-accesibilidad"
+    why: "Revisar el soporte de teclado es el trabajo de mejor-accesibilidad, no de mejor-colores."
+  - prompt: "Escribe el copy de este mensaje de error."
+    route_to: "mejor-redaccion"
+    why: "Escribir el copy de un mensaje de error es el trabajo de mejor-redaccion, no de mejor-colores."
+  - prompt: "Anade una transicion al abrir este menu."
+    route_to: "animar"
+    why: "Anadir una transicion es el trabajo de animar, no de mejor-colores."
+  - prompt: "Ajusta el interlineado de este parrafo."
+    route_to: "mejor-tipografia"
+    why: "Ajustar el interlineado es el trabajo de mejor-tipografia, no de mejor-colores."
+
+capability:
+  - scenario: "El usuario construye o pregunta sobre un sistema de color."
+    must_include:
+      - "contraste"

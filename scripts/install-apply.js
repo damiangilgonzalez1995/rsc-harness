@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { rmSync, existsSync, cpSync, lstatSync, mkdirSync, readFileSync, realpathSync, writeFileSync, appendFileSync, readdirSync } from 'node:fs';
 import { join, dirname, relative, resolve, sep } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { planInstall } from './install-plan.js';
 import { targetPaths, writeSkill, wireHook, unwireHook, baseDir, TARGET_IDS } from '../targets/index.js';
 import {
@@ -45,7 +45,7 @@ function writeBaseVersions(cwd, versions) {
 // when the recorded base version for THIS skill differs from the CLI version, the base is
 // re-copied so a reinstall/sync actually updates content. Tracked per skill (see
 // baseVersionsFile) so a multi-target sync refreshes every target's bases, not just the
-// first target's. Skills are read-only catalog (user customization lives in 02-DOCS), so
+// first target's. Skills are read-only catalog (user customization lives in docs), so
 // overwriting on a version change is safe. Mutates `baseVersions` with the new mark.
 function ensureBase(id, cwd, baseVersions) {
   const dest = baseDir(id, cwd);
@@ -508,7 +508,7 @@ export async function syncInstalled({ target, home, cwd = process.cwd(), dryRun 
 
 // Remove EVERYTHING rsc put in this project: installed skills across all targets,
 // the wired hooks (settings.json entries / AGENTS-blocks / cursor rules), and the
-// shared `.rsc/` (base + hook scripts + version marker). `02-DOCS/` is the user's
+// shared `.rsc/` (base + hook scripts + version marker). `docs/` is the user's
 // own knowledge — kept unless `withDocs` is set. Returns the paths touched.
 // Note: backups live under `.rsc/backups/`, which this removes — so purge does not
 // snapshot (a pre-purge backup would delete itself). It is the deliberate escape hatch.
@@ -548,11 +548,11 @@ export async function purge({ home, cwd = process.cwd(), withDocs = false, dryRu
     // behind rather than guessing from a catalog id and deleting their work.
   }
   drop(join(cwd, '.rsc'), true);
-  if (withDocs) drop(join(cwd, '02-DOCS'), true);
+  if (withDocs) drop(join(cwd, 'docs'), true);
   return [...new Set(removed)];
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const ids = process.argv.slice(2);
   applyInstall({ skillIds: ids, target: 'claude' }).then(() => console.log('installed', ids.join(', ')));
 }

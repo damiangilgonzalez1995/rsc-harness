@@ -2,7 +2,7 @@
 name: forecasting
 description: "Use when projecting history forward — sales, demand, units, revenue, signups, traffic — into a defensible number with an error band: method by data shape, rolling-origin backtest, MASE vs the naive baseline. NOT an assumption-driven P&L or runway model (that is `financial-model`), NOT sizing reorder points or safety stock (that is `inventory`)."
 tags: [forecasting, demand-planning, time-series, sales-forecast, statsforecast]
-recommends: [inventory, financial-model, unit-economics, data-cleaning, analyze, duckdb]
+recommends: [inventory, financial-model, unit-economics, data-cleaning, duckdb]
 origin: risco
 ---
 

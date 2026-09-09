@@ -27,7 +27,7 @@
 #
 # HOW TO RUN (inside YOUR project, not the skills repo)
 #   ./verify.sh                 # scan ./ for tracker / change-log / config files
-#   ./verify.sh --path 02-DOCS  # scan a subdirectory
+#   ./verify.sh --path docs  # scan a subdirectory
 #   ./verify.sh --strict        # treat any warning as a failure (exit 1)
 #
 # EXIT CODES

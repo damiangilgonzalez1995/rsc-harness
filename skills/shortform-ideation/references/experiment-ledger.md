@@ -2,14 +2,14 @@
 
 Phase 4 writes one file per advanced idea so the next ideation cycle learns from the
 last instead of re-guessing. The ledger lives under
-`02-DOCS/shortform/experiments/` and is read back in Phase 1.
+`docs/shortform/experiments/` and is read back in Phase 1.
 
 ## File layout
 
 One markdown file per bet:
 
 ```text
-02-DOCS/shortform/
+docs/shortform/
   performance.md                      # the running perf log (Phase 1 reads)
   backlog.md                          # the ranked idea backlog (Phase 3 emits)
   experiments/
@@ -75,7 +75,7 @@ done its only job: making the next batch smarter than the last.
 ## CSV alternative
 
 If the account prefers one flat file over per-bet markdown, use
-`02-DOCS/shortform/experiments.csv` with columns:
+`docs/shortform/experiments.csv` with columns:
 
 ```text
 id,date,topic,format,trend_signal,trend_first_seen,hook_line,target_len,score,result,three_s_hold,hook_rate,shares,saves,verdict,learning

@@ -46,7 +46,7 @@ capability:
   - scenario: "We have a validated list of 3 competitors. Set up a competitor watch: the tracker of record, the watch config, and a repeatable change-loop process."
     must_include:
       - "Applies the ethics gate first: public/observable sources only, transparent identity, the front-page test; never pose as a customer or bypass access controls/paywalls."
-      - "Persists the tracker under 02-DOCS/ (wiki/competitors + raw/competitors) as a maintained artifact, not a chat answer — or STOPs and routes to market-research if the list were not validated."
+      - "Persists the tracker under docs/ (wiki/competitors + raw/competitors) as a maintained artifact, not a chat answer — or STOPs and routes to market-research if the list were not validated."
       - "Requires a source_url + date on every price/feature cell and refuses to invent a rival's number (blank cell when unconfirmed)."
       - "Maps each watched surface to URL + selector + tiered cadence: pricing 5-15 min, features/changelog daily, positioning/careers daily-weekly."
       - "Defines the change-log schema with axis classification (pricing|feature|positioning|messaging|team|other) and materiality (high|medium|low), append-only over time."

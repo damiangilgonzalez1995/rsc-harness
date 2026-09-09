@@ -1,0 +1,32 @@
+skill: grill-with-docs
+
+should_trigger:
+  - prompt: "Interrogame sobre este diseno y ve documentando las decisiones en ADRs."
+    why: "Disparador directo de grill-with-docs."
+  - prompt: "Ponme a prueba esta idea y deja constancia en el glosario."
+    why: "Disparador directo de grill-with-docs."
+  - prompt: "Quiero un interrogatorio que tambien genere documentacion."
+    why: "Disparador directo de grill-with-docs."
+  - prompt: "Grill this plan and keep an ADR trail as we go."
+    why: "Disparador directo de grill-with-docs."
+  - prompt: "Haz preguntas duras y registra las decisiones que tomemos."
+    why: "Disparador directo de grill-with-docs."
+
+should_not_trigger:
+  - prompt: "Solo interrogame, no hace falta documentar nada."
+    route_to: "grilling"
+    why: "Interrogar sin documentar es el trabajo de grilling, no de grill-with-docs."
+  - prompt: "Implementa el codigo de esta funcion."
+    route_to: "implement"
+    why: "Implementar codigo es el trabajo de implement, no de grill-with-docs."
+  - prompt: "Haz un resumen de traspaso para otro agente."
+    route_to: "handoff"
+    why: "Compactar la conversacion en un traspaso es el trabajo de handoff, no de grill-with-docs."
+  - prompt: "Convierte esta conversacion en tickets."
+    route_to: "to-tickets"
+    why: "Convertir la conversacion en tickets es el trabajo de to-tickets, no de grill-with-docs."
+
+capability:
+  - scenario: "El usuario pide un interrogatorio que ademas documente decisiones."
+    must_include:
+      - "ADR"

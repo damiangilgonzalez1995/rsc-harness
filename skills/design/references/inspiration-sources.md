@@ -92,5 +92,5 @@ component", these outrank any gallery.
   comes back. Do not cite it.
 - **Component ideas**, as opposed to whole pages, live in
   Component galleries — Aceternity, 21st.dev, React Bits.
-- **Identity outranks all of this.** Check `02-DOCS/wiki/brand/` for what the project refuses before
+- **Identity outranks all of this.** Check `docs/wiki/brand/` for what the project refuses before
   bringing an idea back. A gallery cannot know what your brand vetoed.

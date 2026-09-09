@@ -4,9 +4,9 @@
 #
 # WHAT IT DOES (read-only; never edits or creates a file)
 #   Static checks that Phase 1 (PROFILE) actually landed in the workspace:
-#     1. 02-DOCS/wiki/harness/user-profile.md exists and carries technical_level
+#     1. docs/wiki/harness/user-profile.md exists and carries technical_level
 #        and accompaniment_level lines.
-#     2. 02-DOCS/wiki/harness/decisions.md exists (append-only decisions log).
+#     2. docs/wiki/harness/decisions.md exists (append-only decisions log).
 #     3. Root CLAUDE.md exists and its "## Knowledge map" section links the profile.
 #   Everything is detect-or-skip: a missing workspace piece is a WARNING, never a
 #   failure — `init` may simply not have run yet. The script never fails the build;
@@ -57,8 +57,8 @@ if [ ! -e "$ROOT" ]; then
   printf '%sPath not found: %s%s\n' "$RED" "$ROOT" "$NC"; exit 2
 fi
 
-PROFILE="$ROOT/02-DOCS/wiki/harness/user-profile.md"
-DECISIONS="$ROOT/02-DOCS/wiki/harness/decisions.md"
+PROFILE="$ROOT/docs/wiki/harness/user-profile.md"
+DECISIONS="$ROOT/docs/wiki/harness/decisions.md"
 CLAUDE_MD="$ROOT/CLAUDE.md"
 
 # has <file> <pattern>: true if a non-empty file contains a case-insensitive match.
@@ -71,7 +71,7 @@ printf 'Checking init PROFILE artifacts under: %s\n\n' "$ROOT"
 
 # --- 1. user profile --------------------------------------------------------
 if [ ! -s "$PROFILE" ]; then
-  warn "no user profile at 02-DOCS/wiki/harness/user-profile.md — run init's PROFILE phase first"
+  warn "no user profile at docs/wiki/harness/user-profile.md — run init's PROFILE phase first"
 else
   ok "user profile present: $PROFILE"
   if has "$PROFILE" 'technical_level'; then
@@ -88,7 +88,7 @@ fi
 
 # --- 2. decisions log -------------------------------------------------------
 if [ ! -s "$DECISIONS" ]; then
-  warn "no decisions log at 02-DOCS/wiki/harness/decisions.md — significant decisions should be appended here"
+  warn "no decisions log at docs/wiki/harness/decisions.md — significant decisions should be appended here"
 else
   ok "decisions log present: $DECISIONS"
 fi
@@ -103,7 +103,7 @@ else
     if has "$CLAUDE_MD" 'user-profile.md'; then
       ok "Knowledge map links the user profile"
     else
-      warn "Knowledge map does not link 02-DOCS/wiki/harness/user-profile.md"
+      warn "Knowledge map does not link docs/wiki/harness/user-profile.md"
     fi
   else
     warn "CLAUDE.md has no '## Knowledge map' section linking the profile"

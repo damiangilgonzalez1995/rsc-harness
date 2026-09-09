@@ -69,7 +69,7 @@ Before a student adopts a concept, they must drop the belief that's blocking it.
 
 ### How to use it
 
-1. From the learner profile (`02-DOCS/wiki/teaching/false-beliefs.md`), pull the belief actually blocking *this* concept.
+1. From the learner profile (`docs/wiki/teaching/false-beliefs.md`), pull the belief actually blocking *this* concept.
 2. Identify which of the three types it is.
 3. Pick the matching epiphany story and tell it *first* — clear the block — then install the concept.
 
@@ -153,7 +153,7 @@ Good — "I learned input validation the day a single emoji in a username took d
         I'm paranoid about it now, and you should be too." (backstory + flaw + polarity)
 ```
 
-Persist the chosen Attractive Character in `02-DOCS/wiki/teaching/` so the persona stays consistent across every lesson.
+Persist the chosen Attractive Character in `docs/wiki/teaching/` so the persona stays consistent across every lesson.
 
 ---
 
@@ -161,7 +161,7 @@ Persist the chosen Attractive Character in `02-DOCS/wiki/teaching/` so the perso
 
 Brunson's story-selling, used to make abstractions *tangible* rather than to sell. The mechanics of analogy/metaphor engineering live in `mental-models.md`; the teaching moves here are:
 
-- **Explain it in their world.** Translate the concept into the learner's daily vocabulary and objects (from `02-DOCS/wiki/teaching/learner.md`), not the discipline's.
+- **Explain it in their world.** Translate the concept into the learner's daily vocabulary and objects (from `docs/wiki/teaching/learner.md`), not the discipline's.
 - **Future-pace.** Walk the student through a near-future moment where they use the idea and it pays off ("Next time a deploy fails at 5pm, you'll…"). The brain pre-experiences the win and wants it.
 - **One idea per story.** A parable that teaches three things teaches none. Split it.
 

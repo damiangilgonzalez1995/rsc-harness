@@ -19,6 +19,7 @@
 import { existsSync, realpathSync } from 'node:fs';
 import { join, resolve, dirname, basename, relative, sep } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { pathToFileURL } from 'node:url';
 
 // git reports worktree paths with every symlink resolved; callers hand us whatever they were given.
 // On macOS that alone is enough to make every comparison here fail, because /tmp and /var are
@@ -333,6 +334,13 @@ export function reapWorktree(root, targetPath, { confirmed = false } = {}) {
     return { removed: false, reason: refusal(candidate) };
   }
 
+  // On Windows a directory that is any process's current working directory cannot be deleted —
+  // not just by `git`, by anything, including this very process. Closing a branch from the
+  // worktree you built it in is the common case (see resolveMainRoot above), so without stepping
+  // out of the way first, the common case is exactly the one that silently fails to clean here.
+  const cwd = real(process.cwd());
+  const standingInside = cwd === target || cwd.startsWith(target + sep);
+  if (standingInside) process.chdir(root);
   const removal = git(root, ['worktree', 'remove', '--force', target]);
   if (!removal.ok) {
     return { removed: false, reason: `git refused to remove it: ${removal.err || removal.out}` };
@@ -438,7 +446,7 @@ export function summarize(candidate, root) {
 
 // CLI: `node worktree-reaper.mjs <root> [reap [path]]`. `scripts/rsc.js` is the public entry point;
 // this exists so the materialized copy in .rsc/ is runnable on its own.
-if (process.argv[1] && resolve(process.argv[1]) === resolve(new URL(import.meta.url).pathname)) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const root = resolve(process.argv[2] || process.cwd());
   const candidates = classifyWorktrees(root).filter((c) => c.verdict !== 'skip');
   if (process.argv[3] === 'reap') {

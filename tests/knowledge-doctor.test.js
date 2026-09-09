@@ -12,21 +12,21 @@ import {
 
 // drift-check asks whether the path a document names exists. Nothing asked whether what it CLAIMS
 // still holds, and on 2026-08-18 three stale claims were found by hand while drift-check passed green.
-// Spec: 02-DOCS/wiki/sdd/specs/knowledge-doctor.md
+// Spec: docs/wiki/sdd/specs/knowledge-doctor.md
 //
 // EVERY detector is tested in BOTH directions — it flags its known-bad input AND it does not flag its
 // known-good one. That symmetry is the rule shipped in v1.0.17, and it exists because its absence let
 // an over-blocking gate reach production twice in one day. Half of these tests look redundant and are
 // the half that matters.
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const WIKI = join(ROOT, '02-DOCS', 'wiki');
+const WIKI = join(ROOT, 'docs', 'wiki');
 
 // `rel` and `path` are DELIBERATELY different, as the CLI makes them (path = repo-relative,
 // rel = wiki-relative). The first version set `rel: path`, so the single field distinction the
 // index-row check rests on was invisible to every test: swapping the field survived the suite and
 // took the real wiki from 7 candidates to 37 false ones.
 const doc = (path, text, extra = {}) => ({
-  path: `02-DOCS/wiki/${path}`,
+  path: `docs/wiki/${path}`,
   rel: path,
   dir: dirname(path) === '.' ? '' : dirname(path),
   text,
@@ -373,7 +373,7 @@ test('on the real wiki: it does not fire on correct work, and STALE is genuinely
   // puertas-y-mecanismos.md to still exist, so curing the finding the report demands broke the suite —
   // a gate that punishes fixing what it detects. And it injected refExists:()=>true, which makes STALE
   // structurally incapable of firing, while its title claimed "and nothing stale".
-  if (!existsSync(WIKI)) return; // 02-DOCS is untracked (P9); in CI there is nothing to read
+  if (!existsSync(WIKI)) return; // docs is untracked (P9); in CI there is nothing to read
   const walk = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => {
     const p = join(d, e.name);
     if (e.isDirectory()) return walk(p);

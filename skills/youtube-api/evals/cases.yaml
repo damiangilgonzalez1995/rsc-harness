@@ -11,7 +11,7 @@ should_trigger:
     why: "Spanish; upload + ingest stats — the full transport + ingestion loop this skill owns."
   - prompt: "videos.insert returns 403 quotaExceeded — how many uploads does the 10k unit quota allow?"
     why: "Quota math, and a teachable premise correction: uploads use a separate ~100 videos.insert/day call cap, not the shared 10k unit pool (official docs, Last updated 2026-06-01 UTC). Debugging the Data API, this skill's domain."
-  - prompt: "Fetch this month's traffic sources and write them into 02-DOCS/wiki/youtube/."
+  - prompt: "Fetch this month's traffic sources and write them into docs/wiki/youtube/."
     why: "The ingestion deliverable: insightTrafficSourceType report appended to the channel feedback log."
   - prompt: "I keep getting uploadLimitExceeded even though I have quota units left."
     why: "Non-obvious separate daily upload-count cap distinct from unit quota — this skill explains the throttle-count rule."
@@ -37,7 +37,7 @@ should_not_trigger:
     why: "Arbitrary-provider connector; this skill is specific to YouTube's Data + Analytics APIs."
 
 capability:
-  - scenario: "Build a weekly cron that authenticates to a YouTube channel, fetches channel KPIs plus the retention curve and traffic sources for the latest video, and appends a dated entry to 02-DOCS/wiki/youtube/."
+  - scenario: "Build a weekly cron that authenticates to a YouTube channel, fetches channel KPIs plus the retention curve and traffic sources for the latest video, and appends a dated entry to docs/wiki/youtube/."
     must_include:
       - "User OAuth 2.0 flow (not a service account) with a persisted, refreshable token"
       - "Note that the OAuth consent screen must be 'In production' or refresh tokens die in ~7 days"

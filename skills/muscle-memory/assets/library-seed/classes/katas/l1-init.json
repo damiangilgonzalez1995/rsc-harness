@@ -1,0 +1,9 @@
+{
+  "concept": "classes",
+  "level": 1,
+  "title_en": "Fill in the constructor",
+  "spec_html_en": "<p>The class <code>Account</code> needs its constructor: store <code>owner</code> and start <code>balance</code> at 0.</p>",
+  "stub": "class Account:\n    # TODO: __init__ storing owner, balance starts at 0\n    ...\n\n    def deposit(self, amount):\n        self.balance += amount\n",
+  "test": "def test_stores_owner():\n    a = Account('Ana')\n    assert a.owner == 'Ana', 'constructor must store owner'\n\ndef test_balance_starts_at_zero():\n    a = Account('Ana')\n    assert a.balance == 0, 'a new account must start with balance 0'\n\ndef test_deposit_works_on_top():\n    a = Account('Ana')\n    a.deposit(50)\n    assert a.balance == 50, 'deposit(50) on a fresh account must leave balance 50'",
+  "canonical": "class Account:\n    def __init__(self, owner):\n        self.owner = owner\n        self.balance = 0\n\n    def deposit(self, amount):\n        self.balance += amount\n"
+}

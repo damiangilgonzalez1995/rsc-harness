@@ -16,7 +16,7 @@ install is `../motion-craft/SKILL.md`'s.
 
 > Build or review a fast, typed, correctly-architected **client-side** React single-page app bundled by Vite. No server runtime, no RSC tree, no framework router. Server-rendered React (App Router, server actions, SSR/SSG) is not this skill — that is `../nextjs/SKILL.md`.
 
-**SDD gate — before writing feature code.** If this skill fired on a **new, non-trivial feature or behaviour change** and there is **no approved spec + plan** under `02-DOCS/wiki/sdd/`, stop and hand off to `../specify/SKILL.md`: it runs brainstorm → spec → plan → tasks, then routes back here once the plan is approved. Build directly only for a genuinely one-line / low-risk change. Method: `../sdd/SKILL.md`.
+**SDD gate — before writing feature code.** If this skill fired on a **new, non-trivial feature or behaviour change** and there is **no approved spec + plan** under `docs/wiki/sdd/`, stop and hand off to `../grill-with-docs/SKILL.md`: it sharpens the plan before any code, then routes back here once the plan is approved. Build directly only for a genuinely one-line / low-risk change.
 
 ## First: confirm it's a Vite SPA, not a framework
 
@@ -177,6 +177,6 @@ const router = createBrowserRouter([
 
 `scripts/verify.sh` runs from the project root: **ESLint → `tsc --noEmit` → Vitest → `vite build`**, in that order. Each tool is detected and **skipped with a warning (never a failure) if absent**. The final `vite build` writes `dist/`; the lint/type/test steps are read-only. No installs, no network mutations, safe to re-run. It exits non-zero only on a real tool failure, and exits 0 on a clean/empty target.
 
-## Project grounding (02-DOCS)
+## Project grounding (docs)
 
-If the workspace has `02-DOCS/`, record stack-specific React conventions (chosen router, store, query defaults) in `02-DOCS/wiki/stack/react.md` and index it from `CLAUDE.md`. Recorded, not gated — skip silently if there is no `02-DOCS/`.
+If the workspace has `docs/`, record stack-specific React conventions (chosen router, store, query defaults) in `docs/wiki/stack/react.md` and index it from `CLAUDE.md`. Recorded, not gated — skip silently if there is no `docs/`.

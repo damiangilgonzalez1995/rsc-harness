@@ -2,7 +2,7 @@
 name: linkedin-strategy
 description: "Use when a LinkedIn presence — personal brand or company page — needs an account-level decision spanning months: positioning and point of view, three to five content pillars, posting cadence, whether content lives on the founder's profile or the company page, and the social-selling rhythm, read from and written back to the presence's own learning wiki. NOT writing the post copy or hook (that is `linkedin-content`), NOT building a carousel deck (that is `linkedin-carousels`), NOT sending DMs (that is `linkedin-outreach`), NOT pulling raw analytics (that is `linkedin-api`)."
 tags: [linkedin, positioning, content-pillars, cadence, thought-leadership, ssi, social-selling]
-recommends: [linkedin-content, linkedin-outreach, linkedin-api, content-engine, decision-records]
+recommends: [linkedin-content, linkedin-outreach, linkedin-api, content-engine, write-adr]
 origin: risco
 ---
 
@@ -27,7 +27,7 @@ You are the only LinkedIn skill that operates at account altitude and persists i
 
 ## 1. Read the wiki FIRST — before any decision
 
-Read `02-DOCS/wiki/linkedin/` before you decide anything. Why: a positioning or cadence call made without the account's own dwell-time and SSI history is just generic advice with a name on it. The whole value of this skill is that decisions compound.
+Read `docs/wiki/linkedin/` before you decide anything. Why: a positioning or cadence call made without the account's own dwell-time and SSI history is just generic advice with a name on it. The whole value of this skill is that decisions compound.
 
 Extract, in this order:
 1. **Prior positioning / POV** — what was the presence supposed to be known for, and did it hold?
@@ -37,7 +37,7 @@ Extract, in this order:
 5. **SSI trend** — the 0-100 score's direction over the trailing window.
 6. **Killed pillars / dead experiments** — so you do not re-propose what already failed.
 
-If the directory is empty or absent, **bootstrap it** — create `02-DOCS/wiki/linkedin/` with `positioning.md`, `decisions/`, and `what-worked.md`. Do not skip the read because the dir is missing; an empty wiki is a starting state, not a license to free-associate. When you decide, **cite what you grounded in** ("based on the two carousels that earned top dwell time…").
+If the directory is empty or absent, **bootstrap it** — create `docs/wiki/linkedin/` with `positioning.md`, `decisions/`, and `what-worked.md`. Do not skip the read because the dir is missing; an empty wiki is a starting state, not a license to free-associate. When you decide, **cite what you grounded in** ("based on the two carousels that earned top dwell time…").
 
 Full file layout and templates: `references/wiki-records.md`.
 
@@ -128,7 +128,7 @@ Engagement rising while cadence held?
 
 ## 7. Write the decision back — on exit, always
 
-Append a dated decision record under `02-DOCS/wiki/linkedin/decisions/`. Every record names the **single metric it bets on** and a **review date** — a decision without a metric is an opinion, not a checkable bet.
+Append a dated decision record under `docs/wiki/linkedin/decisions/`. Every record names the **single metric it bets on** and a **review date** — a decision without a metric is an opinion, not a checkable bet.
 
 ```markdown
 ---
@@ -156,7 +156,7 @@ Review date: 2026-09-02.
 
 The `type:` field is required (OKF v0.1); `timestamp` is ISO 8601. The dated heading and the `Decision:` / `Bets on metric:` / `Review date:` lines are domain signals `verify.sh` greps for — keep them.
 
-After writing, run `scripts/verify.sh 02-DOCS/wiki/linkedin/` to confirm the record is structurally complete. Full templates and the what-worked format: `references/wiki-records.md`.
+After writing, run `scripts/verify.sh docs/wiki/linkedin/` to confirm the record is structurally complete. Full templates and the what-worked format: `references/wiki-records.md`.
 
 ## Anti-patterns
 
@@ -168,12 +168,12 @@ After writing, run `scripts/verify.sh 02-DOCS/wiki/linkedin/` to confirm the rec
 | Optimizing for likes | Misses dwell time, the real 2026 signal | Weight carousels/docs; measure dwell time |
 | Treating SSI as a vanity score | Ignores it as a steerable habit system | Run the four dimensions as weekly habits |
 | Create-only, no engaging | ~4.2x worse inbound | ~80/20 engage-to-create split |
-| Deciding without reading the wiki | Regresses to generic blog advice | READ `02-DOCS/wiki/linkedin/` first |
+| Deciding without reading the wiki | Regresses to generic blog advice | READ `docs/wiki/linkedin/` first |
 | Never writing the decision back | No compounding; every session restarts | Append a dated record + metric + review date |
 
 ## References & routing
 
-- `references/wiki-records.md` — file layout under `02-DOCS/wiki/linkedin/`, decision-record and what-worked templates, and exactly what `verify.sh` checks.
+- `references/wiki-records.md` — file layout under `docs/wiki/linkedin/`, decision-record and what-worked templates, and exactly what `verify.sh` checks.
 - `references/ssi-and-pillars.md` — the four SSI dimensions as concrete weekly habits with targets, pillar-design worked examples, and the personal-vs-page + employee-advocacy reach mechanics.
 
 Route single-asset work out: post copy → `../linkedin-content/SKILL.md`; carousels → `../linkedin-carousels/SKILL.md`; DMs/sequences → `../linkedin-outreach/SKILL.md`; raw metrics → `../linkedin-api/SKILL.md`; decision discipline → `../decision-records/SKILL.md`.

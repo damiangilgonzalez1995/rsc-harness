@@ -65,7 +65,7 @@ test('small software defers SDD with observable triggers; growing software selec
 
   const growing = buildOnboardingPlan(normalizeOnboarding(answers({ softwareScope: 'growing' })), evidence);
   assert.equal(growing.decisions.find((d) => d.id === 'sdd').state, 'selected');
-  assert.ok(growing.policy.skills.includes('specify'));
+  assert.ok(growing.policy.codeHooks);
   assert.deepEqual(growing.policy.agents.slice(0, 4).sort(), ['developer', 'refuter-correctness', 'refuter-security', 'refuter-tests'].sort());
   assert.ok(growing.decisions.some((d) => d.id === 'developer' && d.state === 'selected'));
   assert.ok(growing.decisions.some((d) => d.id === 'memory' && d.state === 'selected'));
@@ -200,4 +200,39 @@ test('research, content and mixed intent survive normalization and drive proport
   assert.equal(mixed.record.projectKind, 'mixed');
   assert.equal(mixed.policy.codeHooks, true);
   assert.equal(mixed.decisions.find((d) => d.id === 'sdd').state, 'selected');
+});
+
+test('un proyecto con frontend recibe el paquete de interfaz', () => {
+  const plan = buildOnboardingPlan(
+    { schemaVersion: 1, technicalLevel: 'technical', accompaniment: 'L1',
+      projectKind: 'software', softwareScope: 'growing',
+      goal: 'construir el panel de control', targets: ['claude'] },
+    { schemaVersion: 1, signals: ['manifest:package.json'], stacks: ['node', 'react'],
+      complexitySignals: [], sourceFileCount: 40, parentHarness: null },
+  );
+  assert.ok(plan.policy.skills.includes('tastemaker'), 'trae las skills de diseno');
+  assert.ok(plan.policy.skills.includes('grill-with-docs'), 'y tambien las de flujo');
+});
+
+test('un proyecto sin frontend no recibe las skills de diseno', () => {
+  const plan = buildOnboardingPlan(
+    { schemaVersion: 1, technicalLevel: 'technical', accompaniment: 'L1',
+      projectKind: 'software', softwareScope: 'growing',
+      goal: 'construir la api de cobros', targets: ['claude'] },
+    { schemaVersion: 1, signals: ['manifest:go.mod'], stacks: ['go'],
+      complexitySignals: [], sourceFileCount: 40, parentHarness: null },
+  );
+  assert.ok(!plan.policy.skills.includes('tastemaker'), 'sin skills de diseno');
+  assert.ok(plan.policy.skills.includes('grill-with-docs'), 'con las de flujo');
+});
+
+test('el perfil serio declara el plugin superpowers', () => {
+  const plan = buildOnboardingPlan(
+    { schemaVersion: 1, technicalLevel: 'technical', accompaniment: 'L1',
+      projectKind: 'software', softwareScope: 'growing',
+      goal: 'construir la api de cobros', targets: ['claude'] },
+    { schemaVersion: 1, signals: ['manifest:go.mod'], stacks: ['go'],
+      complexitySignals: [], sourceFileCount: 40, parentHarness: null },
+  );
+  assert.deepEqual(plan.policy.plugins, ['superpowers@claude-plugins-official']);
 });

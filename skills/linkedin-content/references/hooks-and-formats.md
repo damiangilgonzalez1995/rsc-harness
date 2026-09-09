@@ -1,4 +1,4 @@
-# Hooks, format templates, and the 02-DOCS post log
+# Hooks, format templates, and the docs post log
 
 Depth offloaded from `SKILL.md`. Use this when you need the full hook library, a
 fill-in template for any of the three formats, or the schema for logging posts and
@@ -84,7 +84,7 @@ CAPTION (text-post arc in miniature):
 Sub-60s short-form gets ~53% more engagement than longer; 30–90s is the band. For a
 cross-platform vertical short (Reels/TikTok/Shorts), route to `../video-shorts/SKILL.md`.
 
-## The 02-DOCS post log
+## The docs post log
 
 Log every published post so the next draft can learn. One markdown file per post (or
 a single appended log), front-matter first:

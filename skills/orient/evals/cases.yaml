@@ -37,11 +37,11 @@ should_not_trigger:
     why: "A concrete task owned by another skill; orient adds the closing block but does not drive the work."
 
   - prompt: "Arregla el test que falla."
-    route_to: "debug"
-    why: "Root-cause work owned by debug; orient does not take over the task itself."
+    route_to: "external:superpowers-systematic-debugging"
+    why: "Root-cause work owned by superpowers' systematic-debugging; orient does not take over the task itself."
 
 capability:
-  - scenario: "The user just ran `npx @ericrisco/rsc add postgresdb` and says 'ya está, ¿y ahora qué?'. The profile shows accompaniment_level L0. Show how orient closes the turn."
+  - scenario: "The user just ran `npx @damiangil/harness add postgresdb` and says 'ya está, ¿y ahora qué?'. The profile shows accompaniment_level L0. Show how orient closes the turn."
     must_include:
       - "Situates the user on the map ('📍 dónde estás' / what is built vs missing)"
       - "States what just happened in one plain-language line ('✅ instalaste la base de datos')"
@@ -51,7 +51,7 @@ capability:
 
   - scenario: "Mid-project, the user says 'explícame menos'. The profile shows accompaniment_level L2. Show how orient responds."
     must_include:
-      - "Updates accompaniment_level in 02-DOCS/wiki/harness/user-profile.md to a lower level"
+      - "Updates accompaniment_level in docs/wiki/harness/user-profile.md to a lower level"
       - "Confirms the change in one line"
       - "Re-renders guidance at the reduced depth from this turn on"
       - "Still closes with a next-step question (no seco)"

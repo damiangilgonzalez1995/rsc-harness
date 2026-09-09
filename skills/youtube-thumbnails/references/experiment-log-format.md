@@ -1,9 +1,9 @@
 # Experiment log format
 
 The wiki layout, schema, filled example, and pattern-mining heuristic for the
-feedback loop in SKILL.md. Everything lives under `02-DOCS/wiki/youtube/`.
+feedback loop in SKILL.md. Everything lives under `docs/wiki/youtube/`.
 
-`02-DOCS/wiki/` is an **OKF v0.1** bundle, so both files below carry file-level
+`docs/wiki/` is an **OKF v0.1** bundle, so both files below carry file-level
 YAML frontmatter with a non-empty `type` (`thumbnail-experiment`) plus the OKF
 surface (`title`, `description`, `tags`, `timestamp`) — the same shared key set the
 api/strategy/packaging siblings use. The frontmatter sits once at the top of each

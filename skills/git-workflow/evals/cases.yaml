@@ -22,17 +22,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "I'm done and verified, land this work into main"
-    route_to: ship
-    why: The land/merge decision and pre-ship safety checklist are ship's phase, not the conventions layer.
+    route_to: none
+    why: The land/merge decision and pre-ship safety checklist have no dedicated shipping skill in this catalog; git-workflow only owns the conventions layer.
   - prompt: "Set up an isolated checkout so I don't dirty main before I start coding"
-    route_to: worktrees
-    why: Workspace isolation up front, before any code is touched.
+    route_to: none
+    why: Workspace isolation up front, before any code is touched, has no dedicated skill in this catalog.
   - prompt: "Write a GitHub Actions workflow that publishes a release on tag push"
     route_to: deployment
     why: CI/CD release automation, not the manual/local release act.
   - prompt: "Review this diff for bugs before we merge"
-    route_to: review
-    why: Adversarial diff reading, not git mechanics.
+    route_to: code-review
+    why: Adversarial diff reading is code-review's job, not git mechanics.
   - prompt: "Containerize the app and deploy it to Coolify"
     route_to: deployment
     why: Build and deploy mechanics to a platform.

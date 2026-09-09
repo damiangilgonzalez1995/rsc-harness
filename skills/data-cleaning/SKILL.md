@@ -250,10 +250,10 @@ documented pattern, feeds it one clearly-good row and one clearly-bad row, and a
 validation while the bad row is FLAGGED/quarantined, proving the gate is not a no-op. Without
 pandas/pandera it prints SKIP for the runtime check and still passes the static checks.
 
-## Project grounding (02-DOCS + CLAUDE.md)
+## Project grounding (docs + CLAUDE.md)
 
-In a project with a `02-DOCS/` layer (the [`harness`](../harness/SKILL.md) wiki), record this dataset's
+In a project with a `docs/` layer (the [`harness`](../harness/SKILL.md) wiki), record this dataset's
 cleaning decisions — the schema/contract, the category mapping tables, the dedupe key, the quarantine
-location, version pins — in `02-DOCS/wiki/data/<dataset>.md`, link it from the root `CLAUDE.md`
-`## Knowledge map`, and read it first on every re-run so the contract stays consistent. No `02-DOCS/`? Skip
+location, version pins — in `docs/wiki/data/<dataset>.md`, link it from the root `CLAUDE.md`
+`## Knowledge map`, and read it first on every re-run so the contract stays consistent. No `docs/`? Skip
 silently. Conventions are recorded, never gated.

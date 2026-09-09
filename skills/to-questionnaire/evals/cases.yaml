@@ -1,0 +1,32 @@
+skill: to-questionnaire
+
+should_trigger:
+  - prompt: "No puedo responder esto solo, convierte la decision en un cuestionario para el equipo."
+    why: "Disparador directo de to-questionnaire."
+  - prompt: "Necesito que otra persona rellene un cuestionario sobre esta decision."
+    why: "Disparador directo de to-questionnaire."
+  - prompt: "Convierte estas preguntas abiertas en un cuestionario para enviar."
+    why: "Disparador directo de to-questionnaire."
+  - prompt: "Turn this open decision into a questionnaire someone else can fill in."
+    why: "Disparador directo de to-questionnaire."
+  - prompt: "Prepara un cuestionario para que el cliente decida esto."
+    why: "Disparador directo de to-questionnaire."
+
+should_not_trigger:
+  - prompt: "Responde tu mismo a esta pregunta con lo que ya sabes."
+    route_to: "none"
+    why: "Fuera del alcance de to-questionnaire."
+  - prompt: "Implementa la funcion que ya se decidio."
+    route_to: "implement"
+    why: "Implementar la funcion ya decidida es el trabajo de implement, no de to-questionnaire."
+  - prompt: "Escribe la spec de este proyecto."
+    route_to: "to-spec"
+    why: "Escribir la spec del proyecto es el trabajo de to-spec, no de to-questionnaire."
+  - prompt: "Haz una lista de tickets a partir del plan."
+    route_to: "to-tickets"
+    why: "Generar tickets a partir del plan es el trabajo de to-tickets, no de to-questionnaire."
+
+capability:
+  - scenario: "El usuario necesita delegar una decision a otra persona mediante un cuestionario."
+    must_include:
+      - "cuestionario"

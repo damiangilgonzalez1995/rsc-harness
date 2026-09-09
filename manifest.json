@@ -1,10 +1,10 @@
 {
   "version": "1.3.2",
   "counts": {
-    "skills": 272,
+    "skills": 290,
     "agents": 33,
-    "commands": 53,
-    "fixedCommands": 20
+    "commands": 43,
+    "fixedCommands": 10
   },
   "skills": [
     {
@@ -152,22 +152,6 @@
       "profiles": []
     },
     {
-      "id": "analyze",
-      "description": "Use when constitution, spec, plan and tasks all exist and you want them cross-read against each other before any code is written — the rsc-sdd pre-implementation gate. Reports coverage gaps, contradictions, duplication, ambiguity and scope drift; edits nothing. NOT the task breakdown (that is `tasks`), NOT the coding (that is `implement`), NOT the post-code test gate (that is `verify`), NOT resolving ambiguity (that is `clarify`).",
-      "tags": [
-        "sdd",
-        "analyze",
-        "consistency"
-      ],
-      "recommends": [
-        "implement"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
       "id": "angular",
       "description": "Use when building, refactoring, or debugging Angular (v20/21+): standalone components, signals, zoneless change detection, @if/@for/@defer control flow, inject() DI, resource()/httpResource(), RxJS interop, NgRx SignalStore, ng CLI. NOT React (that is react), NOT Next.js (that is nextjs), NOT a TypeScript language question (that is typescript).",
       "tags": [
@@ -184,6 +168,20 @@
         "secure-coding"
       ],
       "profiles": []
+    },
+    {
+      "id": "animar",
+      "description": "Use when asked to animate something, add motion, make a component feel alive, or build a transition. Builds the animation from scratch, making the decisions in the order that determines whether it feels right — whether it should animate at all, for what purpose, with which tool, which properties, which curve and duration, how it is interrupted, and how it exits. Writes the implementation. For critiquing existing motion use revisar-animaciones.",
+      "tags": [
+        "animation",
+        "motion",
+        "transitions"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "api-connector-builder",
@@ -345,6 +343,7 @@
       ],
       "profiles": [
         "core",
+        "ui",
         "full"
       ]
     },
@@ -482,6 +481,7 @@
       "profiles": [
         "minimal",
         "core",
+        "ui",
         "full"
       ]
     },
@@ -611,18 +611,17 @@
       "profiles": []
     },
     {
-      "id": "clarify",
-      "description": "Use when a spec exists and must be de-risked before planning — hunt its ambiguities, unstated assumptions and edge cases, ask the few build-changing questions, bake the answers back into the spec. The rsc SDD gate between `specify` (writes the spec) and `plan` (designs the build). NOT the cross-artifact consistency check (that is `analyze`).",
+      "id": "claude-project-setup",
+      "description": "Use when starting a new project, initializing a repository for Claude Code, or when the user asks to configure CLAUDE.md, rules, commands, skills, or agents for a project.",
       "tags": [
-        "sdd",
-        "clarify",
-        "questions"
+        "setup",
+        "claude-code",
+        "project-init"
       ],
-      "recommends": [
-        "plan"
-      ],
+      "recommends": [],
       "profiles": [
         "core",
+        "ui",
         "full"
       ]
     },
@@ -696,19 +695,18 @@
     },
     {
       "id": "code-review",
-      "description": "Use to judge a concrete diff, branch, or GitHub PR on its own merits with no rsc-SDD spec/plan chain to key off — the spec-less giving pass behind /code-review: only findings you can defend, one verdict, read-only unless --comment or --fix. NOT the SDD gate keyed to 02-DOCS/wiki/sdd/ that also processes incoming review comments (that is `review`).",
+      "description": "Reviews changes from a fixed point (commit, branch, tag, or merge-base) along two axes — Standards (does the code follow the repo's documented coding standards?) and Spec (does the code match what the source issue/PRD asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work in progress, or asks to \\\\\"review from X\\\\\".",
       "tags": [
         "code-review",
-        "pr-review",
-        "quality",
-        "correctness"
+        "standards",
+        "spec-compliance"
       ],
-      "recommends": [
-        "review",
-        "secure-coding",
-        "verify"
-      ],
-      "profiles": []
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "codebase-onboarding",
@@ -723,9 +721,7 @@
         "hotspots"
       ],
       "recommends": [
-        "analyze",
-        "debug",
-        "decision-records",
+        "write-adr",
         "harness",
         "init",
         "knowledge-ops"
@@ -835,22 +831,6 @@
       "profiles": []
     },
     {
-      "id": "constitution",
-      "description": "Use when setting or amending a project's non-negotiables — stack canon, quality bars, conventions, security/a11y floors — as numbered, testable rules later phases obey. First rsc-sdd phase; writes 02-DOCS/wiki/sdd/constitution.md. NOT a feature spec (that is `specify`), NOT the technical plan (that is `plan`), NOT the wiki itself (that is `harness`).",
-      "tags": [
-        "sdd",
-        "constitution",
-        "principles"
-      ],
-      "recommends": [
-        "specify"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
       "id": "content-engine",
       "description": "Use when a content operation needs a SYSTEM: a dated editorial calendar built top-down from pillars, plus the stage gates, briefs, WIP limits and 1:10 atomization plan that move each slot to publish-ready. NOT writing the pieces (that is `article-writing`), NOT publishing them (that is `social-publisher`), NOT keyword research (that is `seo-geo`).",
       "tags": [
@@ -886,7 +866,6 @@
       "recommends": [
         "cost-tracking",
         "rag",
-        "parallel",
         "building-agents",
         "harness"
       ],
@@ -904,9 +883,8 @@
         "meta"
       ],
       "recommends": [
-        "decision-records",
+        "write-adr",
         "author-skill",
-        "debug",
         "harness",
         "knowledge-ops"
       ],
@@ -1182,65 +1160,6 @@
       "profiles": []
     },
     {
-      "id": "debug",
-      "description": "Use when something is broken — a failing or flaky test, crash, wrong result or regression — and the root cause must be reproduced and proven before any fix. On-demand; callable mid-`implement`. NOT a feature to spec or build (that is `specify`/`implement`), NOT the lint/test gate (that is `verify`), NOT adversarial diff reading (that is `review`).",
-      "tags": [
-        "debug",
-        "bug",
-        "troubleshoot"
-      ],
-      "recommends": [],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
-      "id": "decision-challenge",
-      "description": "Use when a high-impact plan, migration or architecture claim needs a bounded adversarial challenge before commitment. Isolates claims from persuasion, attacks assumptions, reconciles doubts with evidence and emits proceed/hold/stop. NOT a finished-diff review (`review`/`code-review`), NOT SDD artifact consistency (`analyze`).",
-      "tags": [
-        "adversarial-review",
-        "decision-quality",
-        "assumptions",
-        "risk",
-        "preflight"
-      ],
-      "recommends": [
-        "analyze",
-        "review",
-        "code-review",
-        "decision-records",
-        "security-scan"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
-      "id": "decision-records",
-      "description": "Use when a hard-to-reverse choice (database, framework, vendor, auth model) must be frozen as an immutable numbered ADR — the context that forced it, the options weighed, the decision, consequences both ways — or superseded without erasing history. NOT a meeting recap (that is meeting-notes), NOT standing project principles (that is constitution).",
-      "tags": [
-        "decision-records",
-        "adr",
-        "architecture-decisions",
-        "rationale",
-        "decision-log",
-        "madr",
-        "knowledge-ops"
-      ],
-      "recommends": [
-        "meeting-notes",
-        "constitution",
-        "sop-builder",
-        "knowledge-ops",
-        "codebase-onboarding",
-        "plan",
-        "specify"
-      ],
-      "profiles": []
-    },
-    {
       "id": "deep-learning",
       "description": "Use when training or debugging a neural net in PyTorch — the forward/loss/backward/step loop and its silent bugs, mixed precision (AMP), AdamW/LR schedules, DDP/FSDP/ZeRO, checkpoints and seeds. NOT LoRA/QLoRA on a pretrained LLM (that is `finetuning`), NOT tabular sklearn/XGBoost (that is `machine-learning`), NOT tokenization or NLP metrics (that is `nlp`).",
       "tags": [
@@ -1300,6 +1219,7 @@
       ],
       "profiles": [
         "core",
+        "ui",
         "full"
       ]
     },
@@ -1386,6 +1306,36 @@
       "profiles": []
     },
     {
+      "id": "diseno-apple",
+      "description": "Apple's approach to interface design and fluid, physical motion, translated to the web. Use when building or reviewing gesture-driven UI, spring animations, drag/swipe/sheet interactions, inertia and interruptible transitions, translucent materials and depth, typography (optical size, tracking, line height), reduced motion, or the design fundamentals (feedback, spatial consistency, containment) behind Apple-style interfaces.",
+      "tags": [
+        "design",
+        "apple",
+        "motion",
+        "interface"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "diseno-landing",
+      "description": "Complete system for building high-conversion landing pages: intake questions, page structure, layout choice, conversion copy, SEO, plus strict visual rules for typography, spacing, radii, backgrounds, hero, icons, and motion. Use whenever building, editing, styling, reviewing, or writing copy for ANY landing page, marketing site, web UI, page section, component, or prototype, even if the user does not mention design, conversion, tokens, or a design system. Always consult it before choosing sections, headlines, CTAs, fonts, text sizes, spacing values, radii, background colors, icons, or transitions.",
+      "tags": [
+        "landing-page",
+        "conversion",
+        "design-system",
+        "copywriting"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
       "id": "django",
       "description": "Use when building, reviewing, securing, testing or shipping a Django app — models, migrations, QuerySets/managers, FBV/CBV views, forms, the admin, settings split, and Django REST Framework (serializers, ModelViewSet, permissions). NOT async FastAPI/Pydantic services (that is `fastapi`), NOT Postgres schema/index work (that is `postgresdb`).",
       "tags": [
@@ -1442,6 +1392,21 @@
         "data-scraper"
       ],
       "profiles": []
+    },
+    {
+      "id": "domain-modeling",
+      "description": "Build and refine the project's domain model. Use when the user wants to pin down domain terminology or a ubiquitous language, record an architectural decision, or when another skill needs to keep the domain model up to date.",
+      "tags": [
+        "domain-modeling",
+        "glossary",
+        "architecture"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "domains-dns",
@@ -1573,8 +1538,7 @@
         "testing-web",
         "accessibility",
         "performance",
-        "github-actions",
-        "debug"
+        "github-actions"
       ],
       "profiles": []
     },
@@ -1619,6 +1583,7 @@
       "profiles": [
         "minimal",
         "core",
+        "ui",
         "full"
       ]
     },
@@ -1722,7 +1687,6 @@
         "fault-tolerance"
       ],
       "recommends": [
-        "debug",
         "observability",
         "monitoring",
         "api-design",
@@ -1746,7 +1710,6 @@
       "recommends": [
         "react-native",
         "github-actions",
-        "ship",
         "deployment",
         "secure-coding"
       ],
@@ -1754,7 +1717,7 @@
     },
     {
       "id": "fable-operator",
-      "description": "Use when a substantive request needs verified, calibrated reasoning — analysis, diagnosis, review, advice, or a draft the user will act on — even when rigor is not asked for, and most of all when being wrong is expensive or irreversible. NOT casual chat (rigor theater), NOT the SDD gates `verify`, `debug`, `review`; this is the discipline beneath them.",
+      "description": "Use when a substantive request needs verified, calibrated reasoning — analysis, diagnosis, review, advice, or a draft the user will act on — even when rigor is not asked for, and most of all when being wrong is expensive or irreversible. NOT casual chat (rigor theater), NOT the SDD gates `superpowers:verification-before-completion`, `superpowers:systematic-debugging`, `code-review`; this is the discipline beneath them.",
       "tags": [
         "reasoning",
         "verification",
@@ -1765,13 +1728,11 @@
         "epistemics"
       ],
       "recommends": [
-        "sdd",
-        "verify",
-        "debug",
-        "review"
+        "code-review"
       ],
       "profiles": [
         "core",
+        "ui",
         "full"
       ]
     },
@@ -1951,7 +1912,6 @@
         "financial-model",
         "unit-economics",
         "data-cleaning",
-        "analyze",
         "duckdb"
       ],
       "profiles": []
@@ -2193,8 +2153,6 @@
         "pull-request"
       ],
       "recommends": [
-        "ship",
-        "worktrees",
         "deployment",
         "github-actions"
       ],
@@ -2213,7 +2171,6 @@
       "recommends": [
         "docker",
         "git-workflow",
-        "ship",
         "deployment",
         "secure-coding",
         "aws-essentials",
@@ -2306,8 +2263,69 @@
       "profiles": []
     },
     {
+      "id": "grill-me",
+      "description": "A relentless interrogation to sharpen a plan or design.",
+      "tags": [
+        "planning",
+        "questioning",
+        "decision-making"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "grill-with-docs",
+      "description": "A relentless interrogation to sharpen a plan or design, which also builds documentation (ADRs and a glossary) along the way.",
+      "tags": [
+        "planning",
+        "questioning",
+        "documentation",
+        "adr"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "grilling",
+      "description": "Interrogates the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their reasoning, or when they use any trigger phrase like \\\\\"grill\\\\\" / \\\\\"interrogate me\\\\\" / \\\\\"put me to the test\\\\\".",
+      "tags": [
+        "planning",
+        "questioning",
+        "decision-making"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "handoff",
+      "description": "Compacts the current conversation into a handoff document so another agent can continue the work.",
+      "tags": [
+        "handoff",
+        "documentation",
+        "continuity"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
       "id": "harness",
-      "description": "Use when governing a workspace's control plane, code or not — the `01-TOOLS/` tooling layer, the `02-DOCS/` chaos→knowledge wiki, the root Knowledge map. Audits it, migrates legacy `XX-*` folders, scaffolds provider tooling, sweeps the inbox, writes root CLAUDE.md/AGENTS.md. NOT the bootstrap front door (that is `init`, which hands off here).",
+      "description": "Use when governing a workspace's control plane, code or not — the `01-TOOLS/` tooling layer, the `docs/` chaos→knowledge wiki, the root Knowledge map. Audits it, migrates legacy `XX-*` folders, scaffolds provider tooling, sweeps the inbox, writes root CLAUDE.md/AGENTS.md. NOT the bootstrap front door (that is `init`, which hands off here).",
       "tags": [
         "harness",
         "company",
@@ -2324,6 +2342,7 @@
       "profiles": [
         "minimal",
         "core",
+        "ui",
         "full"
       ]
     },
@@ -2416,45 +2435,38 @@
       "profiles": []
     },
     {
-      "id": "idea-refinement",
-      "description": "Use when a rough product, service, workflow or feature idea needs divergent options and assumption pressure-testing before it becomes a spec. Produces a decision brief with alternatives, evidence gaps, Not Now and a cheap experiment. NOT requirements or acceptance criteria (`specify`), NOT market sizing (`market-research`).",
+      "id": "implement",
+      "description": "Implements a piece of work from a spec or a set of tickets.",
       "tags": [
-        "ideation",
-        "idea-refinement",
-        "product-discovery",
-        "assumptions",
-        "decision-brief"
+        "implementation",
+        "spec",
+        "tickets"
       ],
-      "recommends": [
-        "specify",
-        "market-research",
-        "competitor-watch",
-        "ab-testing"
-      ],
+      "recommends": [],
       "profiles": [
         "core",
+        "ui",
         "full"
       ]
     },
     {
-      "id": "implement",
-      "description": "Use when an approved plan and task list exist and it is time to turn them into working, tested code — the SDD phase after `analyze` and before `verify`. Enforces TDD: a failing test comes before the code that makes it pass, one task at a time, appended to a progress ledger that survives compaction. Delegates test tooling to the stack skill and fans disjoint tasks out via `parallel`. NOT spec writing (that is `specify`), NOT planning (that is `plan`), NOT the final lint/test/audit gate (that is `verify`).",
+      "id": "ingeniero-diseno-web",
+      "description": "Build or redesign polished visual artifacts that render in a browser with HTML/CSS/JavaScript/React — pages, dashboards, prototypes, presentations, animations, UI mockups, and data visualizations. Use for visual front-end creation, design-system exploration, design critique, or explicit browser-based acceptance/QA. Not for back-end, CLI, non-visual code, or converting sources into long-form articles.",
       "tags": [
-        "sdd",
-        "implement",
-        "code"
+        "frontend",
+        "web-design",
+        "prototyping",
+        "qa"
       ],
-      "recommends": [
-        "verify"
-      ],
+      "recommends": [],
       "profiles": [
-        "core",
+        "ui",
         "full"
       ]
     },
     {
       "id": "init",
-      "description": "Use when starting from nothing or pointing rsc at an existing project — the front door. Gauges technical level and the accompaniment dial first (non-technical by default), discovers what the user wants to build or govern (any stack, or a non-code harness: company/ops, research, knowledge, content), writes the profile to 02-DOCS, and installs the skills discovery justified. NOT the scaffolder (that is `harness`), NOT a stack skill.",
+      "description": "Use when starting from nothing or pointing rsc at an existing project — the front door. Gauges technical level and the accompaniment dial first (non-technical by default), discovers what the user wants to build or govern (any stack, or a non-code harness: company/ops, research, knowledge, content), writes the profile to docs, and installs the skills discovery justified. NOT the scaffolder (that is `harness`), NOT a stack skill.",
       "tags": [
         "init",
         "bootstrap",
@@ -2468,12 +2480,13 @@
       "profiles": [
         "minimal",
         "core",
+        "ui",
         "full"
       ]
     },
     {
       "id": "instagram-api",
-      "description": "Use when wiring an agent into Instagram's Graph API: publishing a Reel through the create/poll/publish container dance, reading per-media insights, checking the 24h publish cap, or ingesting Reel metrics into 02-DOCS/wiki/shortform. NOT TikTok (that is `tiktok-api`), NOT YouTube (that is `youtube-api`), NOT cross-platform cadence (that is `social-publisher`).",
+      "description": "Use when wiring an agent into Instagram's Graph API: publishing a Reel through the create/poll/publish container dance, reading per-media insights, checking the 24h publish cap, or ingesting Reel metrics into docs/wiki/shortform. NOT TikTok (that is `tiktok-api`), NOT YouTube (that is `youtube-api`), NOT cross-platform cadence (that is `social-publisher`).",
       "tags": [
         "instagram",
         "graph-api",
@@ -2597,7 +2610,7 @@
     },
     {
       "id": "knowledge-ops",
-      "description": "Use when an already-running 02-DOCS/ wiki needs gardening judgment — what is worth capturing (default: nothing), where a loose note belongs, whether to split a bloated article or merge near-duplicates, how to link orphans back in, and what retires to _archive (never delete). NOT building or sweeping the wiki engine itself (that is `harness`).",
+      "description": "Use when an already-running docs/ wiki needs gardening judgment — what is worth capturing (default: nothing), where a loose note belongs, whether to split a bloated article or merge near-duplicates, how to link orphans back in, and what retires to _archive (never delete). NOT building or sweeping the wiki engine itself (that is `harness`).",
       "tags": [
         "knowledge-ops",
         "wiki",
@@ -2610,7 +2623,7 @@
       ],
       "recommends": [
         "harness",
-        "decision-records",
+        "write-adr",
         "meeting-notes",
         "sop-builder",
         "research-ops",
@@ -2747,6 +2760,34 @@
       ]
     },
     {
+      "id": "leyes-de-percepcion",
+      "description": "Use when composing or reviewing a screen and you need to decide what the eye sees first and how things are grouped — proximity, similarity, common region, closure, continuity, figure-ground, the Von Restorff effect, and visual hierarchy. This is the package of Gestalt laws applied to interface design.",
+      "tags": [
+        "gestalt",
+        "visual-perception",
+        "ui-design"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "leyes-de-retencion",
+      "description": "Use when diagnosing why people abandon a flow halfway through, or when designing decisions, forms, steps, response times, and closing moments — Hick's law, Fitts's law, Miller's law, Jakob's law, the Doherty threshold, the Zeigarnik effect, the serial position effect, the peak-end rule, and Tesler's law.",
+      "tags": [
+        "retention",
+        "ux-laws",
+        "behavioral-design"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
       "id": "linkedin-api",
       "description": "Use when wiring an app to LinkedIn's organic Posts / Community Management API — 3-legged OAuth, publishing text, article or document posts to a member profile or company page, and pulling impressions, engagement and follower stats into a durable feedback record. NOT writing the post copy (that is `linkedin-content`), NOT planning cadence (that is `linkedin-strategy`), NOT DM sequences (that is `linkedin-outreach`).",
       "tags": [
@@ -2846,7 +2887,7 @@
         "linkedin-outreach",
         "linkedin-api",
         "content-engine",
-        "decision-records"
+        "write-adr"
       ],
       "profiles": []
     },
@@ -2869,8 +2910,7 @@
         "cost-tracking",
         "agent-eval",
         "rag",
-        "observability",
-        "parallel"
+        "observability"
       ],
       "profiles": []
     },
@@ -3018,7 +3058,7 @@
         "medium-publishing",
         "content-engine",
         "seo-geo",
-        "decision-records"
+        "write-adr"
       ],
       "profiles": []
     },
@@ -3058,7 +3098,7 @@
         "business-ops"
       ],
       "recommends": [
-        "decision-records",
+        "write-adr",
         "sop-builder",
         "project-ops",
         "calendar-scheduling",
@@ -3067,6 +3107,92 @@
         "document-processing"
       ],
       "profiles": []
+    },
+    {
+      "id": "mejor-accesibilidad",
+      "description": "Use to bring the project up to accessibility standards and best practices — native elements vs. ARIA, focus rings, full keyboard support, focus trapping, tap target sizes, form labels, announced errors, accessible names, reduced motion, live regions, alt text, heading structure, and zoom.",
+      "tags": [
+        "accessibility",
+        "a11y",
+        "aria",
+        "keyboard-navigation"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "mejor-colores",
+      "description": "Use to build a color system or answer anything about color in the project — generating palettes, using semantic tokens, converting between formats, measuring contrast, choosing a gradient's interpolation space, and setting up dark mode.",
+      "tags": [
+        "color",
+        "design-tokens",
+        "contrast",
+        "dark-mode"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "mejor-layout",
+      "description": "Use when building or reviewing a screen's layout — grouping, alignment, reading order, progressive disclosure, spacing, breakpoints, translated-text growth, and RTL.",
+      "tags": [
+        "layout",
+        "responsive-design",
+        "ui-design"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "mejor-redaccion",
+      "description": "Use when writing or reviewing a product's copy — voice and tone, button labels, a flow's vocabulary, link text, capitalization, settings, error messages, empty states, and placeholders.",
+      "tags": [
+        "ux-writing",
+        "microcopy",
+        "content-design"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "mejor-tipografia",
+      "description": "Use when building or reviewing typography — size scale, spacing, line height, variable fonts, OpenType features, wrapping, truncation, tabular numbers, punctuation, and all the details that make text read well across a product.",
+      "tags": [
+        "typography",
+        "design-system",
+        "readability"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "mejor-ui",
+      "description": "Use to polish and improve a project's UI — concentric border radii, optical alignment, surface depth, shadows vs. borders, interruptible animations, staggered entrances, icon transitions, press scaling, theme-switch transition suppression, and motion containment.",
+      "tags": [
+        "ui-polish",
+        "visual-design",
+        "motion"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "modal",
@@ -3140,6 +3266,21 @@
         "design"
       ],
       "profiles": [
+        "full"
+      ]
+    },
+    {
+      "id": "muscle-memory",
+      "description": "Python practice gym — generates short katas from the user's recent code, tracks progress, and reviews solutions. Use when the user wants to practice/keep their coding sharp, review a kata solution, or check practice progress.",
+      "tags": [
+        "practice",
+        "python",
+        "katas"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
         "full"
       ]
     },
@@ -3427,7 +3568,7 @@
     },
     {
       "id": "orient",
-      "description": "Always-on. The brújula: close every turn by situating the person — where they are, what just happened, why it mattered, and the next step as a question, never a dead end. Reads the accompaniment and technical dials from 02-DOCS and calibrates how much it explains, rewriting the dial when the user asks for more or less. NOT the missing-skill installer (that is `suggest`).",
+      "description": "Always-on. The brújula: close every turn by situating the person — where they are, what just happened, why it mattered, and the next step as a question, never a dead end. Reads the accompaniment and technical dials from docs and calibrates how much it explains, rewriting the dial when the user asks for more or less. NOT the missing-skill installer (that is `suggest`).",
       "tags": [
         "orient",
         "guide",
@@ -3440,20 +3581,7 @@
       "profiles": [
         "minimal",
         "core",
-        "full"
-      ]
-    },
-    {
-      "id": "parallel",
-      "description": "Use when two or more pieces of work are genuinely independent — disjoint files, no shared state, no ordering edge — and should fan out across subagents, then be gathered and reconciled under a combined test suite. Decides WHAT can run concurrently; NOT the isolation it runs in (that is `worktrees`), NOT the per-unit TDD loop (that is `implement`).",
-      "tags": [
-        "parallel",
-        "subagents",
-        "fanout"
-      ],
-      "recommends": [],
-      "profiles": [
-        "core",
+        "ui",
         "full"
       ]
     },
@@ -3562,22 +3690,6 @@
         "marketing"
       ],
       "profiles": []
-    },
-    {
-      "id": "plan",
-      "description": "Use when an approved, clarified spec must become a technical blueprint before any code — the SDD phase between clarify and tasks: architecture, contracts, data flow, testing strategy, sequencing and risks, at structure altitude, never framework syntax. NOT the what/why spec (that is `specify`), NOT the ambiguity sweep (that is `clarify`), NOT the task breakdown (that is `tasks`), NOT the code (that is `implement`).",
-      "tags": [
-        "sdd",
-        "plan",
-        "design"
-      ],
-      "recommends": [
-        "tasks"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
     },
     {
       "id": "planetscale",
@@ -3774,8 +3886,7 @@
         "status-tracking"
       ],
       "recommends": [
-        "tasks",
-        "decision-records",
+        "write-adr",
         "meeting-notes",
         "sop-builder",
         "dashboard"
@@ -3817,6 +3928,21 @@
         "brand-voice"
       ],
       "profiles": []
+    },
+    {
+      "id": "prototype",
+      "description": "Builds a throwaway prototype to answer a design question. Use when the user wants to check whether a state model or logic \\\\\"feels right\\\\\", or explore what a UI should look like.",
+      "tags": [
+        "prototyping",
+        "design",
+        "exploration"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "python",
@@ -3940,7 +4066,6 @@
         "react",
         "flutter",
         "design",
-        "debug",
         "performance"
       ],
       "profiles": []
@@ -4082,6 +4207,21 @@
       "profiles": []
     },
     {
+      "id": "research",
+      "description": "Researches a question against high-confidence primary sources and captures the findings as a Markdown file in the repo. Use when the person wants to research a topic, gather facts from documentation or an API, or delegate the reading work to a background agent.",
+      "tags": [
+        "research",
+        "documentation",
+        "background-agent"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
       "id": "research-ops",
       "description": "Use when someone hands you an open question whose answer must survive scrutiny — a tech choice, a regulation, a what-is-actually-true-about-X — with every non-obvious claim dated and sourced, source disagreements surfaced rather than averaged away, and a cited memo as the deliverable. Also for refreshing a stale research memo. NOT sizing a market with TAM/SAM/SOM (that is `market-research`), NOT a standing cadence watch on named rivals (that is `competitor-watch`).",
       "tags": [
@@ -4098,7 +4238,7 @@
         "competitor-watch",
         "data-scraper",
         "knowledge-ops",
-        "decision-records",
+        "write-adr",
         "structured-extraction",
         "technical-writing"
       ],
@@ -4131,22 +4271,6 @@
       "profiles": []
     },
     {
-      "id": "review",
-      "description": "Use when a green diff needs adversarial judgment in the rsc SDD chain, between verify and ship — give a review keyed to the spec/plan/constitution in 02-DOCS/wiki/sdd/, or receive one and verify each comment before agreeing. NOT running lint/type/tests (that is `verify`), NOT the spec-less standalone pass (that is `code-review`), NOT merging (that is `ship`).",
-      "tags": [
-        "sdd",
-        "review",
-        "code-review"
-      ],
-      "recommends": [
-        "ship"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
       "id": "review-management",
       "description": "Use when a public review needs an on-voice reply, when you need to earn more reviews legally, or when an aggregate rating is slipping across Google Business Profile, Trustpilot, the App Store or Google Play — including deciding reply versus flag, getting an unfair one-star removed rather than merely answered, and wiring programmatic replies. NOT a private support ticket against an SLA (that is `customer-support`), NOT churn, NPS or save plays (that is `retention`).",
       "tags": [
@@ -4166,6 +4290,35 @@
         "social-publisher"
       ],
       "profiles": []
+    },
+    {
+      "id": "revision-de-cambios",
+      "description": "Reviews a CHANGE (uncommitted work, a branch, a commit range, or a pull request) rather than a screen. Resolves the scope, expands the touched files to the surfaces they affect, reads both sides of the diff, and classifies each finding as introduced, a regression, or pre-existing.",
+      "tags": [
+        "code-review",
+        "diff-review",
+        "regression"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "revision-interfaz",
+      "description": "Combines all the `mejor-*` skills into a single interface review covering accessibility, layout, copy, typography, color, and visual polish, and consolidates a verdict ordered by impact.",
+      "tags": [
+        "ui-review",
+        "accessibility",
+        "design-audit"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "roast-me",
@@ -4294,46 +4447,6 @@
       "profiles": []
     },
     {
-      "id": "sdd",
-      "description": "Use when you want a disciplined, spec-driven path from a feature idea to shipped, verified software — the SDD dispatcher and front door, in any language. States the method, reads the accompaniment dial from 02-DOCS, and routes to the right phase: constitution -> specify -> clarify -> plan -> tasks -> analyze -> implement -> verify -> review -> ship, with debug / worktrees / parallel on demand. Use it to start a feature, to govern the whole flow, or when unsure which phase you are in. NOT a single phase itself (it dispatches), NOT the workspace harness (that is `harness`), NOT a stack build skill.",
-      "tags": [
-        "sdd",
-        "spec",
-        "workflow",
-        "plan"
-      ],
-      "recommends": [
-        "sdd-init",
-        "constitution",
-        "specify"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
-      "id": "sdd-init",
-      "description": "Use when calibrating an existing repo for the rsc SDD chain: detect stack, package manager, test runners and apply/verify commands, refresh the skill registry, and write the runtime config at 02-DOCS/wiki/sdd/config.yaml. NOT the dispatcher that routes SDD phases (that is `sdd`), NOT first-contact user/workspace bootstrap (that is `init`).",
-      "tags": [
-        "sdd",
-        "init",
-        "config",
-        "testing",
-        "registry"
-      ],
-      "recommends": [
-        "sdd",
-        "specify",
-        "implement",
-        "verify"
-      ],
-      "profiles": [
-        "core",
-        "full"
-      ]
-    },
-    {
       "id": "secure-coding",
       "description": "Use when securing application code: threat-modeling a feature, security-reviewing a diff, hardening auth/authz, secrets, CORS/CSP, or fixing OWASP-class bugs (access control, injection, SSRF, supply chain) in FastAPI, Next.js, Go or Flutter. NOT running the scanners (that is security-scan), NOT agent prompt-injection guardrails (that is agent-safety).",
       "tags": [
@@ -4361,8 +4474,7 @@
       ],
       "recommends": [
         "secure-coding",
-        "github-actions",
-        "verify"
+        "github-actions"
       ],
       "profiles": []
     },
@@ -4388,21 +4500,6 @@
         "analytics"
       ],
       "profiles": []
-    },
-    {
-      "id": "ship",
-      "description": "Use when a verified, review-approved branch has to land — the close of the rsc SDD chain: safety checks, then three landing options (merge, PR, park/discard), authorship always Eric and never an AI trailer. NOT running the gates (that is `verify`), NOT reading the diff for defects (that is `review`), NOT shipping to a server (that is `deployment`).",
-      "tags": [
-        "sdd",
-        "ship",
-        "release",
-        "pr"
-      ],
-      "recommends": [],
-      "profiles": [
-        "core",
-        "full"
-      ]
     },
     {
       "id": "shopify",
@@ -4469,7 +4566,7 @@
     },
     {
       "id": "shortform-packaging",
-      "description": "Use when a vertical short is shot or scripted and you need the upload-form copy and cover that win the feed — the hook line, the first-frame on-screen text, the search-led caption, a tight hashtag set, and the cover frame; it learns from what performed via the 02-DOCS log. NOT inventing the idea (that is `shortform-ideation`), NOT scripting or directing the cuts (that is `video-shorts`), NOT executing the edit (that is `shortform-editing`), NOT scheduling the post (that is `social-publisher`).",
+      "description": "Use when a vertical short is shot or scripted and you need the upload-form copy and cover that win the feed — the hook line, the first-frame on-screen text, the search-led caption, a tight hashtag set, and the cover frame; it learns from what performed via the docs log. NOT inventing the idea (that is `shortform-ideation`), NOT scripting or directing the cuts (that is `video-shorts`), NOT executing the edit (that is `shortform-editing`), NOT scheduling the post (that is `social-publisher`).",
       "tags": [
         "shortform",
         "packaging",
@@ -4543,12 +4640,13 @@
       "profiles": [
         "minimal",
         "core",
+        "ui",
         "full"
       ]
     },
     {
       "id": "simplify-code",
-      "description": "Use when correct working code is unnecessarily hard to read, change or verify and needs behaviour-preserving simplification in a bounded scope. Characterizes the observable contract, removes accidental complexity one concept at a time and proves equivalence. NOT fixing a failure (`debug`), NOT read-only diff judgment (`review`/`code-review`).",
+      "description": "Use when correct working code is unnecessarily hard to read, change or verify and needs behaviour-preserving simplification in a bounded scope. Characterizes the observable contract, removes accidental complexity one concept at a time and proves equivalence. NOT fixing a failure (`superpowers:systematic-debugging`), NOT read-only diff judgment (`code-review`).",
       "tags": [
         "code-simplification",
         "refactoring",
@@ -4558,13 +4656,26 @@
       ],
       "recommends": [
         "code-review",
-        "review",
-        "verify",
-        "debug",
         "performance"
       ],
       "profiles": [
         "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "sitios-calidad-premio",
+      "description": "Art-direct and implement marketing, editorial, portfolio, and landing sites that are distinctive and motion-rich, with original imagery inspired by references, standout heroes, GSAP choreography, a single smooth-scroll engine, optional Three.js shaders, honest icon and logo sourcing, photographic avatars, accessibility, and performance safeguards. Use when asked for an award-quality, premium, cinematic, interactive, high-concept, or motion-driven website.",
+      "tags": [
+        "award-site",
+        "gsap",
+        "webgl",
+        "art-direction"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
         "full"
       ]
     },
@@ -4647,7 +4758,7 @@
     },
     {
       "id": "source-grounded-development",
-      "description": "Use when implementation or review depends on current version-specific framework, SDK, protocol or platform behaviour and memory is unsafe. Detects exact local versions, verifies primary sources, tests applicability and marks unknowns. NOT a standalone cited memo (`research-ops`), NOT diagnosis of a reproduced failure (`debug`).",
+      "description": "Use when implementation or review depends on current version-specific framework, SDK, protocol or platform behaviour and memory is unsafe. Detects exact local versions, verifies primary sources, tests applicability and marks unknowns. NOT a standalone cited memo (`research-ops`), NOT diagnosis of a reproduced failure (`superpowers:systematic-debugging`).",
       "tags": [
         "official-docs",
         "primary-sources",
@@ -4657,29 +4768,12 @@
       ],
       "recommends": [
         "research-ops",
-        "decision-records",
-        "debug",
+        "write-adr",
         "technical-writing"
       ],
       "profiles": [
         "core",
-        "full"
-      ]
-    },
-    {
-      "id": "specify",
-      "description": "Use when a feature, change, or product idea is still fuzzy and must become an approved WHAT/WHY spec before any planning or code — the brainstorming front door of SDD. Turns a one-line intent into problem, goals, users, scope, behaviour and acceptance criteria, via frontier-round dialogue and 2-3 approaches with a recommendation, carrying zero implementation detail. Fires whenever someone jumps to HOW before WHAT is agreed, in any language. NOT the technical plan (that is `plan`), NOT the de-risking ambiguity sweep (that is `clarify`), NOT project-wide principles (that is `constitution`).",
-      "tags": [
-        "sdd",
-        "spec",
-        "requirements"
-      ],
-      "recommends": [
-        "clarify",
-        "plan"
-      ],
-      "profiles": [
-        "core",
+        "ui",
         "full"
       ]
     },
@@ -4809,7 +4903,7 @@
     },
     {
       "id": "suggest",
-      "description": "Always-on. Use whenever the current user turn would clearly benefit from an rsc skill that is not yet installed — detect the gap during normal agent use, name the skill, and (with a one-word confirm) install it via `npx @ericrisco/rsc add <id>`. Triggers on capability intent in any language: building technology, creating content/assets, automating workflows, analyzing data, connecting tools, shipping/deploying, security, business ops, marketing, education, research, or company/documentation harness work.",
+      "description": "Always-on. Use whenever the current user turn would clearly benefit from an rsc skill that is not yet installed — detect the gap during normal agent use, name the skill, and (with a one-word confirm) install it via `npx @damiangil/harness add <id>`. Triggers on capability intent in any language: building technology, creating content/assets, automating workflows, analyzing data, connecting tools, shipping/deploying, security, business ops, marketing, education, research, or company/documentation harness work.",
       "tags": [
         "suggest",
         "detect",
@@ -4821,6 +4915,7 @@
       "profiles": [
         "minimal",
         "core",
+        "ui",
         "full"
       ]
     },
@@ -4883,25 +4978,21 @@
         "react-native",
         "expo",
         "testing-web",
-        "github-actions",
-        "ship"
+        "github-actions"
       ],
       "profiles": []
     },
     {
-      "id": "tasks",
-      "description": "Use when an approved plan needs slicing into an ordered task list before any code — the SDD `tasks` phase. Each row carries a literal done-check, dependencies, a parallel-safe marker and a spec trace, appended to the plan artifact. NOT writing the plan (that is `plan`), NOT the consistency gate (that is `analyze`), NOT executing the tasks (that is `implement`).",
+      "id": "tastemaker",
+      "description": "Generates genuinely beautiful, on-brand UI instead of generic AI slop. Use whenever asked to build, design, style, or improve a UI, landing page, dashboard, app screen, or component; when a PRD needs a design pass before implementation; when the user pastes reference images or links and wants the app to look like them; or when they complain the generated UI looks generic, boring, templated, or like every other AI app. Also triggers without the word \\\\\"design\\\\\", with phrases like \\\\\"make this look good\\\\\", \\\\\"build me the frontend for X\\\\\", \\\\\"this looks like just another SaaS site\\\\\", or \\\\\"pick up the look of this\\\\\". Also with the verbs study or extract the look from a screenshot or URL, and audit or review why something looks AI-made.",
       "tags": [
-        "sdd",
-        "tasks",
-        "breakdown"
+        "ui-design",
+        "branding",
+        "visual-design"
       ],
-      "recommends": [
-        "analyze",
-        "implement"
-      ],
+      "recommends": [],
       "profiles": [
-        "core",
+        "ui",
         "full"
       ]
     },
@@ -4924,6 +5015,22 @@
         "github-actions"
       ],
       "profiles": []
+    },
+    {
+      "id": "teach",
+      "description": "Teaches the user a new skill or concept within this workspace. Use when the user wants to learn a topic across multiple sessions.",
+      "tags": [
+        "teaching",
+        "learning",
+        "mentoring"
+      ],
+      "recommends": [],
+      "profiles": [
+        "minimal",
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "technical-writing",
@@ -5030,8 +5137,7 @@
         "accessibility",
         "testing-py",
         "react",
-        "nextjs",
-        "debug"
+        "nextjs"
       ],
       "profiles": []
     },
@@ -5063,6 +5169,51 @@
         "knowledge-ops"
       ],
       "profiles": []
+    },
+    {
+      "id": "to-questionnaire",
+      "description": "Turns a decision you cannot answer alone into a questionnaire for someone else to fill in.",
+      "tags": [
+        "planning",
+        "questionnaire",
+        "decision-making"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "to-spec",
+      "description": "Turns the current conversation into a spec (PRD) and publishes it to the project's issue tracker — no interview, just a synthesis of what has already been discussed.",
+      "tags": [
+        "spec",
+        "prd",
+        "issue-tracker"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "to-tickets",
+      "description": "Breaks down a plan, a spec, or the current conversation into a set of \\\\\"tracer bullet\\\\\" tickets (vertical slices), each declaring which tickets block it, and publishes them to the configured tracker — as local files (one per ticket) or as issues with native blocking links in a real tracker.",
+      "tags": [
+        "tickets",
+        "planning",
+        "issue-tracker"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "together-fireworks",
@@ -5167,7 +5318,7 @@
         "motion-craft"
       ],
       "profiles": [
-        "core",
+        "ui",
         "full"
       ]
     },
@@ -5261,6 +5412,7 @@
       "profiles": [
         "minimal",
         "core",
+        "ui",
         "full"
       ]
     },
@@ -5342,18 +5494,16 @@
       "profiles": []
     },
     {
-      "id": "verify",
-      "description": "Use when implementation is finished and about to be called done or merged — the rsc-sdd evidence gate: runs the stack's scripts/verify.sh (lint, type, test, audit), walks every task done-check and acceptance criterion, records a dated verdict. NOT judging the diff by eye (that is `review`, spec-less `code-review`), NOT diagnosis (that is `debug`).",
+      "id": "video-a-superprompt",
+      "description": "Turns a reference video into a highly detailed recreation or inspiration prompt. Use when the user provides, mentions, uploads, links, or points to a video and asks to analyze the design, UI, animations, transitions, scroll interactions, typography, colors, assets, WebGL/Three.js, narrative, or section-by-section behavior, or to create a prompt or article that recreates the page, app, interaction, or motion system.",
       "tags": [
-        "sdd",
-        "verify",
-        "test"
+        "video-analysis",
+        "prompt-engineering",
+        "design"
       ],
-      "recommends": [
-        "review"
-      ],
+      "recommends": [],
       "profiles": [
-        "core",
+        "ui",
         "full"
       ]
     },
@@ -5425,6 +5575,20 @@
       "profiles": []
     },
     {
+      "id": "vocabulario-animacion",
+      "description": "Use when someone describes a web motion effect without knowing its name (\\\\\"that bouncy thing when a popover opens\\\\\", \\\\\"the iOS rubber-band scroll\\\\\") and asks \\\\\"what's it called when...\\\\\". Returns the exact term so it can be requested from an AI or a designer. This is for NAMING an effect, not designing or building one.",
+      "tags": [
+        "animation",
+        "vocabulary",
+        "reference"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
       "id": "vue-nuxt",
       "description": "Use when building or reviewing a Vue 3 + Nuxt 4 app — `<script setup>` reactivity, SSR/SSG/hybrid `routeRules`, the `app/`+`server/` layout, SSR-safe fetching (`useFetch`/`useAsyncData`) and state (`useState`/Pinia), Nitro routes, hydration mismatches, Nuxt 3→4 migration. NOT React/RSC (that is nextjs), NOT a static islands site (that is astro).",
       "tags": [
@@ -5440,6 +5604,35 @@
         "secure-coding"
       ],
       "profiles": []
+    },
+    {
+      "id": "wait-what",
+      "description": "Stop. That last message didn't land: rephrase it.",
+      "tags": [
+        "clarification",
+        "communication"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "wayfinder",
+      "description": "Plans a huge chunk of work — more than fits in a single agent session — as a shared map of decision tickets in the repo's issue tracker, and resolves them one at a time until the path to the destination is clear.",
+      "tags": [
+        "planning",
+        "issue-tracker",
+        "large-scale-work"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "webhooks",
@@ -5528,22 +5721,38 @@
       "profiles": []
     },
     {
-      "id": "worktrees",
-      "description": "Use when work is about to become commits and needs isolation first — check the tree state, then branch or cut a git worktree off a clean base (native EnterWorktree first, git fallback) so implement never runs on main. NOT what may run concurrently inside those workspaces (that is `parallel`), NOT the merge/cleanup after (that is `ship`).",
+      "id": "write-adr",
+      "description": "Use when you need to record an architecture decision, open an ADR, amend or replace an existing one, or when a change is hard to revert and someone will ask in six months why it's done this way (structural refactor, major dependency, API contract, data partitioning, module boundaries).",
       "tags": [
-        "git",
-        "worktree",
-        "isolation"
+        "adr",
+        "architecture",
+        "documentation"
       ],
       "recommends": [],
       "profiles": [
         "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "writing-for-agents",
+      "description": "Write documents that an agent will consume. Use when creating or editing skills, or when modifying AGENTS.md or CLAUDE.md.",
+      "tags": [
+        "writing",
+        "documentation",
+        "agents"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
         "full"
       ]
     },
     {
       "id": "youtube-api",
-      "description": "Use when wiring code to a real YouTube channel: user OAuth 2.0, resumable videos.insert uploads, editing metadata after publish, pulling views/watch time/retention/traffic from the Analytics API v2 into a dated 02-DOCS/wiki/youtube/ feedback log. NOT what to publish or how to title and thumbnail it (that is youtube-strategy / youtube-packaging).",
+      "description": "Use when wiring code to a real YouTube channel: user OAuth 2.0, resumable videos.insert uploads, editing metadata after publish, pulling views/watch time/retention/traffic from the Analytics API v2 into a dated docs/wiki/youtube/ feedback log. NOT what to publish or how to title and thumbnail it (that is youtube-strategy / youtube-packaging).",
       "tags": [
         "youtube",
         "youtube-data-api",
@@ -5624,7 +5833,7 @@
         "youtube-packaging",
         "youtube-api",
         "content-engine",
-        "decision-records"
+        "write-adr"
       ],
       "profiles": []
     },
@@ -6107,12 +6316,6 @@
   ],
   "commands": [
     {
-      "id": "analyze",
-      "description": "Run the analyze skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "analyze"
-    },
-    {
       "id": "build-fix",
       "description": "Route a build failure to the installed stack resolver without guessing.",
       "kind": "resolver-selector",
@@ -6123,12 +6326,6 @@
       "description": "Freeze the current candidate for review and seal it only after the required lenses approve.",
       "kind": "capability",
       "backing": "sello"
-    },
-    {
-      "id": "clarify",
-      "description": "Run the clarify skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "clarify"
     },
     {
       "id": "cpp-build",
@@ -6147,12 +6344,6 @@
       "description": "Delegate csharp-dotnet review work to the installed csharp-reviewer agent.",
       "kind": "agent",
       "backing": "csharp-reviewer"
-    },
-    {
-      "id": "debug",
-      "description": "Run the debug skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "debug"
     },
     {
       "id": "django-build",
@@ -6201,12 +6392,6 @@
       "description": "Run the harness skill through a short, non-duplicating entry point.",
       "kind": "skill",
       "backing": "harness"
-    },
-    {
-      "id": "implement",
-      "description": "Run the implement skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "implement"
     },
     {
       "id": "java-build",
@@ -6275,12 +6460,6 @@
       "backing": "php-reviewer"
     },
     {
-      "id": "plan",
-      "description": "Run the plan skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "plan"
-    },
-    {
       "id": "postgresdb-review",
       "description": "Delegate postgresdb review work to the installed postgres-reviewer agent.",
       "kind": "agent",
@@ -6323,12 +6502,6 @@
       "backing": "memory:resume"
     },
     {
-      "id": "review",
-      "description": "Run the review skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "review"
-    },
-    {
       "id": "rust-build",
       "description": "Delegate rust build work to the installed rust-build-resolver agent.",
       "kind": "agent",
@@ -6351,18 +6524,6 @@
       "description": "Run the security-scan skill through a short, non-duplicating entry point.",
       "kind": "skill",
       "backing": "security-scan"
-    },
-    {
-      "id": "ship",
-      "description": "Run the ship skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "ship"
-    },
-    {
-      "id": "specify",
-      "description": "Run the specify skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "specify"
     },
     {
       "id": "spring-boot-build",
@@ -6389,12 +6550,6 @@
       "backing": "swift-reviewer"
     },
     {
-      "id": "tasks",
-      "description": "Run the tasks skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "tasks"
-    },
-    {
       "id": "test-coverage",
       "description": "Delegate coverage work to the installed stack testing skill.",
       "kind": "testing-skill",
@@ -6411,12 +6566,6 @@
       "description": "Run the knowledge-ops skill through a short, non-duplicating entry point.",
       "kind": "skill",
       "backing": "knowledge-ops"
-    },
-    {
-      "id": "verify",
-      "description": "Run the verify skill through a short, non-duplicating entry point.",
-      "kind": "skill",
-      "backing": "verify"
     },
     {
       "id": "vue-nuxt-review",

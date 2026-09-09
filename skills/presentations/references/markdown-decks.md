@@ -57,14 +57,14 @@ and `--notes`, and into PPTX notes.
 
 ### Theme from design tokens (the part that makes it *flipa*)
 
-Read the project's tokens from `02-DOCS/wiki/stack/design.md` / `design-tokens.json` (the `design` skill's
+Read the project's tokens from `docs/wiki/stack/design.md` / `design-tokens.json` (the `design` skill's
 output: OKLCH palette, type pairing, type scale, spacing). A Marp theme is a CSS file with a `/* @theme name */`
 banner; register it with `--theme ./theme.css` (or `--theme-set ./themes`). Map tokens → CSS custom properties
 once, then style sections against the variables — never hand-pick hex per slide.
 
 ```css
 /* @theme brand */
-/* Marp theme generated from 02-DOCS/wiki/stack/design.md tokens. */
+/* Marp theme generated from docs/wiki/stack/design.md tokens. */
 @import 'default'; /* inherit Marp's reset/layout, then override */
 
 /* Web fonts: self-host or @import so they EMBED in the PDF (see exports). */
@@ -217,7 +217,7 @@ Slidev styles with **UnoCSS/Tailwind utilities + CSS**. Drive it from the same d
 `./style.css` (auto-imported) or a local theme folder:
 
 ```css
-/* style.css — Slidev global, from 02-DOCS/wiki/stack/design.md tokens */
+/* style.css — Slidev global, from docs/wiki/stack/design.md tokens */
 :root {
   --brand:     oklch(0.62 0.19 264);
   --brand-ink: oklch(0.18 0.03 264);

@@ -134,9 +134,9 @@ Full templates with char budgets for all three formats live in `references/hooks
 
 **Work the golden hour.** LinkedIn first tests a post on only ~2–5% of your network in the first hour; only ~5% of posts that underperform in that window are reported to ever recover broader reach ([S2]). The first-hour-test mechanism is consistent with LinkedIn Engineering's described pipeline of scoring early engagement on an initial sample before expanding distribution ([S1]). So after posting: reply to every comment fast, and seed the thread with a real follow-up question. The post you abandon for an hour is the post the algorithm abandons.
 
-## Learn from 02-DOCS
+## Learn from docs
 
-If the project has an `02-DOCS/` post log, read it before drafting: pull prior posts and their measured outcomes (impressions, dwell, comments, saves) and bias the new draft toward the hook patterns, formats, and CTA types that actually performed *for this account* — not generic best practice. Then log the new post back with its hook, format, and CTA type so the next draft is sharper. The front-matter schema (date, format, hook, cta_type, impressions, dwell_s, comments, saves) is in `references/hooks-and-formats.md`.
+If the project has an `docs/` post log, read it before drafting: pull prior posts and their measured outcomes (impressions, dwell, comments, saves) and bias the new draft toward the hook patterns, formats, and CTA types that actually performed *for this account* — not generic best practice. Then log the new post back with its hook, format, and CTA type so the next draft is sharper. The front-matter schema (date, format, hook, cta_type, impressions, dwell_s, comments, saves) is in `references/hooks-and-formats.md`.
 
 ## Anti-patterns
 

@@ -24,7 +24,7 @@ Use when:
 
 - Wiring a script or agent to publish to an account: Direct Post or upload-to-draft via `/v2/post/publish/video/init/` (or `/inbox/` for a draft), then `FILE_UPLOAD` chunked PUT or `PULL_FROM_URL`, then poll `/v2/post/publish/status/fetch/`.
 - Pulling an account's own video stats: counters via Display `POST /v2/video/query/` (or `/v2/video/list/`); watch-time / completion / impression-source via the Business Account API.
-- Building the recurring "fetch performance → write to `02-DOCS/wiki/shortform/`" loop that turns API responses into an account feedback log siblings can read.
+- Building the recurring "fetch performance → write to `docs/wiki/shortform/`" loop that turns API responses into an account feedback log siblings can read.
 - Debugging TikTok-specific failures: `scope_not_authorized`, `url_ownership_unverified`, `rate_limit_exceeded` (6 req/min), 24-hour access-token expiry, audit/`video.publish` not approved, unaudited-app private-only posting.
 
 Do NOT use when (route to the sibling that owns it):
@@ -240,10 +240,10 @@ Caveat: **Business insight metrics lag 24–48h** and can differ from the in-app
 
 ## 5. Ingest into the wiki — the actual deliverable
 
-A pull that prints to stdout and vanishes is wasted. **Every pull appends a dated entry under `02-DOCS/wiki/shortform/`**, platform-namespaced, so the account's numbers become queryable history the strategy/packaging siblings can read.
+A pull that prints to stdout and vanishes is wasted. **Every pull appends a dated entry under `docs/wiki/shortform/`**, platform-namespaced, so the account's numbers become queryable history the strategy/packaging siblings can read.
 
 ```text
-02-DOCS/wiki/shortform/
+docs/wiki/shortform/
   index.md                       # rolling pointer to latest snapshot + open questions
   tiktok-account-2026-06-02.md   # dated account snapshot (one per pull)
   videos/tiktok-<video_id>.md    # per-video running log, newest entry on top

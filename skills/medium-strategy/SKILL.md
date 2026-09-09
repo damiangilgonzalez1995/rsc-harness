@@ -2,7 +2,7 @@
 name: medium-strategy
 description: "Use when planning Medium as a growth and revenue system over months rather than one post — the Partner Program, solo profile versus starting or pitching a publication, engineering for Boost and the distribution tiers, tag and topic choices for reach, and a canonical cross-posting plan, read from and written back to the wiki so each session compounds. NOT writing the article's hook, structure or prose (that is `medium-writing`), NOT the mechanical format-and-submit step (that is `medium-publishing`)."
 tags: [medium, partner-program, monetization, distribution, publications, cross-posting]
-recommends: [medium-writing, medium-publishing, content-engine, seo-geo, decision-records]
+recommends: [medium-writing, medium-publishing, content-engine, seo-geo, write-adr]
 origin: risco
 ---
 
@@ -25,7 +25,7 @@ Your spine is a read/write loop with the account's own history. You **read** acc
 
 ## 1. Read the wiki FIRST — before any decision
 
-Before you recommend anything, read `02-DOCS/wiki/medium/`. **Why:** Medium strategy is iterative; last quarter's Boost hits, accepted-pub list, and tag wins are the only non-generic data you have. Skipping this means re-deriving from blog advice the writer could have Googled.
+Before you recommend anything, read `docs/wiki/medium/`. **Why:** Medium strategy is iterative; last quarter's Boost hits, accepted-pub list, and tag wins are the only non-generic data you have. Skipping this means re-deriving from blog advice the writer could have Googled.
 
 Look for, in order:
 - **Decision log** — prior calls on solo vs publication, which pubs were pitched/accepted/dropped, the tag sets tried.
@@ -34,7 +34,7 @@ Look for, in order:
 - **Referral-source notes** — external vs on-platform reads (external reads now pay extra — see §3), and which off-Medium channels sent them.
 - **Dead experiments** — pubs that never replied, tags that pulled nothing. Do not re-run them.
 
-If the directory is empty or absent, **bootstrap it**: create `02-DOCS/wiki/medium/` with a `decisions/` subfolder and a `what-worked.md`, then proceed — this session becomes record #1. Templates and layout: [`references/wiki-records.md`](references/wiki-records.md).
+If the directory is empty or absent, **bootstrap it**: create `docs/wiki/medium/` with a `decisions/` subfolder and a `what-worked.md`, then proceed — this session becomes record #1. Templates and layout: [`references/wiki-records.md`](references/wiki-records.md).
 
 ## 2. The money model — get this right or everything downstream is vanity
 
@@ -130,7 +130,7 @@ On a monthly/quarterly review:
 
 ## 9. Write the decision back to the wiki
 
-Every session ends with a dated record under `02-DOCS/wiki/medium/decisions/`. Minimum fields — the bet-on metric is mandatory, because a decision with no metric is an opinion, not a checkable bet:
+Every session ends with a dated record under `docs/wiki/medium/decisions/`. Minimum fields — the bet-on metric is mandatory, because a decision with no metric is an opinion, not a checkable bet:
 
 ```markdown
 ---
@@ -152,7 +152,7 @@ Bets on metric: member reading time from external/search referral; 1 Boost nomin
 
 `type:` is the required OKF v0.1 field; `timestamp` is ISO 8601. The `Decision:` / `Bets on metric:` lines are domain signals `verify.sh` greps for — keep them.
 
-After a review, append a `what-worked.md` entry tied to specific stories/pubs/tags (e.g. "`AI Coding Tools` long-tail + Boost → 3.2h member reading time"). Full templates, layout, and the verify.sh contract: [`references/wiki-records.md`](references/wiki-records.md). Sanity-check the wiki with `scripts/verify.sh 02-DOCS/wiki/medium/`.
+After a review, append a `what-worked.md` entry tied to specific stories/pubs/tags (e.g. "`AI Coding Tools` long-tail + Boost → 3.2h member reading time"). Full templates, layout, and the verify.sh contract: [`references/wiki-records.md`](references/wiki-records.md). Sanity-check the wiki with `scripts/verify.sh docs/wiki/medium/`.
 
 ## Anti-patterns
 
@@ -170,4 +170,4 @@ After a review, append a `what-worked.md` entry tied to specific stories/pubs/ta
 ## References
 
 - [`references/distribution-and-boost.md`](references/distribution-and-boost.md) — the three tiers in depth, the Boost two-step path, the 5 curation criteria expanded, common distribution disqualifiers, the Boost-eligible publication landscape.
-- [`references/wiki-records.md`](references/wiki-records.md) — decision-record + what-worked templates, the `02-DOCS/wiki/medium/` layout, and exactly what verify.sh checks.
+- [`references/wiki-records.md`](references/wiki-records.md) — decision-record + what-worked templates, the `docs/wiki/medium/` layout, and exactly what verify.sh checks.

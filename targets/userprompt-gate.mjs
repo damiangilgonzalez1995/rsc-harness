@@ -13,7 +13,7 @@
 // Fail-open (never blocks a turn). Opt out per project with .rsc/.no-feature-gate.
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { claimOnce, readHookInput, SDD_GATE_TEXT } from './hook-once.mjs';
+import { claimOnce, readHookInput, WORKFLOW_GATE_TEXT } from './hook-once.mjs';
 
 const root = process.argv[2] || process.cwd();
 
@@ -28,4 +28,4 @@ const hook = readHookInput();
 const turnKey = hook.prompt_id || (hook.prompt ? `p${hook.prompt.length}:${hook.prompt.slice(0, 64)}` : null);
 if (hook.session_id && turnKey && !claimOnce(`up:${hook.session_id}:${turnKey}`)) process.exit(0);
 
-process.stdout.write(SDD_GATE_TEXT);
+process.stdout.write(WORKFLOW_GATE_TEXT);

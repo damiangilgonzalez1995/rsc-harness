@@ -86,21 +86,24 @@ export function claimOnce(key, { dir = markerDir(), windowMs = 30_000, now = Dat
   }
 }
 
-// The SDD gate text lives here, not inline in userprompt-gate.mjs, so it has exactly one
+// The workflow gate text lives here, not inline in userprompt-gate.mjs, so it has exactly one
 // definition: the hook emits it and `rsc doctor` measures it from the same constant. Anything
 // that reports a byte count for text it does not own drifts the moment the text changes.
-export const SDD_GATE_TEXT = `===== rsc SDD new-feature gate (highest precedence) =====
-Before acting on this turn: if the user wants to BUILD, ADD, or CHANGE a feature — in
-ANY language, judged by intent, not by keywords — you MUST route it through SDD via
-\`specify\` FIRST. No feature code is written by ANY skill (stack skills included —
-nextjs/react/fastapi/flutter/go/postgresdb/building-agents/design — and any builder skill
-such as chatbot/course-builder/marketing) until a spec AND a plan exist and the user has
-approved them. No skill outranks this gate.
-- Unclear / in-between? -> \`specify\` (the safe default; a skipped spec is where drift hides).
-- One-line / low-risk change, or a bug fix restoring intended behaviour? -> skip the chain,
-  do it, and say so out loud.
-Full gate + decision table live in the always-on \`suggest\` body; method in \`sdd\`.
-=========================================================
+export const WORKFLOW_GATE_TEXT = `===== workflow gate (highest precedence) =====
+Before acting on this turn: if the user wants to BUILD, ADD or CHANGE something — in ANY
+language, judged by intent, not by keywords — route it through the chain below FIRST. No
+feature code is written by ANY skill until the what is clear and the user has approved it.
+1. Not clear yet? -> \`grill-with-docs\` for a green idea or an open question; \`wayfinder\`
+   when the work is too large to hold in one session.
+2. Clear? -> \`to-spec\` writes the spec. Record every hard-to-reverse call with \`write-adr\`,
+   which leaves its trail under docs/adr/.
+3. Then build. Pick by size, and ask when unsure: ordinary work goes
+   \`superpowers:writing-plans\` -> \`superpowers:executing-plans\`; work that came out of
+   \`wayfinder\`, or too large for one plan, goes \`to-tickets\` -> \`implement\`, ticket by ticket.
+Always: \`superpowers:test-driven-development\`, and \`superpowers:verification-before-completion\`
+before calling anything done. Bugs enter through \`superpowers:systematic-debugging\`.
+One-line change, typo, or config bump? -> skip the chain, do it, say so.
+==============================================
 `;
 
 /**

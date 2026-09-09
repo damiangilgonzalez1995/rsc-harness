@@ -2,11 +2,21 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 let memory = {};
 try { memory = await import('../targets/session-memory-core.mjs'); } catch { /* RED: core absent */ }
+
+test('session-memory-adapter: el guardia de entrypoint usa pathToFileURL', () => {
+  const src = readFileSync(join(ROOT, 'targets/session-memory-adapter.mjs'), 'utf8');
+  assert.match(src, /pathToFileURL\(process\.argv\[1\]\)\.href/,
+    'compara URLs con pathToFileURL; `file://${process.argv[1]}` nunca coincide en Windows');
+  assert.doesNotMatch(src, /file:\/\/\$\{process\.argv\[1\]\}/);
+});
 
 const git = (cwd, args) => execFileSync('git', args, { cwd, encoding: 'utf8' }).trim();
 function repo() {

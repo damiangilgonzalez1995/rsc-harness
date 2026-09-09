@@ -1,0 +1,10 @@
+# El repo se escribe y se lee en LF en todas las plataformas: los parsers de
+# frontmatter y de enlaces exigen \n, y un checkout con CRLF los rompe entero.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.u64 binary

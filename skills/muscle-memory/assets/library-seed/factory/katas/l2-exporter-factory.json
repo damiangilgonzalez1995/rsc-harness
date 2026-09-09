@@ -1,0 +1,9 @@
+{
+  "concept": "factory",
+  "level": 2,
+  "title_en": "Build a create_exporter(kind) function factory",
+  "spec_html_en": "<p>Write function <code>create_exporter(kind)</code> that returns a formatter function chosen by <code>kind</code>: for <code>\"csv\"</code> return a function that joins a row (a list of values) with commas; for <code>\"json\"</code> return a function that returns <code>json.dumps(row)</code>. Raise <code>ValueError</code> for any other <code>kind</code>.</p>",
+  "stub": "import json\n\n\ndef create_exporter(kind):\n    # TODO: implement per spec: return a formatter function for 'csv' or 'json',\n    # raise ValueError for anything else\n    ...\n",
+  "test": "def test_csv_exporter_joins_values():\n    exporter = create_exporter('csv')\n    assert exporter(['Ana', 30]) == 'Ana,30', 'the csv exporter must join row values with commas'\n\ndef test_json_exporter_dumps_row():\n    exporter = create_exporter('json')\n    assert exporter(['Ana', 30]) == '[\"Ana\", 30]', 'the json exporter must return the row as a JSON string'\n\ndef test_unknown_kind_raises():\n    try:\n        create_exporter('xml')\n        assert False, 'an unknown exporter kind must raise ValueError'\n    except ValueError:\n        pass\n",
+  "canonical": "import json\n\n\ndef create_exporter(kind):\n    if kind == 'csv':\n        return lambda row: ','.join(str(v) for v in row)\n    if kind == 'json':\n        return lambda row: json.dumps(row)\n    raise ValueError(f'unknown exporter kind: {kind}')\n"
+}

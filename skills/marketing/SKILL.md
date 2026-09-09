@@ -18,15 +18,15 @@ This skill owns **conversion copywriting**: value proposition, headlines, sectio
 
 Run this gate before writing a single line of copy:
 
-1. **Locate the brand study.** Read the project's root `CLAUDE.md` and look for a `## Brand & voice` section linking into `02-DOCS/wiki/brand/` (the `harness` Karpathy-wiki convention: compiled brand articles live under `02-DOCS/wiki/brand/`, raw inputs the user pastes live under `02-DOCS/raw/brand/`). If `CLAUDE.md` is absent, the link is missing, or it points nowhere, treat the study as ABSENT.
+1. **Locate the brand study.** Read the project's root `CLAUDE.md` and look for a `## Brand & voice` section linking into `docs/wiki/brand/` (the `harness` Karpathy-wiki convention: compiled brand articles live under `docs/wiki/brand/`, raw inputs the user pastes live under `docs/raw/brand/`). If `CLAUDE.md` is absent, the link is missing, or it points nowhere, treat the study as ABSENT.
 
 2. **Check completeness** against the checklist in `references/brand-grounding.md`. The study is complete only when every dimension is filled: brand name & one-line positioning; ICP / audience & their pains & desires; value proposition & differentiation; tone & voice WITH do/don't word lists and 3–5 voice samples pasted from the user's real writing; proof/credibility; offers & primary CTA; channels; SEO keywords. **Any empty dimension = INCOMPLETE.**
 
 3. **If ABSENT or INCOMPLETE, STOP and interview the user.** Ask the targeted questions from `references/brand-grounding.md`, **one focused batch at a time** (do not dump all questions at once; ask, wait, then continue). Voice samples are mandatory — request 3–5 pieces of the user's real writing; never fabricate a voice. Then:
-   - **a.** Write/update the brand study into `02-DOCS/wiki/brand/` as wiki articles (one article per dimension or a single `index.md` plus per-dimension articles), following the wiki article format in `references/brand-grounding.md`, and index it in `02-DOCS/wiki/index.md` (the Knowledge map). Save any raw text the user pastes verbatim into `02-DOCS/raw/brand/` and link to it from the article's `> Raw:` line. Create the directories if they do not exist.
+   - **a.** Write/update the brand study into `docs/wiki/brand/` as wiki articles (one article per dimension or a single `index.md` plus per-dimension articles), following the wiki article format in `references/brand-grounding.md`, and index it in `docs/wiki/index.md` (the Knowledge map). Save any raw text the user pastes verbatim into `docs/raw/brand/` and link to it from the article's `> Raw:` line. Create the directories if they do not exist.
    - **b.** Add or update a `## Brand & voice` section in the root `CLAUDE.md` linking to the brand study — a short pointer only. Create `CLAUDE.md` if absent (additive only — never delete existing sections). The exact snippet to insert is in `references/brand-grounding.md`.
 
-4. **Only once the study exists and is complete, proceed.** Cite which brand articles you used (e.g. "grounded in `02-DOCS/wiki/brand/value-proposition.md` and `voice.md`") so the user can trace every claim back to the study. Every line you then write must plausibly come from the brand's own writing; if it reads like a different author, rewrite.
+4. **Only once the study exists and is complete, proceed.** Cite which brand articles you used (e.g. "grounded in `docs/wiki/brand/value-proposition.md` and `voice.md`") so the user can trace every claim back to the study. Every line you then write must plausibly come from the brand's own writing; if it reads like a different author, rewrite.
 
 If the user explicitly says "skip the brand study, just draft something rough", you may produce a clearly-labelled `DRAFT (ungrounded — not brand-checked)` and still recommend running the gate before anything ships. That is the only exception, and it must be labelled.
 
@@ -36,7 +36,7 @@ Full completeness checklist, the exact question script (batched), and the persis
 
 Run in order. Each step feeds the next; skipping one shows up as vague copy downstream.
 
-1. **Ground.** Pass the brand-grounding gate. Load value prop, ICP, voice, proof, offer, channels, keywords from `02-DOCS/wiki/brand/`.
+1. **Ground.** Pass the brand-grounding gate. Load value prop, ICP, voice, proof, offer, channels, keywords from `docs/wiki/brand/`.
 2. **Lock the value proposition.** Fill the value-proposition canvas (jobs / pains / gains → pain-relievers / gain-creators → headline). → `references/copy-frameworks.md`.
 3. **Pick the framework** by traffic temperature and funnel position: PAS for pain-aware cold traffic; AIDA for broad top-of-funnel; FAB/JTBD for feature → benefit; BAB for transformation/case-study. → `references/copy-frameworks.md`.
 4. **Write section by section.** Each landing section has one job and one framework. Map your copy to the design skill's section anatomy. → `references/landing-copy.md`.

@@ -1,0 +1,32 @@
+skill: prototype
+
+should_trigger:
+  - prompt: "Quiero un prototipo desechable para ver si esta logica se siente bien."
+    why: "Disparador directo de prototype."
+  - prompt: "Explora que aspecto deberia tener esta UI antes de construirla de verdad."
+    why: "Disparador directo de prototype."
+  - prompt: "Haz una prueba rapida de este modelo de estados."
+    why: "Disparador directo de prototype."
+  - prompt: "Build a throwaway prototype to test this interaction."
+    why: "Disparador directo de prototype."
+  - prompt: "Necesito ver si este flujo funciona antes de invertir tiempo en el."
+    why: "Disparador directo de prototype."
+
+should_not_trigger:
+  - prompt: "Implementa la version final de produccion de esta pantalla."
+    route_to: "implement"
+    why: "Implementar la version final de produccion es el trabajo de implement, no de prototype."
+  - prompt: "Escribe los tests unitarios de este modulo."
+    route_to: "none"
+    why: "Fuera del alcance de prototype."
+  - prompt: "Documenta la decision de arquitectura que tomamos."
+    route_to: "write-adr"
+    why: "Documentar una decision de arquitectura es el trabajo de write-adr, no de prototype."
+  - prompt: "Revisa el codigo que acabo de escribir."
+    route_to: "revision-de-cambios"
+    why: "Revisar el trabajo recien escrito y sin commitear es el trabajo de revision-de-cambios, no de prototype."
+
+capability:
+  - scenario: "El usuario quiere comprobar si una idea de diseno funciona antes de construirla."
+    must_include:
+      - "prototipo"

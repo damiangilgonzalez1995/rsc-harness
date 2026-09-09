@@ -2,12 +2,12 @@
 
 This is where the channel's strategy memory lives. The skill READs it on entry and WRITEs to it on exit so sessions compound. Keep it append-only.
 
-`02-DOCS/wiki/` is an **OKF v0.1** bundle, so every `.md` record this skill writes carries YAML frontmatter with a non-empty `type` (`youtube-strategy-record`) plus the OKF surface (`title`, `description`, `tags`, `timestamp`). These are shared, identically, across all four youtube skills. The strategy-specific body fields the loop and `verify.sh` rely on (`Decision:`, `Bets on metric:`, the date) stay in the body exactly as before — the frontmatter is purely additive. All cross-references use standard markdown links (`[text](./file.md)`), never `[[wikilinks]]`.
+`docs/wiki/` is an **OKF v0.1** bundle, so every `.md` record this skill writes carries YAML frontmatter with a non-empty `type` (`youtube-strategy-record`) plus the OKF surface (`title`, `description`, `tags`, `timestamp`). These are shared, identically, across all four youtube skills. The strategy-specific body fields the loop and `verify.sh` rely on (`Decision:`, `Bets on metric:`, the date) stay in the body exactly as before — the frontmatter is purely additive. All cross-references use standard markdown links (`[text](./file.md)`), never `[[wikilinks]]`.
 
-## File layout under `02-DOCS/wiki/youtube/`
+## File layout under `docs/wiki/youtube/`
 
 ```text
-02-DOCS/wiki/youtube/
+docs/wiki/youtube/
 ├── positioning.md            # current claim: niche, who-it's-for, the three-factor rationale
 ├── what-worked.md            # running log of wins/losses tied to specific videos/playlists
 └── decisions/                # one dated file per strategy decision (append-only)
@@ -21,10 +21,10 @@ This is where the channel's strategy memory lives. The skill READs it on entry a
 
 ## Bootstrap (empty or absent dir)
 
-When `02-DOCS/wiki/youtube/` does not exist, create it and a positioning stub before deciding anything:
+When `docs/wiki/youtube/` does not exist, create it and a positioning stub before deciding anything:
 
 ```bash
-mkdir -p 02-DOCS/wiki/youtube/decisions
+mkdir -p docs/wiki/youtube/decisions
 ```
 
 `positioning.md` stub:
@@ -109,9 +109,9 @@ Example entry (appended under the frontmatter + heading):
 
 ## What `verify.sh` checks
 
-`scripts/verify.sh 02-DOCS/wiki/youtube/` is a read-only structural lint, no network:
+`scripts/verify.sh docs/wiki/youtube/` is a read-only structural lint, no network:
 
-1. The target `02-DOCS/wiki/youtube/` directory exists.
+1. The target `docs/wiki/youtube/` directory exists.
 2. At least one decision record is present (a `decisions/*.md` file or a `decisions.md` log).
 3. Each decision record contains the three required signals: a date, a `Decision:` line, and a named metric/bet (a `Bets on metric:` line or equivalent `metric`/`bet` field).
 4. Each decision record carries a non-empty `type:` frontmatter field (the OKF v0.1 conformance check). A record with no `type` is a hard failure.

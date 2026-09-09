@@ -25,8 +25,8 @@ should_not_trigger:
     route_to: nextjs
     why: "Web React / SSR, DOM primitives — not React Native."
   - prompt: "Cut a 1.4.0 release and tag the CI pipeline for it."
-    route_to: ship
-    why: "Release orchestration / CI, not in-app code."
+    route_to: none
+    why: Release orchestration / CI has no dedicated shipping skill in this catalog, not in-app code.
   - prompt: "My OTA update isn't showing up on devices after publish."
     route_to: expo
     why: "OTA update channels/runtime-version belong to the expo pipeline."

@@ -2,7 +2,7 @@
 name: llm-pipeline
 description: "Use when wiring several LLM calls into a production flow: typed contracts between steps, a router/gateway so 429s, timeouts and outages fail over instead of taking you down, and cost control via caching, model tiers and abort caps. NOT single-prompt wording (that is `prompt-engineering`), NOT a model-driven tool loop (that is `building-agents`)."
 tags: [llm-orchestration, llm-gateway, fallbacks, prompt-caching, cost-control, litellm, reliability]
-recommends: [prompt-engineering, structured-extraction, building-agents, cost-tracking, agent-eval, rag, observability, parallel]
+recommends: [prompt-engineering, structured-extraction, building-agents, cost-tracking, agent-eval, rag, observability]
 origin: risco
 ---
 
@@ -35,7 +35,7 @@ Rules:
 
 - **The structured output of step N is the input contract of step N+1.** Validate it (Pydantic / JSON Schema) at the seam. A schema-valid object that fails validation here never poisons the next call.
 - **Keep steps small and single-purpose.** "Extract entities" and "classify sentiment" are two steps, not one prompt doing both. Smaller steps route to cheaper models and cache better.
-- **Mark independent steps for parallel fan-out.** If step B and step C both only need step A's output, run them concurrently — see [../parallel/SKILL.md](../parallel/SKILL.md). Sequential only where there is a real data dependency.
+- **Mark independent steps for parallel fan-out.** If step B and step C both only need step A's output, run them concurrently — see `superpowers:dispatching-parallel-agents`. Sequential only where there is a real data dependency.
 - **Tag each step idempotent or side-effecting.** Retries and replays must be safe; a step that writes to a DB or sends an email is not safe to blindly retry.
 
 ```python

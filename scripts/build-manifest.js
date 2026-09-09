@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync, writeFileSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import Ajv from 'ajv';
 import { parseFrontmatter } from './lib/frontmatter.js';
 import { fenceBalance } from './lib/skill-lint.js';
@@ -149,4 +149,4 @@ function main() {
   console.log(`wrote manifest.json (${manifest.counts.skills} skills, ${manifest.counts.agents} agents, ${manifest.counts.commands} commands)`);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) main();
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main();

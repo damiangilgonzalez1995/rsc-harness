@@ -27,11 +27,11 @@ should_not_trigger:
     route_to: code-review
     why: General correctness/quality review of a diff, not a scanner-driven vuln sweep.
   - prompt: "Be my adversarial reviewer for this change against the spec."
-    route_to: review
-    why: SDD adversarial review gate against a spec, not automated scanning.
+    route_to: code-review
+    why: General correctness/quality review of a diff is code-review's job, not a scanner-driven vuln sweep.
   - prompt: "Run lint and tests and tell me if the green gate passes."
-    route_to: verify
-    why: The lint/type/test verify phase; security-scan can feed it but is not it.
+    route_to: external:superpowers-verification-before-completion
+    why: The lint/type/test verification gate is superpowers' verification-before-completion's job; security-scan can feed it but is not it.
 
 capability:
   - scenario: >

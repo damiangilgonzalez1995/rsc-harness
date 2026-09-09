@@ -30,8 +30,8 @@ should_not_trigger:
     route_to: data-cleaning
     why: Data hygiene precedes modeling and is not forecasting itself.
   - prompt: "Why did revenue drop in March versus February?"
-    route_to: analyze
-    why: Backward-looking explanatory analysis, not forward extrapolation.
+    route_to: none
+    why: Backward-looking explanatory analysis has no dedicated destination in this catalog, not forward extrapolation.
 
 capability:
   - scenario: >

@@ -42,10 +42,10 @@ test('the persisted session schema is closed and ignores conversational sentinel
 
 test('a tracked worklog falls back to local state, remains ignored and warns once', () => {
   const cwd = repo();
-  const worklog = join(cwd, '02-DOCS', 'raw', 'worklog');
+  const worklog = join(cwd, 'docs', 'raw', 'worklog');
   mkdirSync(worklog, { recursive: true });
   writeFileSync(join(worklog, 'tracked.md'), 'tracked\n');
-  git(cwd, ['add', '02-DOCS/raw/worklog/tracked.md']);
+  git(cwd, ['add', 'docs/raw/worklog/tracked.md']);
   git(cwd, ['commit', '-qm', 'track worklog']);
 
   const chosen = memory.chooseMemoryRoot(cwd);
@@ -63,10 +63,10 @@ test('a tracked worklog falls back to local state, remains ignored and warns onc
 
 test('an untracked wiki worklog is preferred and protected by the local exclude', () => {
   const cwd = repo();
-  mkdirSync(join(cwd, '02-DOCS', 'raw', 'worklog'), { recursive: true });
+  mkdirSync(join(cwd, 'docs', 'raw', 'worklog'), { recursive: true });
   const chosen = memory.chooseMemoryRoot(cwd);
   assert.equal(chosen.kind, 'wiki-worklog');
-  assert.ok(chosen.root.endsWith('02-DOCS/raw/worklog/.rsc-memory'));
+  assert.ok(chosen.root.endsWith('docs/raw/worklog/.rsc-memory'));
   const probe = join(relative(cwd, chosen.root), 'probe.json');
   assert.equal(git(cwd, ['check-ignore', probe]), probe);
 });

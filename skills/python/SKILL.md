@@ -310,11 +310,11 @@ env or a secret manager, never hardcode or log them.
 | "`pickle.loads` the cache, it's ours" | Any untrusted byte = code execution; use `json`. |
 | "explicit `TypeVar` everywhere" | New code uses PEP 695 `def f[T]` / `class C[T]` / `type X`. |
 
-## Project grounding (02-DOCS)
+## Project grounding (docs)
 
 In a project that has the [`harness`](../harness/SKILL.md) wiki, record this project's Python
-conventions in `02-DOCS/wiki/stack/python.md` and index it in `02-DOCS/wiki/index.md` — the
+conventions in `docs/wiki/stack/python.md` and index it in `docs/wiki/index.md` — the
 interpreter floor, `src/` layout, uv workflow, ruff/mypy config, async-vs-sync stance, and
 data-modeling defaults. Read it first on every use and bump its `Updated` date when a convention
 changes. This is *recorded, not gated*: never block the task on it, and skip silently when there
-is no `02-DOCS/` layer.
+is no `docs/` layer.

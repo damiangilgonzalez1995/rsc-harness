@@ -20,6 +20,7 @@
 // gets turned off. Every deny names its recovery. Opt out with .rsc/.no-gitmoji.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 // The official gitmoji set (gitmoji.dev/api/gitmojis), as data: [emoji, code, semver, meaning].
 // A table, not a chain of ifs — so a test can iterate it and the reference doc can be
@@ -221,7 +222,7 @@ export function denyMessage(message) {
 
 // ---- hook entrypoint -----------------------------------------------------------
 // Skipped when imported by a test (P2: the mechanism is testable without a subprocess).
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const root = process.argv[2] || process.cwd();
   const allow = () => process.exit(0);
 

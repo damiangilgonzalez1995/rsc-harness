@@ -7,7 +7,7 @@ skill's description versus its siblings, and the `route_to` ids
 `seo-geo`) must win their own cases — the thumbnail, the idea, the API call, the
 channel plan, and non-YouTube SEO all belong elsewhere. The `capability` case is
 scored by a judge against its `must_include` rubric: it checks that a generated
-package grounds in `02-DOCS` first, emits a 2-3 title A/B set within the char
+package grounds in `docs` first, emits a 2-3 title A/B set within the char
 budget, an above-the-fold description line plus a natural ~200-350 word body and a
 3-5 hashtag line, chapters obeying all four rules, 5-8 tags with the right first
 tag, a feedback-log update, correct handoffs, and the watched-time-per-impression

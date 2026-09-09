@@ -16,7 +16,7 @@ import { behavioralGate, scoreFromRaw, formatScorecard } from '../scripts/lib/be
 // "SUSTITUIDA", which exists nowhere but that skill. Four of six baselines were clean, which is worse
 // than all of them being dirty: the contamination is opportunistic, so identical runs yield different
 // lifts and nothing says so. This is the mechanism P2 demands, plus the test of the mechanism.
-// Spec: 02-DOCS/wiki/sdd/specs/eval-integrity.md
+// Spec: docs/wiki/sdd/specs/eval-integrity.md
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const WORKFLOW = readFileSync(join(ROOT, 'scripts/skill-behavior-eval.workflow.js'), 'utf8');
 
@@ -97,11 +97,11 @@ test('the LOADER reading both files is not a violation — that is its job', () 
   assert.equal(r.ok, true);
 });
 
-test('writing into 02-DOCS/wiki is a violation for either arm', () => {
+test('writing into docs/wiki is a violation for either arm', () => {
   for (const role of ['baseline', 'treatment']) {
     const r = findViolations({
       skillId: 'demo',
-      agents: [withCalls('x', role, call('Write', { file_path: '02-DOCS/wiki/sdd/specs/thing.md' }))],
+      agents: [withCalls('x', role, call('Write', { file_path: 'docs/wiki/sdd/specs/thing.md' }))],
     });
     assert.ok(
       r.violations.some((x) => x.kind === 'wrote-protected-path'),
@@ -113,11 +113,11 @@ test('writing into 02-DOCS/wiki is a violation for either arm', () => {
 test('REGRESSION: naming a protected path is not writing to it', () => {
   // The defect the first real run exposed. The old check looked for a write VERB within ~400 chars
   // of a protected path in the raw text. A treatment transcript embeds the whole SKILL.md, and
-  // verify/SKILL.md itself names 02-DOCS/wiki/sdd/config.yaml — so the window matched and the run was
+  // verify/SKILL.md itself names docs/wiki/sdd/config.yaml — so the window matched and the run was
   // BLOCKED while the filesystem held no new files at all. Over-blocking is still a broken gate: it
   // would have blocked every treatment run and wedged skill-harden.
   const skillBodyMentions = withCalls('t', 'treatment',
-    call('Bash', { command: 'cat 02-DOCS/wiki/sdd/config.yaml' }),           // a READ
+    call('Bash', { command: 'cat docs/wiki/sdd/config.yaml' }),           // a READ
     call('Bash', { command: "cat > .rsc/eval-sandbox/x/treatment-0/out.md <<'EOF'" }), // write, in zone
   );
   const r = findViolations({ skillId: 'demo', agents: [skillBodyMentions] });
@@ -125,16 +125,16 @@ test('REGRESSION: naming a protected path is not writing to it', () => {
 });
 
 test('a real write TO a protected path is still caught, by tool and by shell', () => {
-  const byTool = withCalls('a', 'treatment', call('Write', { file_path: '/repo/02-DOCS/wiki/x.md' }));
+  const byTool = withCalls('a', 'treatment', call('Write', { file_path: '/repo/docs/wiki/x.md' }));
   assert.ok(findViolations({ skillId: 'demo', agents: [byTool] }).violations.length, 'Write tool');
 
   for (const cmd of [
-    'cat > 02-DOCS/wiki/x.md',
-    'echo hi >> 02-DOCS/wiki/x.md',
-    'tee 02-DOCS/wiki/x.md',
-    'mv /tmp/a.md 02-DOCS/wiki/a.md',
-    'cp a 02-DOCS/wiki/a',
-    'mkdir -p 02-DOCS/wiki/new',
+    'cat > docs/wiki/x.md',
+    'echo hi >> docs/wiki/x.md',
+    'tee docs/wiki/x.md',
+    'mv /tmp/a.md docs/wiki/a.md',
+    'cp a docs/wiki/a',
+    'mkdir -p docs/wiki/new',
   ]) {
     const a = withCalls('a', 'baseline', call('Bash', { command: cmd }));
     assert.ok(
@@ -147,13 +147,13 @@ test('a real write TO a protected path is still caught, by tool and by shell', (
 test('REGRESSION 2: a sandbox path that MIRRORS the wiki layout is not a protected write', () => {
   // Second false positive in this same check. The treatment arms wrote correctly inside their zone
   // but recreated the wiki tree inside it:
-  //   .rsc/eval-sandbox/specify/treatment-1/02-DOCS/wiki/sdd/specs/x.md
-  // Substring matching flagged it; the filesystem held no new files in the real 02-DOCS. "The path
+  //   .rsc/eval-sandbox/specify/treatment-1/docs/wiki/sdd/specs/x.md
+  // Substring matching flagged it; the filesystem held no new files in the real docs. "The path
   // appears in the string" is not "the write targets that location" — anchor on the sandbox first.
   const mirrored = withCalls('t', 'treatment',
-    call('Bash', { command: "mkdir -p /repo/.rsc/eval-sandbox/specify/treatment-1/02-DOCS/wiki/sdd/specs" }),
-    call('Bash', { command: "cat > /repo/.rsc/eval-sandbox/specify/treatment-1/02-DOCS/wiki/sdd/specs/x.md <<'EOF'" }),
-    call('Write', { file_path: '/repo/.rsc/eval-sandbox/specify/treatment-0/02-DOCS/wiki/index.md' }),
+    call('Bash', { command: "mkdir -p /repo/.rsc/eval-sandbox/specify/treatment-1/docs/wiki/sdd/specs" }),
+    call('Bash', { command: "cat > /repo/.rsc/eval-sandbox/specify/treatment-1/docs/wiki/sdd/specs/x.md <<'EOF'" }),
+    call('Write', { file_path: '/repo/.rsc/eval-sandbox/specify/treatment-0/docs/wiki/index.md' }),
   );
   assert.equal(findViolations({ skillId: 'demo', agents: [mirrored] }).ok, true);
   assert.equal(SANDBOX_MARKER, '.rsc/eval-sandbox/');
@@ -162,7 +162,7 @@ test('REGRESSION 2: a sandbox path that MIRRORS the wiki layout is not a protect
 test('a sandboxed write in the same command does not excuse a real one', () => {
   // Checking the whole command for the sandbox marker would let one legitimate write launder another.
   const both = withCalls('t', 'treatment', call('Bash', {
-    command: "cat > .rsc/eval-sandbox/x/treatment-0/a.md <<'EOF' ; cat > 02-DOCS/wiki/real.md <<'EOF'",
+    command: "cat > .rsc/eval-sandbox/x/treatment-0/a.md <<'EOF' ; cat > docs/wiki/real.md <<'EOF'",
   }));
   assert.ok(
     findViolations({ skillId: 'demo', agents: [both] }).violations.some((v) => v.kind === 'wrote-protected-path'),
@@ -186,9 +186,9 @@ test('extractToolCalls survives junk lines and non-tool content', () => {
 });
 
 test('callWritesTo and callReads are exported and pure', () => {
-  assert.equal(callWritesTo({ name: 'Bash', input: { command: 'cat 02-DOCS/wiki/a' } }, '02-DOCS/wiki/'), false);
-  assert.equal(callWritesTo({ name: 'Bash', input: { command: 'cat > 02-DOCS/wiki/a' } }, '02-DOCS/wiki/'), true);
-  assert.equal(callWritesTo(null, '02-DOCS/wiki/'), false);
+  assert.equal(callWritesTo({ name: 'Bash', input: { command: 'cat docs/wiki/a' } }, 'docs/wiki/'), false);
+  assert.equal(callWritesTo({ name: 'Bash', input: { command: 'cat > docs/wiki/a' } }, 'docs/wiki/'), true);
+  assert.equal(callWritesTo(null, 'docs/wiki/'), false);
   assert.equal(callReads({ name: 'Read', input: { file_path: 'skills/x/SKILL.md' } }, 'skills/x/SKILL.md'), true);
 });
 
@@ -290,5 +290,5 @@ test('the workflow tells the baseline not to read the skill, and why', () => {
 test('the workflow declares the repository read-only for both arms', () => {
   const hits = WORKFLOW.match(/READ-ONLY/g) || [];
   assert.ok(hits.length >= 2, `expected both arms to be told the repo is read-only, found ${hits.length}`);
-  assert.equal(PROTECTED_PATHS[0], '02-DOCS/wiki/');
+  assert.equal(PROTECTED_PATHS[0], 'docs/wiki/');
 });

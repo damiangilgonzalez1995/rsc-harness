@@ -1,0 +1,32 @@
+skill: handoff
+
+should_trigger:
+  - prompt: "Compacta esta conversacion en un documento de traspaso."
+    why: "Disparador directo de handoff."
+  - prompt: "Necesito que otro agente continue este trabajo, prepara el handoff."
+    why: "Disparador directo de handoff."
+  - prompt: "Resume todo lo hecho hasta ahora para pasarselo a otra sesion."
+    why: "Disparador directo de handoff."
+  - prompt: "Compact this conversation into a handoff document for the next agent."
+    why: "Disparador directo de handoff."
+  - prompt: "Prepara el traspaso de este trabajo antes de cerrar la sesion."
+    why: "Disparador directo de handoff."
+
+should_not_trigger:
+  - prompt: "Implementa la siguiente parte del trabajo tu mismo."
+    route_to: "implement"
+    why: "Implementar el codigo es el trabajo de implement, no de handoff."
+  - prompt: "Revisa los cambios que se hicieron en esta rama."
+    route_to: "revision-de-cambios"
+    why: "Revisar los cambios de una rama es el trabajo de revision-de-cambios, no de handoff."
+  - prompt: "Documenta una decision de arquitectura."
+    route_to: "write-adr"
+    why: "Documentar una decision de arquitectura es el trabajo de write-adr, no de handoff."
+  - prompt: "Genera tickets a partir de este plan."
+    route_to: "to-tickets"
+    why: "Generar tickets a partir de un plan es el trabajo de to-tickets, no de handoff."
+
+capability:
+  - scenario: "El usuario quiere traspasar el trabajo actual a otro agente."
+    must_include:
+      - "traspaso"

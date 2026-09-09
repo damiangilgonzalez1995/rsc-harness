@@ -34,17 +34,17 @@ Read the ask against this table before you generate anything, and hand off by th
 
 ```text
 Phase 1 GROUND        Phase 2 SOURCE TRENDS     Phase 3 GENERATE+SCORE   Phase 4 LOG THE BET
-read 02-DOCS perf  ─▶ capture dated trend    ─▶ idea = topic × format ─▶ write hypothesis to
-log; pull winning     signals (legally, no       × trend-hook × pacing    02-DOCS/shortform/
+read docs perf  ─▶ capture dated trend    ─▶ idea = topic × format ─▶ write hypothesis to
+log; pull winning     signals (legally, no       × trend-hook × pacing    docs/shortform/
 hooks/formats and     scraping); flag stale      → score → rank backlog   experiments/, leave
 proven flops          signals                                             result fields pending
 ```
 
 **Never skip Phase 1.** Ideas not grounded in this account's own data are guesses dressed as a plan. Grounding is what makes the score mean something. *Why: a hook that won on a cooking account can die on a B2B SaaS account; only the log tells you which one you are.*
 
-## Phase 1 — Ground in 02-DOCS
+## Phase 1 — Ground in docs
 
-The account's performance log lives at `02-DOCS/shortform/performance.md` (or `performance.csv`). Read it first, every cycle.
+The account's performance log lives at `docs/shortform/performance.md` (or `performance.csv`). Read it first, every cycle.
 
 Extract four things and keep them in working memory for scoring:
 
@@ -53,7 +53,7 @@ Extract four things and keep them in working memory for scoring:
 3. **Dead topics/formats** — what under-indexed twice or more. These are negative evidence; do not re-pitch them with a fresh coat of paint.
 4. **Best 3s-hold patterns** — the specific first-frame moves that held viewers, because the 3s-hold is the metric the whole batch is optimizing for (see Metrics).
 
-**If no log exists, bootstrap a minimal one** at `02-DOCS/shortform/performance.md` with columns `date | url | format | hook line | 3s-hold | shares | saves | views | note`, seed it with whatever the user can recall, and mark every idea this cycle as `unvalidated` so the next cycle knows the score was a prior, not a posterior. *Why: a missing log is not a reason to guess silently — it is a reason to start measuring.*
+**If no log exists, bootstrap a minimal one** at `docs/shortform/performance.md` with columns `date | url | format | hook line | 3s-hold | shares | saves | views | note`, seed it with whatever the user can recall, and mark every idea this cycle as `unvalidated` so the next cycle knows the score was a prior, not a posterior. *Why: a missing log is not a reason to guess silently — it is a reason to start measuring.*
 
 ## Phase 2 — Source trends (legally)
 
@@ -95,7 +95,7 @@ Score every idea on a weighted 1–5 rubric. The weights encode what actually dr
 
 `weighted_score = 3·hook + 2·fit + 2·fresh + 2·share + 1·(6−effort)` → max 50. Rank descending into the backlog.
 
-**Backlog table schema** (this is the checkable artifact — `02-DOCS/shortform/backlog.md`):
+**Backlog table schema** (this is the checkable artifact — `docs/shortform/backlog.md`):
 
 | id | idea | hook line | trend signal + date | format | target len | score | status |
 |---|---|---|---|---|---|---|---|
@@ -110,7 +110,7 @@ Score every idea on a weighted 1–5 rubric. The weights encode what actually dr
 
 ## Phase 4 — Log the bet
 
-Every idea you advance to `shooting`/`posted` gets a hypothesis file at `02-DOCS/shortform/experiments/<YYYY-MM-DD>-<slug>.md`. Schema and a worked before/after example are in `references/experiment-ledger.md`.
+Every idea you advance to `shooting`/`posted` gets a hypothesis file at `docs/shortform/experiments/<YYYY-MM-DD>-<slug>.md`. Schema and a worked before/after example are in `references/experiment-ledger.md`.
 
 The hypothesis is one falsifiable sentence:
 
@@ -118,7 +118,7 @@ The hypothesis is one falsifiable sentence:
 
 Then leave the **result fields pending** — `result: pending | 3s-hold: __ | hook-rate: __ | shares: __ | saves: __ | verdict: __` — to be filled after the video runs. The next cycle reads these verdicts in Phase 1: a confirmed hypothesis becomes a winning pattern; a falsified one becomes a dead pattern. *Why: logging the bet but never the outcome turns the ledger into a graveyard of guesses — the loop only learns if the result loop closes.*
 
-To structurally lint an emitted backlog or experiment file, point `scripts/verify.sh` at it (read-only): `bash scripts/verify.sh 02-DOCS/shortform/`.
+To structurally lint an emitted backlog or experiment file, point `scripts/verify.sh` at it (read-only): `bash scripts/verify.sh docs/shortform/`.
 
 ## Metrics that matter
 

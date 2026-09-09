@@ -2,7 +2,7 @@
 name: security-scan
 description: "Use when automated scanners drive a security sweep of a repo or app — SAST, dependency/lockfile CVEs, secrets in the tree or git history, IaC misconfig — and the raw output has to become one deduped, exploitability-ranked report CI can gate on. NOT threat-modeling, OWASP design reasoning, or hand-authoring the fix (that is `secure-coding`)."
 tags: [security, sast, sca, secrets, scanning, owasp]
-recommends: [secure-coding, github-actions, verify]
+recommends: [secure-coding, github-actions]
 origin: risco
 ---
 
@@ -185,8 +185,8 @@ Emit one `security-scan-report.json` — the machine-checkable contract CI gates
 
 - Upload SARIF to code scanning; gate the merge on `verify.sh`, not on a human
   reading logs. See [`github-actions`](../github-actions/SKILL.md) for the
-  pipeline shell and [`verify`](../verify/SKILL.md) for the broader green gate
-  this feeds.
+  pipeline shell and `superpowers:verification-before-completion` for the broader
+  green gate this feeds.
 
 ## Anti-patterns
 
@@ -202,18 +202,18 @@ Emit one `security-scan-report.json` — the machine-checkable contract CI gates
 | Dumping all four tool outputs in the PR for the reviewer to sort | The reviewer won't. Merge, dedupe, rank, and emit one report. |
 | Letting the scan auto-fix the deps it finds | Read-only by default. Propose bumps; apply only when asked — never mutate during a sweep. |
 
-## Project grounding (02-DOCS + CLAUDE.md)
+## Project grounding (docs + CLAUDE.md)
 
-In a project with a `02-DOCS/` layer (the [`harness`](../harness/SKILL.md)
+In a project with a `docs/` layer (the [`harness`](../harness/SKILL.md)
 Karpathy wiki), record the scanner choices, pinned versions, gate thresholds, and
-any accepted-risk suppressions in `02-DOCS/wiki/stack/security-scan.md`, and index
-it in `02-DOCS/wiki/index.md` (the Knowledge map; root `CLAUDE.md` keeps only a short
+any accepted-risk suppressions in `docs/wiki/stack/security-scan.md`, and index
+it in `docs/wiki/index.md` (the Knowledge map; root `CLAUDE.md` keeps only a short
 pointer to it). Read it first on every run so the next agent inherits the pinned
-tools and thresholds instead of re-deriving them. No `02-DOCS/`? Skip silently.
+tools and thresholds instead of re-deriving them. No `docs/`? Skip silently.
 Conventions are recorded, not gated — never block the scan on this.
 
 ## See Also
 
-Reviewing a diff rather than scanning a repo: [`code-review`](../code-review/SKILL.md)
-for correctness and quality, [`review`](../review/SKILL.md) for adversarial review
-against a spec.
+Reviewing a diff rather than scanning a repo: the `code-review` skill
+for correctness and quality, or `superpowers:requesting-code-review` for adversarial
+review against a spec.

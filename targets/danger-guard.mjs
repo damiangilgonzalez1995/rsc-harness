@@ -3,7 +3,7 @@
 // as `node ...` so it runs on every platform including Windows.
 //   argv[2] = absolute project root   stdin = PreToolUse hook JSON
 //
-// For a NON-TECHNICAL user (per 02-DOCS/wiki/harness/user-profile.md → technical_level),
+// For a NON-TECHNICAL user (per docs/wiki/harness/user-profile.md → technical_level),
 // it DENIES irreversible, foot-gun Bash commands and tells the agent to find a safer,
 // scoped alternative. A fully `technical` user is never guarded. Default-safe: if there
 // is no profile yet, the harness convention is "assume non-technical", so the guard is ON.
@@ -36,7 +36,7 @@ if (existsSync(join(root, '.rsc', '.no-danger-guard'))) allow();
 // technical_level === 'technical' → not guarded. non-technical / mixed / missing → guarded.
 function technicalLevel() {
   try {
-    const txt = readFileSync(join(root, '02-DOCS', 'wiki', 'harness', 'user-profile.md'), 'utf8');
+    const txt = readFileSync(join(root, 'docs', 'wiki', 'harness', 'user-profile.md'), 'utf8');
     const m = txt.match(/technical_level:\s*([a-z-]+)/i);
     return m ? m[1].toLowerCase() : null;
   } catch { return null; }

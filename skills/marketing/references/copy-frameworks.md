@@ -138,7 +138,7 @@ CTA rules:
 The brand study's `voice.md` is the source of truth. Consume it; do not re-derive a voice here. A quick application checklist while drafting:
 
 ```text
-APPLY VOICE (from 02-DOCS/wiki/brand/voice.md)
+APPLY VOICE (from docs/wiki/brand/voice.md)
 [ ] Tone descriptors honored (e.g. direct, dry, technical).
 [ ] Do-words present where natural; don't-words absent.
 [ ] Sentence rhythm matches the samples (compression vs. expansion).

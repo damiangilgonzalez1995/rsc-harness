@@ -212,7 +212,7 @@ while (true) {
       if (verdict.verdict === 'block') {
         // The edit lifted this skill's own cases.yaml but does not transfer to work the fixer never
         // saw. A memorized fix is not a fix: revert it. This is the guard the rubric always promised
-        // and the code never enforced — see 02-DOCS/wiki/sdd/specs/generalization-gate.md.
+        // and the code never enforced — see docs/wiki/sdd/specs/generalization-gate.md.
         log(`${skillId}: hold-out ${verdict.kind} (lift ${verdict.lift}) — reverting round ${round}'s edit`)
         await agent(
           `Run exactly \`git checkout -- skills/${skillId}/SKILL.md skills/${skillId}/references\` and nothing else. ` +

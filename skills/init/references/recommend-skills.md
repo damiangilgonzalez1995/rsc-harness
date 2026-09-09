@@ -1,7 +1,7 @@
 # Recommend Skills — the skill map, sample printouts & the "siempre 3 opciones" pattern
 
 Phase 3 detail. Map discovery to individual rsc skills, print the exact
-`npx @ericrisco/rsc add` commands, and run the requirements-first 3-option decision pattern
+`npx @damiangil/harness add` commands, and run the requirements-first 3-option decision pattern
 for any significant choice. A skill **cannot install anything** — it recommends
 and prints commands the user runs.
 
@@ -27,11 +27,11 @@ usually does NOT want `fastapi`/`nextjs` unless they're also building software.
 
 ## What to print
 
-One `npx @ericrisco/rsc add` line per recommendation (or batch them on one line), each with
+One `npx @damiangil/harness add` line per recommendation (or batch them on one line), each with
 its *why* in the user's language and level.
 
 ```text
-npx @ericrisco/rsc add <skill> [<skill> ...]
+npx @damiangil/harness add <skill> [<skill> ...]
 ```
 
 ### Sample printout — software, full-stack web app with marketing
@@ -40,11 +40,11 @@ npx @ericrisco/rsc add <skill> [<skill> ...]
 Based on what you described (a web app with a backend, a Next.js UI, a landing
 page, and you want to ship it securely), install these:
 
-npx @ericrisco/rsc add harness        # the control plane — scaffolds and governs the workspace
-npx @ericrisco/rsc add fastapi postgresdb   # the API and the database
-npx @ericrisco/rsc add nextjs design  # the web UI people see
-npx @ericrisco/rsc add marketing      # the words for your landing page
-npx @ericrisco/rsc add secure-coding deployment   # ship it safely
+npx @damiangil/harness add harness        # the control plane — scaffolds and governs the workspace
+npx @damiangil/harness add fastapi postgresdb   # the API and the database
+npx @damiangil/harness add nextjs design  # the web UI people see
+npx @damiangil/harness add marketing      # the words for your landing page
+npx @damiangil/harness add secure-coding deployment   # ship it safely
 
 Once they're installed, run the harness skill and I'll build the project structure.
 ```
@@ -55,9 +55,9 @@ Once they're installed, run the harness skill and I'll build the project structu
 You're organizing how your agency runs — client emails, contracts, invoicing,
 and you want it all findable. That's a non-code harness; install:
 
-npx @ericrisco/rsc add harness        # your 01-TOOLS (connections) + 02-DOCS (your second brain)
-npx @ericrisco/rsc add secure-coding deployment   # connect email, payments, drive — and keep credentials safe
-npx @ericrisco/rsc add marketing      # for the proposals, decks and copy you send clients
+npx @damiangil/harness add harness        # your 01-TOOLS (connections) + docs (your second brain)
+npx @damiangil/harness add secure-coding deployment   # connect email, payments, drive — and keep credentials safe
+npx @damiangil/harness add marketing      # for the proposals, decks and copy you send clients
 
 Once installed, run the harness skill and I'll set up the structure that holds it all.
 ```
@@ -67,10 +67,10 @@ Once installed, run the harness skill and I'll set up the structure that holds i
 ```text
 You want an AI agent that answers questions over your own documents. Install:
 
-npx @ericrisco/rsc add harness            # the control plane
-npx @ericrisco/rsc add building-agents    # agent loops, tools, RAG
-npx @ericrisco/rsc add fastapi postgresdb # an API + database to serve it
-npx @ericrisco/rsc add secure-coding deployment   # ship it safely
+npx @damiangil/harness add harness            # the control plane
+npx @damiangil/harness add building-agents    # agent loops, tools, RAG
+npx @damiangil/harness add fastapi postgresdb # an API + database to serve it
+npx @damiangil/harness add secure-coding deployment   # ship it safely
 
 Then run the harness skill.
 ```
@@ -98,7 +98,7 @@ State your recommendation and why, in language they understand. At L3 / non-tech
 
 ### 4. Log the decision
 
-Once they choose, append an entry to `02-DOCS/wiki/harness/decisions.md` (format in `accompaniment-and-profile.md`): context (the requirements you gathered), the three options, the decision, and why.
+Once they choose, append an entry to `docs/wiki/harness/decisions.md` (format in `accompaniment-and-profile.md`): context (the requirements you gathered), the three options, the decision, and why.
 
 ## Canonical worked example — deploy target
 

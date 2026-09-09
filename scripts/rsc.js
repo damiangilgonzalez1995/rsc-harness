@@ -76,7 +76,7 @@ function onboardingRequired(raw, action = 'onboard') {
     code: 'RSC_ONBOARDING_REQUIRED',
     schemaVersion: 1,
     missing: missingOnboardingFields(raw),
-    recovery: `Run npx @ericrisco/rsc@latest ${action} --technical-level <non-technical|mixed|technical> --accompaniment <L0|L1|L2|L3> --project-kind <software|operations|research|content|mixed> --goal "<what you want>" --target <assistant>`,
+    recovery: `Run npx @damiangil/harness@latest ${action} --technical-level <non-technical|mixed|technical> --accompaniment <L0|L1|L2|L3> --project-kind <software|operations|research|content|mixed> --goal "<what you want>" --target <assistant>`,
   };
   console.error(`RSC_ONBOARDING_REQUIRED ${JSON.stringify(payload)}`);
   process.exitCode = 2;
@@ -129,7 +129,7 @@ function renderPlan(plan, planId) {
   for (const path of plan.governedPaths) say(`  ${path}`);
   if (plan.evidence.parentHarness) say(`Parent harness detected at ${plan.evidence.parentHarness}; it is not inherited by this plan.`);
   const pieces = [
-    'npx @ericrisco/rsc@latest onboard',
+    'npx @damiangil/harness@latest onboard',
     `--technical-level ${plan.record.technicalLevel}`,
     `--accompaniment ${plan.record.accompaniment}`,
     `--project-kind ${plan.record.projectKind}`,
@@ -211,7 +211,7 @@ function runReassessment() {
   const manifest = readManifest();
   const plan = manifest?.onboarding?.plan;
   if (!plan) {
-    console.error('RSC_ONBOARDING_REQUIRED: no accepted onboarding receipt. Run npx @ericrisco/rsc@latest onboard');
+    console.error('RSC_ONBOARDING_REQUIRED: no accepted onboarding receipt. Run npx @damiangil/harness@latest onboard');
     process.exitCode = 2;
     return;
   }
@@ -222,7 +222,7 @@ function runReassessment() {
   const record = recommendations[0].suggestedRecord || plan.record;
   say('Review a new plan; nothing has been installed:');
   say([
-    'npx @ericrisco/rsc@latest onboard',
+    'npx @damiangil/harness@latest onboard',
     `--technical-level ${record.technicalLevel}`,
     `--accompaniment ${record.accompaniment}`,
     `--project-kind ${record.projectKind}`,
@@ -283,12 +283,12 @@ function flag(name) {
 }
 
 // Remove everything rsc installed in this project (skills, hooks, .rsc/), across
-// every assistant. Keeps 02-DOCS/ unless --with-docs. `purge` / `uninstall --all`.
+// every assistant. Keeps docs/ unless --with-docs. `purge` / `uninstall --all`.
 async function runPurge(dryRun, withDocs) {
   const removed = await purge({ cwd: process.cwd(), withDocs, dryRun });
   say(`${dryRun ? 'Would remove' : 'Removed'} ${removed.length} path(s):`);
   for (const r of removed) say(`  - ${r}`);
-  if (!withDocs) say('\nKept 02-DOCS/ (your knowledge base). Add --with-docs to remove it too.');
+  if (!withDocs) say('\nKept docs/ (your knowledge base). Add --with-docs to remove it too.');
 }
 
 async function recommendIds(query, { labeledOnly = false } = {}) {
@@ -351,7 +351,7 @@ function printNextSteps(targets, ids) {
   if (hasHarness) {
     say(`   ${n++}. Set up the second brain — tell it:`);
     say('        "set up the harness for this project"');
-    say('      → creates 01-TOOLS/ (connections) + 02-DOCS/ (wiki) + CLAUDE.md/AGENTS.md.');
+    say('      → creates 01-TOOLS/ (connections) + docs/ (wiki) + CLAUDE.md/AGENTS.md.');
   }
   if (hasSdd) {
     say(`   ${n++}. For a new feature, tell it:`);
@@ -360,8 +360,8 @@ function printNextSteps(targets, ids) {
   }
   say(`   ${n++}. From there, work in your own words. orient + suggest stay always-on; bro is ready on request:`);
   say('      they keep you oriented, propose missing skills, and rewrite in plain human language when asked.');
-  say('\n   Add something by hand anytime:    npx @ericrisco/rsc add <skill>');
-  say('   Browse the catalog / get picks:   npx @ericrisco/rsc consult "whatever you need"');
+  say('\n   Add something by hand anytime:    npx @damiangil/harness add <skill>');
+  say('   Browse the catalog / get picks:   npx @damiangil/harness consult "whatever you need"');
   say('────────────────────────────────────────────────────────');
   if (targets.includes('codex')) say('   Codex: review and trust the project lifecycle hook once with `/hooks`; until then memory is reported as requiring trust.');
   if (targets.includes('cursor')) say('   Cursor: startup memory is assisted because its sessionStart hook is fire-and-forget; the installed always-on rule performs the read-before-action fallback.');
@@ -431,14 +431,14 @@ async function wizard(flagTargets) {
   for (;;) {
     const choice = await select('What do you want to do?', [
       { key: 'base', label: `Base install — the essentials (${baseIds.length} skills)` },
-      { key: 'sdd', label: 'Base + Spec-Driven Development — the specify → plan → implement → ship flow' },
+      { key: 'workflow', label: 'Base + tu flujo de trabajo — grill-with-docs → to-spec → plan o tickets' },
       { key: 'manual', label: 'Pick skills by hand, by area' },
     ]);
-    if (choice === null) { say('\nOK — nothing installed. Anytime: npx @ericrisco/rsc'); return; }
+    if (choice === null) { say('\nOK — nothing installed. Anytime: npx @damiangil/harness'); return; }
 
     let ids;
     if (choice === 'base') ids = baseIds;
-    else if (choice === 'sdd') ids = skillsForProfile(m, 'core');
+    else if (choice === 'workflow') ids = skillsForProfile(m, 'core');
     else if (choice === 'manual') {
       const picked = await manualSelect();
       if (picked === null) continue;          // backed out → re-show this menu
@@ -461,8 +461,12 @@ async function wizard(flagTargets) {
       say('Cancelled — back to the menu.');
       continue;                                // "no" / esc → back to menu, not quit
     }
+    // Base installs none of the gate's named skills (grill-with-docs, to-spec, write-adr,
+    // to-tickets, implement) — wiring the full code-hooks gate anyway leaves it referencing
+    // skills that were never installed. Only a choice that actually installs that flow gets it.
+    const policy = { codeHooks: choice !== 'base' };
     for (const target of targets) {
-      await applyInstall({ skillIds: ids, target });
+      await applyInstall({ skillIds: ids, target, policy });
       say(`   ✅ ${target}`);
     }
     say(`\n✅ Installed ${ids.length} skills for ${targets.length} assistant(s).`);
@@ -508,7 +512,7 @@ async function main() {
     } else {
       console.error(
         `rsc: ${resolved.ambiguous.join(' and ')} are both installed here, so I will not guess.\n` +
-        `     Say which one:  npx @ericrisco/rsc ${cmd} --target ${resolved.ambiguous[0]}`,
+        `     Say which one:  npx @damiangil/harness ${cmd} --target ${resolved.ambiguous[0]}`,
       );
       process.exitCode = 1;
       return;
@@ -547,7 +551,12 @@ async function main() {
       ids = withDefaultSkillFloor(ids).filter((id) => !without.includes(id));
       if (!argv.includes('--force') && !(await guardCollisions(targets, ids))) return;
       const receipt = readManifest()?.onboarding;
-      const policy = receipt ? { ...receipt.plan.policy, skills: ids } : undefined;
+      // codeHooks is recomputed for the profile being installed, not inherited from
+      // whatever plan came before: the minimal profile never installs the flow skills
+      // (grill-with-docs, to-spec, write-adr, to-tickets, implement) the full gate names,
+      // and a profile that does install them should wire the gate even if the previous
+      // plan had it off. Same criterion as wizard() at the onboarding menu.
+      const policy = receipt ? { ...receipt.plan.policy, skills: ids, codeHooks: profile !== 'minimal' } : undefined;
       for (const t of targets) await applyInstall({ skillIds: ids, target: t, policy });
       markMaintenanceDrift(`install ${profile}`);
       say(`✅ Profile '${profile}' installed for ${targets.join(', ')} (${ids.length} skills)`);
@@ -647,7 +656,7 @@ async function main() {
         return void say(JSON.stringify(result, null, 2));
       }
       if (sub === 'metrics') return void say(JSON.stringify(M.metricsSummary({ cwd: root }), null, 2));
-      say('Use: npx @ericrisco/rsc memory on|off|status|save [--session id]|resume [--json]|learn --text "…" --evidence "…" --scope project|global --confidence 0..1 --approve|metrics');
+      say('Use: npx @damiangil/harness memory on|off|status|save [--session id]|resume [--json]|learn --text "…" --evidence "…" --scope project|global --confidence 0..1 --approve|metrics');
       process.exitCode = 1;
       return;
     }
@@ -683,7 +692,7 @@ async function main() {
       const dry = argv.includes('--dry-run');
       const global = argv.includes('--global');
       const result = runUpgrade({ targets, dryRun: dry, global });
-      if (result.ran) say('Upgraded global @ericrisco/rsc. Restart your shell if needed.');
+      if (result.ran) say('Upgraded global @damiangil/harness. Restart your shell if needed.');
       else say(`${dry ? 'Would run' : 'Upgrade guide'}: ${result.plan.installCommand}`);
       say(`After upgrade: ${result.plan.syncCommand}`);
       return;
@@ -699,7 +708,7 @@ async function main() {
         say(JSON.stringify(registryStatus(), null, 2));
         return;
       }
-      say('Use: npx @ericrisco/rsc registry refresh | registry status');
+      say('Use: npx @damiangil/harness registry refresh | registry status');
       return;
     }
     case 'worktrees': {
@@ -744,8 +753,8 @@ async function main() {
       say(`${candidates.length} worktree(s) whose work has landed:`);
       for (const c of candidates) say(W.describe(c));
       say('');
-      say('Remove the safe ones:  npx @ericrisco/rsc worktrees reap');
-      say('Remove one by name:    npx @ericrisco/rsc worktrees reap <path> [--confirm]');
+      say('Remove the safe ones:  npx @damiangil/harness worktrees reap');
+      say('Remove one by name:    npx @damiangil/harness worktrees reap <path> [--confirm]');
       return;
     }
     case 'capabilities': {
@@ -983,7 +992,7 @@ async function main() {
           return;
         }
         default:
-          say('Use: npx @ericrisco/rsc sello on|off [--global]|status|freeze|approve --lenses a,b [--accept-partial-lenses]|block --reason "…"|budget --lines N|budget-check [--justify "…"]|check|report');
+          say('Use: npx @damiangil/harness sello on|off [--global]|status|freeze|approve --lenses a,b [--accept-partial-lenses]|block --reason "…"|budget --lines N|budget-check [--justify "…"]|check|report');
           return;
       }
     }
@@ -1021,7 +1030,7 @@ async function main() {
       return void (await runPurge(argv.includes('--dry-run'), argv.includes('--with-docs')));
     default:
       say(`rsc: unknown command '${cmd}'.`);
-      say('Use: npx @ericrisco/rsc onboard | reassess | add <id...> | install --profile <p> | consult "<text>" | list | capabilities [--full|gap-log] | audit | registry refresh | doctor | sync | memory <on|off|status|save|resume|learn|metrics> | sello <on|off|status|…> | worktrees [reap [path] [--confirm]] | backups | restore <id|latest> | upgrade | repair | uninstall <id> | purge');
+      say('Use: npx @damiangil/harness onboard | reassess | add <id...> | install --profile <p> | consult "<text>" | list | capabilities [--full|gap-log] | audit | registry refresh | doctor | sync | memory <on|off|status|save|resume|learn|metrics> | sello <on|off|status|…> | worktrees [reap [path] [--confirm]] | backups | restore <id|latest> | upgrade | repair | uninstall <id> | purge');
       say('Any command takes --target <claude|codex|cursor|copilot|gemini|…> (comma-separate for several)');
       say('   → without it, rsc uses the assistant already installed here; if two are, it asks instead of guessing.');
       process.exitCode = 1;

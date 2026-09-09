@@ -11,7 +11,7 @@ should_trigger:
     why: "TikTok-specific failure mapped to domain/URL-prefix verification in the portal. Squarely this skill's debugging surface."
   - prompt: "I keep hitting rate_limit_exceeded at 6 requests per minute while polling publish status."
     why: "Non-obvious 6/min per-user-token cap; this skill prescribes sleep/backoff instead of a tight status loop."
-  - prompt: "Fetch this week's TikTok impression sources (FYP vs profile) and append them to 02-DOCS/wiki/shortform/."
+  - prompt: "Fetch this week's TikTok impression sources (FYP vs profile) and append them to docs/wiki/shortform/."
     why: "The ingestion deliverable — Business API insight pull appended to the platform-namespaced feedback log."
   - prompt: "subir vídeos a TikTok por API y guardar las métricas del canal en el wiki."
     why: "Spanish; upload + ingest metrics — the full transport + ingestion loop this skill owns."
@@ -39,7 +39,7 @@ should_not_trigger:
     why: "Generic connector for an arbitrary provider, not TikTok's specific three-API split."
 
 capability:
-  - scenario: "Build a daily cron that authenticates to a TikTok account, publishes a local MP4 via the Content Posting API, then fetches that video's views + full_video_watched_rate + impression sources and appends a dated entry to 02-DOCS/wiki/shortform/."
+  - scenario: "Build a daily cron that authenticates to a TikTok account, publishes a local MP4 via the Content Posting API, then fetches that video's views + full_video_watched_rate + impression sources and appends a dated entry to docs/wiki/shortform/."
     must_include:
       - "OAuth v2 token refresh each run (24h access token / 365d refresh token, with the rotating refresh_token persisted)"
       - "publish init (FILE_UPLOAD) → sequential Content-Range chunked PUT (5–64 MB chunks, final ≤128 MB, 1–1000 chunks; <5 MB = single chunk) expecting 206 then 201 → poll status/fetch on publish_id until PUBLISH_COMPLETE"

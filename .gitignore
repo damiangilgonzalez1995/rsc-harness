@@ -20,16 +20,9 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 
-# Working documentation lives in the RSC container, NOT here.
-# This repo stays clean so whoever clones it starts coding, not reading.
-# Migrated 2026-09-04 to https://github.com/ericrisco/RSC → 02-DOCS/
-#   docs/        -> RSC 02-DOCS/raw/migrated/docs/
-#   skill-build/ -> RSC 02-DOCS/raw/migrated/skill-build/
-#   02-DOCS/     -> RSC 02-DOCS/ (wiki/sdd, wiki/brand, wiki/stack, raw/…)
 # The contributor-facing standard stays in this repo: scripts/skill-rubric.md.
-docs/
+# docs/ is tracked: it holds the harness wiki, ADRs and specs.
 skill-build/
-02-DOCS/
 
 node_modules/
 coverage/

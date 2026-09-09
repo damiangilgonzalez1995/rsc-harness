@@ -2,7 +2,7 @@
 name: swift-ios
 description: "Use when building native iOS and Apple-platform apps in Swift with SwiftUI and modern Swift concurrency — observable view models, Swift 6 strict data-race diagnostics, async/await and actors, SwiftData persistence, NavigationStack, and Swift Testing. NOT cross-platform Dart (that is `flutter`), NOT React Native (that is `react-native`), NOT native Kotlin for Android (that is `kotlin-android`), NOT shared KMP code across both OSes (that is `compose-multiplatform`)."
 tags: [swift, swiftui, ios, swift-concurrency, swiftdata, swift-testing, apple]
-recommends: [kotlin-android, compose-multiplatform, flutter, react-native, expo, testing-web, github-actions, ship]
+recommends: [kotlin-android, compose-multiplatform, flutter, react-native, expo, testing-web, github-actions]
 profiles: []
 origin: risco
 ---
@@ -220,5 +220,5 @@ New surface: Liquid Glass via `.glassEffect()` (no `UIVisualEffectView`), the `@
 - One codebase for iOS + Android via KMP/CMP → [../compose-multiplatform/SKILL.md](../compose-multiplatform/SKILL.md)
 - Cross-platform Dart → [../flutter/SKILL.md](../flutter/SKILL.md)
 - React Native runtime / native modules → [../react-native/SKILL.md](../react-native/SKILL.md); the EAS/OTA shipping pipeline → [../expo/SKILL.md](../expo/SKILL.md)
-- Store submission / release process → [../ship/SKILL.md](../ship/SKILL.md)
+- Store submission / release process → App Store Connect / TestFlight docs, not this skill
 - Cloud CI build/sign and the non-Swift test stack are siblings (`github-actions`, `testing-web`) — see `recommends`.

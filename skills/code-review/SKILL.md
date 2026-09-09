@@ -1,130 +1,91 @@
 ---
 name: code-review
-description: "Use to judge a concrete diff, branch, or GitHub PR on its own merits with no rsc-SDD spec/plan chain to key off — the spec-less giving pass behind /code-review: only findings you can defend, one verdict, read-only unless --comment or --fix. NOT the SDD gate keyed to 02-DOCS/wiki/sdd/ that also processes incoming review comments (that is `review`)."
-tags: [code-review, pr-review, quality, correctness]
-recommends: [review, secure-coding, verify]
-origin: risco
+description: "Reviews changes from a fixed point (commit, branch, tag, or merge-base) along two axes — Standards (does the code follow the repo's documented coding standards?) and Spec (does the code match what the source issue/PRD asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work in progress, or asks to \\"review from X\\"."
+tags: ["code-review", "standards", "spec-compliance"]
+profiles: [core, ui, full]
 ---
 
-# Code review — standalone, spec-less diff judgment
+Revisión en dos ejes del diff entre `HEAD` y un punto fijo que proporciona el usuario:
 
-You are reviewing a concrete change — a `git diff`, a branch, a GitHub PR, a pasted patch — on its own merits. No rsc-SDD spec/plan/constitution chain is required and you should not pretend one exists. This is the doctrine behind the executable `/code-review` slash command: same evidence bar, written as a discipline you run by hand. If the user is mid-SDD and wants to process *incoming* comments against `02-DOCS/wiki/sdd/`, that is `../review/SKILL.md`; a naked diff or an inbound third-party PR is this skill.
+- **Estándares** — ¿el código se ajusta a los estándares de codificación documentados de este repo?
+- **Spec** — ¿el código implementa fielmente el issue / PRD / spec de origen?
 
-**The north star is signal-to-noise.** Report only findings you would stake your name on. A clean diff is `APPROVE`, not a manufactured nit. High-false-positive review gets tuned out by humans in about two weeks; the bar to aim for is the logic-error review where under 1% of findings come back marked wrong. Padding does not make you look thorough — it trains the reader to ignore you.
+Ambos ejes se ejecutan como **sub-agentes paralelos** para que no contaminen el contexto del otro, y luego esta skill agrega sus hallazgos.
 
-## Get the change and its intent first
+El issue tracker debería haberte sido proporcionado. Si falta `docs/agents/issue-tracker.md`, busca el spec de origen en las ubicaciones habituales del proyecto (`docs/`, `specs/`, `.scratch/`) o pregunta al usuario.
 
-Three inputs, in this order: **the diff**, **its stated purpose**, and **the touched surface** (the files around the hunks, not just the hunks).
+## Proceso
 
-```bash
-# A GitHub PR
-gh pr diff 1432
-gh pr view 1432 --json title,body,files,additions,deletions
+### 1. Fijar el punto fijo
 
-# A local branch against the trunk
-git diff main...HEAD
-git diff --stat main...HEAD   # see blast radius before reading
+Lo que diga el usuario es el punto fijo — un SHA de commit, nombre de rama, tag, `main`, `HEAD~5`, etc. Si no especifica ninguno, pregúntalo.
 
-# A pasted patch — read it as given
-```
+Captura el comando de diff una vez: `git diff <punto-fijo>...HEAD` (tres puntos, para que la comparación sea contra el merge-base). Anota también la lista de commits vía `git log <punto-fijo>..HEAD --oneline`.
 
-A review with no notion of intent is a review of vibes. If no purpose is stated, **infer it from the diff and say what you assumed** ("Assuming this is meant to add idempotency to the webhook handler…") so the reader can correct a wrong premise — a silent wrong premise produces a confidently wrong review. Then read the *whole* changed file, not just the green/red lines: the structural failure of standalone review is judging a hunk without its context and shipping generic pattern-matched suggestions.
+Antes de seguir, confirma que el punto fijo resuelve (`git rev-parse <punto-fijo>`) y que el diff no está vacío. Una ref inválida o un diff vacío debe fallar aquí — no dentro de dos sub-agentes paralelos.
 
-## The pass order
+### 2. Identificar la fuente del spec
 
-Run these in order. Passes 1–5 are correctness/safety and are blocking-eligible; pass 6 is cleanup and is usually `[should-fix]` or `[nit]`. **A clean pass is a reportable result** ("contracts: nothing changed shape, no finding"), not a pass you silently skip.
+Busca el spec de origen, en este orden:
 
-| # | Pass | The question | Typical defects |
-|---|------|--------------|-----------------|
-| 1 | Intent fidelity | Does it do what it claims? | Wrong behaviour, missing case from the stated goal, scope creep |
-| 2 | Correctness & boundaries | Right on the edges? | Off-by-one, null/empty/unicode, overflow, timezone, concurrency, swallowed errors |
-| 3 | Contracts & data | Do callers/data still hold? | Broken API shape, migration without backfill, nullable made non-null, enum drift |
-| 4 | Security boundary | Untrusted input → dangerous sink? | Unsanitized input to query/shell/template, authz gap, secret in code/log |
-| 5 | Tests as evidence | Do the tests prove the change? | Tests assert nothing, test the mock, miss the new branch, were deleted to go green |
-| 6 | Reuse / simplification / efficiency | Could existing code do this? | Reimplemented helper, copy-paste divergence, N+1, needless allocation in a hot loop |
+1. Referencias a issues en los mensajes de commit (`#123`, `Closes #45`, `!67` de GitLab, etc.) — recupéralas vía el flujo de `docs/agents/issue-tracker.md`.
+2. Una ruta que el usuario haya pasado como argumento.
+3. Un archivo PRD/spec bajo `docs/`, `specs/` o `.scratch/` que coincida con el nombre de la rama o la feature.
+4. Si no encuentras nada, pregunta al usuario dónde está el spec. Si dice que no hay, el sub-agente de **Spec** se salta y reporta "no hay spec disponible".
 
-Pass 4 is a **boundary** pass — trace untrusted input to its sink and flag the reachable ones. For a real STRIDE/OWASP threat model with exploitability ranking and vulnerable→fixed diffs, hand off to `../secure-coding/SKILL.md`.
+### 3. Identificar las fuentes de estándares
 
-Adjacent jobs, delegated by name: running the lint/type/test gates until they are green is `../verify/SKILL.md` (this skill judges whether green is *correct*); root-causing one confirmed failure is `../debug/SKILL.md`; cross-checking spec/plan/tasks *before* code exists is `../analyze/SKILL.md`.
+Cualquier cosa en el repo que documente cómo debe escribirse el código, como `CODING_STANDARDS.md` o `CONTRIBUTING.md`. (En este proyecto: `CLAUDE.md` y `docs/CARTA-MAGNA.md`.)
 
-## Confidence floor and the false-positive skip-list
+Además de lo que el repo documente, el eje de Estándares siempre lleva el **smell baseline** de abajo — un conjunto fijo de code smells de Fowler (_Refactoring_, cap. 3) que aplica incluso cuando el repo no documenta nada. Dos reglas lo condicionan:
 
-**The 80% rule:** if you are not at least ~80% sure a finding is real, you have two moves — trace the code until you *are* sure, or downgrade it to `[question]`. Never ship a guess dressed as a defect.
+- **El repo manda.** Un estándar documentado del repo siempre gana; donde el repo avale algo que el baseline marcaría, suprime el smell.
+- **Siempre es un juicio.** Cada smell es una heurística etiquetada ("posible Feature Envy"), nunca una violación dura — y, como cualquier estándar aquí, sáltate lo que el tooling ya imponga.
 
-Skip these common false positives outright (or demote to `[question]`/`[nit]`):
+Cada smell se lee *qué es* → *cómo arreglarlo*; contrástalo con el diff:
 
-- **Guarded upstream** — the "missing" check happens in the caller you can see; trace before you flag.
-- **Framework-enforced** — the framework already does it (e.g. an ORM that parameterizes, a router that validates).
-- **Behind an off-everywhere flag** — real but unreachable in any deployed config → `[nit]`, not blocking.
-- **Test-only / generated code held to the prod bar** — don't demand prod-grade error handling in a fixture or a generated client.
-- **Style the linter owns** — quotes, import order, line length. If a tool enforces it, don't spend a finding on it.
+- **Nombre misterioso (Mysterious Name)** — una función, variable o tipo cuyo nombre no revela qué hace o qué guarda. → renómbralo; si no sale un nombre honesto, el diseño está turbio.
+- **Código duplicado (Duplicated Code)** — la misma forma de lógica aparece en más de un hunk o archivo del cambio. → extrae la forma compartida, llámala desde ambos.
+- **Feature Envy** — un método que hurga en los datos de otro objeto más que en los suyos. → mueve el método a los datos que envidia.
+- **Grupos de datos (Data Clumps)** — los mismos pocos campos o params viajan siempre juntos (un tipo que quiere nacer). → agrúpalos en un solo tipo, pasa ese.
+- **Obsesión por primitivos (Primitive Obsession)** — un primitivo o string que hace de concepto de dominio que merece su propio tipo. → dale al concepto su propio tipo pequeño.
+- **Switches repetidos (Repeated Switches)** — el mismo `switch`/cascada de `if` sobre el mismo tipo se repite por el cambio. → reemplázalo con polimorfismo, o un mapa que ambos sitios compartan.
+- **Cirugía de escopeta (Shotgun Surgery)** — un cambio lógico obliga a ediciones dispersas en muchos archivos del diff. → reúne lo que cambia junto en un solo módulo.
+- **Cambio divergente (Divergent Change)** — un archivo o módulo se edita por varias razones no relacionadas. → divídelo para que cada módulo cambie por una sola razón.
+- **Generalidad especulativa (Speculative Generality)** — abstracción, parámetros o hooks añadidos para necesidades que el spec no tiene. → bórralo; vuelve a hacerlo inline hasta que aparezca una necesidad real.
+- **Cadenas de mensajes (Message Chains)** — navegación larga `a.b().c().d()` de la que el llamante no debería depender. → oculta el recorrido tras un método del primer objeto.
+- **Intermediario (Middle Man)** — una clase o función que casi solo delega hacia adelante. → córtala, llama al objetivo real directamente.
+- **Herencia rechazada (Refused Bequest)** — una subclase o implementador que ignora o sobrescribe casi todo lo que hereda. → suelta la herencia, usa composición.
 
-**No severity inflation.** Rank by `blast radius × reachability`, not by how clever the catch was. A typo in a log string is a nit even if it took effort to spot.
+### 4. Lanzar ambos sub-agentes en paralelo
 
-## Severity and finding format
+Envía un único mensaje con dos llamadas a la herramienta `Agent`. Usa el subagente `general-purpose` para ambos.
 
-- `[blocking]` — wrong/unsafe; merging causes a real defect. Must be fixed.
-- `[should-fix]` — a real problem with bounded blast radius; fix it or consciously accept it.
-- `[nit]` — minor; the reader may ignore it without consequence.
-- `[question]` — you suspect an issue but cannot prove reachability; asking, not asserting.
+**Prompt del sub-agente de Estándares** — incluye:
 
-Every finding carries **where / why / repro / fix**:
+- El comando de diff completo y la lista de commits.
+- La lista de archivos-fuente de estándares que encontraste en el paso 3, **más el smell baseline del paso 3 pegado completo** — el sub-agente no tiene otro acceso a él.
+- El encargo: "Reporta — por archivo/hunk donde proceda — (a) cada lugar donde el diff viola un estándar documentado: cita el estándar (archivo + la regla); y (b) cualquier smell del baseline que detectes: nómbralo y cita el hunk. Distingue violaciones duras de juicios — las infracciones de estándar documentado pueden ser duras, pero los smells del baseline son siempre juicios, y un estándar documentado del repo prevalece sobre el baseline. Sáltate lo que el tooling imponga. Menos de 400 palabras."
 
-```text
-[should-fix] api/orders.py:88 — duplicated total logic
-  where:  `subtotal = sum(i.price * i.qty for i in items)` re-implements
-          `cart.compute_subtotal()` (cart/totals.py:14), which also applies
-          per-item discounts this copy silently drops.
-  why:    discounted items now bill at full price on this path only;
-          the two implementations will drift on the next discount change.
-  repro:  order containing any item with `discount_pct > 0` → charged the
-          undiscounted amount; covered by no test.
-  fix:    call `cart.compute_subtotal(items)` instead of inlining the sum.
-```
+**Prompt del sub-agente de Spec** — incluye:
 
-**Rule: no repro or stated mechanism → it is a `[question]`, not a blocker.** "This could overflow" with no path is a question; "n*1000 with n up to 3M exceeds int32 at orders.py:51" is a finding.
+- El comando de diff y la lista de commits.
+- La ruta o el contenido recuperado del spec.
+- El encargo: "Reporta: (a) requisitos que el spec pedía y que faltan o están parciales; (b) comportamiento en el diff que no se pidió (scope creep); (c) requisitos que parecen implementados pero cuya implementación parece incorrecta. Cita la línea del spec por cada hallazgo. Menos de 400 palabras."
 
-## Verify before you flag
+Si falta el spec, sáltate el sub-agente de Spec y anótalo en el reporte final.
 
-Read the surrounding code, trace the *value*, confirm the path is reachable.
+### 5. Agregar
 
-- **Bad:** "Looks like SQL injection." (pattern-match)
-- **Good:** "`search()` interpolates `req.query.q` straight into `db.execute(\`… WHERE name='${q}'\`)` at search.ts:22; `q` is unvalidated user input → injection." (traced)
+Presenta los dos reportes bajo los encabezados `## Estándares` y `## Spec`, verbatim o ligeramente limpiados. **No** fusiones ni reordenes los hallazgos — los dos ejes son deliberadamente separados (ver _Por qué dos ejes_).
 
-If you cannot trace it to a concrete value and a reachable sink, you do not yet have a finding.
+Termina con un resumen de una línea: total de hallazgos por eje, y el peor problema _dentro de cada eje_ (si lo hay). No elijas un único ganador entre ejes — eso es el reordenamiento que la separación existe para evitar.
 
-## The verdict
+## Por qué dos ejes
 
-End every review with exactly one, plainly — no mushy middle:
+Un cambio puede pasar un eje y fallar el otro:
 
-- **APPROVE** — no blockers, no should-fix. Point the user to `../ship/SKILL.md` to merge.
-- **APPROVE WITH NITS** — mergeable; nits listed but none gate the merge.
-- **CHANGES REQUESTED** — at least one `[blocking]`. List precisely what unblocks it, so the author knows when they are done.
+- Código que sigue todos los estándares pero implementa lo equivocado → **Estándares pasa, Spec falla.**
+- Código que hace exactamente lo que pedía el issue pero rompe las convenciones del proyecto → **Spec pasa, Estándares falla.**
 
-## Effort dial
-
-Mirror the slash command's effort level: **low/medium** → fewer, high-confidence findings (raise the confidence floor, focus on passes 1–4). **high/max** → broader coverage; uncertain findings are allowed but must be labelled `[question]`, never inflated into blockers. This is *coverage vs precision*, not the harness accompaniment dial — it changes what you look at, not how much you narrate.
-
-## Emitting comments and applying fixes
-
-**Read-only by default.** You produce findings + a verdict and stop there. Two opt-in modes:
-
-- `--comment` → post the findings as an inline-anchored review on the PR.
-- `--fix` → apply the agreed findings to the working tree.
-
-```bash
-# Summary review (the verdict)
-gh pr review 1432 --request-changes -b "CHANGES REQUESTED — see inline. Blocker: orders.py:88 …"
-gh pr review 1432 --approve -b "APPROVE — correctness and contracts clean."
-```
-
-Inline line-anchored comments go through the GitHub REST API — see `references/pr-workflow.md` for the JSON shape, fork-PR handling, and large-diff strategy. If `--fix` puts you on the default branch, **branch first**; commit or push **only when the user asks**; git authorship is **Eric** (no Claude co-author or generated footer).
-
-## Anti-patterns
-
-| Failure mode | Reality |
-|---|---|
-| "It compiles and the tests pass, so it's correct." | Tests prove green, not correct. Pass 5 asks whether the tests actually exercise the new branch — green for the wrong reason is a finding. |
-| Listing everything you would have done differently. | That is noise. Report defects and reuse wins you can defend; preference is not a finding. |
-| "It's just a dependency bump, skim it." | Bumps carry supply-chain and transitive risk and behaviour changes. Check the changelog/lockfile diff, not just the version string. |
-| Applying every nit "to be safe" under `--fix`. | Each unrequested edit is scope creep and a regression surface. Apply the agreed findings only. |
+Reportarlos por separado evita que un eje enmascare al otro.

@@ -1,0 +1,32 @@
+skill: animar
+
+should_trigger:
+  - prompt: "Anade movimiento a este componente para que se sienta vivo."
+    why: "Disparador directo de animar."
+  - prompt: "Quiero animar la apertura de este modal."
+    why: "Disparador directo de animar."
+  - prompt: "Construye una transicion para este cambio de estado."
+    why: "Disparador directo de animar."
+  - prompt: "Animate this component so it feels alive when it appears."
+    why: "Disparador directo de animar."
+  - prompt: "Necesito una animacion de entrada y salida para esta lista."
+    why: "Disparador directo de animar."
+
+should_not_trigger:
+  - prompt: "Critica la animacion que ya existe en este componente."
+    route_to: "none"
+    why: "Fuera del alcance de animar."
+  - prompt: "Explicame como se llama este efecto de movimiento."
+    route_to: "vocabulario-animacion"
+    why: "Nombrar un efecto de movimiento es el trabajo de vocabulario-animacion, no de animar."
+  - prompt: "Revisa la accesibilidad general de esta pantalla."
+    route_to: "mejor-accesibilidad"
+    why: "Revisar la accesibilidad es el trabajo de mejor-accesibilidad, no de animar."
+  - prompt: "Ajusta la tipografia de este texto."
+    route_to: "mejor-tipografia"
+    why: "Ajustar la tipografia es el trabajo de mejor-tipografia, no de animar."
+
+capability:
+  - scenario: "El usuario pide construir una animacion o transicion desde cero."
+    must_include:
+      - "anima"

@@ -10,7 +10,7 @@ should_trigger:
   - prompt: "Is 20 hashtags too many for a Reel?"
     why: Non-obvious — tests the Instagram 5-tag hard cap and the 3-5 best-practice rule.
   - prompt: "Log how my last 5 shorts performed and apply it to the next batch."
-    why: The learning loop — read the 02-DOCS feedback log on retention/sends and carry winners forward.
+    why: The learning loop — read the docs feedback log on retention/sends and carry winners forward.
   - prompt: "Rewrite this caption so it ranks in TikTok search."
     why: Caption as a search-ranking field — keyword-led first sentence, owned here.
   - prompt: "Escríbeme el gancho i el pie de foto per a aquest Reel i dona'm els hashtags."
@@ -35,10 +35,10 @@ should_not_trigger:
 
 capability:
   - scenario: >
-      Given a finished 25s faceless productivity TikTok and a 02-DOCS feedback log whose
+      Given a finished 25s faceless productivity TikTok and a docs feedback log whose
       last winner was a number-led on-screen hook, produce the full package.
     must_include:
-      - Reads the 02-DOCS feedback log / brand voice BEFORE writing, and carries the number-led winner forward.
+      - Reads the docs feedback log / brand voice BEFORE writing, and carries the number-led winner forward.
       - Emits a SET of >=2 hook + on-screen-text variants, each 4-7 words.
       - On-screen text restates the hook (the silent twin) and stays in the safe zones.
       - Caption first sentence is keyword-led and <=~150 chars, not a teaser like "wait for it".

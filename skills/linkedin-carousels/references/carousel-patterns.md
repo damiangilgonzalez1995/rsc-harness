@@ -11,8 +11,8 @@ Produce one block per slide. Fill every field; "—" if a field genuinely doesn'
 SLIDE 0 — CONTEXT (not exported; for the build)
   Topic / angle:
   Source (post/article/idea):
-  Brand kit ref (02-DOCS or assumption):
-  Voice ref (02-DOCS or assumption):
+  Brand kit ref (docs or assumption):
+  Voice ref (docs or assumption):
   Chosen arc:
   Slide count:
 

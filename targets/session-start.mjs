@@ -102,7 +102,7 @@ block and the SDD gate TWICE — once per scope. Only the updated scope can de-d
   this scope:    ${root} (${mine})
   lagging scope: ${other} (${theirs})
 ACTION: update the lagging scope, then it will stay silent on its own:
-  cd "${other}" && npx @ericrisco/rsc@latest
+  cd "${other}" && npx @damiangil/harness@latest
 Opt out with .rsc/.no-scope-check · this notice repeats at most every ${SCOPE_WARN_DAYS} days.
 ===================================
 `);
@@ -113,13 +113,13 @@ Opt out with .rsc/.no-scope-check · this notice repeats at most every ${SCOPE_W
   }
 }
 
-const profile = join(root, '02-DOCS', 'wiki', 'harness', 'user-profile.md');
+const profile = join(root, 'docs', 'wiki', 'harness', 'user-profile.md');
 const optout = join(root, '.rsc', '.no-harness');
 const profileExists = existsSync(profile);
 if (!existsSync(profile) && !existsSync(optout)) {
   process.stdout.write(`
 ===== rsc onboarding =====
-Fresh setup: 02-DOCS/wiki/harness/user-profile.md is missing.
+Fresh setup: docs/wiki/harness/user-profile.md is missing.
 ACTION: invoke \`init\` now (first contact: technical level + accompaniment dial) before the task.
 If the user does not want a harness here: create .rsc/.no-harness
 ==========================
@@ -130,8 +130,8 @@ If the user does not want a harness here: create .rsc/.no-harness
 // (anything other than README.md / dotfiles / the _processed archive), tell the
 // agent to run the Auto-Ingest Sweep. The hook only reminds; the agent does the
 // scan + ingest. Cheap signal here; the thorough workspace scan lives in the sweep.
-const inbox = join(root, '02-DOCS', 'inbox');
-if (existsSync(join(root, '02-DOCS', 'wiki')) && existsSync(inbox)) {
+const inbox = join(root, 'docs', 'inbox');
+if (existsSync(join(root, 'docs', 'wiki')) && existsSync(inbox)) {
   let pending = false;
   try {
     pending = readdirSync(inbox, { withFileTypes: true })
@@ -140,7 +140,7 @@ if (existsSync(join(root, '02-DOCS', 'wiki')) && existsSync(inbox)) {
   if (pending) {
     process.stdout.write(`
 ===== rsc auto-ingest =====
-Un-ingested material is waiting in 02-DOCS/inbox/.
+Un-ingested material is waiting in docs/inbox/.
 ACTION: run the Auto-Ingest Sweep now — ingest inbox/, then scan the workspace
 (minus .rscignore) for un-ingested documents, recording them in wiki/.ingested.json.
 Originals are copied, never moved; deleting an emptied folder needs explicit consent.
@@ -182,7 +182,7 @@ if (profileExists && auditDue() && !has('.rsc', '.no-audit')) {
 ===== rsc skill audit =====
 A skill audit is due (runs at most every ${STALE_AUDIT_DAYS} days). It flags overlapping
 skills and skills with no footprint in this project.
-ACTION: run \`npx @ericrisco/rsc audit\`. Opt out with .rsc/.no-audit.
+ACTION: run \`npx @damiangil/harness audit\`. Opt out with .rsc/.no-audit.
 ===========================
 `);
 }
@@ -190,7 +190,7 @@ ACTION: run \`npx @ericrisco/rsc audit\`. Opt out with .rsc/.no-audit.
 // CLAUDE.md hygiene: the root CLAUDE.md is read on EVERY turn, so an overgrown one (usually
 // the Knowledge map accreting a row per wiki article) is a permanent context tax that rots
 // adherence. When it passes the ~200-line 2026 budget, nudge to offload the index into
-// 02-DOCS/wiki/index.md and keep CLAUDE.md a short pointer (the `harness` skill owns the move;
+// docs/wiki/index.md and keep CLAUDE.md a short pointer (the `harness` skill owns the move;
 // it's a relocation, not a delete). Opt out with .rsc/.no-claudemd-check.
 const CLAUDEMD_MAX_LINES = 200;
 if (!has('.rsc', '.no-claudemd-check')) {
@@ -200,7 +200,7 @@ if (!has('.rsc', '.no-claudemd-check')) {
       process.stdout.write(`
 ===== rsc CLAUDE.md hygiene =====
 CLAUDE.md is ${lines} lines — over the ~${CLAUDEMD_MAX_LINES}-line budget (it's read every turn, so each line costs context).
-ACTION: offload the Knowledge map / overgrown sections into 02-DOCS/wiki/index.md and leave a short
+ACTION: offload the Knowledge map / overgrown sections into docs/wiki/index.md and leave a short
 pointer in CLAUDE.md (no info lost — it's a move). The \`harness\` skill owns the procedure.
 Opt out with .rsc/.no-claudemd-check.
 =================================
@@ -229,8 +229,8 @@ if (has('.git')) {
 ${candidates.length} worktree(s) hold work that is already in the trunk:
 ${candidates.map((c) => W.summarize(c, root)).join('\n')}
 ACTION: offer to retire them in ONE line and wait for a yes. On a yes run:
-  npx @ericrisco/rsc worktrees reap          (the ones marked safe)
-  npx @ericrisco/rsc worktrees reap <path>   (one the user confirmed by name)
+  npx @damiangil/harness worktrees reap          (the ones marked safe)
+  npx @damiangil/harness worktrees reap <path>   (one the user confirmed by name)
 A yes in bulk covers only the safe ones; anything marked \`ask\` is confirmed on its own.
 A no holds for this session. Permanent off: .rsc/.no-worktree-cleanup
 ================================
@@ -261,7 +261,7 @@ if (!process.env.RSC_NO_UPDATE_CHECK) {
     if (!latest) {
       const ctrl = new AbortController();
       const timer = setTimeout(() => ctrl.abort(), 1500);
-      const res = await fetch('https://registry.npmjs.org/@ericrisco%2frsc/latest', { signal: ctrl.signal });
+      const res = await fetch('https://registry.npmjs.org/@damiangil%2fharness/latest', { signal: ctrl.signal });
       clearTimeout(timer);
       latest = (await res.json()).version;
     }
@@ -270,7 +270,7 @@ if (!process.env.RSC_NO_UPDATE_CHECK) {
 ===== rsc update available =====
 rsc ${latest} is out — you have ${installed}.
 ACTION: tell the user a new version is available and, if they say yes, run:
-  npx @ericrisco/rsc@latest
+  npx @damiangil/harness@latest
 (That reinstalls and refreshes the skill content to the latest.)
 ================================
 `);

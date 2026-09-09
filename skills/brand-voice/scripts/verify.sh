@@ -4,7 +4,7 @@
 #
 # WHAT IT DOES (read-only; never edits or writes a file)
 #   Static, network-free checks over ONE voice-guide file you point it at
-#   (markdown / plain text — e.g. 02-DOCS/wiki/brand/voice-guide.md):
+#   (markdown / plain text — e.g. docs/wiki/brand/voice-guide.md):
 #     1. Required sections present -> FAIL each missing:
 #        traits, rules (with a Bad->Good), four-dimension ratios,
 #        a word bank, a non-empty BAN list, a tone-by-context matrix,
@@ -20,7 +20,7 @@
 #   false failure.
 #
 # HOW TO RUN (inside YOUR project, not the skills repo)
-#   ./verify.sh 02-DOCS/wiki/brand/voice-guide.md
+#   ./verify.sh docs/wiki/brand/voice-guide.md
 #   ./verify.sh guide.md --strict        # treat warnings as failures (CI gate)
 #
 # EXIT CODES

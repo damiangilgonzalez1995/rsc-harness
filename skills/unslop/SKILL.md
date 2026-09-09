@@ -3,7 +3,7 @@ name: unslop
 description: "Use when a written text must be audited against a named catalogue of AI tells before it ships: puffery, `not just X but Y`, the rule of three, em dashes, filler, hedging, abstract metaphor nouns. Names each hit and fixes it. NOT the register rewrite in the user's own voice (that is `bro`), NOT a reusable voice guide (that is `brand-voice`)."
 tags: [unslop, ai-tells, editing, audit, slop, publish-check, revisar-texto]
 recommends: [bro, brand-voice, technical-writing]
-profiles: [minimal, core, full]
+profiles: [minimal, core, ui, full]
 origin: risco
 ---
 

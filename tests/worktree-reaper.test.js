@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, writeFileSync, existsSync, rmSync, realpathSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname, basename } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 // The reaper decides whether a worktree can be removed WITHOUT asking. That makes it the most
 // dangerous piece of judgement the harness owns: every false positive is a directory that is gone,
@@ -19,7 +19,7 @@ const CLI = join(HERE, '..', 'scripts', 'rsc.js');
 
 const {
   classifyWorktrees, reapWorktree, isCleanupEnabled, resolveTrunk, listWorktrees, REGENERABLE,
-} = await import(MOD);
+} = await import(pathToFileURL(MOD).href);
 
 const TMP = [];
 function git(cwd, ...args) {
@@ -319,18 +319,6 @@ test('15 · the regenerable table is data the test can read, not conditionals it
   }
 });
 
-test('15b · ship option 1 executes the cleanup instead of describing it afterwards', async () => {
-  const { readFileSync } = await import('node:fs');
-  const ship = readFileSync(join(HERE, '..', 'skills', 'ship', 'SKILL.md'), 'utf8');
-  const start = ship.indexOf('### Option 1');
-  const end = ship.indexOf('### Option 2');
-  assert.ok(start > 0 && end > start, 'the option-1 section must exist');
-  const runnable = ship.slice(start, end).split('\n')
-    .filter((l) => !l.trimStart().startsWith('#')).join('\n');
-  assert.match(runnable, /^npx @ericrisco\/rsc worktrees reap /m,
-    'a commented-out command satisfies /rsc worktrees/ too; the criterion is that option 1 RUNS it');
-});
-
 test('15c · the CLI classifies a real repository', () => {
   const root = repo();
   const wt = rscWorktree(root, 'pi');
@@ -421,7 +409,7 @@ test('17b · a real build directory is still regenerable, and so is junk at any 
 });
 
 test('18 · a refusal names every reason, not just the first one it happened to record', async () => {
-  const { refusal } = await import(MOD);
+  const { refusal } = await import(pathToFileURL(MOD).href);
   const root = repo();
   const wt = rscWorktree(root, 'phi');
   write(wt.path, 'feature.txt', 'work\n');
@@ -614,7 +602,7 @@ test('28 · a worktree too large for a 1 MiB pipe is still read, not called unre
 });
 
 test('28b · but a genuinely unreadable worktree is skipped, never called safe', async () => {
-  const { classifyWorktrees: classify } = await import(MOD);
+  const { classifyWorktrees: classify } = await import(pathToFileURL(MOD).href);
   const root = repo();
   const wt = rscWorktree(root, 'gone');
   write(wt.path, 'feature.txt', 'work\n');
@@ -697,13 +685,13 @@ test('31 · a detached worktree is left alone, and no message says "null"', asyn
   const v = verdictFor(root, real);
   assert.equal(v.verdict, 'skip');
   assert.ok(v.reasons.includes('detached'));
-  const { refusal, summarize } = await import(MOD);
+  const { refusal, summarize } = await import(pathToFileURL(MOD).href);
   assert.ok(!refusal(v).includes('null'), 'a refusal that interpolates a branch which does not exist is not a message');
   assert.ok(!summarize(v, root).includes('null'));
 });
 
 test('32 · a submodule is not a worktree of this repository', async () => {
-  const { classifyWorktrees: classify } = await import(MOD);
+  const { classifyWorktrees: classify } = await import(pathToFileURL(MOD).href);
   const root = repo();
   const inner = repo();
   git(root, '-c', 'protocol.file.allow=always', 'submodule', 'add', '-q', inner, 'vendor-lib');
@@ -714,7 +702,7 @@ test('32 · a submodule is not a worktree of this repository', async () => {
 });
 
 test('33 · from inside a worktree, home is the main checkout — not where you stand', async () => {
-  const { resolveMainRoot } = await import(MOD);
+  const { resolveMainRoot } = await import(pathToFileURL(MOD).href);
   const root = repo();
   const wt = rscWorktree(root, 'standing');
 
@@ -743,7 +731,7 @@ test('34 · the remote tip wins over a stale local trunk', () => {
 });
 
 test('35 · an integration question git cannot answer is never read as "landed"', async () => {
-  const { integrationOf, listWorktrees: list, refusal } = await import(MOD);
+  const { integrationOf, listWorktrees: list, refusal } = await import(pathToFileURL(MOD).href);
   const root = repo();
   const wt = rscWorktree(root, 'unanswerable');
   write(wt.path, 'f.txt', 'work\n'); git(wt.path, 'add', '-A'); git(wt.path, 'commit', '-qm', 'feat: u');

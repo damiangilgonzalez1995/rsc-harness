@@ -196,7 +196,7 @@ export function renderAuditMarkdown(report) {
   }
   if (report.summary.clean) L.push('Nothing to flag. The installed set fits the project.', '');
 
-  L.push('---', `_Advisory only. Trim with \`npx @ericrisco/rsc uninstall <id>\`. Re-run with \`npx @ericrisco/rsc audit\`._`);
+  L.push('---', `_Advisory only. Trim with \`npx @damiangil/harness uninstall <id>\`. Re-run with \`npx @damiangil/harness audit\`._`);
   return L.join('\n') + '\n';
 }
 
@@ -210,8 +210,8 @@ export function stampAudit(cwd, date = new Date().toISOString()) {
 // Write the report into the harness wiki when one exists; always stamp .rsc/audit.json.
 export function writeAuditReport(report, cwd = process.cwd()) {
   const written = [];
-  const wikiHarness = join(cwd, '02-DOCS', 'wiki', 'harness');
-  if (existsSync(join(cwd, '02-DOCS', 'wiki'))) {
+  const wikiHarness = join(cwd, 'docs', 'wiki', 'harness');
+  if (existsSync(join(cwd, 'docs', 'wiki'))) {
     mkdirSync(wikiHarness, { recursive: true });
     const file = join(wikiHarness, `skill-audit-${report.date}.md`);
     writeFileSync(file, renderAuditMarkdown(report));

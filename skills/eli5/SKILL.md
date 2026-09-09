@@ -3,7 +3,7 @@ name: eli5
 description: "Use when a topic must be explained from zero to someone who knows nothing about it: one page, big pictures, very few words, everyday analogies, no jargon and nothing assumed. NOT the smallest in-conversation visual for someone already following (that is `show-me`), NOT a course with exercises (that is `course-builder`)."
 tags: [eli5, explain, beginner, simple, analogy, no-jargon, explicame]
 recommends: [show-me, technical-writing, course-builder]
-profiles: [minimal, core, full]
+profiles: [minimal, core, ui, full]
 origin: risco
 ---
 

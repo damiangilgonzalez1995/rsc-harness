@@ -20,8 +20,8 @@ should_not_trigger:
     route_to: rag
     why: Retrieval is how you find context to inject, not how much you let live or when to evict.
   - prompt: "Split these 4 independent modules across agents and reconcile the results."
-    route_to: parallel
-    why: Fan-out/partition-then-gather discipline, not single-window budgeting.
+    route_to: none
+    why: Fan-out/partition-then-gather discipline has no dedicated destination in this catalog, not single-window budgeting.
   - prompt: "Rewrite this prompt so the model returns cleaner JSON."
     route_to: prompt-engineering
     why: Prompt text and output format, not the context budget.

@@ -33,8 +33,8 @@ test('session-start: emits suggest body + banner when no profile and no opt-out'
 
 test('session-start: no banner once user-profile.md exists', () => {
   const root = mkdtempSync(join(tmpdir(), 'rsc-ss-'));
-  mkdirSync(join(root, '02-DOCS/wiki/harness'), { recursive: true });
-  writeFileSync(join(root, '02-DOCS/wiki/harness/user-profile.md'), 'technical_level: technical\n');
+  mkdirSync(join(root, 'docs/wiki/harness'), { recursive: true });
+  writeFileSync(join(root, 'docs/wiki/harness/user-profile.md'), 'technical_level: technical\n');
   const out = runSessionStart(root);
   assert.ok(out.includes('detect & install'), 'still cats suggest body');
   assert.ok(!out.includes('rsc onboarding'), 'no banner when profile exists');
@@ -53,7 +53,7 @@ test('session-start: nudges when CLAUDE.md exceeds the line budget', () => {
   writeFileSync(join(root, 'CLAUDE.md'), `# CLAUDE\n${'x\n'.repeat(250)}`);
   const out = runSessionStart(root);
   assert.ok(out.includes('CLAUDE.md hygiene'), 'over-budget CLAUDE.md triggers the nudge');
-  assert.ok(out.includes('02-DOCS/wiki/index.md'), 'nudge names the offload target');
+  assert.ok(out.includes('docs/wiki/index.md'), 'nudge names the offload target');
 });
 
 test('session-start: no CLAUDE.md nudge under budget or with opt-out', () => {
@@ -70,26 +70,26 @@ test('session-start: no CLAUDE.md nudge under budget or with opt-out', () => {
 
 test('session-start: auto-ingest nudge when wiki exists and inbox has a real file', () => {
   const root = mkdtempSync(join(tmpdir(), 'rsc-ss-'));
-  mkdirSync(join(root, '02-DOCS/wiki'), { recursive: true });
-  mkdirSync(join(root, '02-DOCS/inbox'), { recursive: true });
-  writeFileSync(join(root, '02-DOCS/inbox/invoice.pdf'), '%PDF-1.4');
+  mkdirSync(join(root, 'docs/wiki'), { recursive: true });
+  mkdirSync(join(root, 'docs/inbox'), { recursive: true });
+  writeFileSync(join(root, 'docs/inbox/invoice.pdf'), '%PDF-1.4');
   const out = runSessionStart(root);
   assert.ok(out.includes('rsc auto-ingest'), 'nudges the Auto-Ingest Sweep');
 });
 
 test('session-start: no auto-ingest nudge when inbox holds only README', () => {
   const root = mkdtempSync(join(tmpdir(), 'rsc-ss-'));
-  mkdirSync(join(root, '02-DOCS/wiki'), { recursive: true });
-  mkdirSync(join(root, '02-DOCS/inbox'), { recursive: true });
-  writeFileSync(join(root, '02-DOCS/inbox/README.md'), 'drop zone');
+  mkdirSync(join(root, 'docs/wiki'), { recursive: true });
+  mkdirSync(join(root, 'docs/inbox'), { recursive: true });
+  writeFileSync(join(root, 'docs/inbox/README.md'), 'drop zone');
   const out = runSessionStart(root);
   assert.ok(!out.includes('rsc auto-ingest'), 'README alone is not un-ingested material');
 });
 
 test('session-start: no auto-ingest nudge without a harness wiki', () => {
   const root = mkdtempSync(join(tmpdir(), 'rsc-ss-'));
-  mkdirSync(join(root, '02-DOCS/inbox'), { recursive: true });
-  writeFileSync(join(root, '02-DOCS/inbox/invoice.pdf'), '%PDF-1.4');
+  mkdirSync(join(root, 'docs/inbox'), { recursive: true });
+  writeFileSync(join(root, 'docs/inbox/invoice.pdf'), '%PDF-1.4');
   const out = runSessionStart(root);
   assert.ok(!out.includes('rsc auto-ingest'), 'no wiki → nothing to ingest into yet');
 });
@@ -101,7 +101,7 @@ test('session-start: update banner when a newer version is available', () => {
   const out = runSessionStart(root, { RSC_NO_UPDATE_CHECK: '', RSC_LATEST: '0.2.0' });
   assert.ok(out.includes('rsc update available'), 'notifies when a newer version exists');
   assert.ok(out.includes('0.2.0') && out.includes('0.1.0'), 'shows latest and installed versions');
-  assert.ok(out.includes('npx @ericrisco/rsc@latest'), 'gives the update command');
+  assert.ok(out.includes('npx @damiangil/harness@latest'), 'gives the update command');
 });
 
 test('session-start: no update banner when installed is current', () => {
@@ -255,7 +255,7 @@ test('claude: install wires the UserPromptSubmit new-feature gate (idempotent, o
 
   // The materialized script emits the gate; the opt-out marker silences it.
   const emit = spawnSync('node', [join(cwd, '.rsc/userprompt-gate.mjs'), cwd], { encoding: 'utf8' });
-  assert.ok(emit.stdout.includes('new-feature gate'), 'script emits the gate reminder');
+  assert.ok(emit.stdout.includes('workflow gate'), 'script emits the gate reminder');
   writeFileSync(join(cwd, '.rsc/.no-feature-gate'), '');
   const silenced = spawnSync('node', [join(cwd, '.rsc/userprompt-gate.mjs'), cwd], { encoding: 'utf8' });
   assert.equal(silenced.stdout.trim(), '', 'opt-out marker silences the gate');
@@ -312,8 +312,8 @@ test('userprompt-gate: two scopes in one turn emit the gate exactly once', async
   const first = spawnSync('node', [gate, cwd], { encoding: 'utf8', env, input: turn });
   const second = spawnSync('node', [gate, cwd], { encoding: 'utf8', env, input: turn });
 
-  assert.equal(countOf(first.stdout, 'new-feature gate'), 1, 'first scope emits the gate');
-  assert.equal(countOf(second.stdout, 'new-feature gate'), 0, 'second scope stays silent');
+  assert.equal(countOf(first.stdout, 'workflow gate'), 1, 'first scope emits the gate');
+  assert.equal(countOf(second.stdout, 'workflow gate'), 0, 'second scope stays silent');
 });
 
 test('userprompt-gate: the next turn emits the gate again', async () => {
@@ -330,8 +330,8 @@ test('userprompt-gate: the next turn emits the gate again', async () => {
     encoding: 'utf8', env, input: JSON.stringify({ session_id: 'sess-4', prompt_id: 'turn-2' }),
   });
 
-  assert.equal(countOf(t1.stdout, 'new-feature gate'), 1);
-  assert.equal(countOf(t2.stdout, 'new-feature gate'), 1, 'a new prompt_id is a new turn');
+  assert.equal(countOf(t1.stdout, 'workflow gate'), 1);
+  assert.equal(countOf(t2.stdout, 'workflow gate'), 1, 'a new prompt_id is a new turn');
 });
 
 // De-dup only works when BOTH scopes run an updated hook. A scope left on an older version keeps
@@ -635,7 +635,7 @@ test('cross-target: onboarding gate text rides suggest into a non-claude target'
   assert.ok(agents.includes('catalog --available'), 'capability detector injected cross-target');
   assert.ok(agents.includes('by meaning'), 'detector matches semantically, not by keyword');
   // A hookless target has no per-turn gate, so the routing rule must be IN this block.
-  assert.ok(agents.includes('specify'), 'SDD routing rule survives into a hookless assistant');
+  assert.ok(agents.includes('grill-with-docs'), 'workflow routing rule survives into a hookless assistant');
 });
 
 test('unknown target throws', async () => {
@@ -683,8 +683,8 @@ test('session-start: .rsc/.no-git silences the git banner', () => {
 // ---- session-start: context7 MCP banner (active rsc projects only) -----------
 
 function withProfile(root) {
-  mkdirSync(join(root, '02-DOCS/wiki/harness'), { recursive: true });
-  writeFileSync(join(root, '02-DOCS/wiki/harness/user-profile.md'), 'technical_level: technical\n');
+  mkdirSync(join(root, 'docs/wiki/harness'), { recursive: true });
+  writeFileSync(join(root, 'docs/wiki/harness/user-profile.md'), 'technical_level: technical\n');
 }
 
 test('session-start: context7 banner when a profile exists and no MCP is wired', () => {
@@ -761,8 +761,8 @@ function denied(root, command) {
 function profileDir(level) {
   const root = mkdtempSync(join(tmpdir(), 'rsc-dg-'));
   if (level) {
-    mkdirSync(join(root, '02-DOCS/wiki/harness'), { recursive: true });
-    writeFileSync(join(root, '02-DOCS/wiki/harness/user-profile.md'), `technical_level: ${level}\n`);
+    mkdirSync(join(root, 'docs/wiki/harness'), { recursive: true });
+    writeFileSync(join(root, 'docs/wiki/harness/user-profile.md'), `technical_level: ${level}\n`);
   }
   return root;
 }

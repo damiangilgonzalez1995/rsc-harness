@@ -33,7 +33,7 @@ Good (named)      — "The Elevator Button: press it five times, one elevator st
 
 ### Where names live
 
-Persist every coined model in `02-DOCS/wiki/stack/course-storytelling.md` (or under `wiki/teaching/`) so names stay consistent across lessons and the student hears the same handle every time. A model renamed mid-course is a model un-learned.
+Persist every coined model in `docs/wiki/stack/course-storytelling.md` (or under `wiki/teaching/`) so names stay consistent across lessons and the student hears the same handle every time. A model renamed mid-course is a model un-learned.
 
 ---
 

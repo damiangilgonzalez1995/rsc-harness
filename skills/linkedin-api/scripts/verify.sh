@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # verify.sh — static, no-network checker for the linkedin-api feedback log + secret guard.
-# Read-only. Confirms each 02-DOCS/wiki/linkedin/*.md carries the required metric front-matter,
+# Read-only. Confirms each docs/wiki/linkedin/*.md carries the required metric front-matter,
 # and fails if a LinkedIn token / client secret is committed anywhere in the target tree.
 # Exits 0 on a clean or not-yet-run target (no false failure), non-zero on a real issue.
 #
@@ -23,7 +23,7 @@ note() { echo "NOTE [$1] $2"; }
 # ---------------------------------------------------------------------------
 # (1) Feedback-log front-matter check.
 # ---------------------------------------------------------------------------
-WIKI_DIR="$TARGET/02-DOCS/wiki/linkedin"
+WIKI_DIR="$TARGET/docs/wiki/linkedin"
 REQUIRED_KEYS="post_urn captured_at impressions engagement"
 
 if [ ! -d "$WIKI_DIR" ]; then

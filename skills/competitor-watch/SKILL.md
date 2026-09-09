@@ -48,8 +48,8 @@ If a request needs any of those, **refuse and reframe to the legal equivalent**:
 2. **Pick the vital few, then the watch-axes.** The 3–7 rivals that move your roadmap, and only
    the surfaces (below) that change your decisions. *Why:* watching 30 companies on every axis
    produces noise nobody reads; depth on the few beats breadth on the many.
-3. **Persist the tracker of record** under `02-DOCS/wiki/competitors/` (one profile per rival
-   + a shared change log); keep raw captures under `02-DOCS/raw/competitors/`. *Why:* the
+3. **Persist the tracker of record** under `docs/wiki/competitors/` (one profile per rival
+   + a shared change log); keep raw captures under `docs/raw/competitors/`. *Why:* the
    tracker is a maintained artifact, not a chat answer — it has to live somewhere re-runnable.
 4. **Every price/feature cell carries a `source_url` + `date`, or it stays blank.** *Why:*
    this is the single highest-value guard against inventing a rival's number. If you didn't
@@ -108,7 +108,7 @@ Good: 2026-05-20 · pricing · Acme · acme.com/pricing
 
 Three structured files. Required fields named here; full schema + a filled end-to-end example
 competitor live in `references/tracker-schema.md`. The profile is a `.md` page under the
-`02-DOCS/wiki/` OKF v0.1 bundle, so its YAML frontmatter carries a non-empty `type: competitor`
+`docs/wiki/` OKF v0.1 bundle, so its YAML frontmatter carries a non-empty `type: competitor`
 (plus the OKF-recommended `title`/`description`/`tags`/`timestamp`) alongside the domain keys;
 its body uses standard markdown links, never wikilinks. The two CSVs are data files, not OKF
 documents.

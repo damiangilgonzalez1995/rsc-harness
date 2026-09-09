@@ -1,5 +1,5 @@
 // What does this project already own, and does its colour hold up? — and the tests that check the
-// checker (P2). Spec: 02-DOCS/wiki/sdd/specs/design-starting-point.md
+// checker (P2). Spec: docs/wiki/sdd/specs/design-starting-point.md
 //
 // Three promises in the design area say "I'll propose you a starting point" and none of them had
 // anything behind it. This is the half that can be an algorithm (P1): finding what is already
@@ -17,6 +17,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, rmSync, symlinkSync, chmodSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   ownedStartingPoints,
   contrastRatio,
@@ -72,7 +73,7 @@ test('owned: what the harness cites comes first, and the rest stay listed', () =
   try {
     record(root, 'aaa-first-alphabetically');
     record(root, 'night-shift');
-    const brand = join(harness, '02-DOCS', 'wiki', 'brand');
+    const brand = join(harness, 'docs', 'wiki', 'brand');
     mkdirSync(brand, { recursive: true });
     writeFileSync(join(brand, 'visual-identity.md'), '# Identity\n\nBuilt in the night-shift style.\n');
 
@@ -268,7 +269,7 @@ test('summary stays compact — a report field is paid by every user who runs do
 // must exist in exactly one place, and it must not offer as a candidate something the area's own
 // trend record already marks as reading like a template.
 
-const REPO = new URL('..', import.meta.url).pathname;
+const REPO = fileURLToPath(new URL('..', import.meta.url));
 const MATERIAL = join(REPO, 'skills', 'design', 'references', 'starting-point.md');
 
 test('the mapping lives in exactly one file (P5 — the area just paid down its duplication)', () => {

@@ -1,0 +1,32 @@
+skill: grilling
+
+should_trigger:
+  - prompt: "Interrogame sin tregua sobre este plan."
+    why: "Disparador directo de grilling."
+  - prompt: "Ponme a prueba mi razonamiento en esta decision."
+    why: "Disparador directo de grilling."
+  - prompt: "Quiero que me hagas grill sobre esta idea."
+    why: "Disparador directo de grilling."
+  - prompt: "Interrogate me about this architecture decision."
+    why: "Disparador directo de grilling."
+  - prompt: "Haz preguntas duras hasta que el plan quede a prueba de balas."
+    why: "Disparador directo de grilling."
+
+should_not_trigger:
+  - prompt: "Implementa esta funcion en el backend."
+    route_to: "implement"
+    why: "Implementar el codigo es el trabajo de implement, no de grilling."
+  - prompt: "Escribe un ticket para este trabajo."
+    route_to: "to-tickets"
+    why: "Escribir un ticket es el trabajo de to-tickets, no de grilling."
+  - prompt: "Documenta esta decision de arquitectura."
+    route_to: "write-adr"
+    why: "Documentar una decision de arquitectura es el trabajo de write-adr, no de grilling."
+  - prompt: "Haz un prototipo desechable de esta pantalla."
+    route_to: "prototype"
+    why: "Construir un prototipo desechable es el trabajo de prototype, no de grilling."
+
+capability:
+  - scenario: "El usuario quiere que se pongan a prueba sus decisiones."
+    must_include:
+      - "pregunta"

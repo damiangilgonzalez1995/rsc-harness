@@ -1,0 +1,32 @@
+skill: diseno-landing
+
+should_trigger:
+  - prompt: "Construye la landing de este producto de principio a fin."
+    why: "Disparador directo de diseno-landing."
+  - prompt: "Revisa el copy y la estructura de esta pagina de marketing."
+    why: "Disparador directo de diseno-landing."
+  - prompt: "Necesito elegir el hero, las secciones y los CTAs de esta landing."
+    why: "Disparador directo de diseno-landing."
+  - prompt: "Build a high-conversion landing page for this product."
+    why: "Disparador directo de diseno-landing."
+  - prompt: "Estiliza esta seccion de la web de marketing."
+    why: "Disparador directo de diseno-landing."
+
+should_not_trigger:
+  - prompt: "Construye un dashboard interno de analitica."
+    route_to: "none"
+    why: "Fuera del alcance de diseno-landing."
+  - prompt: "Revisa la accesibilidad de una app movil."
+    route_to: "mejor-accesibilidad"
+    why: "Revisar la accesibilidad es el trabajo de mejor-accesibilidad, no de diseno-landing."
+  - prompt: "Escribe tests end to end para el checkout."
+    route_to: "none"
+    why: "Fuera del alcance de diseno-landing."
+  - prompt: "Documenta el modelo de dominio del proyecto."
+    route_to: "domain-modeling"
+    why: "Documentar el modelo de dominio es el trabajo de domain-modeling, no de diseno-landing."
+
+capability:
+  - scenario: "El usuario construye, edita o revisa una landing o web de marketing."
+    must_include:
+      - "landing"

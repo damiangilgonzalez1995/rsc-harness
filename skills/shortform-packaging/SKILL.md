@@ -1,6 +1,6 @@
 ---
 name: shortform-packaging
-description: "Use when a vertical short is shot or scripted and you need the upload-form copy and cover that win the feed — the hook line, the first-frame on-screen text, the search-led caption, a tight hashtag set, and the cover frame; it learns from what performed via the 02-DOCS log. NOT inventing the idea (that is `shortform-ideation`), NOT scripting or directing the cuts (that is `video-shorts`), NOT executing the edit (that is `shortform-editing`), NOT scheduling the post (that is `social-publisher`)."
+description: "Use when a vertical short is shot or scripted and you need the upload-form copy and cover that win the feed — the hook line, the first-frame on-screen text, the search-led caption, a tight hashtag set, and the cover frame; it learns from what performed via the docs log. NOT inventing the idea (that is `shortform-ideation`), NOT scripting or directing the cuts (that is `video-shorts`), NOT executing the edit (that is `shortform-editing`), NOT scheduling the post (that is `social-publisher`)."
 tags: [shortform, packaging, tiktok, reels, shorts, caption, hashtags, hook, cover, retention, social-copy]
 recommends: [video-shorts, shortform-ideation, shortform-strategy, shortform-editing, social-publisher, brand-voice, tiktok-api, instagram-api]
 profiles: []
@@ -16,7 +16,7 @@ friend. You are not the idea, not the script, not the edit, not the schedule. A 
 clip dies on a weak package; a tested package multiplies a fine clip.
 
 You optimize against measured retention and shares pulled from the account's own
-`02-DOCS` log — not a hunch, not the latest "viral hook" thread.
+`docs` log — not a hunch, not the latest "viral hook" thread.
 
 ## What you produce
 
@@ -29,7 +29,7 @@ Five artifacts plus one feedback entry, every single time:
 4. **A hashtag set** — 3-5 topic-signal tags, never a discovery dump.
 5. **A cover frame + overlay** — which frame becomes the grid/Shorts-shelf billboard,
    plus its 3-6 word overlay.
-6. **A `02-DOCS` feedback entry** — what shipped, the metric that moved, what won.
+6. **A `docs` feedback entry** — what shipped, the metric that moved, what won.
 
 **Precondition (do not skip).** The video must be shot or scripted, and the idea/angle
 must be decided. If there is no script, route to `video-shorts`. If there is no settled
@@ -56,18 +56,18 @@ Every choice below serves exactly two outcomes. Hold them in mind:
 Before you write a word, read the account. Skipping this produces generic copy in a
 stranger's voice that contradicts what already won.
 
-1. Read `02-DOCS/wiki/shortform/` for the **brand voice** and prior packages.
+1. Read `docs/wiki/shortform/` for the **brand voice** and prior packages.
 2. Read the **performance feedback log** — which hooks, covers, and hashtags already
    lifted intro retention and sends. Carry the winner's shape forward.
 3. Pull the decided **idea/angle** from `shortform-ideation` output if it exists.
 4. **No script or no settled angle? Route OUT** (see Handoffs). Never invent here.
 
-Persist the package under `02-DOCS/wiki/shortform/` and raw test results under
-`02-DOCS/raw/shortform/`. The `shortform/` wiki tree is an **OKF v0.1 bundle** shared
+Persist the package under `docs/wiki/shortform/` and raw test results under
+`docs/raw/shortform/`. The `shortform/` wiki tree is an **OKF v0.1 bundle** shared
 with the `tiktok-api` and `shortform-strategy` siblings: each persisted package `.md`
 leads with YAML frontmatter carrying a non-empty `type: shortform-package` (plus the
 recommended `title`/`tags`/`timestamp`), and any cross-references use standard markdown
-links, never `[[wikilinks]]`. The raw feedback log under `02-DOCS/raw/shortform/` is
+links, never `[[wikilinks]]`. The raw feedback log under `docs/raw/shortform/` is
 `raw/`, not `wiki/` — no frontmatter required. The full frontmatter + pattern depth
 lives in [references/package-templates.md](references/package-templates.md).
 
@@ -177,7 +177,7 @@ Cover checklist:
 - [ ] Overlay text sits inside the 1:1 centre square (the only region that survives the 3:4 grid crop, the 4:5 feed crop, and the 9:16 tab)
 - [ ] Text clears the top status bar and bottom UI
 
-## The learning loop (02-DOCS)
+## The learning loop (docs)
 
 This is the core that makes the skill compound. **Read winners before writing; append a
 result after shipping.** Key the log on the metrics that move distribution — NOT likes:
@@ -237,7 +237,7 @@ existence as a precondition.
 | Like-bait CTA ("smash that like") | A save/send payoff — sends and saves outweigh likes. |
 | Cover text outside the 1:1 centre square | Keep overlay inside the centre square — the band that survives the 3:4 grid, 4:5 feed, and 9:16 tab crops — clear of UI. |
 | On-screen text that doesn't match the hook | Make on-screen text the silent twin — same words. |
-| Writing blind, ignoring the 02-DOCS log | Read prior winners first; carry the winning shape forward. |
+| Writing blind, ignoring the docs log | Read prior winners first; carry the winning shape forward. |
 | Packaging before a script/idea exists | Route to `video-shorts` / `shortform-ideation` first. |
 | Same caption copy-pasted to every platform | Tune keywords and hashtags per platform's search audience. |
 | Logging likes as the success metric | Log intro retention, sends-per-reach, and saves. |
@@ -247,6 +247,6 @@ existence as a precondition.
 `scripts/verify.sh <package-file>` is a read-only, network-free lint over one package
 draft: hook set has ≥2 variants; on-screen text exists and is ≤7 words per line; the
 caption's first sentence is ≤~150 chars and does not open with a banned teaser; the
-hashtag count is 3-5; a cover frame + overlay is present; and a `02-DOCS` feedback block
+hashtag count is 3-5; a cover frame + overlay is present; and a `docs` feedback block
 exists with `intro_retention`, `sends_per_reach`, and `saves`. A clean or empty file
 exits 0 — never a false failure. See `evals/README.md` for how the cases are run.

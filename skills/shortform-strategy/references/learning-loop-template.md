@@ -4,7 +4,7 @@ The forms that keep SKILL.md a playbook instead of a worksheet. Copy these verba
 
 ## Per-post metrics ledger
 
-Write to `02-DOCS/raw/shortform/metrics.csv`. One row per published post. The non-vanity columns — `completion_pct`, `sends`, `saves` — are the ones that drive reach in 2026; logging only `likes`/`views` makes you blind to the actual signal.
+Write to `docs/raw/shortform/metrics.csv`. One row per published post. The non-vanity columns — `completion_pct`, `sends`, `saves` — are the ones that drive reach in 2026; logging only `likes`/`views` makes you blind to the actual signal.
 
 ```csv
 date,platform,format,hook,length_s,sound,completion_pct,sends,saves,follows,notes
@@ -25,7 +25,7 @@ Deliberately **no `likes` column** — if you want it, add it last, never first.
 
 ## Monthly review checklist
 
-Run once a month, reading `02-DOCS/raw/shortform/metrics.csv`:
+Run once a month, reading `docs/raw/shortform/metrics.csv`:
 
 - [ ] Sort by `completion_pct`: name the top 3 and bottom 3 posts. What do the top 3 share?
 - [ ] Sort by `sends`: same — which hooks/formats earned shares?
@@ -34,11 +34,11 @@ Run once a month, reading `02-DOCS/raw/shortform/metrics.csv`:
 - [ ] Which trend calls paid off (rode within 24h, on-niche) vs which were forced?
 - [ ] Make exactly **one** change to positioning, cadence, mix, or series — not five.
 - [ ] Record it as a dated decision (template below). Set a `revisit on` date.
-- [ ] Write the compiled state back to `02-DOCS/wiki/shortform/strategy.md`.
+- [ ] Write the compiled state back to `docs/wiki/shortform/strategy.md`.
 
 ## Decision-record template
 
-`02-DOCS/wiki/shortform/decisions.md` is an OKF v0.1 append-log: the frontmatter header (a non-empty `type` is the only OKF hard requirement; `title`/`tags`/`timestamp` are recommended) is written once, then each new block is **prepended newest-first** under the H1. Every block is dated (ISO 8601), rests on a named metric, and carries a revisit date so it is an experiment, not folklore. Past blocks are immutable; bump the header `timestamp` on each append.
+`docs/wiki/shortform/decisions.md` is an OKF v0.1 append-log: the frontmatter header (a non-empty `type` is the only OKF hard requirement; `title`/`tags`/`timestamp` are recommended) is written once, then each new block is **prepended newest-first** under the H1. Every block is dated (ISO 8601), rests on a named metric, and carries a revisit date so it is an experiment, not folklore. Past blocks are immutable; bump the header `timestamp` on each append.
 
 ```markdown
 ---

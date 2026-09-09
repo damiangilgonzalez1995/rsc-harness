@@ -1,0 +1,9 @@
+{
+  "concept": "inheritance",
+  "level": 1,
+  "title_en": "Subclass Notification with super().__init__",
+  "spec_html_en": "<p>Define class <code>EmailNotification(Notification)</code> with <code>__init__(self, message, address)</code> that calls <code>super().__init__(message)</code> and stores <code>address</code>.</p>",
+  "stub": "class Notification:\n    def __init__(self, message: str):\n        self.message = message\n\n    def send(self):\n        return f'Sending: {self.message}'\n\n\n# TODO: define class EmailNotification(Notification) with __init__(self, message, address)\n# that calls super().__init__(message) and stores address\n",
+  "test": "def test_email_stores_message_via_super():\n    n = EmailNotification('Server down', 'ops@example.com')\n    assert n.message == 'Server down', 'EmailNotification must call super().__init__ to store message'\n\ndef test_email_stores_address():\n    n = EmailNotification('Server down', 'ops@example.com')\n    assert n.address == 'ops@example.com', 'EmailNotification must store its own address'\n\ndef test_email_inherits_send():\n    n = EmailNotification('Server down', 'ops@example.com')\n    assert n.send() == 'Sending: Server down', 'EmailNotification must inherit send() from Notification'",
+  "canonical": "class Notification:\n    def __init__(self, message):\n        self.message = message\n\n    def send(self):\n        return f'Sending: {self.message}'\n\n\nclass EmailNotification(Notification):\n    def __init__(self, message, address):\n        super().__init__(message)\n        self.address = address\n"
+}

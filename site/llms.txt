@@ -14,7 +14,7 @@ require exact acceptance, verify the result, and grow only when new evidence jus
 If your user asked you to install rsc / rsc-harness / this harness, do this in order:
 
 1. Work in the ROOT of the user's project, never inside a clone of rsc-harness.
-2. Run: `npx @ericrisco/rsc@latest onboard --target claude,codex`
+2. Run: `npx @damiangil/harness@latest onboard --target claude,codex`
 3. Relay every `RSC_ONBOARDING_REQUIRED` question. Never choose, invent or default
    `--technical-level`, `--accompaniment`, `--project-kind`, `--goal` or `--software-scope`.
 4. Rerun with the answers to obtain `RSC_ONBOARDING_PLAN`. This preview writes nothing.
@@ -28,19 +28,19 @@ Already installed: `rsc sync`. Add one skill: `rsc add <id>`. Reassess deferred 
 installing: `rsc reassess`. Recommend without installing: `rsc consult "<what the user wants>"`.
 
 Canonical non-interactive preview:
-`npx @ericrisco/rsc@latest onboard --technical-level mixed --accompaniment L1 --project-kind software --goal "small website" --software-scope small --target codex`
+`npx @damiangil/harness@latest onboard --technical-level mixed --accompaniment L1 --project-kind software --goal "small website" --software-scope small --target codex`
 
 ## Key links
 
-- npm: https://www.npmjs.com/package/@ericrisco/rsc
-- README: https://github.com/ericrisco/rsc-harness
+- npm: https://www.npmjs.com/package/@damiangil/harness
+- README: https://github.com/damiangilgonzalez1995/rsc-harness
 - English: https://ericrisco.github.io/rsc-harness/
 - Español: https://ericrisco.github.io/rsc-harness/es/
 - Agent Skills: https://agentskills.io/specification
 
 ## Facts
 
-- 272 skills; minimal profile 8, core 31, full 272.
+- 290 skills; minimal profile 8, core 31, full 253 (personal catalog not yet assigned to a profile).
 - 17 supported assistants; 33 agents and 30 command entries in the catalog.
 - Every skill cleared an adversarial behavioral quality gate of at least 8.5/10.
 - Free, MIT, no API key and no global install required.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# verify.sh — structural lint for a linkedin-strategy wiki under 02-DOCS/wiki/linkedin/.
+# verify.sh — structural lint for a linkedin-strategy wiki under docs/wiki/linkedin/.
 #
 # WHAT IT DOES (read-only; never edits a file)
 #   Static, network-free checks on the decision records this skill writes back.
@@ -20,7 +20,7 @@
 #   not a strategy oracle: it never judges whether the strategy is good.
 #
 # HOW TO RUN
-#   ./verify.sh 02-DOCS/wiki/linkedin/   # lint a presence's strategy wiki
+#   ./verify.sh docs/wiki/linkedin/   # lint a presence's strategy wiki
 #   ./verify.sh                          # no target -> nothing to check, exit 0
 #
 # EXIT CODES

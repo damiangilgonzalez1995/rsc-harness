@@ -70,7 +70,7 @@ test('missing: the directory exists but holds no identity article', () => {
 test('inconclusive: the brand path is a file, not a directory — cannot look, so cannot say', () => {
   const root = harness();
   try {
-    mkdirSync(join(root, '02-DOCS', 'wiki'), { recursive: true });
+    mkdirSync(join(root, 'docs', 'wiki'), { recursive: true });
     writeFileSync(brand(root), 'not a directory\n');
 
     const r = designIdentity(root);
@@ -83,7 +83,7 @@ test('inconclusive: the brand path is a file, not a directory — cannot look, s
 test('inconclusive: a dangling symlink where the brand directory should be', () => {
   const root = harness();
   try {
-    mkdirSync(join(root, '02-DOCS', 'wiki'), { recursive: true });
+    mkdirSync(join(root, 'docs', 'wiki'), { recursive: true });
     symlinkSync(join(root, 'nowhere-at-all'), brand(root));
 
     const r = designIdentity(root);

@@ -321,7 +321,7 @@ five types here cover the overwhelming majority of marketing sites.
 You do not need a paid tool to do real keyword work. Use the agent's **WebSearch** plus the free
 audit. Escalate to APIs only when scale demands it.
 
-1. **Seed from the brand study.** The SEO keywords dimension in `02-DOCS/wiki/brand/` is the
+1. **Seed from the brand study.** The SEO keywords dimension in `docs/wiki/brand/` is the
    starting list — never invent keywords the brand hasn't claimed.
 2. **Expand with WebSearch.** Search the seed terms; read the People-Also-Ask questions and the
    autocomplete-style related queries that surface. Each real question is a candidate FAQ entry and
@@ -388,4 +388,4 @@ Run before claiming a page is optimized.
 - `../nextjs/SKILL.md` — implements the technical layer: Metadata API for title/description/OG and
   JSON-LD, `next/image` and font strategy for Core Web Vitals.
 - `../design/SKILL.md` — the visual/UX layer; CLS and LCP are as much layout as code.
-- `../harness/SKILL.md` — the `02-DOCS/wiki/brand/` study whose SEO-keywords dimension seeds the research above.
+- `../harness/SKILL.md` — the `docs/wiki/brand/` study whose SEO-keywords dimension seeds the research above.

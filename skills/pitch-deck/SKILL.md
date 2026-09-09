@@ -204,6 +204,6 @@ References:
   CAC/LTV health check to `unit-economics`.
 
 See also: `../presentations/SKILL.md` (renders + exports the locked outline), `../marketing/SKILL.md` (polishes
-the words), `../harness/SKILL.md` (the `02-DOCS` wiki where deck/raise conventions persist). The siblings
+the words), `../harness/SKILL.md` (the `docs` wiki where deck/raise conventions persist). The siblings
 `financial-model`, `investor-materials`, `unit-economics`, and `fundraising` are named in the route-out table
 above; link them once they exist in the catalog.

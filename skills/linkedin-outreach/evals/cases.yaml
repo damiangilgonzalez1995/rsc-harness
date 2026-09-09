@@ -8,7 +8,7 @@ should_trigger:
   - prompt: "Build me a 30-minute-a-day social-selling routine that turns LinkedIn into pipeline."
     why: The loop plus the daily checklist — the motion, not any message.
   - prompt: "Turn everyone who engaged with my last post into a conversation, and log who I've touched."
-    why: Engagement-to-conversation play plus the 02-DOCS ledger.
+    why: Engagement-to-conversation play plus the docs ledger.
   - prompt: "Someone just viewed my profile and another person liked my post — what's the play?"
     why: Non-obvious signal-to-play question; the choreography, never the finished copy.
   - prompt: "Munta'm una rutina de social selling a LinkedIn i porta'm un registre dels contactes."
@@ -38,6 +38,6 @@ capability:
       - Specifies the engagement-before-connect ritual (view + one genuine comment/like 1–2 days prior) and the acceptance lift it buys.
       - Gives a note-or-no-note decision tied to the acceptance-vs-reply goal (the note paradox).
       - States the weekly connection-request budget and at least one health rule (rolling cap, pause if acceptance drops).
-      - Defines the 02-DOCS ledger path and its columns.
+      - Defines the docs ledger path and its columns.
       - Delegates the actual message copy to cold-outreach.
       - Names the pipeline handoff point (booked call / warm intro → sales-pipeline).

@@ -1,0 +1,9 @@
+{
+  "concept": "methods",
+  "level": 1,
+  "title_en": "Add a staticmethod code validator",
+  "spec_html_en": "<p>The class <code>Coupon</code> already applies a discount. Add a <code>@staticmethod</code> <code>is_valid_code(code)</code> that returns <code>True</code> if <code>code</code> starts with <code>\"SALE-\"</code>, <code>False</code> otherwise.</p>",
+  "stub": "class Coupon:\n    def __init__(self, code: str, percent_off: float):\n        self.code = code\n        self.percent_off = percent_off\n\n    def apply(self, price: float) -> float:\n        return price * (1 - self.percent_off / 100)\n\n    # TODO: add a staticmethod is_valid_code(code) -> bool, True if code starts with 'SALE-'\n",
+  "test": "def test_apply_discount():\n    c = Coupon('SALE-10', 10)\n    assert c.apply(100) == 90, 'apply(100) with 10% off must be 90'\n\ndef test_valid_code_true():\n    assert Coupon.is_valid_code('SALE-5') is True, \"codes starting with 'SALE-' are valid\"\n\ndef test_valid_code_false():\n    assert Coupon.is_valid_code('XYZ') is False, \"codes not starting with 'SALE-' are invalid\"",
+  "canonical": "class Coupon:\n    def __init__(self, code, percent_off):\n        self.code = code\n        self.percent_off = percent_off\n\n    def apply(self, price):\n        return price * (1 - self.percent_off / 100)\n\n    @staticmethod\n    def is_valid_code(code):\n        return code.startswith('SALE-')\n"
+}

@@ -93,7 +93,7 @@ export function wireHook(paths, sourceMd, policy = {}) {
   let suggestRel = at(relative(paths.projectRoot, paths.skillDir('suggest')).split(sep).join('/'), 'SKILL.md');
   const operationsSuggest = join(paths.projectRoot, '.rsc', 'suggest-always-on.md');
   if (policy.codeHooks === false) {
-    writeFileSync(operationsSuggest, '# rsc-suggest — always-on operations layer\n\nRead `02-DOCS/wiki/harness/user-profile.md` before acting. Use `orient` to keep the user situated and `suggest` to offer a missing skill only when the current task needs it. Close with the configured orientation block.\n');
+    writeFileSync(operationsSuggest, '# rsc-suggest — always-on operations layer\n\nRead `docs/wiki/harness/user-profile.md` before acting. Use `orient` to keep the user situated and `suggest` to offer a missing skill only when the current task needs it. Close with the configured orientation block.\n');
     suggestRel = at('.rsc', 'suggest-always-on.md');
   } else if (existsSync(operationsSuggest)) rmSync(operationsSuggest, { force: true });
   const cmd = `node "${at('.rsc', 'session-start.mjs')}" "${suggestRel}" "${P}"`;
@@ -111,7 +111,7 @@ export function wireHook(paths, sourceMd, policy = {}) {
 
   // Worklog checkpoint: PreCompact + SessionEnd run a project-local
   // worklog-checkpoint.mjs via `node` that reminds the agent to capture what we did
-  // this session into 02-DOCS/raw/worklog/ (the work-driven on-ramp). Silent when
+  // this session into docs/raw/worklog/ (the work-driven on-ramp). Silent when
   // the workspace has no harness wiki. Registered idempotently on both events, with
   // any prior rsc worklog-checkpoint entry (.sh or .mjs) dropped first.
   const wlDest = join(paths.projectRoot, '.rsc', 'worklog-checkpoint.mjs');
@@ -203,6 +203,11 @@ export function wireHook(paths, sourceMd, policy = {}) {
       rmSync(join(paths.projectRoot, '.rsc', name), { force: true });
     }
     written.push(operationsSuggest);
+  }
+
+  if (policy.plugins?.length) {
+    settings.enabledPlugins ||= {};
+    for (const id of policy.plugins) settings.enabledPlugins[id] = true;
   }
 
   mkdirSync(dirname(file), { recursive: true });

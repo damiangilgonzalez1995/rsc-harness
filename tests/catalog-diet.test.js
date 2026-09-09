@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { descriptionWeight, DESCRIPTION_CEILING_CHARS } from '../scripts/build-manifest.js';
 
-// Invariants for the catalog's context weight. See 02-DOCS/wiki/sdd/specs/catalog-diet.md.
+// Invariants for the catalog's context weight. See docs/wiki/sdd/specs/catalog-diet.md.
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SKILLS = join(ROOT, 'skills');
 

@@ -1,0 +1,9 @@
+{
+  "concept": "dataclasses",
+  "level": 1,
+  "title_en": "Add fields to a dataclass",
+  "spec_html_en": "<p>Turn <code>Product</code> into a dataclass with fields <code>name: str</code>, <code>price: float</code> and <code>in_stock: bool = True</code>.</p>",
+  "stub": "from dataclasses import dataclass\n\n\n@dataclass\nclass Product:\n    # TODO: add fields name: str, price: float, in_stock: bool = True\n    pass\n",
+  "test": "def test_fields_stored():\n    p = Product('Widget', 9.99)\n    assert p.name == 'Widget', 'name must be stored'\n    assert p.price == 9.99, 'price must be stored'\n\ndef test_default_in_stock():\n    p = Product('Widget', 9.99)\n    assert p.in_stock is True, 'in_stock must default to True'\n\ndef test_repr_contains_name():\n    p = Product('Gadget', 5)\n    assert 'Gadget' in repr(p), 'dataclass repr must include field values'",
+  "canonical": "from dataclasses import dataclass\n\n\n@dataclass\nclass Product:\n    name: str\n    price: float\n    in_stock: bool = True\n"
+}

@@ -14,7 +14,7 @@
 #        no obvious CTA verb.
 #     5b. JSON-LD/schema presence: landing-style pages (<section>) with no
 #         application/ld+json get a GEO/SEO warning (detect-or-skip; see seo-geo.md).
-#     6. Brand-grounding presence: warns if no 02-DOCS/wiki/brand/ study is found.
+#     6. Brand-grounding presence: warns if no docs/wiki/brand/ study is found.
 #
 #   Every finding is a WARNING by default (copy is judgement, not pass/fail).
 #   Use --strict to turn warnings into a failure (exit 1) so CI can gate on it.
@@ -213,10 +213,10 @@ else
 fi
 
 # --- 6. brand-grounding presence --------------------------------------------
-if [ -d "$SCAN_PATH/02-DOCS/wiki/brand" ] || [ -d "02-DOCS/wiki/brand" ]; then
-  ok "brand study found under 02-DOCS/wiki/brand/"
+if [ -d "$SCAN_PATH/docs/wiki/brand" ] || [ -d "docs/wiki/brand" ]; then
+  ok "brand study found under docs/wiki/brand/"
 else
-  warn "no brand study at 02-DOCS/wiki/brand/ — run the brand-grounding gate before shipping copy"
+  warn "no brand study at docs/wiki/brand/ — run the brand-grounding gate before shipping copy"
 fi
 
 # --- summary ----------------------------------------------------------------

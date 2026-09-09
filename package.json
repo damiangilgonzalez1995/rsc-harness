@@ -1,5 +1,5 @@
 {
-  "name": "@ericrisco/rsc",
+  "name": "@damiangil/harness",
   "version": "1.3.2",
   "description": "A guided harness builder that turns your goal into a minimal, verified AI-agent setup using strict best practices.",
   "type": "module",
@@ -17,7 +17,6 @@
     "drift:check": "node scripts/drift-check.js",
     "drift:knowledge": "node scripts/drift-check.js --knowledge",
     "knowledge:doctor": "node scripts/knowledge-doctor.js",
-    "spec:gate": "node scripts/spec-gate.js",
     "routing:audit": "node scripts/routing-audit.js",
     "originality:check": "node scripts/originality-check.js",
     "test": "node --test",
@@ -53,14 +52,14 @@
     "ai"
   ],
   "license": "MIT",
-  "author": "Eric Risco",
-  "homepage": "https://github.com/ericrisco/rsc-harness#readme",
+  "author": "Damián Gil González",
+  "homepage": "https://github.com/damiangilgonzalez1995/rsc-harness#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ericrisco/rsc-harness.git"
+    "url": "git+https://github.com/damiangilgonzalez1995/rsc-harness.git"
   },
   "bugs": {
-    "url": "https://github.com/ericrisco/rsc-harness/issues"
+    "url": "https://github.com/damiangilgonzalez1995/rsc-harness/issues"
   },
   "publishConfig": {
     "access": "public"

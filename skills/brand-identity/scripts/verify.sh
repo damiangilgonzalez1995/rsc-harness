@@ -68,7 +68,7 @@ if [ -z "$TOKENS" ]; then
   for cand in \
     ./design-tokens.json \
     ./tokens/design-tokens.json \
-    ./02-DOCS/wiki/brand/design-tokens.json; do
+    ./docs/wiki/brand/design-tokens.json; do
     if [ -f "$cand" ]; then TOKENS="$cand"; break; fi
   done
   if [ -z "$TOKENS" ]; then

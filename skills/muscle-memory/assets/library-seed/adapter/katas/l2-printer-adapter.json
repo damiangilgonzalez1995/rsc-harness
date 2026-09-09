@@ -1,0 +1,9 @@
+{
+  "concept": "adapter",
+  "level": 2,
+  "title_en": "Wrap a legacy printer behind a new interface",
+  "spec_html_en": "<p>There is a legacy <code>OldPrinter</code> class with method <code>send(text)</code> returning <code>f\"printed: {text}\"</code>. Write class <code>PrinterAdapter</code>: <code>__init__(self, old_printer)</code> stores it, and <code>render(self, document)</code> delegates to the wrapped printer's <code>send</code> method and returns its result unchanged.</p>",
+  "stub": "class OldPrinter:\n    def send(self, text):\n        return f'printed: {text}'\n\n\nclass PrinterAdapter:\n    # TODO: implement __init__ and render, delegating to the wrapped OldPrinter.send\n    pass\n",
+  "test": "def test_adapter_delegates_to_legacy_send():\n    adapter = PrinterAdapter(OldPrinter())\n    assert adapter.render('invoice #1') == 'printed: invoice #1', 'render must delegate to the legacy send() method'\n\ndef test_adapter_works_with_different_printers():\n    class MockPrinter:\n        def send(self, text):\n            return f'MOCK[{text}]'\n    adapter = PrinterAdapter(MockPrinter())\n    assert adapter.render('test') == 'MOCK[test]', 'the adapter must work with any object exposing a compatible send() method'\n\ndef test_render_returns_a_string():\n    adapter = PrinterAdapter(OldPrinter())\n    result = adapter.render('')\n    assert isinstance(result, str), 'render must return a string'\n",
+  "canonical": "class OldPrinter:\n    def send(self, text):\n        return f'printed: {text}'\n\n\nclass PrinterAdapter:\n    def __init__(self, old_printer):\n        self.old_printer = old_printer\n\n    def render(self, document):\n        return self.old_printer.send(document)\n"
+}

@@ -78,12 +78,12 @@ test('renderAuditMarkdown includes the headline and a re-run hint', () => {
   const md = renderAuditMarkdown(audit({ cwd: project(['prisma-orm', 'drizzle-orm']), home: emptyHome(), date: '2026-06-05' }));
   assert.match(md, /# Skill audit — 2026-06-05/);
   assert.match(md, /Possible overlap/);
-  assert.match(md, /rsc audit/);
+  assert.match(md, /damiangil\/harness audit/);
 });
 
 test('writeAuditReport writes the wiki file when a harness wiki exists, and always stamps audit.json', () => {
   const cwd = project(['prisma-orm', 'drizzle-orm']);
-  mkdirSync(join(cwd, '02-DOCS', 'wiki'), { recursive: true });
+  mkdirSync(join(cwd, 'docs', 'wiki'), { recursive: true });
   const r = audit({ cwd, home: emptyHome(), date: '2026-06-05' });
   const written = writeAuditReport(r, cwd);
   assert.ok(written.length === 1 && written[0].endsWith('skill-audit-2026-06-05.md'));

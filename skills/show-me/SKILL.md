@@ -3,7 +3,7 @@ name: show-me
 description: "Use when the user needs to see how something works instead of reading about it: picks the smallest visual that carries the point — pseudocode, call tree, file tree, component tree, Mermaid, a shaped diff, or one HTML page. NOT visual identity (that is `design-loop`), NOT slides (that is `presentations`), NOT a from-zero explainer (that is `eli5`)."
 tags: [show-me, explain, diagram, visual, mermaid, diff, call-tree, ensename]
 recommends: [eli5, presentations, technical-writing, codebase-onboarding]
-profiles: [minimal, core, full]
+profiles: [minimal, core, ui, full]
 origin: risco
 ---
 

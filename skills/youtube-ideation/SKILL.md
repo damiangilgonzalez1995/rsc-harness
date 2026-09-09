@@ -30,7 +30,7 @@ competitors for outliers as one-time input; running a standing watch on a named 
 
 ## What you produce
 
-Two coupled Markdown artifacts, both written to `02-DOCS/` so the next run sees them:
+Two coupled Markdown artifacts, both written to `docs/` so the next run sees them:
 
 1. **An idea ledger** — candidate ideas scored on a fixed rubric, ranked, with the top
    picks promoted to `produce`, each tagged with its demand evidence (outlier links,
@@ -51,7 +51,7 @@ Exact templates for both artifacts: `references/idea-ledger-and-loop.md`.
 
 ## Read the log first — you cannot score what you can't measure
 
-Before you generate a single idea, load the channel performance history from `02-DOCS/`
+Before you generate a single idea, load the channel performance history from `docs/`
 and compute each past video's **outlier multiple = views ÷ the channel's average views**.
 
 ```text
@@ -66,10 +66,10 @@ raw views.
 
 Decision at the top of every run:
 
-| Found in `02-DOCS/`? | Do this |
+| Found in `docs/`? | Do this |
 | --- | --- |
 | A performance log with views per video | Use it. Compute the channel average → that is your **baseline**. |
-| Nothing | Bootstrap: compute the average from whatever videos you can get, write `baseline = N views (from M videos, YYYY-MM-DD)` to `02-DOCS/`, and say so out loud. |
+| Nothing | Bootstrap: compute the average from whatever videos you can get, write `baseline = N views (from M videos, YYYY-MM-DD)` to `docs/`, and say so out loud. |
 
 You cannot grade a hypothesis "vs baseline" if there is no baseline. The raw numbers are
 populated by `../youtube-api/SKILL.md` — you read them, you do not pull them.

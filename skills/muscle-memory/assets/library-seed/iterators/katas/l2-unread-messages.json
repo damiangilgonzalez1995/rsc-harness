@@ -1,0 +1,9 @@
+{
+  "concept": "iterators",
+  "level": 2,
+  "title_en": "Build UnreadMessages with __iter__/__next__",
+  "spec_html_en": "<p>Write class <code>UnreadMessages</code> implementing the iterator protocol over a list of message dicts (each with a <code>read</code> key). <code>__init__(self, messages)</code> stores them. <code>__iter__</code> returns <code>self</code>. <code>__next__</code> returns the next message whose <code>read</code> is <code>False</code> (skipping read ones), and raises <code>StopIteration</code> when there are no more.</p>",
+  "stub": "class UnreadMessages:\n    # TODO: implement __init__, __iter__ and __next__ per spec\n    pass\n",
+  "test": "def test_iterates_only_unread():\n    messages = [{'text': 'hi', 'read': True}, {'text': 'call me', 'read': False}, {'text': 'urgent', 'read': False}]\n    result = list(UnreadMessages(messages))\n    assert result == [messages[1], messages[2]], 'must yield only messages with read=False, in order'\n\ndef test_iter_returns_self():\n    it = UnreadMessages([])\n    assert iter(it) is it, '__iter__ must return self so the object is its own iterator'\n\ndef test_raises_stop_iteration_when_exhausted():\n    it = UnreadMessages([{'text': 'a', 'read': False}])\n    next(it)\n    try:\n        next(it)\n        assert False, 'calling next() past the last unread message must raise StopIteration'\n    except StopIteration:\n        pass",
+  "canonical": "class UnreadMessages:\n    def __init__(self, messages):\n        self.messages = messages\n        self.index = 0\n\n    def __iter__(self):\n        return self\n\n    def __next__(self):\n        while self.index < len(self.messages):\n            message = self.messages[self.index]\n            self.index += 1\n            if not message['read']:\n                return message\n        raise StopIteration\n"
+}

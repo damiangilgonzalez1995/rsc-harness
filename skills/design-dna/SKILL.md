@@ -26,7 +26,7 @@ Nobody wrote down **why** the winner was beautiful. Next time you ask for "the s
 If a `dna.json` already exists for the style named, you are in REUSE. Never re-derive a style that has a record.
 
 To find out which records exist — in either scope, without guessing at paths — run
-`npx @ericrisco/rsc doctor --json` and read `designStartingPoint`. A record it reports as `unreadable`
+`npx @damiangil/harness doctor --json` and read `designStartingPoint`. A record it reports as `unreadable`
 is **not** a record you can reuse: say what is missing, do not use half of one.
 
 ## Hard rules (these are the skill)
@@ -72,8 +72,8 @@ Run `PROMPT.md` as written. It is the operative artefact and it is self-containe
 The folder above makes the style **reusable**. Writing the record into the harness is what makes it
 **this project's identity** rather than a loose folder in a global directory:
 
-- Write the record as an article under `02-DOCS/wiki/brand/`, beside the brand study, and link it
-  from `02-DOCS/wiki/index.md` and the root `CLAUDE.md` `## Brand & voice` section — the same
+- Write the record as an article under `docs/wiki/brand/`, beside the brand study, and link it
+  from `docs/wiki/index.md` and the root `CLAUDE.md` `## Brand & voice` section — the same
   convention `design` follows, and the same place `marketing`, `presentations`, `brand-voice` and
   `content-engine` already read.
 - **It does not replace the brand study.** The study is the judgement and the direction — why this

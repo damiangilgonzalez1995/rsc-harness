@@ -25,7 +25,7 @@
 //
 // It never writes. The output is a report; adopting it is a human's job.
 import { readdirSync, readFileSync, existsSync, realpathSync } from 'node:fs';
-import { join, dirname, resolve, relative, basename } from 'node:path';
+import { join, dirname, resolve, relative, basename, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { homedir } from 'node:os';
 
@@ -90,7 +90,7 @@ export function extractProseLinks(text) {
 
 // Report mode only: a path asserted inside backticks. Noisier by nature (this is where syntax
 // examples live), which is exactly why it never gates a build.
-const TOP_DIRS = /^(scripts|targets|skills|tests|bin|site|schema|02-DOCS|\.github|\.rsc)(\/|$)/;
+const TOP_DIRS = /^(scripts|targets|skills|tests|bin|site|schema|docs|\.github|\.rsc)(\/|$)/;
 export function extractInlinePaths(text) {
   const noFences = stripFences(text);
   const out = [];
@@ -122,15 +122,15 @@ export const CLASSES = {
   // tests/drift-check.test.js already forbids shipping one.
   'web-route': (t) => t.startsWith('/'),
   // The INSTALLED user's project, which the catalog legitimately talks about and does not
-  // contain. Segment-exact, so `rawdata/` and `02-DOCSX/` stay real claims.
-  'user-project': (t) => /(^|\/)(02-DOCS|raw)\//.test(t),
+  // contain. Segment-exact, so `rawdata/` and `docsX/` stay real claims.
+  'user-project': (t) => /(^|\/)(docs|raw)\//.test(t),
 };
 
 export function classify(target, { mode = 'catalog' } = {}) {
   for (const name of ['placeholder', 'anchored', 'runtime', 'web-route']) {
     if (CLASSES[name](target)) return name;
   }
-  // In knowledge mode this repo IS the project, so `02-DOCS/…` is a real claim about real files.
+  // In knowledge mode this repo IS the project, so `docs/…` is a real claim about real files.
   if (mode === 'catalog' && CLASSES['user-project'](target)) return 'user-project';
   return 'real';
 }
@@ -143,7 +143,7 @@ export function classify(target, { mode = 'catalog' } = {}) {
 // would otherwise arrive as false positives.
 export function basesFor(docPath, { mode, root }) {
   if (mode === 'catalog') return [dirname(docPath)];
-  return [dirname(docPath), root, join(root, '02-DOCS'), join(root, '02-DOCS', 'wiki'), join(root, 'skills')];
+  return [dirname(docPath), root, join(root, 'docs'), join(root, 'docs', 'wiki'), join(root, 'skills')];
 }
 
 // `existsSync` asks the filesystem, and on APFS/HFS+ (macOS) and NTFS (Windows) the filesystem
@@ -157,14 +157,17 @@ export function basesFor(docPath, { mode, root }) {
 // construction; the declared hole is a target that resolves OUTSIDE the repo, where there is no
 // listing we can trust — the repo's own path may sit under a differently-cased volume or behind a
 // symlink, and a false positive in a blocking gate costs more than a named gap.
-// Spec: 02-DOCS/wiki/sdd/specs/drift-check-case.md
+// Spec: docs/wiki/sdd/specs/drift-check-case.md
 function existsExact(absTarget, root, cache) {
   const rel = relative(root, absTarget);
   // Outside the repo (or the root itself): keep the old behaviour, and say so rather than guess.
   if (rel === '' || rel.startsWith('..') || rel.startsWith('/')) return existsSync(absTarget);
 
   let dir = root;
-  for (const segment of rel.split('/')) {
+  // `relative()` returns platform-native separators (`\` on Windows, `/` elsewhere); splitting
+  // on a hardcoded '/' left every Windows path as a single un-matched segment, so no link ever
+  // resolved there. Split on `sep` instead — it is exactly the separator `relative()` used.
+  for (const segment of rel.split(sep)) {
     let entries = cache.get(dir);
     if (entries === undefined) {
       // An unreadable directory is not evidence of drift; fall back rather than accuse.
@@ -266,10 +269,10 @@ export function checkCatalog({ root = REPO } = {}) {
 // loaded into every later session.
 export function checkKnowledge({ root = REPO, home = homedir() } = {}) {
   const trees = [
-    { dir: join(root, '02-DOCS', 'wiki'), label: 'wiki' },
+    { dir: join(root, 'docs', 'wiki'), label: 'wiki' },
     { dir: memoryDir(root, home), label: 'memory' },
   ].filter((t) => existsSync(t.dir));
-  if (!trees.length) throw new MissingRoot('no knowledge tree found (02-DOCS/wiki and auto-memory are both absent)');
+  if (!trees.length) throw new MissingRoot('no knowledge tree found (docs/wiki and auto-memory are both absent)');
   const all = { findings: [], claims: 0, skipped: 0, trees: trees.map((t) => t.label) };
   for (const t of trees) {
     const r = scanTree(t.dir, { mode: 'knowledge', root, label: t.label });
@@ -328,7 +331,7 @@ function main(argv) {
         console.log('no drift found');
       }
     } catch (e) {
-      // Advisory tree missing is normal (02-DOCS is gitignored; a fresh install has no wiki).
+      // Advisory tree missing is normal (docs is gitignored; a fresh install has no wiki).
       console.log(`\ndrift-check knowledge: skipped — ${e.message}`);
     }
   }

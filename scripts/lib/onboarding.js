@@ -73,7 +73,7 @@ export function scanProject(root = process.cwd()) {
       const path = join(dir, entry.name);
       const rel = relative(absolute, path).split(sep).join('/');
       if (rel.startsWith('../') || rel === '..') throw new Error('project scan escaped the selected root');
-      if (rel === '02-DOCS/wiki/harness' || rel.startsWith('02-DOCS/wiki/harness/')) continue;
+      if (rel === 'docs/wiki/harness' || rel.startsWith('docs/wiki/harness/')) continue;
       if (entry.isDirectory()) { visit(path); continue; }
       if (!entry.isFile()) continue;
       let isSignal = manifests.has(entry.name) || entry.name.endsWith('.md');
@@ -156,19 +156,21 @@ export function buildOnboardingPlan(record, evidence) {
   if (/database|persistence|persistencia|base de datos/.test(goal)) goalSignals.push('persistence');
   if (/integration|integración|webhook|third-party|tercero/.test(goal)) goalSignals.push('external-integrations');
   const complexitySignals = [...new Set([...(evidence.complexitySignals || []), ...goalSignals])].sort();
-  const needsSdd = isSoftware && (normalized.softwareScope !== 'small' || complexitySignals.length > 0);
-  const profile = needsSdd ? 'core' : 'minimal';
+  const UI_STACKS = new Set(['nextjs', 'react', 'vue', 'svelte']);
+  const needsWorkflow = isSoftware && (normalized.softwareScope !== 'small' || complexitySignals.length > 0);
+  const hasInterface = needsWorkflow && (evidence.stacks || []).some((stack) => UI_STACKS.has(stack));
+  const profile = !needsWorkflow ? 'minimal' : (hasInterface ? 'ui' : 'core');
   const catalog = loadManifest();
   const catalogIds = new Set(catalog.skills.map((skill) => skill.id));
   const detectedSkills = (evidence.stacks || []).filter((stack) => catalogIds.has(stack));
   const skills = [...new Set([...skillsForProfile(catalog, profile), ...detectedSkills])].sort();
-  const baseAgents = needsSdd;
-  const hooks = needsSdd;
+  const baseAgents = needsWorkflow;
+  const hooks = needsWorkflow;
   const agents = baseAgents ? resolveAgentNames(skills, []).sort() : [];
   const gitmojiGuard = hooks && normalized.targets.includes('claude');
   const decisions = skills.map((id) => detectedSkills.includes(id)
     ? selected(id, 'skill', `Detected ${id} evidence inside the selected project root.`, 'workspace-evidence')
-    : selected(id, 'skill', needsSdd
+    : selected(id, 'skill', needsWorkflow
       ? (id === 'sdd' && complexitySignals.length
         ? `Included because the accepted work has ${complexitySignals.join(', ')} complexity.`
         : `Included in the development workflow for ${normalized.softwareScope} software.`)
@@ -179,9 +181,15 @@ export function buildOnboardingPlan(record, evidence) {
     { type: 'complexity-added', atLeast: 1 },
     { type: 'manifest-with-implementation' },
   ];
-  if (!needsSdd) decisions.push(deferred('sdd', 'workflow', isSoftware
-    ? 'The software scope is small, so specification overhead is not justified yet.'
-    : 'SDD applies to substantial software work, which is not the declared project purpose.', sddTriggers, softwareTriggers));
+  if (!needsWorkflow) {
+    decisions.push(deferred('sdd', 'workflow', isSoftware
+      ? 'The software scope is small, so specification overhead is not justified yet.'
+      : 'SDD applies to substantial software work, which is not the declared project purpose.', sddTriggers, softwareTriggers));
+  } else {
+    decisions.push(selected('sdd', 'workflow', complexitySignals.length
+      ? `Included because the accepted work has ${complexitySignals.join(', ')} complexity.`
+      : `Included in the development workflow for ${normalized.softwareScope} software.`));
+  }
   if (baseAgents) {
     for (const id of agents) decisions.push(selected(id, 'agent', 'The accepted substantial software workflow requires this implementation or review role.'));
   } else {
@@ -194,8 +202,12 @@ export function buildOnboardingPlan(record, evidence) {
     ? selected('gitmoji-guard', 'guard', 'Claude Code supports the commit guard and the accepted code policy includes it.')
     : deferred('gitmoji-guard', 'guard', 'No selected target and project policy justify this Claude-only commit guard.', ['Claude Code is selected and a governed software workflow adopts the convention'], [{ type: 'software-trigger-and-claude' }]));
   decisions.push(selected('memory', 'capability', 'Local bounded project memory supports continuity without an external account.'));
-  decisions.push(selected('harness-documents', 'route', 'The accepted profile and plan are persisted under 02-DOCS/wiki/harness/.'));
+  decisions.push(selected('harness-documents', 'route', 'The accepted profile and plan are persisted under docs/wiki/harness/.'));
   decisions.push(excluded('context7', 'integration', 'External MCP connections require a separate, provider-specific consent flow and are outside this local harness plan.'));
+  if (needsWorkflow) {
+    decisions.push(selected('superpowers', 'plugin',
+      'The planning and execution chain lives in the superpowers plugin, kept current by Claude Code.'));
+  }
   decisions.sort((a, b) => `${a.kind}:${a.id}`.localeCompare(`${b.kind}:${b.id}`));
   const policy = {
     skills,
@@ -203,22 +215,23 @@ export function buildOnboardingPlan(record, evidence) {
     baseAgents,
     agents,
     alwaysOn: true,
-    codeHooks: needsSdd,
+    codeHooks: needsWorkflow,
     gitmojiGuard,
     memory: true,
     context7: false,
+    plugins: needsWorkflow ? ['superpowers@claude-plugins-official'] : [],
   };
   const root = evidence.root;
   const governedPaths = root ? [...new Set([
     '.rsc.json', '.rsc/backups/',
     ...(existsSync(join(root, '.git')) ? ['.gitignore'] : []),
-    '02-DOCS/wiki/harness/user-profile.md',
-    '02-DOCS/wiki/harness/decisions.md',
-    '02-DOCS/wiki/harness/installation-plan.md',
+    'docs/wiki/harness/user-profile.md',
+    'docs/wiki/harness/decisions.md',
+    'docs/wiki/harness/installation-plan.md',
     '.rsc/.no-context7',
     ...normalized.targets.flatMap((target) => managedPathsForInstall({ skillIds: skills, target, cwd: root, policy })
       .map((path) => relative(root, path).split(sep).join('/'))),
-  ])].sort() : ['.rsc.json', '.rsc/', '02-DOCS/wiki/harness/'];
+  ])].sort() : ['.rsc.json', '.rsc/', 'docs/wiki/harness/'];
   return {
     schemaVersion: 1,
     record: normalized,

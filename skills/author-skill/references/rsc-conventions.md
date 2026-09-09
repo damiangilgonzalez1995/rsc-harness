@@ -2,7 +2,7 @@
 
 A skill is not done when `SKILL.md` reads well. It is done when it is *in the
 catalog* — frontmatter valid, indexed in the manifest, discoverable by the
-`npx @ericrisco/rsc` recommender, and reachable where the agent will find it. This reference
+`npx @damiangil/harness` recommender, and reachable where the agent will find it. This reference
 is the rsc plumbing.
 
 ## The layout (single source of truth)
@@ -56,7 +56,7 @@ discovers project skills one level under `.claude/skills/`, so rsc skills instal
 **flat** at `.claude/skills/<id>/SKILL.md` (a nested `.claude/skills/rsc/<id>/`
 is never discovered). A skill is invoked by its `name`. The `suggest` detector is
 always installed (the floor) and proposes installing any skill a task needs via
-`npx @ericrisco/rsc add <id>`.
+`npx @damiangil/harness add <id>`.
 
 ## Wiring steps for a new skill
 
@@ -84,7 +84,7 @@ bash scripts/eval-lint.sh
 
 ## The Knowledge map
 
-The root `CLAUDE.md` carries a `## Knowledge map` section that indexes the 02-DOCS wiki topics — it is what every other skill reads before working in its area (the `harness` convention). When a skill produces durable artifacts, they live under `02-DOCS/wiki/<topic>/` and get a Knowledge-map row. For SDD-related artifacts the topic is `02-DOCS/wiki/sdd/`. `author-skill` writes there only when a design note is worth keeping; the executable record is always the skill's own `evals/`.
+The root `CLAUDE.md` carries a `## Knowledge map` section that indexes the docs wiki topics — it is what every other skill reads before working in its area (the `harness` convention). When a skill produces durable artifacts, they live under `docs/wiki/<topic>/` and get a Knowledge-map row. For SDD-related artifacts the topic is `docs/wiki/sdd/`. `author-skill` writes there only when a design note is worth keeping; the executable record is always the skill's own `evals/`.
 
 ## verify.sh — only for checkable artifacts
 

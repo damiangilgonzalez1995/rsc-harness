@@ -1,0 +1,263 @@
+<title>Tres sesiones con memoria</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#ffffff;--paper:#ffffff;--ink:#111318;--ink-2:#5b616e;--ink-3:#9096a2;--line:#e6e8ec;--rail:#e0e3e8;
+  --soft:#f6f7f9;
+  --you:#111318;--inject:#8a6a1f;--memo:#6b7280;--guard:#b3261e;--ai:#5b4bd6;--win:#0f8a5f;
+  --code-bg:#f6f7f9;--code-ink:#2a2f3a;
+}
+ *{box-sizing:border-box}
+body{margin:0;background:#ffffff;color-scheme:light;color:var(--ink);font:16px/1.6 "Manrope",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+code{font-family:"JetBrains Mono",monospace;font-size:.86em}
+main{max-width:680px;margin:0 auto;padding:72px 24px 140px}
+h1{font-size:2.4rem;line-height:1.1;margin:0 0 14px;letter-spacing:-.03em;font-weight:700;text-wrap:balance}
+.lede{color:var(--ink-2);margin:0 0 28px;max-width:58ch;font-size:1.05rem}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.78rem;color:var(--ink-3);margin:0 0 10px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.hint{font-size:.78rem;color:var(--ink-3);margin-bottom:48px}
+
+.chapter{position:relative;margin:72px 0 0}
+.chapter-head{margin-bottom:28px}
+.chapter-head .day{display:block;font-family:"JetBrains Mono",monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.chapter-head h2{margin:0;font-size:1.5rem;letter-spacing:-.02em;font-weight:700}
+
+.rail{position:relative;padding-left:40px}
+.rail::before{content:"";position:absolute;left:11px;top:6px;bottom:6px;width:1px;background:var(--rail)}
+
+.pt{position:relative;margin:0 0 6px;opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease}
+.pt.in{opacity:1;transform:none}
+.pt .marker{position:absolute;left:-40px;top:14px;width:23px;height:23px;border-radius:50%;background:var(--paper);border:1.5px solid var(--c);display:grid;place-items:center;font-size:.7rem;z-index:1;color:var(--c)}
+.pt.big .marker{width:29px;height:29px;left:-43px;top:11px;font-size:.85rem;background:var(--c);color:#fff;border-color:var(--c)}
+.pt button.head{width:100%;text-align:left;background:transparent;border:0;border-radius:10px;padding:12px 14px;font:inherit;color:var(--ink);cursor:pointer;display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;transition:background .15s}
+.pt button.head:hover{background:var(--soft)}
+.pt.open button.head{background:var(--soft)}
+.pt button.head:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.pt .t{font-weight:600;font-size:1rem;letter-spacing:-.01em}
+.pt.big .t{font-size:1.06rem}
+.pt .s{display:block;font-weight:400;color:var(--ink-2);font-size:.88rem;margin-top:1px}
+.pt .tag{font-family:"JetBrains Mono",monospace;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c);white-space:nowrap}
+.pt .chev{color:var(--ink-3);font-size:.7rem;transition:transform .2s}
+.pt.open .chev{transform:rotate(90deg)}
+.pt .body{display:none;margin:0 0 10px;padding:6px 14px 18px 14px}
+.pt.open .body{display:block}
+.body p{margin:0 0 10px;font-size:.92rem;color:var(--ink-2);max-width:60ch}
+.body p:last-child{margin-bottom:0}
+.body h5{margin:14px 0 6px;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.body pre{margin:0;font-family:"JetBrains Mono",monospace;font-size:.76rem;line-height:1.55;background:var(--code-bg);color:var(--code-ink);padding:12px 14px;border-radius:8px;white-space:pre-wrap;word-break:break-word;border:1px solid var(--line)}
+.body .file{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--ink);background:var(--soft);padding:1px 6px;border-radius:4px;border:1px solid var(--line)}
+
+.k-you{--c:var(--you)} .k-inject{--c:var(--inject)} .k-memo{--c:var(--memo)}
+.k-guard{--c:var(--guard)} .k-ai{--c:var(--ai)} .k-win{--c:var(--win)}
+
+.files{margin-top:96px;padding-top:32px;border-top:1px solid var(--line)}
+.files h2{font-size:1.5rem;margin:0 0 8px;letter-spacing:-.02em}
+.files > p{color:var(--ink-2);margin:0 0 20px;max-width:58ch}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th{text-align:left;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);padding:8px 8px;border-bottom:1px solid var(--ink);font-weight:600}
+td{padding:11px 8px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-2)}
+td:first-child{font-family:"JetBrains Mono",monospace;font-size:.74rem;white-space:nowrap;color:var(--ink)}
+.wrap{overflow-x:auto}
+@media (prefers-reduced-motion: reduce){.pt{transition:none;opacity:1;transform:none}}
+</style>
+
+<main>
+<h1>Tres sesiones con memoria</h1>
+<p class="lede">Una historia inventada pero realista: el lunes tomas una decisión, el martes retomas sin explicar nada, el viernes Claude evita un error que ya cometió una vez. Baja con el scroll: los puntos van apareciendo. Pulsa uno para ver qué pasó por dentro.</p>
+<div class="legend">
+  <span><i class="dot" style="background:var(--you)"></i>Tú</span>
+  <span><i class="dot" style="background:var(--inject)"></i>Hook que inyecta texto</span>
+  <span><i class="dot" style="background:var(--memo)"></i>Hook que escribe en disco</span>
+  <span><i class="dot" style="background:var(--guard)"></i>Guarda que bloquea</span>
+  <span><i class="dot" style="background:var(--ai)"></i>Claude decide</span>
+  <span><i class="dot" style="background:var(--win)"></i>Aquí la memoria marca la diferencia</span>
+</div>
+<p class="hint">El proyecto es aurora, rama <code>feat/busqueda</code>. Los textos de los hooks son los reales; la conversación es un ejemplo.</p>
+
+<!-- ============ SESIÓN 1 ============ -->
+<section class="chapter">
+  <div class="chapter-head"><span class="day">Lunes · Sesión 1</span><h2>Tomas una decisión</h2></div>
+  <div class="rail">
+
+    <div class="pt k-you"><span class="marker">●</span>
+      <button class="head"><span><span class="t">Abres Claude Code</span><span class="s">Primera sesión en esta rama. No hay nada que recordar.</span></span><span class="tag">tú</span><span class="chev">›</span></button>
+      <div class="body"><p>Claude Code arranca y ejecuta los hooks de SessionStart. Como es la primera vez en la rama <code>feat/busqueda</code>, el hook de memoria no encuentra ninguna nota anterior.</p></div>
+    </div>
+
+    <div class="pt k-memo"><span class="marker">▪</span>
+      <button class="head"><span><span class="t">Foto inicial</span><span class="s">El hook apunta cómo está git ahora mismo.</span></span><span class="tag">disco</span><span class="chev">›</span></button>
+      <div class="body"><p>Rama, último commit y ficheros sucios. Es la referencia para saber después qué cambió durante la sesión.</p>
+      <h5>Se escribe</h5><pre>.rsc/memory/anchors/claude--a1b2.json
+{ "baselineHead": "b34ac893", "baselineFiles": [] }</pre></div>
+    </div>
+
+    <div class="pt k-you"><span class="marker">●</span>
+      <button class="head"><span><span class="t">"Quiero búsqueda semántica sobre los vídeos"</span><span class="s">Pides una feature nueva.</span></span><span class="tag">tú</span><span class="chev">›</span></button>
+      <div class="body"><p>Antes de que Claude lea el mensaje, el hook <span class="file">userprompt-gate.mjs</span> le recuerda que una feature nueva pasa por spec.</p>
+      <h5>Claude recibe</h5><pre>===== workflow gate =====
+if the user wants to BUILD, ADD or CHANGE something —
+not clear yet? -&gt; `grill-with-docs`
+clear? -&gt; `to-spec` writes the spec.</pre></div>
+    </div>
+
+    <div class="pt k-ai"><span class="marker">◆</span>
+      <button class="head"><span><span class="t">Claude propone dos caminos y tú eliges</span><span class="s">pgvector en Postgres, o un servicio aparte con Elasticsearch.</span></span><span class="tag">claude</span><span class="chev">›</span></button>
+      <div class="body"><p>La skill <code>grill-with-docs</code> te hace las preguntas y <code>to-spec</code> recoge el resultado. Tú decides: <strong>pgvector</strong>, porque ya tenéis Postgres y no quieres otro servicio. Claude escribe la spec con esa decisión.</p>
+      <h5>Se escribe (lo hace Claude, no un hook)</h5><pre>docs/specs/busqueda-semantica.md
+## Decisión: pgvector, no Elasticsearch
+Motivo: un servicio menos que desplegar; el volumen (< 50k vídeos) no lo justifica.</pre></div>
+    </div>
+
+    <div class="pt k-guard"><span class="marker">■</span>
+      <button class="head"><span><span class="t">Commit rechazado, commit repetido</span><span class="s">Sin emoji no pasa. Con emoji sí.</span></span><span class="tag">guarda</span><span class="chev">›</span></button>
+      <div class="body"><p>Claude intenta <code>git commit -m "add search spec"</code>. El hook <span class="file">gitmoji-guard.mjs</span> devuelve <em>deny</em>. Claude lee el motivo y reintenta con <code>📝 docs: spec búsqueda semántica</code>.</p>
+      <h5>Claude recibe</h5><pre>"permissionDecision": "deny",
+"permissionDecisionReason": "This commit message has no gitmoji..."</pre></div>
+    </div>
+
+    <div class="pt k-memo"><span class="marker">▪</span>
+      <button class="head"><span><span class="t">La nota de sesión se escribe</span><span class="s">Hubo edición y commit: ahora sí hay algo que apuntar.</span></span><span class="tag">disco</span><span class="chev">›</span></button>
+      <div class="body"><p>Los hooks de PostToolUse y Stop comparan con la foto inicial. Hay un fichero nuevo y un commit. Escriben la nota.</p>
+      <h5>Se escribe</h5><pre>.rsc/memory/sessions/claude--a1b2.json
+{ "branch": "feat/busqueda", "head": "c71e09a",
+  "files": ["docs/specs/busqueda-semantica.md"],
+  "commits": ["c71e09a"], "editCount": 1 }</pre></div>
+    </div>
+
+    <div class="pt k-you"><span class="marker">●</span>
+      <button class="head"><span><span class="t">Cierras con /exit</span><span class="s">Se te olvida apuntar nada. No pasa nada.</span></span><span class="tag">tú</span><span class="chev">›</span></button>
+      <div class="body"><p>SessionEnd lanza dos hooks. <span class="file">worklog-checkpoint.mjs</span> le pide a Claude que escriba un resumen en <code>docs/raw/worklog/</code>. <span class="file">session-memory-adapter.mjs</span> marca la nota como completada.</p>
+      <h5>Se escribe</h5><pre>docs/raw/worklog/2026-09-08-busqueda-spec.md   ← lo escribe Claude
+.rsc/memory/sessions/claude--a1b2.json             ← "event": "sessionEnd"</pre></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ SESIÓN 2 ============ -->
+<section class="chapter">
+  <div class="chapter-head"><span class="day">Martes · Sesión 2</span><h2>Retomas sin explicar nada</h2></div>
+  <div class="rail">
+
+    <div class="pt k-you"><span class="marker">●</span>
+      <button class="head"><span><span class="t">Abres Claude Code</span><span class="s">Misma rama. Han pasado 20 horas.</span></span><span class="tag">tú</span><span class="chev">›</span></button>
+      <div class="body"><p>Claude Code lanza SessionStart. Esta vez el hook de memoria sí encuentra una nota de esta rama.</p></div>
+    </div>
+
+    <div class="pt k-win big"><span class="marker">★</span>
+      <button class="head"><span><span class="t">La nota de ayer entra en el contexto</span><span class="s">Claude arranca sabiendo qué ficheros tocaste y qué commit hiciste.</span></span><span class="tag">memoria</span><span class="chev">›</span></button>
+      <div class="body"><p>Sin esto, Claude empezaría explorando el repo desde cero, o peor: te preguntaría "¿por dónde vamos?". Con esto, sabe por dónde seguir antes de tu primer mensaje.</p>
+      <h5>Claude recibe</h5><pre>[rsc local exact continuation]
+branch: feat/busqueda
+head: c71e09a
+files: docs/specs/busqueda-semantica.md
+commits: c71e09a</pre></div>
+    </div>
+
+    <div class="pt k-you"><span class="marker">●</span>
+      <button class="head"><span><span class="t">"Sigue"</span><span class="s">Una palabra. Nada de contexto.</span></span><span class="tag">tú</span><span class="chev">›</span></button>
+      <div class="body"><p>Claude sabe que "sigue" significa: la spec está hecha y commiteada, toca el siguiente paso de la cadena. Abre la spec, lee la decisión de pgvector, y pasa a <code>plan</code>.</p></div>
+    </div>
+
+    <div class="pt k-ai"><span class="marker">◆</span>
+      <button class="head"><span><span class="t">Claude planifica e implementa con pgvector</span><span class="s">No vuelve a proponer Elasticsearch. La decisión está en la spec.</span></span><span class="tag">claude</span><span class="chev">›</span></button>
+      <div class="body"><p>Crea la migración, el endpoint y los tests. Varios commits con emoji.</p></div>
+    </div>
+
+    <div class="pt k-guard"><span class="marker">■</span>
+      <button class="head"><span><span class="t">Los tests fallan</span><span class="s">"OPENAI_API_KEY not set". Pierdes veinte minutos.</span></span><span class="tag">problema</span><span class="chev">›</span></button>
+      <div class="body"><p>La skill <code>superpowers:verification-before-completion</code> lanza pytest y falla. Claude investiga, prueba cosas, y al final descubre que los tests de este repo necesitan una variable de entorno para usar un modelo simulado. Con <code>AURORA_MODE=mock pytest</code> pasan.</p>
+      <p>Esto es conocimiento que <strong>no está en ningún fichero de código</strong>. Solo está en tu cabeza y ahora en esta conversación, que se perderá al cerrar.</p></div>
+    </div>
+
+    <div class="pt k-win big"><span class="marker">★</span>
+      <button class="head"><span><span class="t">/learn: guardas la lección</span><span class="s">Una frase que evitará repetir los veinte minutos.</span></span><span class="tag">memoria</span><span class="chev">›</span></button>
+      <div class="body"><p>Escribes <code>/learn "los tests necesitan AURORA_MODE=mock"</code>. Claude te muestra la lección propuesta y te pide aprobarla. Dices sí. Solo entonces se guarda.</p>
+      <h5>Se escribe</h5><pre>.rsc/memory/lessons/2d65.json
+{ "text": "Los tests de rag-api necesitan AURORA_MODE=mock;
+           sin la variable fallan por falta de API key",
+  "evidence": "sesión 2026-09-09, pytest falló sin ella",
+  "confidence": 0.9, "scope": "project" }</pre>
+      <p>Las lecciones se inyectan al arrancar <strong>cualquier</strong> sesión del proyecto, en cualquier rama. Máximo cinco, y solo las aprobadas con confianza alta.</p></div>
+    </div>
+
+    <div class="pt k-you"><span class="marker">●</span>
+      <button class="head"><span><span class="t">Cierras</span><span class="s">Nota actualizada, worklog escrito.</span></span><span class="tag">tú</span><span class="chev">›</span></button>
+      <div class="body"><h5>Se escribe</h5><pre>.rsc/memory/sessions/claude--f9e3.json
+{ "branch": "feat/busqueda", "head": "e02b41d",
+  "files": ["rag-api/src/search.py", "rag-api/tests/test_search.py",
+            "rag-api/migrations/004_pgvector.sql"],
+  "commits": ["d13...", "e02b41d"], "editCount": 7 }</pre></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ SESIÓN 3 ============ -->
+<section class="chapter">
+  <div class="chapter-head"><span class="day">Viernes · Sesión 3</span><h2>Otra rama, otro tema, y aun así se acuerda</h2></div>
+  <div class="rail">
+
+    <div class="pt k-you"><span class="marker">●</span>
+      <button class="head"><span><span class="t">Abres Claude Code en la rama fix/subtitulos</span><span class="s">Nada que ver con la búsqueda.</span></span><span class="tag">tú</span><span class="chev">›</span></button>
+      <div class="body"><p>El hook de memoria busca una nota de <em>esta</em> rama. No la hay. Busca notas del mismo directorio de trabajo: encuentra la del martes y la marca como "cercana", no como continuación exacta.</p></div>
+    </div>
+
+    <div class="pt k-win big"><span class="marker">★</span>
+      <button class="head"><span><span class="t">La lección sí entra, aunque la rama sea otra</span><span class="s">Las lecciones son del proyecto, no de la rama.</span></span><span class="tag">memoria</span><span class="chev">›</span></button>
+      <div class="body"><h5>Claude recibe</h5><pre>[rsc local nearby continuation]      ← "cercana": otra rama
+branch: feat/busqueda
+files: rag-api/src/search.py, ...
+
+[rsc local approved lessons]
+approved lesson (0.9): Los tests de rag-api necesitan AURORA_MODE=mock;
+sin la variable fallan por falta de API key</pre></div>
+    </div>
+
+    <div class="pt k-you"><span class="marker">●</span>
+      <button class="head"><span><span class="t">"Arregla el test de subtítulos que falla"</span><span class="s">Un bug. Claude va a lanzar pytest.</span></span><span class="tag">tú</span><span class="chev">›</span></button>
+      <div class="body"><p>El gate de spec no aplica: es un bug, y el propio gate dice que los bugs van por <code>debug</code>.</p></div>
+    </div>
+
+    <div class="pt k-win big"><span class="marker">★</span>
+      <button class="head"><span><span class="t">Claude lanza los tests bien a la primera</span><span class="s">AURORA_MODE=mock pytest. Sin perder veinte minutos.</span></span><span class="tag">memoria</span><span class="chev">›</span></button>
+      <div class="body"><p>Sin la lección, Claude habría vuelto a chocar con "OPENAI_API_KEY not set", habría investigado de nuevo, y tú habrías tenido que explicárselo otra vez. Esto es lo que la memoria compra: <strong>no pagar dos veces el mismo descubrimiento</strong>.</p></div>
+    </div>
+
+    <div class="pt k-ai"><span class="marker">◆</span>
+      <button class="head"><span><span class="t">Un compañero pregunta por Elasticsearch</span><span class="s">Claude responde con la decisión del lunes.</span></span><span class="tag">claude</span><span class="chev">›</span></button>
+      <div class="body"><p>Le pides a Claude: "un compañero dice que metamos Elasticsearch, ¿qué opinas?". Claude lee <code>docs/wiki/harness/decisions.md</code> (donde el worklog del lunes dejó la decisión) y responde: "el lunes se descartó por volumen y por no añadir un servicio; si el volumen ha cambiado, revisamos". No reabre el debate desde cero.</p></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ FICHEROS ============ -->
+<section class="files">
+  <h2>Los ficheros de memoria, y para qué sirve cada uno</h2>
+  <p>Hay dos familias: lo que escriben los hooks solos (mecánico, solo nombres) y lo que escribe Claude cuando se lo piden (con significado). Se complementan.</p>
+  <div class="wrap"><table>
+    <tr><th>Fichero</th><th>Quién lo escribe</th><th>Qué guarda</th><th>Cuándo se lee</th></tr>
+    <tr><td>.rsc/memory/anchors/*.json</td><td>Hook, al abrir</td><td>La foto inicial de git: commit y ficheros sucios al empezar</td><td>Durante la sesión, para comparar y saber qué cambió</td></tr>
+    <tr><td>.rsc/memory/sessions/*.json</td><td>Hook, si hubo trabajo</td><td>Rama, commit, ficheros tocados, commits hechos, contador de ediciones</td><td>Al abrir la siguiente sesión de la misma rama. Otra rama: como "cercana"</td></tr>
+    <tr><td>.rsc/memory/lessons/*.json</td><td>Tú con /learn, tras aprobar</td><td>Una frase de conocimiento con evidencia y confianza</td><td>Al abrir cualquier sesión del proyecto. Máximo 5, confianza ≥ 0,7</td></tr>
+    <tr><td>docs/raw/worklog/*.md</td><td>Claude, cuando el hook de cierre se lo pide</td><td>Qué se hizo, por qué, ficheros, resultado, siguiente paso. Prosa.</td><td>Cuando Claude o tú lo abrís. No se inyecta solo</td></tr>
+    <tr><td>docs/wiki/harness/decisions.md</td><td>Claude, al compilar el worklog</td><td>Decisiones importantes con fecha y motivo</td><td>Cuando Claude necesita saber por qué algo es como es</td></tr>
+    <tr><td>docs/wiki/harness/user-profile.md</td><td>El instalador, y Claude si le pides "explícame menos"</td><td>Tu nivel técnico y cuánto acompañamiento quieres</td><td>Al abrir cada sesión, para calibrar la brújula</td></tr>
+  </table></div>
+  <p style="margin-top:16px">Regla para recordar: <strong>los hooks recuerdan qué ficheros</strong>, <strong>las lecciones recuerdan qué aprendiste</strong>, <strong>el worklog y decisions recuerdan por qué</strong>. Ninguno guarda la conversación.</p>
+</section>
+</main>
+
+<script>
+const pts=[...document.querySelectorAll('.pt')];
+pts.forEach(p=>{
+  const b=p.querySelector('button.head');
+  b.setAttribute('aria-expanded','false');
+  b.addEventListener('click',()=>{const o=p.classList.toggle('open');b.setAttribute('aria-expanded',o);});
+});
+if('IntersectionObserver' in window){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{rootMargin:'0px 0px -12% 0px',threshold:.15});
+  pts.forEach(p=>io.observe(p));
+}else{pts.forEach(p=>p.classList.add('in'));}
+</script>

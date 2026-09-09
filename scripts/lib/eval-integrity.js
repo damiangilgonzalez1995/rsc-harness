@@ -32,7 +32,7 @@ export const ROLE_MARKERS = {
 // Tools that write. Checked against a tool call's actual target path, never against nearby text.
 const WRITE_TOOLS = new Set(['Write', 'Edit', 'MultiEdit', 'NotebookEdit']);
 
-// Shell constructs that write TO a path. `cat 02-DOCS/x` is a read and must not match; `cat > 02-DOCS/x`
+// Shell constructs that write TO a path. `cat docs/x` is a read and must not match; `cat > docs/x`
 // must. Each pattern is anchored on the redirect/verb so the protected path has to be its TARGET.
 const SHELL_WRITE_TO = (p) => [
   new RegExp(`>>?\\s*\\S*${p}`),          // > path, >> path
@@ -46,7 +46,7 @@ const SHELL_WRITE_TO = (p) => [
  * Structurally extract the tool calls from a transcript. This is the fix for the defect the first
  * real run exposed: the previous version looked for a write VERB within ~400 chars of a protected
  * path in the raw text. In a treatment transcript the injected SKILL.md itself names
- * 02-DOCS/wiki/... paths, and tool names appear in every JSON envelope, so the proximity window
+ * docs/wiki/... paths, and tool names appear in every JSON envelope, so the proximity window
  * matched almost always. It blocked a run in which nothing had been written — verified against the
  * filesystem, which held no new files at all. An over-blocking gate is still a broken gate: it would
  * have made every treatment run BLOCKED and wedged skill-harden permanently.
@@ -75,10 +75,10 @@ export const SANDBOX_MARKER = '.rsc/eval-sandbox/';
  *
  * Two false positives were fixed here, both the same mistake — "the path appears in the string" is
  * not "the write targets that location":
- *  1. proximity matching in raw transcript text (the injected SKILL.md names 02-DOCS paths);
+ *  1. proximity matching in raw transcript text (the injected SKILL.md names docs paths);
  *  2. substring matching against a sandbox path that MIRRORS the wiki layout inside itself, e.g.
- *     .rsc/eval-sandbox/specify/treatment-1/02-DOCS/wiki/sdd/specs/x.md — a correct write that
- *     contains "02-DOCS/wiki/" as a substring.
+ *     .rsc/eval-sandbox/specify/treatment-1/docs/wiki/sdd/specs/x.md — a correct write that
+ *     contains "docs/wiki/" as a substring.
  * Both were caught only by checking the filesystem, which held no new files either time. The lesson
  * is in the shape of the check, not in the patterns: anchor on the sandbox first, always.
  */
@@ -112,9 +112,9 @@ export function callReads(call, path) {
   return input.includes(path);
 }
 
-// Paths an eval arm may never write. 02-DOCS is the project's brain and is untracked (P9), so a
+// Paths an eval arm may never write. docs is the project's brain and is untracked (P9), so a
 // stray write there has no undo.
-export const PROTECTED_PATHS = ['02-DOCS/wiki/'];
+export const PROTECTED_PATHS = ['docs/wiki/'];
 
 /**
  * Which arm produced this transcript. Order matters: a grader transcript quotes the skill body, so
@@ -150,7 +150,7 @@ export function findViolations({ skillId, agents }) {
 
   for (const a of agents || []) {
     // Judged on TOOL CALLS, not on text. A transcript naming a path proves nothing: the treatment's
-    // own injected skill body names 02-DOCS paths, and the grader quotes repo paths constantly.
+    // own injected skill body names docs paths, and the grader quotes repo paths constantly.
     const calls = a.calls || extractToolCalls(a.text);
 
     if (a.role === 'baseline') {

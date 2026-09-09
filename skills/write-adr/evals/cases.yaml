@@ -1,0 +1,32 @@
+skill: write-adr
+
+should_trigger:
+  - prompt: "Necesito registrar esta decision de arquitectura en un ADR."
+    why: "Disparador directo de write-adr."
+  - prompt: "Abre un ADR para este cambio dificil de revertir."
+    why: "Disparador directo de write-adr."
+  - prompt: "Hay que enmendar el ADR-012 con este nuevo matiz."
+    why: "Disparador directo de write-adr."
+  - prompt: "Record this architecture decision as an ADR before we proceed."
+    why: "Disparador directo de write-adr."
+  - prompt: "Este cambio de contrato de API necesita un ADR."
+    why: "Disparador directo de write-adr."
+
+should_not_trigger:
+  - prompt: "Escribe el plan de implementacion, no una decision ya tomada."
+    route_to: "none"
+    why: "Fuera del alcance de write-adr."
+  - prompt: "Documenta la terminologia del dominio, no una decision de arquitectura."
+    route_to: "domain-modeling"
+    why: "Documentar la terminologia del dominio es el trabajo de domain-modeling, no de write-adr."
+  - prompt: "Implementa el codigo de esta funcionalidad."
+    route_to: "implement"
+    why: "Implementar el codigo es el trabajo de implement, no de write-adr."
+  - prompt: "Revisa los cambios de esta rama."
+    route_to: "revision-de-cambios"
+    why: "Revisar los cambios de una rama es el trabajo de revision-de-cambios, no de write-adr."
+
+capability:
+  - scenario: "El usuario necesita registrar una decision de arquitectura difícil de revertir."
+    must_include:
+      - "ADR"

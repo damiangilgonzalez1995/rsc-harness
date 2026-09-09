@@ -6,9 +6,9 @@ template, the stage gates, and the CSV column docs you fill in.
 ## The canonical brief
 
 Every slot carries one brief in the same shape. A slot cannot leave the `idea` stage
-without it. Store briefs under `02-DOCS/wiki/content/briefs/<slug>.md`.
+without it. Store briefs under `docs/wiki/content/briefs/<slug>.md`.
 
-These briefs live in the `02-DOCS/wiki/` OKF v0.1 bundle, so each brief `.md` carries YAML
+These briefs live in the `docs/wiki/` OKF v0.1 bundle, so each brief `.md` carries YAML
 frontmatter with a non-empty `type: content-brief` (the OKF-recommended `title`/`description`/
 `tags`/`timestamp` are added where meaningful). The domain brief fields below are kept as-is —
 OKF allows any extra key. Cross-references in the body use **standard markdown links**, never
@@ -95,10 +95,10 @@ One row per slot. This is the artifact `scripts/verify.sh` lints.
 
 ```csv
 date,pillar,cluster,format,owner,stage,brief_link,atomization,mix
-2026-07-07,Onboarding,activation-checklist,flagship-guide,ana,brief,02-DOCS/wiki/content/briefs/onboarding-activation-guide.md,planned,evergreen
+2026-07-07,Onboarding,activation-checklist,flagship-guide,ana,brief,docs/wiki/content/briefs/onboarding-activation-guide.md,planned,evergreen
 2026-07-09,Onboarding,activation-checklist,linkedin-post,ana,idea,,,evergreen
 2026-07-11,Onboarding,activation-checklist,x-thread,leo,idea,,,evergreen
 2026-07-15,Trends,q3-benchmarks,reactive-open,,idea,,,reactive-open
-2026-07-21,Proof,customer-results,case-study,leo,brief,02-DOCS/wiki/content/briefs/acme-results.md,planned,evergreen
+2026-07-21,Proof,customer-results,case-study,leo,brief,docs/wiki/content/briefs/acme-results.md,planned,evergreen
 2026-07-28,Seasonal,back-to-work,linkedin-post,ana,idea,,,timely
 ```

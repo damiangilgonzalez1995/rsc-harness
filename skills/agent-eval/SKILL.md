@@ -180,7 +180,7 @@ Pick by where the eval runs and what it must do. Versions as of 2026-06 — re-v
 
 ## Project grounding
 
-If the workspace has a `02-DOCS/` harness, record the eval policy in `02-DOCS/wiki/stack/evals.md`: dataset location, scorer mix, gate baseline file, judge model, and the failure modes covered. Follow the harness [`wiki-article-template.md`](../harness/references/wiki-article-template.md) (`type: stack`) and index it in `02-DOCS/wiki/index.md`. This is **recorded, not gated** — skip silently if there is no harness.
+If the workspace has a `docs/` harness, record the eval policy in `docs/wiki/stack/evals.md`: dataset location, scorer mix, gate baseline file, judge model, and the failure modes covered. Follow the harness [`wiki-article-template.md`](../harness/references/wiki-article-template.md) (`type: stack`) and index it in `docs/wiki/index.md`. This is **recorded, not gated** — skip silently if there is no harness.
 
 ## verify.sh
 

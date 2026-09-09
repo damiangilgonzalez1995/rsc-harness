@@ -1,0 +1,9 @@
+{
+  "concept": "typing",
+  "level": 1,
+  "title_en": "Annotate a lookup with Optional",
+  "spec_html_en": "<p>Implement <code>get_order_status(order_id, statuses)</code>: return the status stored for <code>order_id</code> in the <code>statuses</code> dict, or <code>None</code> if it is not present. Annotate the return type as <code>Optional[str]</code>.</p>",
+  "stub": "from typing import Optional\n\n\ndef get_order_status(order_id: int, statuses: dict):\n    # TODO: return statuses[order_id] if present, otherwise None; annotate the return type\n    # as Optional[str]\n    ...\n",
+  "test": "def test_known_order():\n    statuses = {1: 'shipped', 2: 'pending'}\n    assert get_order_status(1, statuses) == 'shipped', 'must return the stored status for a known order_id'\n\ndef test_unknown_order_returns_none():\n    statuses = {1: 'shipped'}\n    assert get_order_status(99, statuses) is None, 'an unknown order_id must return None, not raise'\n\ndef test_annotation_uses_optional():\n    from typing import Optional\n    ann = get_order_status.__annotations__\n    assert ann.get('return') == Optional[str], 'return type must be annotated as Optional[str] (or equivalently str | None)'",
+  "canonical": "from typing import Optional\n\n\ndef get_order_status(order_id: int, statuses: dict) -> Optional[str]:\n    return statuses.get(order_id)\n"
+}

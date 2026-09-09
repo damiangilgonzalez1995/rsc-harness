@@ -16,30 +16,29 @@ const repo = () => {
   return cwd;
 };
 
-test('the fixed catalog contains exactly the approved 20 thin entries', () => {
+test('the fixed catalog contains exactly the approved 10 thin entries', () => {
   assert.equal(typeof commands.fixedCommandNames, 'function');
   assert.deepEqual(commands.fixedCommandNames().sort(), [
-    'analyze', 'build-fix', 'checkpoint', 'clarify', 'debug', 'harness-audit', 'implement',
-    'learn', 'plan', 'refactor-clean', 'resume-session', 'review', 'save-session',
-    'security-scan', 'ship', 'specify', 'tasks', 'test-coverage', 'update-docs', 'verify',
+    'build-fix', 'checkpoint', 'harness-audit', 'learn', 'refactor-clean',
+    'resume-session', 'save-session', 'security-scan', 'test-coverage', 'update-docs',
   ].sort());
 });
 
 test('resolution follows installed backing and Claude does not duplicate skill commands', () => {
   const input = {
-    skills: ['go', 'plan', 'testing-go'],
+    skills: ['go', 'security-scan', 'testing-go'],
     agents: ['go-reviewer', 'go-build-resolver'],
     memoryMode: 'unsupported',
   };
   const cursor = commands.resolveCommands({ target: 'cursor', ...input }).map((c) => c.name);
-  assert.ok(cursor.includes('plan'));
+  assert.ok(cursor.includes('security-scan'));
   assert.ok(cursor.includes('go-review'));
   assert.ok(cursor.includes('go-build'));
   assert.ok(cursor.includes('test-coverage'));
   assert.ok(!cursor.includes('learn'));
 
   const claude = commands.resolveCommands({ target: 'claude', ...input }).map((c) => c.name);
-  assert.ok(!claude.includes('plan'), 'the plan skill is already /plan in Claude');
+  assert.ok(!claude.includes('security-scan'), 'the security-scan skill is already native in Claude');
   assert.ok(!claude.includes('test-coverage'), 'all skill-backed commands are native in Claude');
   assert.ok(claude.includes('go-review'));
   assert.ok(claude.includes('go-build'));
@@ -67,10 +66,10 @@ test('native command targets render their real format and Codex stays unsupporte
   assert.equal(commands.targetHasCommands('codex'), false);
   for (const target of expected) {
     const cwd = repo();
-    const resolved = commands.resolveCommands({ target, skills: ['plan'], agents: [], memoryMode: 'unsupported' });
-    const command = resolved.find((candidate) => candidate.name === 'plan');
+    const resolved = commands.resolveCommands({ target, skills: ['security-scan'], agents: [], memoryMode: 'unsupported' });
+    const command = resolved.find((candidate) => candidate.name === 'security-scan');
     if (target === 'claude') {
-      assert.equal(command, undefined, 'Claude skips skill-backed plan');
+      assert.equal(command, undefined, 'Claude skips skill-backed security-scan');
       continue;
     }
     const result = commands.reconcileCommands(target, cwd, [], [command]);
@@ -78,7 +77,7 @@ test('native command targets render their real format and Codex stays unsupporte
     const path = commands.commandPath(target, cwd, command.name);
     assert.ok(existsSync(path), `${target}: ${path}`);
     const body = readFileSync(path, 'utf8');
-    assert.match(body, /plan/);
+    assert.match(body, /security-scan/);
     if (target === 'gemini') assert.match(body, /^prompt = /m);
   }
 });
@@ -89,18 +88,18 @@ test('install/uninstall reconciles stack aliases and leaves a user command untou
   mkdirSync(dirname(mine), { recursive: true });
   writeFileSync(mine, 'my command');
 
-  await applyInstall({ skillIds: ['go', 'plan'], target: 'cursor', home: cwd, cwd });
+  await applyInstall({ skillIds: ['go', 'security-scan'], target: 'cursor', home: cwd, cwd });
   const stateFile = targetPaths('cursor', cwd, cwd).stateFile;
   let state = JSON.parse(readFileSync(stateFile, 'utf8'));
   assert.ok(state.commands.includes('go-review'));
   assert.ok(state.commands.includes('go-build'));
-  assert.ok(state.commands.includes('plan'));
+  assert.ok(state.commands.includes('security-scan'));
 
   await uninstall({ skillIds: ['go'], target: 'cursor', home: cwd, cwd });
   state = JSON.parse(readFileSync(stateFile, 'utf8'));
   assert.ok(!state.commands.includes('go-review'));
   assert.ok(!state.commands.includes('go-build'));
-  assert.ok(state.commands.includes('plan'));
+  assert.ok(state.commands.includes('security-scan'));
   assert.equal(readFileSync(mine, 'utf8'), 'my command');
 });
 

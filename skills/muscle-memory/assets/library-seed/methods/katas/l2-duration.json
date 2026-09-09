@@ -1,0 +1,9 @@
+{
+  "concept": "methods",
+  "level": 2,
+  "title_en": "Build Duration with an alternative constructor",
+  "spec_html_en": "<p>Write class <code>Duration</code> with <code>__init__(self, seconds)</code> storing <code>seconds</code>. Add a <code>classmethod</code> <code>from_minutes(cls, minutes)</code> that builds a <code>Duration</code> from minutes (<code>minutes * 60</code>).</p>",
+  "stub": "class Duration:\n    # TODO: implement __init__ and classmethod from_minutes per spec\n    pass\n",
+  "test": "def test_stores_seconds():\n    d = Duration(90)\n    assert d.seconds == 90, 'constructor must store seconds'\n\ndef test_from_minutes():\n    d = Duration.from_minutes(2)\n    assert d.seconds == 120, 'from_minutes(2) must create a Duration of 120 seconds'\n\ndef test_from_minutes_returns_duration():\n    d = Duration.from_minutes(1)\n    assert isinstance(d, Duration), 'from_minutes must return a Duration instance'",
+  "canonical": "class Duration:\n    def __init__(self, seconds):\n        self.seconds = seconds\n\n    @classmethod\n    def from_minutes(cls, minutes):\n        return cls(minutes * 60)\n"
+}

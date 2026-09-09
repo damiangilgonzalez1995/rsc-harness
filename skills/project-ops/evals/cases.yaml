@@ -31,16 +31,16 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Break this approved implementation plan into ordered dev tasks with done-checks."
-    route_to: tasks
-    why: "Per-task engineering sequencing inside one approved plan, not cross-cutting milestones above it."
+    route_to: to-tickets
+    why: "Per-task engineering sequencing inside one approved plan is to-tickets' job, not cross-cutting milestones above it."
 
   - prompt: "Write the technical implementation plan and architecture for this feature."
-    route_to: plan
-    why: "Authoring the how/architecture of a feature is the plan phase, not milestone status tracking."
+    route_to: to-spec
+    why: "Authoring the how/architecture of a feature is to-spec's job, not milestone status tracking."
 
   - prompt: "Record the decision we made about the database choice with the options and rationale."
-    route_to: decision-records
-    why: "Capturing a single durable ADR with context/options/rationale, not running a project."
+    route_to: write-adr
+    why: "Capturing a single durable ADR with context/options/rationale is write-adr's job, not running a project."
 
   - prompt: "Turn today's meeting into notes with action items."
     route_to: meeting-notes

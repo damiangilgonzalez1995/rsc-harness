@@ -4,9 +4,11 @@
 
 # `rsc-harness` — You decide what to build. It builds your agent's harness.
 
-[![npm](https://img.shields.io/npm/v/@ericrisco/rsc?color=63d68a&labelColor=12161c&label=npm)](https://www.npmjs.com/package/@ericrisco/rsc)
-[![downloads](https://img.shields.io/npm/dm/@ericrisco/rsc?color=63d68a&labelColor=12161c&label=downloads)](https://www.npmjs.com/package/@ericrisco/rsc)
-[![skills](https://img.shields.io/badge/skills-272-63d68a?labelColor=12161c)](#the-catalog)
+> Este proyecto es un fork del trabajo original de Eric Risco: [github.com/ericrisco/rsc-harness](https://github.com/ericrisco/rsc-harness).
+
+[![npm](https://img.shields.io/npm/v/@damiangil/harness?color=63d68a&labelColor=12161c&label=npm)](https://www.npmjs.com/package/@damiangil/harness)
+[![downloads](https://img.shields.io/npm/dm/@damiangil/harness?color=63d68a&labelColor=12161c&label=downloads)](https://www.npmjs.com/package/@damiangil/harness)
+[![skills](https://img.shields.io/badge/skills-290-63d68a?labelColor=12161c)](#the-catalog)
 [![license](https://img.shields.io/badge/license-MIT-63d68a?labelColor=12161c)](LICENSE)
 [![stars](https://img.shields.io/github/stars/ericrisco/rsc-harness?color=63d68a&labelColor=12161c)](https://github.com/ericrisco/rsc-harness/stargazers)
 
@@ -24,7 +26,7 @@ Ask me the onboarding questions, show me the exact plan, and wait for my accepta
 Or start from the terminal:
 
 ```bash
-npx @ericrisco/rsc@latest onboard
+npx @damiangil/harness@latest onboard
 ```
 
 <img src="https://raw.githubusercontent.com/ericrisco/rsc-harness/main/site/meta-harness.png" alt="rsc-harness wizard turns an outcome into a verified plan: memory, tools, knowledge and rules selected, deferred or excluded according to evidence." width="960">
@@ -63,7 +65,7 @@ asked you to **install rsc / this harness / these skills**, run this in the **ro
 project they're equipping** — not inside a clone of this repo (see the note under *Install*):
 
 ```bash
-npx @ericrisco/rsc@latest onboard
+npx @damiangil/harness@latest onboard
 ```
 
 That launches the binding plain-language onboarding. It asks the user for technical level,
@@ -75,11 +77,11 @@ prints a SHA-256 plan id. Only rerun with `--accept-plan <id>` after the user ac
 For a non-interactive agent, collect the answers and preview the same plan explicitly:
 
 ```bash
-npx @ericrisco/rsc@latest onboard --technical-level mixed --accompaniment L1 \
+npx @damiangil/harness@latest onboard --technical-level mixed --accompaniment L1 \
   --project-kind software --goal "small compound-interest website" \
   --software-scope small --target codex
 # After the user accepts the printed plan:
-npx @ericrisco/rsc@latest onboard --technical-level mixed --accompaniment L1 \
+npx @damiangil/harness@latest onboard --technical-level mixed --accompaniment L1 \
   --project-kind software --goal "small compound-interest website" \
   --software-scope small --target codex --accept-plan PRINTED_SHA256_ID
 ```
@@ -91,7 +93,8 @@ npx @ericrisco/rsc@latest onboard --technical-level mixed --accompaniment L1 \
 
 From then on it's self-driving: `rsc-suggest` proposes the next skill as tasks appear, and in
 Claude Code a hook re-asserts the spec-first **new-feature gate** on every turn — so a feature
-request routes through `specify` before any skill writes code.
+request routes through `to-spec` (or `grill-with-docs`/`wayfinder` first, when the shape is still
+fuzzy) before any skill writes code.
 
 ---
 
@@ -107,7 +110,7 @@ no method deciding whether each piece belongs. rsc-harness keeps that constructi
   *next* skill the moment a task needs it — a one-word confirm installs it.
 - **Not code-only.** First-class support for running a *company*: bookkeeping,
   invoicing, hiring, GDPR, pitch decks, SEO, a YouTube/TikTok/LinkedIn presence —
-  each wired to a `02-DOCS/` knowledge loop that learns from your own results.
+  each wired to a `docs/` knowledge loop that learns from your own results.
 - **Specialists follow the stack.** The four base agents stay small; installing a
   supported stack adds only its reviewer and build resolver. `rsc add go`, for
   example, adds the Go pair without pulling reviewers for every other language.
@@ -151,13 +154,13 @@ injects at most 4,096 bytes. Disable every memory surface for a project with
 ## Install
 
 ```bash
-npx @ericrisco/rsc@latest onboard
+npx @damiangil/harness@latest onboard
 ```
 
 Prefer the short `rsc` command? Install once, globally:
 
 ```bash
-npm install -g @ericrisco/rsc   # then just: rsc
+npm install -g @damiangil/harness   # then just: rsc
 ```
 
 Run it inside any project and describe what you want. Working on the catalog
@@ -169,11 +172,11 @@ cd ~/rsc-skills && npm install && npm link
 ```
 
 > **Run it inside the project you're equipping — not inside this repo.** The
-> catalog's own `package.json` is named `@ericrisco/rsc`, so `npx @ericrisco/rsc`
+> catalog's own `package.json` is named `@damiangil/harness`, so `npx @damiangil/harness`
 > *from within a `rsc-harness` clone* resolves to the local (unlinked) bin and
 > dies with `sh: rsc: command not found`. Working on the catalog itself? Use
 > `node scripts/rsc.js …`, the `npm link` above, or pin the published build with
-> `npx @ericrisco/rsc@latest …`.
+> `npx @damiangil/harness@latest …`.
 
 The first run asks **how technical the conversation should be**, the accompaniment level, what the
 project is for, its goal and the assistants to target. It then presents the complete plan. A small
@@ -199,7 +202,7 @@ $ rsc onboard
  ██████╗ ███████╗ ██████╗     ← animated gradient wordmark
  ██╔══██╗██╔════╝██╔════╝
  ██████╔╝███████╗██║
-  272 skills · one CLI · zero bloat
+  290 skills · one CLI · zero bloat
 
 How technical should the conversation be?
 How much accompaniment do you want?
@@ -231,9 +234,9 @@ rsc reassess                        # check persisted deferral triggers; never i
 rsc add fastapi postgresdb           # install specific skills, by name
 rsc add youtube-api remotion-video   # …grow a channel, edit with Remotion
 rsc add fastapi --target claude,codex   # install into several assistants at once
-rsc install --profile minimal        # the base: orient + suggest + bro + unslop + show-me + eli5 + harness + init
+rsc install --profile minimal        # the base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach
 rsc install --profile core           # floor + the full SDD workflow
-rsc install --profile full           # everything (all 272 skills)
+rsc install --profile full           # everything (all 290 skills)
 rsc install --profile full --without go
 rsc consult "I want to launch a SaaS"  # recommend only, no install
 rsc registry refresh                 # write .rsc/skill-registry.{json,md}
@@ -265,7 +268,7 @@ The harness travels by git, but not all of it — and the split is the point.
 | | |
 | --- | --- |
 | `.rsc.json` | The decision: which assistants, which skills, **which catalog version**, the developer tier, which gates you disarmed |
-| `01-TOOLS/` · `02-DOCS/` | Your tooling and your wiki, if you use them |
+| `01-TOOLS/` · `docs/` | Your tooling and your wiki, if you use them |
 | Skills and agents you wrote by hand | They are yours. rsc does not claim them, does not count them as drift, and does not touch them |
 
 **Do not commit these** — rsc adds them to `.gitignore` for you:
@@ -273,13 +276,13 @@ The harness travels by git, but not all of it — and the split is the point.
 | | Why |
 | --- | --- |
 | `.rsc/` | Machine state: hook scripts, seals, logs and fallback session memory |
-| `02-DOCS/raw/worklog/.rsc-memory/` | Preferred session journal when a local wiki exists; protected with git's local exclude |
+| `docs/raw/worklog/.rsc-memory/` | Preferred session journal when a local wiki exists; protected with git's local exclude |
 | The skill entries rsc manages | Symlinks on macOS/Linux, real copies on Windows — two incompatible shapes of one thing |
 
 Whoever clones runs **one command** and ends up with the same harness:
 
 ```bash
-npx @ericrisco/rsc@latest sync
+npx @damiangil/harness@latest sync
 ```
 
 Same skills, same version — `.rsc.json` pins the catalog, so a teammate who clones in three
@@ -309,7 +312,7 @@ Recognise any of these? They are all the same fix.
 | Template lines showed up inside your hand-written `AGENTS.md` | |
 
 ```bash
-npx @ericrisco/rsc@latest repair
+npx @damiangil/harness@latest repair
 ```
 
 Safe in any folder: with no rsc there, it says so and writes nothing. It shows what it
@@ -331,7 +334,7 @@ so rsc does not repair, move or delete them — not even when rebuilding from sc
 re-sync what's already wired into your project:
 
 ```bash
-npm install -g @ericrisco/rsc@latest   # global install: pull the newest catalog
+npm install -g @damiangil/harness@latest   # global install: pull the newest catalog
 rsc sync                               # refresh managed skills + hooks (auto-detects your assistant)
 ```
 
@@ -342,7 +345,7 @@ rsc upgrade --dry-run                  # prints the npm install + rsc sync lines
 ```
 
 Running through `npx` (no global install)? There's nothing to upgrade —
-`npx @ericrisco/rsc@latest` always fetches the latest published catalog; just run
+`npx @damiangil/harness@latest` always fetches the latest published catalog; just run
 `rsc sync` afterwards if the project already has skills installed.
 
 Every sync snapshots the project first, so a bad update is always reversible:
@@ -375,28 +378,28 @@ just asks in plain language.
 
 ## The catalog
 
-272 skills, grouped by what you're trying to do. Click any skill to read its
+290 skills, grouped by what you're trying to do. Click any skill to read its
 `SKILL.md`. It fires on its own when a task matches.
 
 ### 🧭 Core & control plane
 The front door and the workspace brain.
 
-[init](skills/init/) · [harness](skills/harness/) · [orient](skills/orient/) · [suggest](skills/suggest/) · [bro](skills/bro/) · [unslop](skills/unslop/) · [author-skill](skills/author-skill/) · [sdd-init](skills/sdd-init/)
+[init](skills/init/) · [harness](skills/harness/) · [orient](skills/orient/) · [suggest](skills/suggest/) · [bro](skills/bro/) · [unslop](skills/unslop/) · [author-skill](skills/author-skill/)
 
 > **harness** is the Karpathy *chaos→knowledge* engine — a `01-TOOLS/` layer (one
-> folder per provider, each with a working `test_connection`) and a `02-DOCS/`
+> folder per provider, each with a working `test_connection`) and a `docs/`
 > self-improving wiki. It governs software *or* a whole company. **orient** is the
 > always-on compass that keeps a non-technical human oriented after every step.
 > **bro** is installed with every profile and rewrites any answer in plain, natural
 > language when the user asks — without making its full body always-on.
 
-> #### 📦 The `02-DOCS/` brain is now 100% Open Knowledge Format (OKF v0.1) conformant
+> #### 📦 The `docs/` brain is now 100% Open Knowledge Format (OKF v0.1) conformant
 >
 > Google Cloud published the [**Open Knowledge Format**](https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf)
 > — a vendor-neutral standard for portable, agent-readable knowledge — built on the
-> same Karpathy *LLM-wiki* pattern our `02-DOCS/` engine has used from day one. We
+> same Karpathy *LLM-wiki* pattern our `docs/` engine has used from day one. We
 > independently converged on the same design, so adopting the standard cost almost
-> nothing. As of now, **every `02-DOCS/wiki/` is a valid, portable OKF bundle**:
+> nothing. As of now, **every `docs/wiki/` is a valid, portable OKF bundle**:
 >
 > - **Markdown + YAML frontmatter**, `type` on every concept doc, OKF-standard
 >   fields (`title`, `description`, `resource`, `tags`, `timestamp`).
@@ -411,11 +414,18 @@ The front door and the workspace brain.
 > root, anything in `inbox/`) is *moved* into `raw/`, never left as clutter.
 
 ### 📐 Spec-Driven Development
-Take a fuzzy intent to a shipped, verified change — phase by phase. `npx @ericrisco/rsc install --profile core`.
+Take a fuzzy intent to a shipped, verified change — phase by phase. `npx @damiangil/harness install --profile core`.
 
-[sdd](skills/sdd/) · [constitution](skills/constitution/) · [idea-refinement](skills/idea-refinement/) · [specify](skills/specify/) · [clarify](skills/clarify/) · [plan](skills/plan/) · [tasks](skills/tasks/) · [analyze](skills/analyze/) · [decision-challenge](skills/decision-challenge/) · [implement](skills/implement/) · [source-grounded-development](skills/source-grounded-development/) · [verify](skills/verify/) · [review](skills/review/) · [simplify-code](skills/simplify-code/) · [ship](skills/ship/) · [debug](skills/debug/) · [worktrees](skills/worktrees/) · [parallel](skills/parallel/)
+[source-grounded-development](skills/source-grounded-development/) · [simplify-code](skills/simplify-code/)
 
-> Two of those are not phases the chain walks on its own. `idea-refinement` **is** invoked — `specify` runs its FRAME block before the first question round. `decision-challenge` is **on-demand**: it exists, it is good, and no phase calls it yet. Listed so you can reach for it, not because the chain will. And the limit of what FRAME buys you, stated rather than implied: a second reading by the same model breaks correlation of **framing**, not of model — it shares the priors it is checking.
+> The actual spec-first chain — clarify, specify, plan, break into tickets, build, verify, debug,
+> ship — now lives in the personal catalog below: `grill-with-docs`/`wayfinder` → `to-spec`
+> (+ `write-adr` for decisions) → `superpowers:writing-plans` → `superpowers:executing-plans`, or
+> `to-tickets` → `implement`, with `superpowers:systematic-debugging` for bugs and
+> `superpowers:verification-before-completion` before calling anything done. This section keeps
+> the two skills that stay stack-agnostic in-phase regardless of which chain built the code:
+> grounding an implementation or review in current version-specific docs, and simplifying working
+> code without changing its behaviour.
 
 ### 💼 Run a business
 
@@ -434,7 +444,7 @@ Take a fuzzy intent to a shipped, verified change — phase by phase. `npx @eric
 [marketing](skills/marketing/) · [seo-geo](skills/seo-geo/) · [content-engine](skills/content-engine/) · [social-publisher](skills/social-publisher/) · [brand-voice](skills/brand-voice/) · [brand-identity](skills/brand-identity/) · [newsletter](skills/newsletter/) · [landing-copy](skills/landing-copy/) · [ads](skills/ads/) · [article-writing](skills/article-writing/) · [case-studies](skills/case-studies/) · [video-shorts](skills/video-shorts/) · [podcast](skills/podcast/) · [market-research](skills/market-research/) · [competitor-watch](skills/competitor-watch/) · [press-kit](skills/press-kit/) · [community](skills/community/) · [webinar](skills/webinar/) · [review-management](skills/review-management/)
 
 ### 🎬 Grow a channel
-Each with a `02-DOCS` feedback loop that learns from your own results. `remotion-video` edits programmatically — transitions, Whisper captions, silence removal.
+Each with a `docs` feedback loop that learns from your own results. `remotion-video` edits programmatically — transitions, Whisper captions, silence removal.
 
 [youtube-api](skills/youtube-api/) · [youtube-strategy](skills/youtube-strategy/) · [youtube-ideation](skills/youtube-ideation/) · [youtube-thumbnails](skills/youtube-thumbnails/) · [youtube-packaging](skills/youtube-packaging/) · [remotion-video](skills/remotion-video/) · [tiktok-api](skills/tiktok-api/) · [instagram-api](skills/instagram-api/) · [shortform-strategy](skills/shortform-strategy/) · [shortform-ideation](skills/shortform-ideation/) · [shortform-packaging](skills/shortform-packaging/) · [shortform-editing](skills/shortform-editing/) · [viral-score](skills/viral-score/) · [linkedin-api](skills/linkedin-api/) · [linkedin-strategy](skills/linkedin-strategy/) · [linkedin-content](skills/linkedin-content/) · [linkedin-carousels](skills/linkedin-carousels/) · [linkedin-outreach](skills/linkedin-outreach/) · [medium-writing](skills/medium-writing/) · [medium-publishing](skills/medium-publishing/) · [medium-strategy](skills/medium-strategy/)
 
@@ -506,7 +516,19 @@ Three engines + engine-agnostic disciplines. Every engine skill pins the current
 
 ### 🧠 Knowledge & meta
 
-[knowledge-ops](skills/knowledge-ops/) · [codebase-onboarding](skills/codebase-onboarding/) · [research-ops](skills/research-ops/) · [decision-records](skills/decision-records/) · [continuous-learning](skills/continuous-learning/) · [skill-scout](skills/skill-scout/) · [context-budget](skills/context-budget/) · [roast-me](skills/roast-me/) · [show-me](skills/show-me/) · [eli5](skills/eli5/) · [fable-operator](skills/fable-operator/)
+[knowledge-ops](skills/knowledge-ops/) · [codebase-onboarding](skills/codebase-onboarding/) · [research-ops](skills/research-ops/) · [continuous-learning](skills/continuous-learning/) · [skill-scout](skills/skill-scout/) · [context-budget](skills/context-budget/) · [roast-me](skills/roast-me/) · [show-me](skills/show-me/) · [eli5](skills/eli5/) · [fable-operator](skills/fable-operator/)
+
+### 🇪🇸 Personal catalog — workflow (Spanish)
+
+The user's own 37-skill catalog, brought in as-is: bodies stay in Spanish, only each
+`description` was translated to English so Claude can still decide when to
+fire them. Split into a workflow half and an interface-design half.
+
+[grill-me](skills/grill-me/) · [grill-with-docs](skills/grill-with-docs/) · [grilling](skills/grilling/) · [wayfinder](skills/wayfinder/) · [to-spec](skills/to-spec/) · [to-tickets](skills/to-tickets/) · [to-questionnaire](skills/to-questionnaire/) · [implement](skills/implement/) · [revision-de-cambios](skills/revision-de-cambios/) · [code-review](skills/code-review/) · [research](skills/research/) · [prototype](skills/prototype/) · [domain-modeling](skills/domain-modeling/) · [handoff](skills/handoff/) · [write-adr](skills/write-adr/) · [wait-what](skills/wait-what/) · [writing-for-agents](skills/writing-for-agents/) · [claude-project-setup](skills/claude-project-setup/) · [muscle-memory](skills/muscle-memory/) · [teach](skills/teach/)
+
+### 🇪🇸 Personal catalog — interface design (Spanish)
+
+[animar](skills/animar/) · [diseno-apple](skills/diseno-apple/) · [diseno-landing](skills/diseno-landing/) · [ingeniero-diseno-web](skills/ingeniero-diseno-web/) · [leyes-de-percepcion](skills/leyes-de-percepcion/) · [leyes-de-retencion](skills/leyes-de-retencion/) · [mejor-accesibilidad](skills/mejor-accesibilidad/) · [mejor-colores](skills/mejor-colores/) · [mejor-layout](skills/mejor-layout/) · [mejor-redaccion](skills/mejor-redaccion/) · [mejor-tipografia](skills/mejor-tipografia/) · [mejor-ui](skills/mejor-ui/) · [sitios-calidad-premio](skills/sitios-calidad-premio/) · [tastemaker](skills/tastemaker/) · [video-a-superprompt](skills/video-a-superprompt/) · [vocabulario-animacion](skills/vocabulario-animacion/) · [revision-interfaz](skills/revision-interfaz/)
 
 ---
 
@@ -554,7 +576,7 @@ The richer surfaces are intentionally narrower than skill support:
 | Antigravity, Zed, Continue, Amp, Jules, Aider | unsupported | unsupported | unsupported |
 
 `manifest.json` is the generated public inventory: 33 agents (4 base + 29
-selective specialists) and 53 command entries (20 fixed + 33 stack aliases).
+selective specialists) and 43 command entries (10 fixed + 33 stack aliases).
 Unsupported means rsc writes nothing for that surface; it does not emulate a
 provider feature with an unverified file.
 

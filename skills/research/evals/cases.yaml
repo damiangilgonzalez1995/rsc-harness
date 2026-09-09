@@ -1,0 +1,32 @@
+skill: research
+
+should_trigger:
+  - prompt: "Investiga como funciona esta API de terceros antes de integrarla."
+    why: "Disparador directo de research."
+  - prompt: "Necesito que alguien lea la documentacion oficial y me resuma los hechos."
+    why: "Disparador directo de research."
+  - prompt: "Delega esta investigacion a un agente en segundo plano."
+    why: "Disparador directo de research."
+  - prompt: "Research this topic against primary sources and write up the findings."
+    why: "Disparador directo de research."
+  - prompt: "Reune hechos verificados sobre esta libreria antes de decidir."
+    why: "Disparador directo de research."
+
+should_not_trigger:
+  - prompt: "Implementa la funcion que ya investigamos."
+    route_to: "implement"
+    why: "Implementar la funcion investigada es el trabajo de implement, no de research."
+  - prompt: "Escribe un ticket con lo que se va a hacer."
+    route_to: "to-tickets"
+    why: "Escribir un ticket es el trabajo de to-tickets, no de research."
+  - prompt: "Revisa el codigo que hemos escrito hoy."
+    route_to: "revision-de-cambios"
+    why: "Revisar el trabajo sin commitear de hoy es el trabajo de revision-de-cambios, no de research."
+  - prompt: "Genera un prototipo de la pantalla."
+    route_to: "prototype"
+    why: "Generar un prototipo desechable es el trabajo de prototype, no de research."
+
+capability:
+  - scenario: "El usuario quiere investigar un tema contra fuentes primarias."
+    must_include:
+      - "fuente"

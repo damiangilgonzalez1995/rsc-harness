@@ -1,0 +1,9 @@
+{
+  "concept": "strategy",
+  "level": 2,
+  "title_en": "Build checkout using a function as a strategy",
+  "spec_html_en": "<p>Write function <code>checkout(total, discount_strategy)</code>. Call <code>discount_strategy(total)</code> to get the discount amount, then return <code>total</code> minus that discount, clamped so the result never goes below <code>0</code>.</p>",
+  "stub": "def checkout(total, discount_strategy):\n    # TODO: implement per spec: apply discount_strategy(total) and clamp at 0\n    ...\n",
+  "test": "def test_percentage_discount():\n    def ten_percent_off(total):\n        return total * 0.1\n    assert checkout(200, ten_percent_off) == 180, 'a 10% discount on 200 must leave 180'\n\ndef test_flat_discount():\n    def flat_20_off(total):\n        return 20\n    assert checkout(50, flat_20_off) == 30, 'a flat 20 discount on 50 must leave 30'\n\ndef test_discount_never_goes_negative():\n    def flat_100_off(total):\n        return 100\n    assert checkout(30, flat_100_off) == 0, 'a discount larger than the total must clamp the result at 0, never negative'\n",
+  "canonical": "def checkout(total, discount_strategy):\n    discount = discount_strategy(total)\n    return max(total - discount, 0)\n"
+}

@@ -1,0 +1,9 @@
+{
+  "concept": "properties",
+  "level": 2,
+  "title_en": "Build Thermostat with a validated setter",
+  "spec_html_en": "<p>Write class <code>Thermostat</code> with <code>__init__(self, target_temp)</code>. Expose <code>target_temp</code> as a property; the setter must raise <code>ValueError</code> if the value is below 0 or above 40.</p>",
+  "stub": "class Thermostat:\n    # TODO: implement __init__ and target_temp property+setter per spec\n    pass\n",
+  "test": "def test_initial_value():\n    t = Thermostat(21)\n    assert t.target_temp == 21, 'constructor must store target_temp'\n\ndef test_setter_accepts_valid_value():\n    t = Thermostat(21)\n    t.target_temp = 25\n    assert t.target_temp == 25, 'setter must update target_temp within range'\n\ndef test_setter_rejects_out_of_range():\n    t = Thermostat(21)\n    try:\n        t.target_temp = 100\n        assert False, 'setting target_temp above 40 must raise ValueError'\n    except ValueError:\n        pass",
+  "canonical": "class Thermostat:\n    def __init__(self, target_temp):\n        self._target_temp = None\n        self.target_temp = target_temp\n\n    @property\n    def target_temp(self):\n        return self._target_temp\n\n    @target_temp.setter\n    def target_temp(self, value):\n        if value < 0 or value > 40:\n            raise ValueError('target_temp must be between 0 and 40')\n        self._target_temp = value\n"
+}

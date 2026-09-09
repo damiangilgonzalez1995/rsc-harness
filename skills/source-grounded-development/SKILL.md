@@ -1,9 +1,9 @@
 ---
 name: source-grounded-development
-description: "Use when implementation or review depends on current version-specific framework, SDK, protocol or platform behaviour and memory is unsafe. Detects exact local versions, verifies primary sources, tests applicability and marks unknowns. NOT a standalone cited memo (`research-ops`), NOT diagnosis of a reproduced failure (`debug`)."
+description: "Use when implementation or review depends on current version-specific framework, SDK, protocol or platform behaviour and memory is unsafe. Detects exact local versions, verifies primary sources, tests applicability and marks unknowns. NOT a standalone cited memo (`research-ops`), NOT diagnosis of a reproduced failure (`superpowers:systematic-debugging`)."
 tags: [official-docs, primary-sources, version-detection, implementation, verification]
-recommends: [research-ops, decision-records, debug, technical-writing]
-profiles: [core, full]
+recommends: [research-ops, write-adr, technical-writing]
+profiles: [core, ui, full]
 origin: risco
 ---
 
@@ -97,12 +97,12 @@ Do not use this skill as a reason to delay reversible work indefinitely. If a pr
 
 | Smell | Correction |
 |---|---|
-| A reproduced bug is replaced by a docs tour | `debug` owns diagnosis; use this only for the disputed versioned claim. |
+| A reproduced bug is replaced by a docs tour | `superpowers:systematic-debugging` owns diagnosis; use this only for the disputed versioned claim. |
 | A broad open question is forced into implementation | Route the cited memo to `research-ops`. |
-| A lasting architecture choice disappears into a task summary | Preserve it in `decision-records` with this ledger as evidence. |
+| A lasting architecture choice disappears into a task summary | Preserve it in `write-adr` with this ledger as evidence. |
 | A search result or secondary article is presented as official | Follow it to the primary source or mark the claim unverified. |
 | “Latest docs” are read before the lockfile | Detect the local version and mode first; then choose applicable docs. |
 
 ## Orientación (siempre)
 
-Cierra cada turno con el **bloque-brújula** (📍 dónde estás · ✅ qué hiciste · 🧭 por qué · ➡️ siguiente, terminando en pregunta), calibrado al dial de `02-DOCS/wiki/harness/user-profile.md`. **Nunca termines en seco.** Protocolo completo: skill `orient` → `skills/orient/references/orientation-contract.md`. (Defiere a `suggest` el “¿instalo la skill que falta?”.)
+Cierra cada turno con el **bloque-brújula** (📍 dónde estás · ✅ qué hiciste · 🧭 por qué · ➡️ siguiente, terminando en pregunta), calibrado al dial de `docs/wiki/harness/user-profile.md`. **Nunca termines en seco.** Protocolo completo: skill `orient` → `skills/orient/references/orientation-contract.md`. (Defiere a `suggest` el “¿instalo la skill que falta?”.)
