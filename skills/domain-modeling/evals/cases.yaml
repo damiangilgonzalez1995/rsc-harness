@@ -1,0 +1,32 @@
+skill: domain-modeling
+
+should_trigger:
+  - prompt: "Necesitamos fijar el lenguaje ubicuo de este dominio antes de seguir."
+    why: "Disparador directo de domain-modeling."
+  - prompt: "Quiero registrar por que elegimos este modelo de datos."
+    why: "Disparador directo de domain-modeling."
+  - prompt: "Ayudame a construir el modelo de dominio del proyecto."
+    why: "Disparador directo de domain-modeling."
+  - prompt: "Hay que documentar la terminologia que usamos en el negocio."
+    why: "Disparador directo de domain-modeling."
+  - prompt: "Quiero mantener actualizado el glosario del dominio."
+    why: "Disparador directo de domain-modeling."
+
+should_not_trigger:
+  - prompt: "Escribe el codigo de la entidad Usuario en TypeScript."
+    route_to: "none"
+    why: "Fuera del alcance de domain-modeling."
+  - prompt: "Revisa el rendimiento de esta consulta SQL."
+    route_to: "none"
+    why: "Fuera del alcance de domain-modeling."
+  - prompt: "Genera un componente de React para el formulario."
+    route_to: "none"
+    why: "Fuera del alcance de domain-modeling."
+  - prompt: "Haz un test unitario para esta funcion."
+    route_to: "none"
+    why: "Fuera del alcance de domain-modeling."
+
+capability:
+  - scenario: "El usuario quiere fijar la terminologia de dominio del proyecto."
+    must_include:
+      - "dominio"

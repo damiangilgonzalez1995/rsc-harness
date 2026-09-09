@@ -1,0 +1,32 @@
+skill: claude-project-setup
+
+should_trigger:
+  - prompt: "Estoy empezando un proyecto nuevo, ayudame a configurar Claude Code."
+    why: "Disparador directo de claude-project-setup."
+  - prompt: "Quiero inicializar el repo con CLAUDE.md y reglas para el agente."
+    why: "Disparador directo de claude-project-setup."
+  - prompt: "Configurame comandos y skills para este proyecto desde cero."
+    why: "Disparador directo de claude-project-setup."
+  - prompt: "Necesito montar agentes y hooks para un repo que acabo de crear."
+    why: "Disparador directo de claude-project-setup."
+  - prompt: "Ayudame a dejar listo el repositorio para trabajar con Claude Code."
+    why: "Disparador directo de claude-project-setup."
+
+should_not_trigger:
+  - prompt: "Revisa el CLAUDE.md actual y dime si sigue las buenas practicas."
+    route_to: "none"
+    why: "Fuera del alcance de claude-project-setup."
+  - prompt: "Explicame que es un hook de Claude Code."
+    route_to: "none"
+    why: "Fuera del alcance de claude-project-setup."
+  - prompt: "Anade una regla nueva a un CLAUDE.md que ya existe."
+    route_to: "none"
+    why: "Fuera del alcance de claude-project-setup."
+  - prompt: "Documenta el dominio de este proyecto."
+    route_to: "none"
+    why: "Fuera del alcance de claude-project-setup."
+
+capability:
+  - scenario: "El usuario pide inicializar un proyecto nuevo para Claude Code."
+    must_include:
+      - "CLAUDE.md"
