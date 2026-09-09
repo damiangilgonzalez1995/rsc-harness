@@ -3,7 +3,7 @@ name: automation-strategy
 description: "Use when deciding whether a process is worth automating, sizing ROI and build-vs-buy, choosing an automation platform, or diagnosing why a fleet of automations keeps breaking — the decision layer before anyone builds. NOT building the flow (that is `automation-flows`, or `n8n` / `make` / `zapier` / `power-automate` to drive a live platform)."
 tags: [automation, strategy, roi, build-vs-buy, platform-selection, orchestration, idempotency, n8n, make, zapier, power-automate]
 recommends: [automation-flows, n8n, make, zapier, power-automate]
-profiles: [core, full]
+profiles: [core, ui, full]
 origin: risco
 ---
 
