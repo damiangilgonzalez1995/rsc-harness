@@ -1,0 +1,9 @@
+{
+  "concept": "classes",
+  "level": 2,
+  "title_en": "Build an Invoice class from the spec",
+  "spec_html_en": "<p>Write a class <code>Invoice</code> with <code>__init__(self, customer, amount, tax_rate=0.0)</code>. Add a method <code>total()</code> returning <code>amount + amount * tax_rate</code>.</p>",
+  "stub": "class Invoice:\n    # TODO: implement __init__ and total() per spec\n    pass\n",
+  "test": "def test_total_no_tax():\n    inv = Invoice('Ana', 100)\n    assert inv.total() == 100, 'total() must equal amount when tax_rate is 0'\n\ndef test_total_with_tax():\n    inv = Invoice('Bo', 200, 0.1)\n    assert abs(inv.total() - 220) < 1e-9, 'total() must add tax_rate * amount'\n\ndef test_stores_customer():\n    inv = Invoice('Cy', 50)\n    assert inv.customer == 'Cy', 'constructor must store customer'",
+  "canonical": "class Invoice:\n    def __init__(self, customer, amount, tax_rate=0.0):\n        self.customer = customer\n        self.amount = amount\n        self.tax_rate = tax_rate\n\n    def total(self):\n        return self.amount + self.amount * self.tax_rate\n"
+}

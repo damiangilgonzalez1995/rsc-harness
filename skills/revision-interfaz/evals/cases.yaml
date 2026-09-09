@@ -1,0 +1,32 @@
+skill: revision-interfaz
+
+should_trigger:
+  - prompt: "Haz una revision completa de esta interfaz: accesibilidad, layout, color y texto."
+    why: "Disparador directo de revision-interfaz."
+  - prompt: "Necesito un veredicto unico ordenado por impacto sobre esta pantalla."
+    why: "Disparador directo de revision-interfaz."
+  - prompt: "Revisa toda la UI de esta pagina con todas las skills mejor-*."
+    why: "Disparador directo de revision-interfaz."
+  - prompt: "Run a full interface review covering accessibility, layout, copy, typography and color."
+    why: "Disparador directo de revision-interfaz."
+  - prompt: "Consolida los hallazgos de diseno de esta pantalla en un solo informe."
+    why: "Disparador directo de revision-interfaz."
+
+should_not_trigger:
+  - prompt: "Revisa solo el diff de un PR concreto."
+    route_to: "none"
+    why: "Fuera del alcance de revision-interfaz."
+  - prompt: "Implementa la funcionalidad de esta pantalla."
+    route_to: "none"
+    why: "Fuera del alcance de revision-interfaz."
+  - prompt: "Escribe el copy de un solo boton."
+    route_to: "none"
+    why: "Fuera del alcance de revision-interfaz."
+  - prompt: "Genera la paleta de colores desde cero."
+    route_to: "none"
+    why: "Fuera del alcance de revision-interfaz."
+
+capability:
+  - scenario: "El usuario quiere una revision de interfaz completa y consolidada."
+    must_include:
+      - "veredicto"

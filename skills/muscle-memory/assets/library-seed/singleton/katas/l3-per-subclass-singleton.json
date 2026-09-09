@@ -1,0 +1,9 @@
+{
+  "concept": "singleton",
+  "level": 3,
+  "title_en": "Build a Singleton base class with one instance per subclass",
+  "spec_html_en": "<p>Write class <code>Singleton</code> implementing <code>__new__</code> so that each concrete subclass gets its own single shared instance: <code>_instances</code> must be a dict keyed by the class itself, so two different subclasses never share the same instance, but two calls to the same subclass always return the same one.</p>",
+  "stub": "class Singleton:\n    _instances = {}\n\n    def __new__(cls):\n        # TODO: implement per spec: one shared instance per concrete subclass,\n        # keyed by cls in _instances\n        ...\n",
+  "test": "class Logger(Singleton):\n    pass\n\nclass Cache(Singleton):\n    pass\n\ndef test_same_subclass_returns_same_instance():\n    a = Logger()\n    b = Logger()\n    assert a is b, 'two calls to the same subclass must return the same instance'\n\ndef test_different_subclasses_get_different_instances():\n    logger = Logger()\n    cache = Cache()\n    assert logger is not cache, 'different subclasses of Singleton must not share the same instance'\n\ndef test_each_subclass_keeps_its_own_state():\n    logger = Logger()\n    logger.name = 'app-logger'\n    same_logger = Logger()\n    assert same_logger.name == 'app-logger', 'the shared instance for a subclass must keep its state across references'\n",
+  "canonical": "class Singleton:\n    _instances = {}\n\n    def __new__(cls):\n        if cls not in cls._instances:\n            cls._instances[cls] = super().__new__(cls)\n        return cls._instances[cls]\n"
+}

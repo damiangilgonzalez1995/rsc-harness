@@ -1,0 +1,9 @@
+{
+  "concept": "exceptions",
+  "level": 1,
+  "title_en": "Raise a custom exception",
+  "spec_html_en": "<p>Implement <code>remove_stock(stock, quantity)</code>: raise <code>OutOfStockError</code> if <code>quantity > stock</code>, otherwise return <code>stock - quantity</code>.</p>",
+  "stub": "class OutOfStockError(Exception):\n    pass\n\n\ndef remove_stock(stock: int, quantity: int) -> int:\n    # TODO: raise OutOfStockError if quantity > stock, otherwise return stock - quantity\n    ...\n",
+  "test": "def test_removes_stock_normally():\n    assert remove_stock(10, 3) == 7, 'removing 3 from 10 must leave 7'\n\ndef test_raises_when_insufficient():\n    try:\n        remove_stock(2, 5)\n        assert False, 'removing more than available stock must raise OutOfStockError'\n    except OutOfStockError:\n        pass\n\ndef test_removes_exact_stock():\n    assert remove_stock(5, 5) == 0, 'removing all remaining stock must leave 0'",
+  "canonical": "class OutOfStockError(Exception):\n    pass\n\n\ndef remove_stock(stock, quantity):\n    if quantity > stock:\n        raise OutOfStockError(f'cannot remove {quantity} units, only {stock} in stock')\n    return stock - quantity\n"
+}

@@ -1,0 +1,32 @@
+skill: code-review
+
+should_trigger:
+  - prompt: "Revisa los cambios de esta rama desde el commit base."
+    why: "Disparador directo de code-review."
+  - prompt: "Necesito ver si este PR cumple los estandares del repo y la spec."
+    why: "Disparador directo de code-review."
+  - prompt: "Revisa desde main hasta mi rama actual."
+    why: "Disparador directo de code-review."
+  - prompt: "Review this branch against the repo's coding standards and the original spec."
+    why: "Disparador directo de code-review."
+  - prompt: "Comprueba si el codigo coincide con lo que pedia el issue."
+    why: "Disparador directo de code-review."
+
+should_not_trigger:
+  - prompt: "Revisa solo el trabajo sin commitear de la sesion actual."
+    route_to: "none"
+    why: "Fuera del alcance de code-review."
+  - prompt: "Implementa la funcionalidad que falta."
+    route_to: "none"
+    why: "Fuera del alcance de code-review."
+  - prompt: "Escribe la spec de este cambio."
+    route_to: "none"
+    why: "Fuera del alcance de code-review."
+  - prompt: "Genera tickets a partir de este plan."
+    route_to: "none"
+    why: "Fuera del alcance de code-review."
+
+capability:
+  - scenario: "El usuario quiere revisar una rama, PR o rango de commits frente a estandares y spec."
+    must_include:
+      - "estandares"

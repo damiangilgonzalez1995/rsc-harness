@@ -1,0 +1,9 @@
+{
+  "concept": "observer",
+  "level": 3,
+  "title_en": "Build StockTicker with unsubscribe",
+  "spec_html_en": "<p>Write class <code>StockTicker</code> with <code>subscribe(self, callback)</code>, <code>unsubscribe(self, callback)</code> and <code>notify(self, price)</code>. <code>subscribe</code> adds a callback. <code>unsubscribe</code> removes it if present, doing nothing if it was never subscribed. <code>notify</code> calls every currently subscribed callback with <code>price</code>, in subscription order.</p>",
+  "stub": "class StockTicker:\n    # TODO: implement __init__, subscribe, unsubscribe and notify per spec\n    pass\n",
+  "test": "def test_subscriber_receives_notifications():\n    received = []\n    ticker = StockTicker()\n    ticker.subscribe(lambda price: received.append(price))\n    ticker.notify(100)\n    assert received == [100], 'a subscribed callback must receive the notified price'\n\ndef test_unsubscribed_callback_stops_receiving():\n    received = []\n    def watcher(price):\n        received.append(price)\n    ticker = StockTicker()\n    ticker.subscribe(watcher)\n    ticker.notify(100)\n    ticker.unsubscribe(watcher)\n    ticker.notify(200)\n    assert received == [100], 'after unsubscribe, the callback must not receive further notifications'\n\ndef test_unsubscribing_unknown_callback_is_a_no_op():\n    ticker = StockTicker()\n    def never_subscribed(price):\n        pass\n    ticker.unsubscribe(never_subscribed)\n    ticker.notify(50)\n",
+  "canonical": "class StockTicker:\n    def __init__(self):\n        self.subscribers = []\n\n    def subscribe(self, callback):\n        self.subscribers.append(callback)\n\n    def unsubscribe(self, callback):\n        if callback in self.subscribers:\n            self.subscribers.remove(callback)\n\n    def notify(self, price):\n        for callback in self.subscribers:\n            callback(price)\n"
+}

@@ -1,0 +1,9 @@
+{
+  "concept": "properties",
+  "level": 1,
+  "title_en": "Add a read-only area property",
+  "spec_html_en": "<p>The class <code>Rectangle</code> stores <code>width</code> and <code>height</code>. Add a read-only property <code>area</code> returning <code>width * height</code>.</p>",
+  "stub": "class Rectangle:\n    def __init__(self, width: float, height: float):\n        self.width = width\n        self.height = height\n\n    # TODO: add a read-only property `area` returning width * height\n",
+  "test": "def test_area_basic():\n    r = Rectangle(3, 4)\n    assert r.area == 12, 'area must be width * height'\n\ndef test_area_no_parentheses():\n    r = Rectangle(2, 5)\n    assert r.area == 10, 'area must be accessed without parentheses, like an attribute'\n\ndef test_area_updates_with_dimensions():\n    r = Rectangle(1, 1)\n    r.width = 10\n    assert r.area == 10, 'area must reflect the current width and height'",
+  "canonical": "class Rectangle:\n    def __init__(self, width, height):\n        self.width = width\n        self.height = height\n\n    @property\n    def area(self):\n        return self.width * self.height\n"
+}

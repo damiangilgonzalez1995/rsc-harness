@@ -1,0 +1,9 @@
+{
+  "concept": "dunder-methods",
+  "level": 2,
+  "title_en": "Build Inventory with __len__ and __iter__",
+  "spec_html_en": "<p>Write class <code>Inventory</code> with <code>__init__(self, items)</code> storing items. Implement <code>__len__</code> returning the number of items, and <code>__iter__</code> allowing iteration over the items in order.</p>",
+  "stub": "class Inventory:\n    # TODO: implement __init__, __len__ and __iter__ per spec\n    pass\n",
+  "test": "def test_len():\n    inv = Inventory(['bolt', 'nut', 'washer'])\n    assert len(inv) == 3, 'len(inventory) must return the number of items'\n\ndef test_iter_order():\n    inv = Inventory(['bolt', 'nut'])\n    assert list(inv) == ['bolt', 'nut'], 'iterating must yield items in insertion order'\n\ndef test_empty_inventory():\n    inv = Inventory([])\n    assert len(inv) == 0, 'an empty inventory must have length 0'\n    assert list(inv) == [], 'iterating an empty inventory must yield nothing'",
+  "canonical": "class Inventory:\n    def __init__(self, items):\n        self.items = items\n\n    def __len__(self):\n        return len(self.items)\n\n    def __iter__(self):\n        return iter(self.items)\n"
+}

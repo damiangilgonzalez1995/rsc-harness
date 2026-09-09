@@ -1,0 +1,9 @@
+{
+  "concept": "singleton",
+  "level": 2,
+  "title_en": "Build ConfigManager as a singleton with __new__",
+  "spec_html_en": "<p>Write class <code>ConfigManager</code> using <code>__new__</code> so that every call to <code>ConfigManager()</code> returns the exact same instance. <code>__init__</code> is already implemented and only creates <code>self.settings</code> as an empty dict the first time, so re-running <code>__init__</code> on later calls does not wipe existing state.</p>",
+  "stub": "class ConfigManager:\n    _instance = None\n\n    def __new__(cls):\n        # TODO: implement per spec: return the same instance on every call\n        ...\n\n    def __init__(self):\n        if not hasattr(self, 'settings'):\n            self.settings = {}\n",
+  "test": "def test_returns_same_instance():\n    a = ConfigManager()\n    b = ConfigManager()\n    assert a is b, 'ConfigManager() must always return the same instance'\n\ndef test_shared_state_across_references():\n    a = ConfigManager()\n    a.settings['debug'] = True\n    b = ConfigManager()\n    assert b.settings['debug'] is True, 'all references must share the same underlying state'\n\ndef test_settings_not_reset_on_new_call():\n    a = ConfigManager()\n    a.settings['x'] = 1\n    b = ConfigManager()\n    assert b.settings['x'] == 1, 'creating a \"new\" instance must not wipe previously set state'\n",
+  "canonical": "class ConfigManager:\n    _instance = None\n\n    def __new__(cls):\n        if cls._instance is None:\n            cls._instance = super().__new__(cls)\n        return cls._instance\n\n    def __init__(self):\n        if not hasattr(self, 'settings'):\n            self.settings = {}\n"
+}

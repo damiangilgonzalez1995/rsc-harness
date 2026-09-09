@@ -1,0 +1,32 @@
+skill: muscle-memory
+
+should_trigger:
+  - prompt: "Ponme ejercicios de Python basados en mi codigo reciente."
+    why: "Disparador directo de muscle-memory."
+  - prompt: "Quiero practicar para mantener el codigo afilado."
+    why: "Disparador directo de muscle-memory."
+  - prompt: "Revisa mi solucion a este kata."
+    why: "Disparador directo de muscle-memory."
+  - prompt: "Generate a short Python kata from my recent code."
+    why: "Disparador directo de muscle-memory."
+  - prompt: "Como voy con mi progreso de practica."
+    why: "Disparador directo de muscle-memory."
+
+should_not_trigger:
+  - prompt: "Implementa esta funcion de produccion directamente."
+    route_to: "none"
+    why: "Fuera del alcance de muscle-memory."
+  - prompt: "Ensename un concepto nuevo a lo largo de varias sesiones."
+    route_to: "none"
+    why: "Fuera del alcance de muscle-memory."
+  - prompt: "Revisa el codigo de este PR."
+    route_to: "none"
+    why: "Fuera del alcance de muscle-memory."
+  - prompt: "Documenta el modelo de dominio."
+    route_to: "none"
+    why: "Fuera del alcance de muscle-memory."
+
+capability:
+  - scenario: "El usuario quiere practicar Python con katas generados a partir de su codigo."
+    must_include:
+      - "kata"

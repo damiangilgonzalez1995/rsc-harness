@@ -1,0 +1,9 @@
+{
+  "concept": "comprehensions",
+  "level": 2,
+  "title_en": "Filter and map a support ticket queue",
+  "spec_html_en": "<p>Given a list of ticket dicts with keys <code>id</code>, <code>title</code>, <code>urgent</code>, write <code>urgent_titles(tickets)</code> returning a list of <code>title</code> for tickets where <code>urgent</code> is <code>True</code>, using a list comprehension. Write <code>titles_by_id(tickets)</code> returning a dict mapping <code>id</code> to <code>title</code> for every ticket, using a dict comprehension.</p>",
+  "stub": "def urgent_titles(tickets):\n    # TODO: implement with a list comprehension per spec\n    ...\n\n\ndef titles_by_id(tickets):\n    # TODO: implement with a dict comprehension per spec\n    ...\n",
+  "test": "def test_urgent_titles_filters():\n    tickets = [\n        {'id': 1, 'title': 'Server down', 'urgent': True},\n        {'id': 2, 'title': 'Typo in docs', 'urgent': False},\n        {'id': 3, 'title': 'Data loss', 'urgent': True},\n    ]\n    assert urgent_titles(tickets) == ['Server down', 'Data loss'], 'must return titles of urgent tickets only, in order'\n\ndef test_titles_by_id_maps_all_tickets():\n    tickets = [{'id': 1, 'title': 'Server down', 'urgent': True}, {'id': 2, 'title': 'Typo', 'urgent': False}]\n    assert titles_by_id(tickets) == {1: 'Server down', 2: 'Typo'}, 'must map every ticket id to its title, urgent or not'\n\ndef test_empty_ticket_list():\n    assert urgent_titles([]) == [], 'no tickets means no urgent titles'\n    assert titles_by_id([]) == {}, 'no tickets means an empty mapping'",
+  "canonical": "def urgent_titles(tickets):\n    return [t['title'] for t in tickets if t['urgent']]\n\n\ndef titles_by_id(tickets):\n    return {t['id']: t['title'] for t in tickets}\n"
+}

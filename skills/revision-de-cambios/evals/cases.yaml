@@ -1,0 +1,32 @@
+skill: revision-de-cambios
+
+should_trigger:
+  - prompt: "Revisa este cambio, el trabajo sin commitear que tengo ahora."
+    why: "Disparador directo de revision-de-cambios."
+  - prompt: "Clasifica los hallazgos de este PR como introducidos o preexistentes."
+    why: "Disparador directo de revision-de-cambios."
+  - prompt: "Revisa este rango de commits y expande a las superficies afectadas."
+    why: "Disparador directo de revision-de-cambios."
+  - prompt: "Review this pull request and classify each finding as a regression or pre-existing."
+    why: "Disparador directo de revision-de-cambios."
+  - prompt: "Necesito revisar el diff de esta rama frente a main."
+    why: "Disparador directo de revision-de-cambios."
+
+should_not_trigger:
+  - prompt: "Revisa toda la pantalla de accesibilidad, layout y color a la vez."
+    route_to: "none"
+    why: "Fuera del alcance de revision-de-cambios."
+  - prompt: "Implementa la funcionalidad que falta."
+    route_to: "none"
+    why: "Fuera del alcance de revision-de-cambios."
+  - prompt: "Escribe la spec de este cambio."
+    route_to: "none"
+    why: "Fuera del alcance de revision-de-cambios."
+  - prompt: "Documenta la decision de arquitectura tomada."
+    route_to: "none"
+    why: "Fuera del alcance de revision-de-cambios."
+
+capability:
+  - scenario: "El usuario quiere revisar un cambio concreto en lugar de una pantalla entera."
+    must_include:
+      - "diff"

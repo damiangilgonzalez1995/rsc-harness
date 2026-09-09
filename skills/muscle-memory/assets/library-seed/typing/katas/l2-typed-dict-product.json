@@ -1,0 +1,9 @@
+{
+  "concept": "typing",
+  "level": 2,
+  "title_en": "Build a TypedDict and a function that uses it",
+  "spec_html_en": "<p>Define a <code>TypedDict</code> named <code>Product</code> with keys <code>name: str</code>, <code>price: float</code>, <code>qty: int</code>. Write function <code>total_value(product) -> float</code> returning <code>price * qty</code>.</p>",
+  "stub": "from typing import TypedDict\n\n\nclass Product(TypedDict):\n    # TODO: define keys name: str, price: float, qty: int\n    pass\n\n\ndef total_value(product: Product) -> float:\n    # TODO: return price * qty\n    pass\n",
+  "test": "def test_total_value():\n    p = {'name': 'Widget', 'price': 2.5, 'qty': 4}\n    assert total_value(p) == 10.0, 'total_value must be price * qty'\n\ndef test_total_value_zero_qty():\n    p = {'name': 'Gadget', 'price': 99.0, 'qty': 0}\n    assert total_value(p) == 0.0, 'total_value with qty 0 must be 0'\n\ndef test_product_is_plain_dict_at_runtime():\n    p = {'name': 'Widget', 'price': 1.0, 'qty': 1}\n    assert isinstance(p, dict), 'a TypedDict instance is still a plain dict at runtime'",
+  "canonical": "from typing import TypedDict\n\n\nclass Product(TypedDict):\n    name: str\n    price: float\n    qty: int\n\n\ndef total_value(product: Product) -> float:\n    return product['price'] * product['qty']\n"
+}

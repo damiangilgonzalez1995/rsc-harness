@@ -1,0 +1,9 @@
+{
+  "concept": "context-managers",
+  "level": 2,
+  "title_en": "Build ManagedConnection with __enter__/__exit__",
+  "spec_html_en": "<p>Write class <code>ManagedConnection</code> implementing the context manager protocol. <code>__init__(self, name, log)</code> stores both. <code>__enter__</code> appends <code>f\"{name}:open\"</code> to <code>log</code> and returns <code>self</code>. <code>__exit__</code> appends <code>f\"{name}:closed\"</code> to <code>log</code> regardless of exception, and returns <code>False</code> (never suppress exceptions).</p>",
+  "stub": "class ManagedConnection:\n    # TODO: implement __init__, __enter__ and __exit__ per spec\n    pass\n",
+  "test": "def test_enter_appends_open():\n    log = []\n    with ManagedConnection('db', log):\n        pass\n    assert 'db:open' in log, '__enter__ must append \"<name>:open\" to log'\n\ndef test_exit_appends_closed_in_order():\n    log = []\n    with ManagedConnection('db', log):\n        pass\n    assert log == ['db:open', 'db:closed'], '__exit__ must append \"<name>:closed\" right after the block runs'\n\ndef test_exit_runs_even_on_error():\n    log = []\n    try:\n        with ManagedConnection('db', log):\n            raise ValueError('boom')\n    except ValueError:\n        pass\n    assert 'db:closed' in log, '__exit__ must run even if the with-block raises'",
+  "canonical": "class ManagedConnection:\n    def __init__(self, name, log):\n        self.name = name\n        self.log = log\n\n    def __enter__(self):\n        self.log.append(f'{self.name}:open')\n        return self\n\n    def __exit__(self, exc_type, exc_value, traceback):\n        self.log.append(f'{self.name}:closed')\n        return False\n"
+}

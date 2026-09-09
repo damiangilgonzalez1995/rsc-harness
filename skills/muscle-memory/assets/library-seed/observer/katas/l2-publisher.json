@@ -1,0 +1,9 @@
+{
+  "concept": "observer",
+  "level": 2,
+  "title_en": "Build Publisher with subscribe and notify",
+  "spec_html_en": "<p>Write class <code>Publisher</code>. <code>__init__(self)</code> sets up an empty list of subscribers. <code>subscribe(self, callback)</code> adds <code>callback</code> to that list. <code>notify(self, event)</code> calls every subscribed callback with <code>event</code>, in the order they subscribed.</p>",
+  "stub": "class Publisher:\n    # TODO: implement __init__, subscribe and notify per spec\n    pass\n",
+  "test": "def test_notifies_single_subscriber():\n    received = []\n    publisher = Publisher()\n    publisher.subscribe(lambda event: received.append(event))\n    publisher.notify('breaking news')\n    assert received == ['breaking news'], 'notify must call the subscribed callback with the event'\n\ndef test_notifies_multiple_subscribers_in_order():\n    received = []\n    publisher = Publisher()\n    publisher.subscribe(lambda event: received.append(('a', event)))\n    publisher.subscribe(lambda event: received.append(('b', event)))\n    publisher.notify('update')\n    assert received == [('a', 'update'), ('b', 'update')], 'notify must call every subscriber, in the order they subscribed'\n\ndef test_no_subscribers_does_not_raise():\n    publisher = Publisher()\n    publisher.notify('anything')\n",
+  "canonical": "class Publisher:\n    def __init__(self):\n        self.subscribers = []\n\n    def subscribe(self, callback):\n        self.subscribers.append(callback)\n\n    def notify(self, event):\n        for callback in self.subscribers:\n            callback(event)\n"
+}

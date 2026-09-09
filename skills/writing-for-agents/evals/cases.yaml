@@ -1,0 +1,32 @@
+skill: writing-for-agents
+
+should_trigger:
+  - prompt: "Estoy creando una skill nueva, ayudame a escribirla para que la consuma un agente."
+    why: "Disparador directo de writing-for-agents."
+  - prompt: "Necesito editar este AGENTS.md para que un agente lo entienda bien."
+    why: "Disparador directo de writing-for-agents."
+  - prompt: "Revisa este CLAUDE.md pensando en que lo lee un agente, no una persona."
+    why: "Disparador directo de writing-for-agents."
+  - prompt: "Write this skill document so an agent can consume it effectively."
+    why: "Disparador directo de writing-for-agents."
+  - prompt: "Ajusta este documento para que un agente lo siga sin ambiguedad."
+    why: "Disparador directo de writing-for-agents."
+
+should_not_trigger:
+  - prompt: "Escribe un articulo de blog para lectores humanos."
+    route_to: "none"
+    why: "Fuera del alcance de writing-for-agents."
+  - prompt: "Redacta un email de marketing."
+    route_to: "none"
+    why: "Fuera del alcance de writing-for-agents."
+  - prompt: "Documenta el modelo de dominio del negocio."
+    route_to: "none"
+    why: "Fuera del alcance de writing-for-agents."
+  - prompt: "Genera tickets a partir de esta spec."
+    route_to: "none"
+    why: "Fuera del alcance de writing-for-agents."
+
+capability:
+  - scenario: "El usuario crea o edita un documento que va a consumir un agente."
+    must_include:
+      - "agente"

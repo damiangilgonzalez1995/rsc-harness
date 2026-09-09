@@ -1,0 +1,32 @@
+skill: wait-what
+
+should_trigger:
+  - prompt: "Espera, ese ultimo mensaje no ha calado, vuelve a plantearlo."
+    why: "Disparador directo de wait-what."
+  - prompt: "Wait, that last message did not land, rephrase it."
+    why: "Disparador directo de wait-what."
+  - prompt: "Para, no he entendido bien lo que acabas de decir, explicalo de otra forma."
+    why: "Disparador directo de wait-what."
+  - prompt: "Creo que no me has entendido, vuelve a intentarlo."
+    why: "Disparador directo de wait-what."
+  - prompt: "Eso no es lo que pedi, replanteatelo."
+    why: "Disparador directo de wait-what."
+
+should_not_trigger:
+  - prompt: "Implementa la funcionalidad que describimos."
+    route_to: "none"
+    why: "Fuera del alcance de wait-what."
+  - prompt: "Revisa el codigo de este PR."
+    route_to: "none"
+    why: "Fuera del alcance de wait-what."
+  - prompt: "Documenta esta decision de arquitectura."
+    route_to: "none"
+    why: "Fuera del alcance de wait-what."
+  - prompt: "Genera tickets a partir de este plan."
+    route_to: "none"
+    why: "Fuera del alcance de wait-what."
+
+capability:
+  - scenario: "El usuario indica que el ultimo mensaje del agente no encajo y pide replantearlo."
+    must_include:
+      - "replant"

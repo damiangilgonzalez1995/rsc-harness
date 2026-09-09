@@ -1,0 +1,9 @@
+{
+  "concept": "strategy",
+  "level": 3,
+  "title_en": "Build Router that swaps strategy at runtime",
+  "spec_html_en": "<p>Write class <code>Router</code>. <code>__init__(self, strategy)</code> stores the initial strategy. <code>set_strategy(self, strategy)</code> replaces the active strategy. <code>plan(self, distance)</code> calls the current strategy with <code>distance</code> and returns its result.</p>",
+  "stub": "class Router:\n    # TODO: implement __init__, set_strategy and plan per spec\n    pass\n",
+  "test": "def test_uses_initial_strategy():\n    def fastest(distance):\n        return distance / 2\n    router = Router(fastest)\n    assert router.plan(100) == 50, 'plan must delegate to the strategy passed to __init__'\n\ndef test_swaps_strategy_at_runtime():\n    def fastest(distance):\n        return distance / 2\n    def cheapest(distance):\n        return distance * 1.5\n    router = Router(fastest)\n    router.set_strategy(cheapest)\n    assert router.plan(10) == 15, 'after set_strategy, plan must use the new strategy, not the old one'\n\ndef test_can_swap_back():\n    def a(distance):\n        return distance + 1\n    def b(distance):\n        return distance + 2\n    router = Router(a)\n    router.set_strategy(b)\n    router.set_strategy(a)\n    assert router.plan(0) == 1, 'set_strategy must allow swapping back to a previously used strategy'\n",
+  "canonical": "class Router:\n    def __init__(self, strategy):\n        self.strategy = strategy\n\n    def set_strategy(self, strategy):\n        self.strategy = strategy\n\n    def plan(self, distance):\n        return self.strategy(distance)\n"
+}

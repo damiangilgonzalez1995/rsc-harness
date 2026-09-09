@@ -1,0 +1,9 @@
+{
+  "concept": "enums",
+  "level": 1,
+  "title_en": "Fill in the Enum members",
+  "spec_html_en": "<p>Add members to <code>OrderStatus</code>: <code>PENDING = \"pending\"</code>, <code>SHIPPED = \"shipped\"</code>, <code>DELIVERED = \"delivered\"</code>.</p>",
+  "stub": "from enum import Enum\n\n\nclass OrderStatus(Enum):\n    # TODO: add members PENDING = 'pending', SHIPPED = 'shipped', DELIVERED = 'delivered'\n    ...\n",
+  "test": "def test_member_values():\n    assert OrderStatus.PENDING.value == 'pending', \"PENDING must have value 'pending'\"\n    assert OrderStatus.SHIPPED.value == 'shipped', \"SHIPPED must have value 'shipped'\"\n\ndef test_members_are_distinct():\n    assert OrderStatus.PENDING != OrderStatus.SHIPPED, 'different members must not be equal'\n\ndef test_lookup_by_value():\n    assert OrderStatus('delivered') == OrderStatus.DELIVERED, \"OrderStatus('delivered') must return DELIVERED\"",
+  "canonical": "from enum import Enum\n\n\nclass OrderStatus(Enum):\n    PENDING = 'pending'\n    SHIPPED = 'shipped'\n    DELIVERED = 'delivered'\n"
+}

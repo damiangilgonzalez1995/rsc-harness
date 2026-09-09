@@ -1,0 +1,9 @@
+{
+  "concept": "async",
+  "level": 3,
+  "title_en": "Fetch device statuses concurrently with asyncio.gather",
+  "spec_html_en": "<p>Write async function <code>fetch_status(device_id)</code> that awaits <code>asyncio.sleep(0)</code> and returns <code>f\"{device_id}: online\"</code>. Write async function <code>fetch_all_statuses(device_ids)</code> that uses <code>asyncio.gather</code> to run <code>fetch_status</code> for every id in <code>device_ids</code> concurrently, returning the results as a list in the same order.</p>",
+  "stub": "import asyncio\n\n\nasync def fetch_status(device_id):\n    # TODO: implement per spec, awaiting asyncio.sleep(0)\n    ...\n\n\nasync def fetch_all_statuses(device_ids):\n    # TODO: implement per spec, using asyncio.gather\n    ...\n",
+  "test": "async def test_fetch_status_single_device():\n    result = await fetch_status('sensor-1')\n    assert result == 'sensor-1: online', 'fetch_status must return \"<device_id>: online\"'\n\nasync def test_fetch_all_statuses_preserves_order():\n    result = await fetch_all_statuses(['a', 'b', 'c'])\n    assert result == ['a: online', 'b: online', 'c: online'], 'results must be in the same order as the input device_ids'\n\nasync def test_fetch_all_statuses_empty_list():\n    result = await fetch_all_statuses([])\n    assert result == [], 'gathering zero coroutines must return an empty list'",
+  "canonical": "import asyncio\n\n\nasync def fetch_status(device_id):\n    await asyncio.sleep(0)\n    return f'{device_id}: online'\n\n\nasync def fetch_all_statuses(device_ids):\n    return await asyncio.gather(*(fetch_status(d) for d in device_ids))\n"
+}

@@ -1,0 +1,9 @@
+{
+  "concept": "decorators",
+  "level": 2,
+  "title_en": "Build a count_calls decorator",
+  "spec_html_en": "<p>Write decorator <code>count_calls(func)</code> that counts how many times the wrapped function has been called, storing the count on <code>wrapper.calls</code>. Use <code>functools.wraps</code> so the wrapped function keeps its original name, and return the wrapped function's result unchanged.</p>",
+  "stub": "from functools import wraps\n\n\ndef count_calls(func):\n    # TODO: implement per spec: wraps func, tracks the number of calls on\n    # wrapper.calls, and returns func's result unchanged\n    ...\n",
+  "test": "def test_wrapped_function_still_works():\n    @count_calls\n    def add(a, b):\n        return a + b\n    assert add(2, 3) == 5, 'the decorated function must still return the original result'\n\ndef test_counts_every_call():\n    @count_calls\n    def ping():\n        return 'pong'\n    ping()\n    ping()\n    ping()\n    assert ping.calls == 3, 'calls must be counted across every invocation'\n\ndef test_preserves_function_name():\n    @count_calls\n    def greet():\n        return 'hi'\n    assert greet.__name__ == 'greet', 'functools.wraps must preserve the original __name__'",
+  "canonical": "from functools import wraps\n\n\ndef count_calls(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        wrapper.calls += 1\n        return func(*args, **kwargs)\n    wrapper.calls = 0\n    return wrapper\n"
+}

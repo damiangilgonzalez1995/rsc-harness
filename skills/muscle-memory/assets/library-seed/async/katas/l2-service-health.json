@@ -1,0 +1,9 @@
+{
+  "concept": "async",
+  "level": 2,
+  "title_en": "Build an async check_service_health coroutine",
+  "spec_html_en": "<p>Write async function <code>check_service_health(service_name)</code> that awaits <code>asyncio.sleep(0)</code> (simulating a network check) and returns <code>f\"{service_name}: healthy\"</code>.</p>",
+  "stub": "import asyncio\n\n\nasync def check_service_health(service_name):\n    # TODO: implement per spec, awaiting asyncio.sleep(0)\n    ...\n",
+  "test": "async def test_returns_formatted_status():\n    result = await check_service_health('billing')\n    assert result == 'billing: healthy', 'must return \"<service_name>: healthy\" after awaiting'\n\ndef test_is_a_coroutine_function():\n    import inspect\n    assert inspect.iscoroutinefunction(check_service_health), 'check_service_health must be defined with async def'\n\nasync def test_runs_for_different_services():\n    result = await check_service_health('auth')\n    assert result == 'auth: healthy', 'the formatted status must reflect the given service_name'",
+  "canonical": "import asyncio\n\n\nasync def check_service_health(service_name):\n    await asyncio.sleep(0)\n    return f'{service_name}: healthy'\n"
+}

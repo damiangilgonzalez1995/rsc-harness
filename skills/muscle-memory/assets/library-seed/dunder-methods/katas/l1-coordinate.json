@@ -1,0 +1,9 @@
+{
+  "concept": "dunder-methods",
+  "level": 1,
+  "title_en": "Add __repr__ and __eq__",
+  "spec_html_en": "<p>The class <code>Coordinate</code> stores <code>lat</code> and <code>lng</code>. Add <code>__repr__</code> returning <code>\"Coordinate(lat, lng)\"</code> and <code>__eq__</code> comparing both fields.</p>",
+  "stub": "class Coordinate:\n    def __init__(self, lat: float, lng: float):\n        self.lat = lat\n        self.lng = lng\n\n    # TODO: add __repr__ returning \"Coordinate(lat, lng)\" and __eq__ comparing lat and lng\n",
+  "test": "def test_repr_format():\n    c = Coordinate(40.7, -74.0)\n    assert repr(c) == 'Coordinate(40.7, -74.0)', 'repr must be Coordinate(lat, lng)'\n\ndef test_eq_same_values():\n    assert Coordinate(1.0, 2.0) == Coordinate(1.0, 2.0), 'coordinates with equal lat/lng must be equal'\n\ndef test_eq_different_values():\n    assert Coordinate(1.0, 2.0) != Coordinate(1.0, 3.0), 'coordinates with different lng must not be equal'",
+  "canonical": "class Coordinate:\n    def __init__(self, lat, lng):\n        self.lat = lat\n        self.lng = lng\n\n    def __repr__(self):\n        return f'Coordinate({self.lat}, {self.lng})'\n\n    def __eq__(self, other):\n        return self.lat == other.lat and self.lng == other.lng\n"
+}

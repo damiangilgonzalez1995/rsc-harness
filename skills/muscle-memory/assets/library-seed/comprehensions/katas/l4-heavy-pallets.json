@@ -1,0 +1,9 @@
+{
+  "concept": "comprehensions",
+  "level": 4,
+  "title_en": "Refactor a loop into a list comprehension",
+  "spec_html_en": "<p><code>heavy_pallet_ids(pallets, limit)</code> returns the <code>id</code> of every pallet dict in <code>pallets</code> whose <code>weight</code> is strictly greater than <code>limit</code>. It already works with a manual loop; rewrite its body as a single list comprehension.</p>",
+  "stub": "def heavy_pallet_ids(pallets, limit):\n    # TODO: rewrite this loop as a single list comprehension\n    result = []\n    for pallet in pallets:\n        if pallet['weight'] > limit:\n            result.append(pallet['id'])\n    return result\n",
+  "test": "def test_filters_heavier_than_limit():\n    pallets = [{'id': 'A', 'weight': 500}, {'id': 'B', 'weight': 1200}, {'id': 'C', 'weight': 900}]\n    assert heavy_pallet_ids(pallets, 800) == ['B', 'C'], 'must return ids of pallets heavier than the limit, in order'\n\ndef test_weight_equal_to_limit_is_excluded():\n    pallets = [{'id': 'A', 'weight': 800}]\n    assert heavy_pallet_ids(pallets, 800) == [], 'a pallet exactly at the limit is not \"over\" it, so it must be excluded'\n\ndef test_empty_pallet_list():\n    assert heavy_pallet_ids([], 100) == [], 'no pallets means an empty result'",
+  "canonical": "def heavy_pallet_ids(pallets, limit):\n    return [pallet['id'] for pallet in pallets if pallet['weight'] > limit]\n"
+}

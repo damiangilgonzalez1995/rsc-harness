@@ -1,0 +1,9 @@
+{
+  "concept": "exceptions",
+  "level": 2,
+  "title_en": "Build parse_reading with try/except/else/finally",
+  "spec_html_en": "<p>Write <code>parse_reading(raw, log)</code>. Try to convert <code>raw</code> to <code>float</code>. If it raises <code>ValueError</code>, append <code>\"invalid\"</code> to <code>log</code> and return <code>None</code>. On success, append <code>\"ok\"</code> to <code>log</code> in the <code>else</code> branch and return the parsed float. Regardless of outcome, always append <code>\"done\"</code> to <code>log</code> in a <code>finally</code> block.</p>",
+  "stub": "def parse_reading(raw: str, log: list):\n    # TODO: implement per spec using try/except/else/finally\n    ...\n",
+  "test": "def test_valid_reading():\n    log = []\n    result = parse_reading('23.5', log)\n    assert result == 23.5, 'a valid numeric string must be parsed to a float'\n    assert log == ['ok', 'done'], \"on success, log must record 'ok' then 'done'\"\n\ndef test_invalid_reading():\n    log = []\n    result = parse_reading('N/A', log)\n    assert result is None, 'an invalid reading must return None'\n    assert log == ['invalid', 'done'], \"on failure, log must record 'invalid' then 'done'\"\n\ndef test_finally_always_runs():\n    log = []\n    parse_reading('1', log)\n    parse_reading('x', log)\n    assert log.count('done') == 2, \"'done' must be appended on every call, success or failure\"",
+  "canonical": "def parse_reading(raw, log):\n    try:\n        value = float(raw)\n    except ValueError:\n        log.append('invalid')\n        return None\n    else:\n        log.append('ok')\n        return value\n    finally:\n        log.append('done')\n"
+}

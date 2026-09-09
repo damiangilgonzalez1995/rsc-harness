@@ -1,0 +1,9 @@
+{
+  "concept": "dataclasses",
+  "level": 2,
+  "title_en": "Build ShoppingCart with a safe mutable default",
+  "spec_html_en": "<p>Write a dataclass <code>ShoppingCart</code> with field <code>owner: str</code> and field <code>items</code> that defaults to an independent empty list per instance (use <code>field(default_factory=list)</code>).</p>",
+  "stub": "from dataclasses import dataclass, field\n\n\nclass ShoppingCart:\n    # TODO: turn into a dataclass per spec: owner: str, items defaulting to an\n    # independent empty list via field(default_factory=list)\n    pass\n",
+  "test": "def test_owner_stored():\n    cart = ShoppingCart('Ana')\n    assert cart.owner == 'Ana', 'owner must be stored'\n\ndef test_items_default_empty():\n    cart = ShoppingCart('Ana')\n    assert cart.items == [], 'items must default to an empty list'\n\ndef test_items_are_independent_per_instance():\n    cart1 = ShoppingCart('Ana')\n    cart2 = ShoppingCart('Bo')\n    cart1.items.append('apple')\n    assert cart2.items == [], 'each ShoppingCart must get its own items list, not a shared one'",
+  "canonical": "from dataclasses import dataclass, field\n\n\n@dataclass\nclass ShoppingCart:\n    owner: str\n    items: list = field(default_factory=list)\n"
+}
