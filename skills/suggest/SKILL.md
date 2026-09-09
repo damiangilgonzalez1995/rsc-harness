@@ -53,8 +53,10 @@ whole run — advance through the phases without re-asking.
 If a step's skill is not installed, offer to add it (§2) before routing. `implement` always
 pairs with test-driven development and a verification pass before anything is called done.
 
-Exact skill names and order: `../sdd/SKILL.md`. On Claude Code this rule also arrives as a
-per-turn hook; the brevity here is deduplication, not relaxation.
+Exact skill names and order: `grill-with-docs` or `wayfinder` -> `to-spec` (and `write-adr` for
+decisions) -> `superpowers:writing-plans` -> `superpowers:executing-plans`, or `to-tickets` ->
+`implement`. On Claude Code this rule also arrives as a per-turn hook; the brevity here is
+deduplication, not relaxation.
 
 ---
 

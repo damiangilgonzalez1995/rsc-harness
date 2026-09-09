@@ -20,7 +20,7 @@ export function writeSkill(id, fromDir, toPath) {
 export function wireHook(paths, sourceMd, policy = {}) {
   const full = stripFrontmatter(readFileSync(sourceMd, 'utf8'));
   const body = policy.codeHooks === false
-    ? `# rsc-suggest — always-on operations layer\n\nRead \`docs/wiki/harness/user-profile.md\` before acting. If the user wants to build, add or change something, route it through \`grill-with-docs\` then \`to-spec\` before any code, then build it with \`superpowers:writing-plans\`. Use \`orient\` to keep the user situated and \`suggest\` to offer a missing skill only when the current task needs it. Close with the configured orientation block.\n`
+    ? `# rsc-suggest — always-on operations layer\n\nRead \`docs/wiki/harness/user-profile.md\` before acting. If the user wants to build, add or change something, route it through \`grill-with-docs\` or \`wayfinder\` then \`to-spec\` before any code, then build it with \`superpowers:writing-plans\` (or \`to-tickets\` then \`implement\` for ticket-sized work) — unless it is a one-line change, typo, or config bump, which skips the chain. Use \`orient\` to keep the user situated and \`suggest\` to offer a missing skill only when the current task needs it. Close with the configured orientation block.\n`
     : full;
   const block = `${MARK_START}\n${body}\n${MARK_END}`;
   let doc = existsSync(paths.hookTarget) ? readFileSync(paths.hookTarget, 'utf8') : '';
