@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Implementa la funcion que ya investigamos."
-    route_to: "none"
-    why: "Fuera del alcance de research."
+    route_to: "implement"
+    why: "Implementar la funcion investigada es el trabajo de implement, no de research."
   - prompt: "Escribe un ticket con lo que se va a hacer."
-    route_to: "none"
-    why: "Fuera del alcance de research."
+    route_to: "to-tickets"
+    why: "Escribir un ticket es el trabajo de to-tickets, no de research."
   - prompt: "Revisa el codigo que hemos escrito hoy."
-    route_to: "none"
-    why: "Fuera del alcance de research."
+    route_to: "revision-de-cambios"
+    why: "Revisar el trabajo sin commitear de hoy es el trabajo de revision-de-cambios, no de research."
   - prompt: "Genera un prototipo de la pantalla."
-    route_to: "none"
-    why: "Fuera del alcance de research."
+    route_to: "prototype"
+    why: "Generar un prototipo desechable es el trabajo de prototype, no de research."
 
 capability:
   - scenario: "El usuario quiere investigar un tema contra fuentes primarias."

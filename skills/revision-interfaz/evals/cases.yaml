@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Revisa solo el diff de un PR concreto."
-    route_to: "none"
-    why: "Fuera del alcance de revision-interfaz."
+    route_to: "revision-de-cambios"
+    why: "Revisar el diff de un PR concreto es el trabajo de revision-de-cambios, no de revision-interfaz."
   - prompt: "Implementa la funcionalidad de esta pantalla."
-    route_to: "none"
-    why: "Fuera del alcance de revision-interfaz."
+    route_to: "implement"
+    why: "Implementar la funcionalidad es el trabajo de implement, no de revision-interfaz."
   - prompt: "Escribe el copy de un solo boton."
-    route_to: "none"
-    why: "Fuera del alcance de revision-interfaz."
+    route_to: "mejor-redaccion"
+    why: "Escribir el copy de un boton es el trabajo de mejor-redaccion, no de revision-interfaz."
   - prompt: "Genera la paleta de colores desde cero."
-    route_to: "none"
-    why: "Fuera del alcance de revision-interfaz."
+    route_to: "mejor-colores"
+    why: "Generar la paleta de colores es el trabajo de mejor-colores, no de revision-interfaz."
 
 capability:
   - scenario: "El usuario quiere una revision de interfaz completa y consolidada."

@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Revisa toda la pantalla de accesibilidad, layout y color a la vez."
-    route_to: "none"
-    why: "Fuera del alcance de revision-de-cambios."
+    route_to: "revision-interfaz"
+    why: "Revisar una pantalla completa en accesibilidad, layout y color es el trabajo de revision-interfaz, no de revision-de-cambios."
   - prompt: "Implementa la funcionalidad que falta."
-    route_to: "none"
-    why: "Fuera del alcance de revision-de-cambios."
+    route_to: "implement"
+    why: "Implementar la funcionalidad es el trabajo de implement, no de revision-de-cambios."
   - prompt: "Escribe la spec de este cambio."
-    route_to: "none"
-    why: "Fuera del alcance de revision-de-cambios."
+    route_to: "to-spec"
+    why: "Escribir la spec de un cambio es el trabajo de to-spec, no de revision-de-cambios."
   - prompt: "Documenta la decision de arquitectura tomada."
-    route_to: "none"
-    why: "Fuera del alcance de revision-de-cambios."
+    route_to: "write-adr"
+    why: "Documentar una decision de arquitectura es el trabajo de write-adr, no de revision-de-cambios."
 
 capability:
   - scenario: "El usuario quiere revisar un cambio concreto en lugar de una pantalla entera."

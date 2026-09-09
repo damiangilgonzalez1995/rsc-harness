@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Revisa solo el trabajo sin commitear de la sesion actual."
-    route_to: "none"
-    why: "Fuera del alcance de code-review."
+    route_to: "revision-de-cambios"
+    why: "Revisar solo el trabajo sin commitear es el trabajo de revision-de-cambios, no de code-review."
   - prompt: "Implementa la funcionalidad que falta."
-    route_to: "none"
-    why: "Fuera del alcance de code-review."
+    route_to: "implement"
+    why: "Implementar la funcionalidad es el trabajo de implement, no de code-review."
   - prompt: "Escribe la spec de este cambio."
-    route_to: "none"
-    why: "Fuera del alcance de code-review."
+    route_to: "to-spec"
+    why: "Escribir la spec de un cambio es el trabajo de to-spec, no de code-review."
   - prompt: "Genera tickets a partir de este plan."
-    route_to: "none"
-    why: "Fuera del alcance de code-review."
+    route_to: "to-tickets"
+    why: "Generar tickets a partir de un plan es el trabajo de to-tickets, no de code-review."
 
 capability:
   - scenario: "El usuario quiere revisar una rama, PR o rango de commits frente a estandares y spec."

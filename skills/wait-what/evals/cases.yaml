@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Implementa la funcionalidad que describimos."
-    route_to: "none"
-    why: "Fuera del alcance de wait-what."
+    route_to: "implement"
+    why: "Implementar la funcionalidad es el trabajo de implement, no de wait-what."
   - prompt: "Revisa el codigo de este PR."
-    route_to: "none"
-    why: "Fuera del alcance de wait-what."
+    route_to: "code-review"
+    why: "Revisar el codigo de un PR es el trabajo de code-review, no de wait-what."
   - prompt: "Documenta esta decision de arquitectura."
-    route_to: "none"
-    why: "Fuera del alcance de wait-what."
+    route_to: "write-adr"
+    why: "Documentar una decision de arquitectura es el trabajo de write-adr, no de wait-what."
   - prompt: "Genera tickets a partir de este plan."
-    route_to: "none"
-    why: "Fuera del alcance de wait-what."
+    route_to: "to-tickets"
+    why: "Generar tickets a partir de un plan es el trabajo de to-tickets, no de wait-what."
 
 capability:
   - scenario: "El usuario indica que el ultimo mensaje del agente no encajo y pide replantearlo."

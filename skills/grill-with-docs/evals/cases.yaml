@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Solo interrogame, no hace falta documentar nada."
-    route_to: "none"
-    why: "Fuera del alcance de grill-with-docs."
+    route_to: "grilling"
+    why: "Interrogar sin documentar es el trabajo de grilling, no de grill-with-docs."
   - prompt: "Implementa el codigo de esta funcion."
-    route_to: "none"
-    why: "Fuera del alcance de grill-with-docs."
+    route_to: "implement"
+    why: "Implementar codigo es el trabajo de implement, no de grill-with-docs."
   - prompt: "Haz un resumen de traspaso para otro agente."
-    route_to: "none"
-    why: "Fuera del alcance de grill-with-docs."
+    route_to: "handoff"
+    why: "Compactar la conversacion en un traspaso es el trabajo de handoff, no de grill-with-docs."
   - prompt: "Convierte esta conversacion en tickets."
-    route_to: "none"
-    why: "Fuera del alcance de grill-with-docs."
+    route_to: "to-tickets"
+    why: "Convertir la conversacion en tickets es el trabajo de to-tickets, no de grill-with-docs."
 
 capability:
   - scenario: "El usuario pide un interrogatorio que ademas documente decisiones."

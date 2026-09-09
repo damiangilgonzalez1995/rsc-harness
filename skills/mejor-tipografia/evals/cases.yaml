@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Elige la paleta de colores de la marca."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-tipografia."
+    route_to: "mejor-colores"
+    why: "Elegir la paleta de colores es el trabajo de mejor-colores, no de mejor-tipografia."
   - prompt: "Revisa el soporte de teclado de este formulario."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-tipografia."
+    route_to: "mejor-accesibilidad"
+    why: "Revisar el soporte de teclado es el trabajo de mejor-accesibilidad, no de mejor-tipografia."
   - prompt: "Escribe el copy del boton de enviar."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-tipografia."
+    route_to: "mejor-redaccion"
+    why: "Escribir el copy de un boton es el trabajo de mejor-redaccion, no de mejor-tipografia."
   - prompt: "Anade una transicion a este menu desplegable."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-tipografia."
+    route_to: "animar"
+    why: "Anadir una transicion es el trabajo de animar, no de mejor-tipografia."
 
 capability:
   - scenario: "El usuario construye o revisa la tipografia de un producto."

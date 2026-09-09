@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Elige la paleta de colores de la marca."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-accesibilidad."
+    route_to: "mejor-colores"
+    why: "Elegir la paleta de colores es el trabajo de mejor-colores, no de mejor-accesibilidad."
   - prompt: "Escribe el copy del boton de enviar."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-accesibilidad."
+    route_to: "mejor-redaccion"
+    why: "Escribir el copy de un boton es el trabajo de mejor-redaccion, no de mejor-accesibilidad."
   - prompt: "Anade una animacion al icono del menu."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-accesibilidad."
+    route_to: "animar"
+    why: "Anadir una animacion es el trabajo de animar, no de mejor-accesibilidad."
   - prompt: "Revisa el layout responsive de esta pagina."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-accesibilidad."
+    route_to: "mejor-layout"
+    why: "Revisar el layout responsive es el trabajo de mejor-layout, no de mejor-accesibilidad."
 
 capability:
   - scenario: "El usuario quiere que el proyecto cumpla estandares de accesibilidad."

@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Escribe el copy de este mensaje de error."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-ui."
+    route_to: "mejor-redaccion"
+    why: "Escribir el copy de un mensaje de error es el trabajo de mejor-redaccion, no de mejor-ui."
   - prompt: "Genera la paleta de colores del sistema."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-ui."
+    route_to: "mejor-colores"
+    why: "Generar la paleta de colores es el trabajo de mejor-colores, no de mejor-ui."
   - prompt: "Revisa el contraste de este texto."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-ui."
+    route_to: "mejor-colores"
+    why: "Medir el contraste es el trabajo de mejor-colores, no de mejor-ui."
   - prompt: "Documenta el modelo de dominio."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-ui."
+    route_to: "domain-modeling"
+    why: "Documentar el modelo de dominio es el trabajo de domain-modeling, no de mejor-ui."
 
 capability:
   - scenario: "El usuario quiere pulir y mejorar la UI de un proyecto."

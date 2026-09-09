@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Implementa esta funcion de produccion directamente."
-    route_to: "none"
-    why: "Fuera del alcance de muscle-memory."
+    route_to: "implement"
+    why: "Implementar el codigo es el trabajo de implement, no de muscle-memory."
   - prompt: "Ensename un concepto nuevo a lo largo de varias sesiones."
-    route_to: "none"
-    why: "Fuera del alcance de muscle-memory."
+    route_to: "teach"
+    why: "Ensenar un concepto a lo largo de varias sesiones es el trabajo de teach, no de muscle-memory."
   - prompt: "Revisa el codigo de este PR."
-    route_to: "none"
-    why: "Fuera del alcance de muscle-memory."
+    route_to: "code-review"
+    why: "Revisar el codigo de un PR es el trabajo de code-review, no de muscle-memory."
   - prompt: "Documenta el modelo de dominio."
-    route_to: "none"
-    why: "Fuera del alcance de muscle-memory."
+    route_to: "domain-modeling"
+    why: "Documentar el modelo de dominio es el trabajo de domain-modeling, no de muscle-memory."
 
 capability:
   - scenario: "El usuario quiere practicar Python con katas generados a partir de su codigo."

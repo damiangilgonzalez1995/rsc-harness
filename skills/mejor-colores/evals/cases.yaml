@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Revisa el soporte de teclado de este formulario."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-colores."
+    route_to: "mejor-accesibilidad"
+    why: "Revisar el soporte de teclado es el trabajo de mejor-accesibilidad, no de mejor-colores."
   - prompt: "Escribe el copy de este mensaje de error."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-colores."
+    route_to: "mejor-redaccion"
+    why: "Escribir el copy de un mensaje de error es el trabajo de mejor-redaccion, no de mejor-colores."
   - prompt: "Anade una transicion al abrir este menu."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-colores."
+    route_to: "animar"
+    why: "Anadir una transicion es el trabajo de animar, no de mejor-colores."
   - prompt: "Ajusta el interlineado de este parrafo."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-colores."
+    route_to: "mejor-tipografia"
+    why: "Ajustar el interlineado es el trabajo de mejor-tipografia, no de mejor-colores."
 
 capability:
   - scenario: "El usuario construye o pregunta sobre un sistema de color."

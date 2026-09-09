@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Elige la tipografia de este texto."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-redaccion."
+    route_to: "mejor-tipografia"
+    why: "Elegir la tipografia es el trabajo de mejor-tipografia, no de mejor-redaccion."
   - prompt: "Anade una animacion a este boton."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-redaccion."
+    route_to: "animar"
+    why: "Anadir una animacion es el trabajo de animar, no de mejor-redaccion."
   - prompt: "Revisa el contraste de color de este texto."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-redaccion."
+    route_to: "mejor-colores"
+    why: "Medir el contraste es el trabajo de mejor-colores, no de mejor-redaccion."
   - prompt: "Ajusta el layout de esta pantalla."
-    route_to: "none"
-    why: "Fuera del alcance de mejor-redaccion."
+    route_to: "mejor-layout"
+    why: "Ajustar el layout es el trabajo de mejor-layout, no de mejor-redaccion."
 
 capability:
   - scenario: "El usuario escribe o revisa los textos de un producto."

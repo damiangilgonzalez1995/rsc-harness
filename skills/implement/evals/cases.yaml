@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Escribe la spec antes de implementar nada."
-    route_to: "none"
-    why: "Fuera del alcance de implement."
+    route_to: "to-spec"
+    why: "Escribir la spec es el trabajo de to-spec, no de implement."
   - prompt: "Revisa el codigo que ya se implemento."
-    route_to: "none"
-    why: "Fuera del alcance de implement."
+    route_to: "code-review"
+    why: "Revisar el codigo ya implementado es el trabajo de code-review, no de implement."
   - prompt: "Descompon el plan en tickets primero."
-    route_to: "none"
-    why: "Fuera del alcance de implement."
+    route_to: "to-tickets"
+    why: "Descomponer el plan en tickets es el trabajo de to-tickets, no de implement."
   - prompt: "Documenta la decision de arquitectura tomada."
-    route_to: "none"
-    why: "Fuera del alcance de implement."
+    route_to: "write-adr"
+    why: "Documentar una decision de arquitectura es el trabajo de write-adr, no de implement."
 
 capability:
   - scenario: "El usuario quiere implementar una pieza de trabajo a partir de una spec o tickets."

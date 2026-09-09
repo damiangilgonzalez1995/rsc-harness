@@ -20,11 +20,11 @@ should_not_trigger:
     route_to: "none"
     why: "Fuera del alcance de writing-for-agents."
   - prompt: "Documenta el modelo de dominio del negocio."
-    route_to: "none"
-    why: "Fuera del alcance de writing-for-agents."
+    route_to: "domain-modeling"
+    why: "Documentar el modelo de dominio del negocio es el trabajo de domain-modeling, no de writing-for-agents."
   - prompt: "Genera tickets a partir de esta spec."
-    route_to: "none"
-    why: "Fuera del alcance de writing-for-agents."
+    route_to: "to-tickets"
+    why: "Generar tickets a partir de una spec es el trabajo de to-tickets, no de writing-for-agents."
 
 capability:
   - scenario: "El usuario crea o edita un documento que va a consumir un agente."

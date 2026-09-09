@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Construye esta animacion desde cero, no necesito el nombre."
-    route_to: "none"
-    why: "Fuera del alcance de vocabulario-animacion."
+    route_to: "animar"
+    why: "Construir la animacion desde cero es el trabajo de animar, no de vocabulario-animacion."
   - prompt: "Critica la animacion que ya existe en este componente."
     route_to: "none"
     why: "Fuera del alcance de vocabulario-animacion."
   - prompt: "Revisa la accesibilidad del movimiento reducido."
-    route_to: "none"
-    why: "Fuera del alcance de vocabulario-animacion."
+    route_to: "mejor-accesibilidad"
+    why: "Revisar la accesibilidad del movimiento reducido es el trabajo de mejor-accesibilidad, no de vocabulario-animacion."
   - prompt: "Escribe el copy de este boton."
-    route_to: "none"
-    why: "Fuera del alcance de vocabulario-animacion."
+    route_to: "mejor-redaccion"
+    why: "Escribir el copy de un boton es el trabajo de mejor-redaccion, no de vocabulario-animacion."
 
 capability:
   - scenario: "El usuario quiere el nombre exacto de un efecto de movimiento que no sabe nombrar."

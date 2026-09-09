@@ -17,14 +17,14 @@ should_not_trigger:
     route_to: "none"
     why: "Fuera del alcance de diseno-landing."
   - prompt: "Revisa la accesibilidad de una app movil."
-    route_to: "none"
-    why: "Fuera del alcance de diseno-landing."
+    route_to: "mejor-accesibilidad"
+    why: "Revisar la accesibilidad es el trabajo de mejor-accesibilidad, no de diseno-landing."
   - prompt: "Escribe tests end to end para el checkout."
     route_to: "none"
     why: "Fuera del alcance de diseno-landing."
   - prompt: "Documenta el modelo de dominio del proyecto."
-    route_to: "none"
-    why: "Fuera del alcance de diseno-landing."
+    route_to: "domain-modeling"
+    why: "Documentar el modelo de dominio es el trabajo de domain-modeling, no de diseno-landing."
 
 capability:
   - scenario: "El usuario construye, edita o revisa una landing o web de marketing."

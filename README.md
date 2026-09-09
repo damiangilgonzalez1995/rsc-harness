@@ -508,13 +508,17 @@ Three engines + engine-agnostic disciplines. Every engine skill pins the current
 
 [knowledge-ops](skills/knowledge-ops/) · [codebase-onboarding](skills/codebase-onboarding/) · [research-ops](skills/research-ops/) · [decision-records](skills/decision-records/) · [continuous-learning](skills/continuous-learning/) · [skill-scout](skills/skill-scout/) · [context-budget](skills/context-budget/) · [roast-me](skills/roast-me/) · [show-me](skills/show-me/) · [eli5](skills/eli5/) · [fable-operator](skills/fable-operator/)
 
-### 🇪🇸 Personal catalog (Spanish)
+### 🇪🇸 Personal catalog — workflow (Spanish)
 
 The user's own 37-skill catalog, brought in as-is: bodies stay in Spanish, only each
 `description` was translated to English so Claude can still decide when to
-fire them.
+fire them. Split into a workflow half and an interface-design half.
 
-[claude-project-setup](skills/claude-project-setup/) · [domain-modeling](skills/domain-modeling/) · [grill-me](skills/grill-me/) · [grill-with-docs](skills/grill-with-docs/) · [grilling](skills/grilling/) · [prototype](skills/prototype/) · [research](skills/research/) · [to-questionnaire](skills/to-questionnaire/) · [to-spec](skills/to-spec/) · [to-tickets](skills/to-tickets/) · [wayfinder](skills/wayfinder/) · [implement](skills/implement/) · [animar](skills/animar/) · [diseno-apple](skills/diseno-apple/) · [diseno-landing](skills/diseno-landing/) · [ingeniero-diseno-web](skills/ingeniero-diseno-web/) · [leyes-de-percepcion](skills/leyes-de-percepcion/) · [leyes-de-retencion](skills/leyes-de-retencion/) · [mejor-accesibilidad](skills/mejor-accesibilidad/) · [mejor-colores](skills/mejor-colores/) · [mejor-layout](skills/mejor-layout/) · [mejor-redaccion](skills/mejor-redaccion/) · [mejor-tipografia](skills/mejor-tipografia/) · [mejor-ui](skills/mejor-ui/) · [sitios-calidad-premio](skills/sitios-calidad-premio/) · [tastemaker](skills/tastemaker/) · [video-a-superprompt](skills/video-a-superprompt/) · [vocabulario-animacion](skills/vocabulario-animacion/) · [code-review](skills/code-review/) · [handoff](skills/handoff/) · [revision-de-cambios](skills/revision-de-cambios/) · [revision-interfaz](skills/revision-interfaz/) · [muscle-memory](skills/muscle-memory/) · [teach](skills/teach/) · [wait-what](skills/wait-what/) · [writing-for-agents](skills/writing-for-agents/) · [write-adr](skills/write-adr/)
+[grill-me](skills/grill-me/) · [grill-with-docs](skills/grill-with-docs/) · [grilling](skills/grilling/) · [wayfinder](skills/wayfinder/) · [to-spec](skills/to-spec/) · [to-tickets](skills/to-tickets/) · [to-questionnaire](skills/to-questionnaire/) · [implement](skills/implement/) · [revision-de-cambios](skills/revision-de-cambios/) · [code-review](skills/code-review/) · [research](skills/research/) · [prototype](skills/prototype/) · [domain-modeling](skills/domain-modeling/) · [handoff](skills/handoff/) · [write-adr](skills/write-adr/) · [wait-what](skills/wait-what/) · [writing-for-agents](skills/writing-for-agents/) · [claude-project-setup](skills/claude-project-setup/) · [muscle-memory](skills/muscle-memory/) · [teach](skills/teach/)
+
+### 🇪🇸 Personal catalog — interface design (Spanish)
+
+[animar](skills/animar/) · [diseno-apple](skills/diseno-apple/) · [diseno-landing](skills/diseno-landing/) · [ingeniero-diseno-web](skills/ingeniero-diseno-web/) · [leyes-de-percepcion](skills/leyes-de-percepcion/) · [leyes-de-retencion](skills/leyes-de-retencion/) · [mejor-accesibilidad](skills/mejor-accesibilidad/) · [mejor-colores](skills/mejor-colores/) · [mejor-layout](skills/mejor-layout/) · [mejor-redaccion](skills/mejor-redaccion/) · [mejor-tipografia](skills/mejor-tipografia/) · [mejor-ui](skills/mejor-ui/) · [sitios-calidad-premio](skills/sitios-calidad-premio/) · [tastemaker](skills/tastemaker/) · [video-a-superprompt](skills/video-a-superprompt/) · [vocabulario-animacion](skills/vocabulario-animacion/) · [revision-interfaz](skills/revision-interfaz/)
 
 ---
 

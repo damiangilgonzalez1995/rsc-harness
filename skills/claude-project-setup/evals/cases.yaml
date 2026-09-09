@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Revisa el CLAUDE.md actual y dime si sigue las buenas practicas."
-    route_to: "none"
-    why: "Fuera del alcance de claude-project-setup."
+    route_to: "writing-for-agents"
+    why: "Revisar un CLAUDE.md pensando en que lo lee un agente es el trabajo de writing-for-agents, no de claude-project-setup."
   - prompt: "Explicame que es un hook de Claude Code."
     route_to: "none"
     why: "Fuera del alcance de claude-project-setup."
   - prompt: "Anade una regla nueva a un CLAUDE.md que ya existe."
-    route_to: "none"
-    why: "Fuera del alcance de claude-project-setup."
+    route_to: "writing-for-agents"
+    why: "Editar un CLAUDE.md ya existente es el trabajo de writing-for-agents, no de claude-project-setup."
   - prompt: "Documenta el dominio de este proyecto."
-    route_to: "none"
-    why: "Fuera del alcance de claude-project-setup."
+    route_to: "domain-modeling"
+    why: "Documentar el dominio del proyecto es el trabajo de domain-modeling, no de claude-project-setup."
 
 capability:
   - scenario: "El usuario pide inicializar un proyecto nuevo para Claude Code."

@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Implementa la version final de produccion de esta pantalla."
-    route_to: "none"
-    why: "Fuera del alcance de prototype."
+    route_to: "implement"
+    why: "Implementar la version final de produccion es el trabajo de implement, no de prototype."
   - prompt: "Escribe los tests unitarios de este modulo."
     route_to: "none"
     why: "Fuera del alcance de prototype."
   - prompt: "Documenta la decision de arquitectura que tomamos."
-    route_to: "none"
-    why: "Fuera del alcance de prototype."
+    route_to: "write-adr"
+    why: "Documentar una decision de arquitectura es el trabajo de write-adr, no de prototype."
   - prompt: "Revisa el codigo que acabo de escribir."
-    route_to: "none"
-    why: "Fuera del alcance de prototype."
+    route_to: "revision-de-cambios"
+    why: "Revisar el trabajo recien escrito y sin commitear es el trabajo de revision-de-cambios, no de prototype."
 
 capability:
   - scenario: "El usuario quiere comprobar si una idea de diseno funciona antes de construirla."

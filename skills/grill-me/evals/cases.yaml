@@ -14,17 +14,17 @@ should_trigger:
 
 should_not_trigger:
   - prompt: "Implementa la funcion que describimos antes."
-    route_to: "none"
-    why: "Fuera del alcance de grill-me."
+    route_to: "implement"
+    why: "Implementar el codigo es el trabajo de implement, no de grill-me."
   - prompt: "Escribe la documentacion de este modulo."
     route_to: "none"
     why: "Fuera del alcance de grill-me."
   - prompt: "Haz un resumen de la conversacion para otro agente."
-    route_to: "none"
-    why: "Fuera del alcance de grill-me."
+    route_to: "handoff"
+    why: "Compactar la conversacion en un documento de traspaso es el trabajo de handoff, no de grill-me."
   - prompt: "Genera tickets a partir de este plan."
-    route_to: "none"
-    why: "Fuera del alcance de grill-me."
+    route_to: "to-tickets"
+    why: "Generar tickets a partir de un plan es el trabajo de to-tickets, no de grill-me."
 
 capability:
   - scenario: "El usuario pide que se ponga a prueba un plan o decision."
