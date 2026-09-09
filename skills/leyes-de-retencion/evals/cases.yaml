@@ -1,0 +1,32 @@
+skill: leyes-de-retencion
+
+should_trigger:
+  - prompt: "La gente abandona este formulario a mitad, ayudame a diagnosticarlo."
+    why: "Disparador directo de leyes-de-retencion."
+  - prompt: "Aplica la ley de Hick a este menu con demasiadas opciones."
+    why: "Disparador directo de leyes-de-retencion."
+  - prompt: "Necesito disenar mejor los pasos de este flujo de onboarding."
+    why: "Disparador directo de leyes-de-retencion."
+  - prompt: "Use Fitts's law and the peak-end rule to redesign this checkout flow."
+    why: "Disparador directo de leyes-de-retencion."
+  - prompt: "Por que la gente no termina este proceso de varios pasos."
+    why: "Disparador directo de leyes-de-retencion."
+
+should_not_trigger:
+  - prompt: "Elige la tipografia de este texto largo."
+    route_to: "none"
+    why: "Fuera del alcance de leyes-de-retencion."
+  - prompt: "Revisa el contraste de color de este boton."
+    route_to: "none"
+    why: "Fuera del alcance de leyes-de-retencion."
+  - prompt: "Anade una animacion de entrada a esta tarjeta."
+    route_to: "none"
+    why: "Fuera del alcance de leyes-de-retencion."
+  - prompt: "Escribe el copy del estado vacio."
+    route_to: "none"
+    why: "Fuera del alcance de leyes-de-retencion."
+
+capability:
+  - scenario: "El usuario diagnostica abandono en un flujo o disena sus pasos y tiempos."
+    must_include:
+      - "abandona"

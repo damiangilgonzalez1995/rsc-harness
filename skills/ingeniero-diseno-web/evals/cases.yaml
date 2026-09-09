@@ -1,0 +1,32 @@
+skill: ingeniero-diseno-web
+
+should_trigger:
+  - prompt: "Construye un dashboard pulido en React para este proyecto."
+    why: "Disparador directo de ingeniero-diseno-web."
+  - prompt: "Necesito un prototipo visual en HTML/CSS que se vea profesional."
+    why: "Disparador directo de ingeniero-diseno-web."
+  - prompt: "Hazme una presentacion visual renderizada en el navegador."
+    why: "Disparador directo de ingeniero-diseno-web."
+  - prompt: "Build a polished browser-rendered mockup of this UI."
+    why: "Disparador directo de ingeniero-diseno-web."
+  - prompt: "Quiero explorar variantes de design system para esta pantalla."
+    why: "Disparador directo de ingeniero-diseno-web."
+
+should_not_trigger:
+  - prompt: "Escribe el codigo de backend de esta API."
+    route_to: "none"
+    why: "Fuera del alcance de ingeniero-diseno-web."
+  - prompt: "Convierte este articulo largo a partir de fuentes."
+    route_to: "none"
+    why: "Fuera del alcance de ingeniero-diseno-web."
+  - prompt: "Configura el pipeline de CI de este repo."
+    route_to: "none"
+    why: "Fuera del alcance de ingeniero-diseno-web."
+  - prompt: "Escribe un script de CLI para procesar datos."
+    route_to: "none"
+    why: "Fuera del alcance de ingeniero-diseno-web."
+
+capability:
+  - scenario: "El usuario quiere crear o rediseñar un artefacto visual en el navegador."
+    must_include:
+      - "visual"

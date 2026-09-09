@@ -1,0 +1,32 @@
+skill: mejor-accesibilidad
+
+should_trigger:
+  - prompt: "Revisa que este formulario cumple accesibilidad."
+    why: "Disparador directo de mejor-accesibilidad."
+  - prompt: "Necesito soporte completo de teclado en este componente."
+    why: "Disparador directo de mejor-accesibilidad."
+  - prompt: "Comprueba que los errores se anuncian correctamente a lectores de pantalla."
+    why: "Disparador directo de mejor-accesibilidad."
+  - prompt: "Make sure this modal traps focus and has accessible names."
+    why: "Disparador directo de mejor-accesibilidad."
+  - prompt: "Ajusta los anillos de foco de este boton."
+    why: "Disparador directo de mejor-accesibilidad."
+
+should_not_trigger:
+  - prompt: "Elige la paleta de colores de la marca."
+    route_to: "none"
+    why: "Fuera del alcance de mejor-accesibilidad."
+  - prompt: "Escribe el copy del boton de enviar."
+    route_to: "none"
+    why: "Fuera del alcance de mejor-accesibilidad."
+  - prompt: "Anade una animacion al icono del menu."
+    route_to: "none"
+    why: "Fuera del alcance de mejor-accesibilidad."
+  - prompt: "Revisa el layout responsive de esta pagina."
+    route_to: "none"
+    why: "Fuera del alcance de mejor-accesibilidad."
+
+capability:
+  - scenario: "El usuario quiere que el proyecto cumpla estandares de accesibilidad."
+    must_include:
+      - "teclado"

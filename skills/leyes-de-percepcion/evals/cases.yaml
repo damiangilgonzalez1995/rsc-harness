@@ -1,0 +1,32 @@
+skill: leyes-de-percepcion
+
+should_trigger:
+  - prompt: "Revisa que ve el ojo primero en esta pantalla."
+    why: "Disparador directo de leyes-de-percepcion."
+  - prompt: "Necesito aplicar las leyes de la Gestalt a este layout."
+    why: "Disparador directo de leyes-de-percepcion."
+  - prompt: "Como deberia agrupar estos elementos para que se lean juntos."
+    why: "Disparador directo de leyes-de-percepcion."
+  - prompt: "Apply Gestalt principles like proximity and figure-ground to this screen."
+    why: "Disparador directo de leyes-de-percepcion."
+  - prompt: "Ayudame a decidir la jerarquia visual de esta interfaz."
+    why: "Disparador directo de leyes-de-percepcion."
+
+should_not_trigger:
+  - prompt: "Escribe el texto del boton de confirmar."
+    route_to: "none"
+    why: "Fuera del alcance de leyes-de-percepcion."
+  - prompt: "Elige la paleta de colores del modo oscuro."
+    route_to: "none"
+    why: "Fuera del alcance de leyes-de-percepcion."
+  - prompt: "Revisa el contraste de este texto."
+    route_to: "none"
+    why: "Fuera del alcance de leyes-de-percepcion."
+  - prompt: "Ajusta el espaciado responsive de esta grid."
+    route_to: "none"
+    why: "Fuera del alcance de leyes-de-percepcion."
+
+capability:
+  - scenario: "El usuario compone o revisa una pantalla y necesita decidir agrupacion visual."
+    must_include:
+      - "Gestalt"
