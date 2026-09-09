@@ -551,7 +551,12 @@ async function main() {
       ids = withDefaultSkillFloor(ids).filter((id) => !without.includes(id));
       if (!argv.includes('--force') && !(await guardCollisions(targets, ids))) return;
       const receipt = readManifest()?.onboarding;
-      const policy = receipt ? { ...receipt.plan.policy, skills: ids } : undefined;
+      // codeHooks is recomputed for the profile being installed, not inherited from
+      // whatever plan came before: the minimal profile never installs the flow skills
+      // (grill-with-docs, to-spec, write-adr, to-tickets, implement) the full gate names,
+      // and a profile that does install them should wire the gate even if the previous
+      // plan had it off. Same criterion as wizard() at the onboarding menu.
+      const policy = receipt ? { ...receipt.plan.policy, skills: ids, codeHooks: profile !== 'minimal' } : undefined;
       for (const t of targets) await applyInstall({ skillIds: ids, target: t, policy });
       markMaintenanceDrift(`install ${profile}`);
       say(`✅ Profile '${profile}' installed for ${targets.join(', ')} (${ids.length} skills)`);

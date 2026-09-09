@@ -178,3 +178,23 @@ test('reassess stays quiet until deferred evidence changes, then requires a new 
   assert.match(changed.stdout, /--software-scope growing/);
   assert.match(changed.stdout, /accept/i);
 });
+
+test('install --profile recalculates codeHooks for the requested profile instead of inheriting the prior onboarding plan', () => {
+  const cwd = fresh();
+  const software = ['--technical-level', 'mixed', '--accompaniment', 'L1', '--project-kind', 'software', '--software-scope', 'growing', '--goal', 'Build product', '--target', 'claude'];
+  const preview = run(cwd, ['onboard', ...software]);
+  const id = preview.stdout.match(/Plan id: ([a-f0-9]{64})/)?.[1];
+  assert.equal(run(cwd, ['onboard', ...software, '--accept-plan', id]).status, 0);
+  // The prior onboarding plan (software) wires the full code-hooks gate, which names
+  // grill-with-docs/to-spec/write-adr/to-tickets/implement — none of which the minimal
+  // profile installs. Asking for the minimal profile must recompute codeHooks for THIS
+  // profile, not drag along the previous plan's policy.
+  const installed = run(cwd, ['install', '--profile', 'minimal', '--target', 'claude']);
+  assert.equal(installed.status, 0, installed.stderr);
+  for (const name of ['ship-guard.mjs', 'gitmoji-guard.mjs', 'userprompt-gate.mjs']) {
+    assert.ok(!existsSync(join(cwd, '.rsc', name)), `minimal profile must not leave ${name} wired`);
+  }
+  const settings = JSON.parse(readFileSync(join(cwd, '.claude/settings.json'), 'utf8'));
+  assert.equal(settings.hooks.PreToolUse, undefined, 'minimal profile must not gate tool use for flow skills it never installed');
+  assert.equal(settings.hooks.UserPromptSubmit, undefined, 'minimal profile must not gate prompts for flow skills it never installed');
+});
