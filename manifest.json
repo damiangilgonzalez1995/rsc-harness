@@ -721,6 +721,7 @@
         "hotspots"
       ],
       "recommends": [
+        "write-adr",
         "harness",
         "init",
         "knowledge-ops"
@@ -882,6 +883,7 @@
         "meta"
       ],
       "recommends": [
+        "write-adr",
         "author-skill",
         "harness",
         "knowledge-ops"
@@ -1725,7 +1727,9 @@
         "decision-making",
         "epistemics"
       ],
-      "recommends": [],
+      "recommends": [
+        "code-review"
+      ],
       "profiles": [
         "core",
         "ui",
@@ -2619,6 +2623,7 @@
       ],
       "recommends": [
         "harness",
+        "write-adr",
         "meeting-notes",
         "sop-builder",
         "research-ops",
@@ -2881,7 +2886,8 @@
         "linkedin-content",
         "linkedin-outreach",
         "linkedin-api",
-        "content-engine"
+        "content-engine",
+        "write-adr"
       ],
       "profiles": []
     },
@@ -3051,7 +3057,8 @@
         "medium-writing",
         "medium-publishing",
         "content-engine",
-        "seo-geo"
+        "seo-geo",
+        "write-adr"
       ],
       "profiles": []
     },
@@ -3091,6 +3098,7 @@
         "business-ops"
       ],
       "recommends": [
+        "write-adr",
         "sop-builder",
         "project-ops",
         "calendar-scheduling",
@@ -3878,6 +3886,7 @@
         "status-tracking"
       ],
       "recommends": [
+        "write-adr",
         "meeting-notes",
         "sop-builder",
         "dashboard"
@@ -4229,6 +4238,7 @@
         "competitor-watch",
         "data-scraper",
         "knowledge-ops",
+        "write-adr",
         "structured-extraction",
         "technical-writing"
       ],
@@ -4758,6 +4768,7 @@
       ],
       "recommends": [
         "research-ops",
+        "write-adr",
         "technical-writing"
       ],
       "profiles": [
@@ -5821,7 +5832,8 @@
         "youtube-ideation",
         "youtube-packaging",
         "youtube-api",
-        "content-engine"
+        "content-engine",
+        "write-adr"
       ],
       "profiles": []
     },

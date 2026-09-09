@@ -2,7 +2,7 @@
 name: medium-strategy
 description: "Use when planning Medium as a growth and revenue system over months rather than one post — the Partner Program, solo profile versus starting or pitching a publication, engineering for Boost and the distribution tiers, tag and topic choices for reach, and a canonical cross-posting plan, read from and written back to the wiki so each session compounds. NOT writing the article's hook, structure or prose (that is `medium-writing`), NOT the mechanical format-and-submit step (that is `medium-publishing`)."
 tags: [medium, partner-program, monetization, distribution, publications, cross-posting]
-recommends: [medium-writing, medium-publishing, content-engine, seo-geo, decision-records]
+recommends: [medium-writing, medium-publishing, content-engine, seo-geo, write-adr]
 origin: risco
 ---
 

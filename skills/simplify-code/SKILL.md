@@ -2,7 +2,7 @@
 name: simplify-code
 description: "Use when correct working code is unnecessarily hard to read, change or verify and needs behaviour-preserving simplification in a bounded scope. Characterizes the observable contract, removes accidental complexity one concept at a time and proves equivalence. NOT fixing a failure (`superpowers:systematic-debugging`), NOT read-only diff judgment (`code-review`)."
 tags: [code-simplification, refactoring, readability, complexity, behavior-preservation]
-recommends: [code-review, review, verify, debug, performance]
+recommends: [code-review, performance]
 profiles: [core, ui, full]
 origin: risco
 ---

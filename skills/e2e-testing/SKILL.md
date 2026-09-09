@@ -2,7 +2,7 @@
 name: e2e-testing
 description: "Use when writing or stabilizing Playwright tests that drive a real browser through multi-step journeys — durable locators, web-first assertions, storageState auth, trace/retries, and flakes that only bite in CI. NOT in-process component tests (that is testing-web), NOT WCAG auditing (that is accessibility), NOT the pre-merge gate (that is verify)."
 tags: [playwright, e2e, browser-testing, flakiness, ci]
-recommends: [testing-web, accessibility, performance, github-actions, debug]
+recommends: [testing-web, accessibility, performance, github-actions]
 origin: risco
 ---
 

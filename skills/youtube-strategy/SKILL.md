@@ -2,7 +2,7 @@
 name: youtube-strategy
 description: "Use when a YouTube channel needs a system-level decision — positioning and niche, upload cadence, how videos chain into playlists and series, end-screen routing, or a what-is-working review — read from and written back to the channel's own learning wiki rather than one video's choices. NOT generating next-video topics (that is `youtube-ideation`), NOT per-video titles or thumbnail text (that is `youtube-packaging`), NOT designing the thumbnail image (that is `youtube-thumbnails`), NOT fetching metrics from the Data API (that is `youtube-api`)."
 tags: [youtube, channel-strategy, positioning, cadence, playlists, retention]
-recommends: [youtube-ideation, youtube-packaging, youtube-api, content-engine, decision-records]
+recommends: [youtube-ideation, youtube-packaging, youtube-api, content-engine, write-adr]
 origin: risco
 ---
 

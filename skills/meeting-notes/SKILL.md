@@ -2,7 +2,7 @@
 name: meeting-notes
 description: "Use when a meeting just ended and a transcript or rough notes must become a record the absent can act on — decisions with their why, actions with an owner and a real date, open questions, a recap inside 24–48h — or to clean an AI-notetaker draft that invented tasks or swapped speakers. NOT the durable ADR with alternatives weighed (that is decision-records)."
 tags: [meeting-notes, action-items, decisions, recap, transcript-cleanup, minutes, standup, business-ops]
-recommends: [decision-records, sop-builder, project-ops, calendar-scheduling, notion-connector, automation-flows, document-processing]
+recommends: [write-adr, sop-builder, project-ops, calendar-scheduling, notion-connector, automation-flows, document-processing]
 origin: risco
 ---
 

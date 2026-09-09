@@ -47,3 +47,26 @@ test('bro is present in every default profile', () => {
     assert.ok(skillsForProfile(m, profile).includes('bro'), `${profile} profile must install bro`);
   }
 });
+
+
+test('every recommends entry in every skill points to a skill directory that actually exists', async () => {
+  const { readdirSync, readFileSync, statSync } = await import('node:fs');
+  const { join } = await import('node:path');
+  const { fileURLToPath } = await import('node:url');
+  const { parseFrontmatter } = await import('../scripts/lib/frontmatter.js');
+  const ROOT = fileURLToPath(new URL('..', import.meta.url));
+  const SKILLS = join(ROOT, 'skills');
+  const ids = readdirSync(SKILLS).filter((d) => {
+    try { return statSync(join(SKILLS, d)).isDirectory() && statSync(join(SKILLS, d, 'SKILL.md')).isFile(); }
+    catch { return false; }
+  });
+  const known = new Set(ids);
+  const dangling = [];
+  for (const id of ids) {
+    const fm = parseFrontmatter(readFileSync(join(SKILLS, id, 'SKILL.md'), 'utf8'));
+    for (const r of fm.recommends || []) {
+      if (!known.has(r)) dangling.push(`${id} -> ${r}`);
+    }
+  }
+  assert.deepEqual(dangling, [], `recommends pointing at skills/ directories that do not exist (build-manifest silently drops these):\n${dangling.join('\n')}`);
+});

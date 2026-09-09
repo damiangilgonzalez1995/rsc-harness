@@ -2,7 +2,7 @@
 name: source-grounded-development
 description: "Use when implementation or review depends on current version-specific framework, SDK, protocol or platform behaviour and memory is unsafe. Detects exact local versions, verifies primary sources, tests applicability and marks unknowns. NOT a standalone cited memo (`research-ops`), NOT diagnosis of a reproduced failure (`superpowers:systematic-debugging`)."
 tags: [official-docs, primary-sources, version-detection, implementation, verification]
-recommends: [research-ops, decision-records, debug, technical-writing]
+recommends: [research-ops, write-adr, technical-writing]
 profiles: [core, ui, full]
 origin: risco
 ---

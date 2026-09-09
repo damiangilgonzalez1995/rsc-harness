@@ -2,7 +2,7 @@
 name: project-ops
 description: "Use when an operator wants to run a small or mid-sized project from a flat file instead of standing up Jira or Asana — dated milestones each with one named owner and a binary done-test, rule-driven RAG status, a RAID log, slippage detection, and a two-minute weekly status report. NOT sequencing the engineering work inside one approved plan (that is `tasks`)."
 tags: [project-management, milestones, status-tracking]
-recommends: [tasks, decision-records, meeting-notes, sop-builder, dashboard]
+recommends: [write-adr, meeting-notes, sop-builder, dashboard]
 origin: risco
 ---
 

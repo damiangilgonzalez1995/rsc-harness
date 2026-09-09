@@ -2,7 +2,7 @@
 name: linkedin-strategy
 description: "Use when a LinkedIn presence — personal brand or company page — needs an account-level decision spanning months: positioning and point of view, three to five content pillars, posting cadence, whether content lives on the founder's profile or the company page, and the social-selling rhythm, read from and written back to the presence's own learning wiki. NOT writing the post copy or hook (that is `linkedin-content`), NOT building a carousel deck (that is `linkedin-carousels`), NOT sending DMs (that is `linkedin-outreach`), NOT pulling raw analytics (that is `linkedin-api`)."
 tags: [linkedin, positioning, content-pillars, cadence, thought-leadership, ssi, social-selling]
-recommends: [linkedin-content, linkedin-outreach, linkedin-api, content-engine, decision-records]
+recommends: [linkedin-content, linkedin-outreach, linkedin-api, content-engine, write-adr]
 origin: risco
 ---
 
