@@ -261,7 +261,7 @@ if (!process.env.RSC_NO_UPDATE_CHECK) {
     if (!latest) {
       const ctrl = new AbortController();
       const timer = setTimeout(() => ctrl.abort(), 1500);
-      const res = await fetch('https://registry.npmjs.org/@damiangil%2fharness/latest', { signal: ctrl.signal });
+      const res = await fetch('https://registry.npmjs.org/@damiangilgonzalez%2fharness/latest', { signal: ctrl.signal });
       clearTimeout(timer);
       latest = (await res.json()).version;
     }
