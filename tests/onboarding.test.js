@@ -214,6 +214,25 @@ test('un proyecto con frontend recibe el paquete de interfaz', () => {
   assert.ok(plan.policy.skills.includes('grill-with-docs'), 'y tambien las de flujo');
 });
 
+test('un proyecto Angular recibe el paquete de interfaz', () => {
+  const plan = buildOnboardingPlan(
+    { schemaVersion: 1, technicalLevel: 'technical', accompaniment: 'L1',
+      projectKind: 'software', softwareScope: 'growing',
+      goal: 'construir el panel de control', targets: ['claude'] },
+    { schemaVersion: 1, signals: ['manifest:package.json'], stacks: ['angular', 'node'],
+      complexitySignals: [], sourceFileCount: 40, parentHarness: null },
+  );
+  assert.ok(plan.policy.skills.includes('tastemaker'), 'trae las skills de diseno');
+  assert.ok(plan.policy.skills.includes('angular'), 'y la skill del stack detectado');
+});
+
+test('el escaneo detecta Angular en un package.json anidado', () => {
+  const root = mkdtempSync(join(tmpdir(), 'rsc-angular-'));
+  mkdirSync(join(root, 'frontend'));
+  writeFileSync(join(root, 'frontend', 'package.json'), JSON.stringify({ dependencies: { '@angular/core': '^21.2.0' } }));
+  assert.ok(scanProject(root).stacks.includes('angular'));
+});
+
 test('un proyecto sin frontend no recibe las skills de diseno', () => {
   const plan = buildOnboardingPlan(
     { schemaVersion: 1, technicalLevel: 'technical', accompaniment: 'L1',

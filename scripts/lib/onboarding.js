@@ -104,7 +104,7 @@ export function scanProject(root = process.cwd()) {
         try {
           const pkg = JSON.parse(readFileSync(path, 'utf8'));
           const deps = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
-          for (const [name, stack] of [['next', 'nextjs'], ['react', 'react'], ['vue', 'vue'], ['svelte', 'svelte']]) if (deps[name]) stacks.add(stack);
+          for (const [name, stack] of [['next', 'nextjs'], ['react', 'react'], ['vue', 'vue'], ['svelte', 'svelte'], ['@angular/core', 'angular']]) if (deps[name]) stacks.add(stack);
           stacks.add('node');
           const names = Object.keys(deps).join(' ').toLowerCase();
           if (/(passport|auth0|clerk|next-auth|better-auth)/.test(names)) complexitySignals.add('authentication');
@@ -162,7 +162,7 @@ export function buildOnboardingPlan(record, evidence) {
   if (/database|persistence|persistencia|base de datos/.test(goal)) goalSignals.push('persistence');
   if (/integration|integración|webhook|third-party|tercero/.test(goal)) goalSignals.push('external-integrations');
   const complexitySignals = [...new Set([...(evidence.complexitySignals || []), ...goalSignals])].sort();
-  const UI_STACKS = new Set(['nextjs', 'react', 'vue', 'svelte']);
+  const UI_STACKS = new Set(['nextjs', 'react', 'vue', 'svelte', 'angular']);
   const needsWorkflow = isSoftware && (normalized.softwareScope !== 'small' || complexitySignals.length > 0);
   const hasInterface = needsWorkflow && (evidence.stacks || []).some((stack) => UI_STACKS.has(stack));
   const profile = !needsWorkflow ? 'minimal' : (hasInterface ? 'ui' : 'core');
