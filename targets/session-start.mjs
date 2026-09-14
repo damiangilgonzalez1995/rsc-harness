@@ -102,7 +102,7 @@ block and the SDD gate TWICE — once per scope. Only the updated scope can de-d
   this scope:    ${root} (${mine})
   lagging scope: ${other} (${theirs})
 ACTION: update the lagging scope, then it will stay silent on its own:
-  cd "${other}" && npx @damiangil/harness@latest
+  cd "${other}" && npx @damiangilgonzalez/harness@latest
 Opt out with .rsc/.no-scope-check · this notice repeats at most every ${SCOPE_WARN_DAYS} days.
 ===================================
 `);
@@ -182,7 +182,7 @@ if (profileExists && auditDue() && !has('.rsc', '.no-audit')) {
 ===== rsc skill audit =====
 A skill audit is due (runs at most every ${STALE_AUDIT_DAYS} days). It flags overlapping
 skills and skills with no footprint in this project.
-ACTION: run \`npx @damiangil/harness audit\`. Opt out with .rsc/.no-audit.
+ACTION: run \`npx @damiangilgonzalez/harness audit\`. Opt out with .rsc/.no-audit.
 ===========================
 `);
 }
@@ -229,8 +229,8 @@ if (has('.git')) {
 ${candidates.length} worktree(s) hold work that is already in the trunk:
 ${candidates.map((c) => W.summarize(c, root)).join('\n')}
 ACTION: offer to retire them in ONE line and wait for a yes. On a yes run:
-  npx @damiangil/harness worktrees reap          (the ones marked safe)
-  npx @damiangil/harness worktrees reap <path>   (one the user confirmed by name)
+  npx @damiangilgonzalez/harness worktrees reap          (the ones marked safe)
+  npx @damiangilgonzalez/harness worktrees reap <path>   (one the user confirmed by name)
 A yes in bulk covers only the safe ones; anything marked \`ask\` is confirmed on its own.
 A no holds for this session. Permanent off: .rsc/.no-worktree-cleanup
 ================================
@@ -270,7 +270,7 @@ if (!process.env.RSC_NO_UPDATE_CHECK) {
 ===== rsc update available =====
 rsc ${latest} is out — you have ${installed}.
 ACTION: tell the user a new version is available and, if they say yes, run:
-  npx @damiangil/harness@latest
+  npx @damiangilgonzalez/harness@latest
 (That reinstalls and refreshes the skill content to the latest.)
 ================================
 `);

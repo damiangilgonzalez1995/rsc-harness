@@ -43,7 +43,7 @@ Esto es lo que más confunde. Hay dos fases y en cada una trabaja gente distinta
 flowchart TD
     subgraph fase1["FASE 1 · Instalar (una vez)"]
         direction LR
-        tu1["👤 Tú escribes<br>npx @damiangil/harness onboard"]:::trigger
+        tu1["👤 Tú escribes<br>npx @damiangilgonzalez/harness onboard"]:::trigger
         wizard["📋 Wizard: 4 preguntas"]
         plan["📄 Plan con su código<br>(qué instala y por qué)"]:::decision
         acepta["👤 Tú aceptas"]:::trigger
@@ -115,7 +115,7 @@ Ejemplo real. Cada vez que abres Claude Code en el proyecto, se ejecuta `session
 ```
 ===== rsc skill audit =====
 A skill audit is due (runs at most every 14 days).
-ACTION: run `npx @damiangil/harness audit`.
+ACTION: run `npx @damiangilgonzalez/harness audit`.
 ===========================
 ```
 

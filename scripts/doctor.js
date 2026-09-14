@@ -113,14 +113,14 @@ export function doctor({ target, home, cwd }) {
   if (targetHasCommands(target)) {
     for (const id of state.commands || []) {
       const path = commandPath(target, root, id);
-      if (!path || !existsSync(path)) missingCommands.push({ id, path, action: 'Run `npx @damiangil/harness sync` to restore this managed command.' });
+      if (!path || !existsSync(path)) missingCommands.push({ id, path, action: 'Run `npx @damiangilgonzalez/harness sync` to restore this managed command.' });
       else if (!desiredCommands.has(id)) commandOrphans.push({ id, path, action: 'Restore its backing skill/agent with `rsc add`, or run `rsc sync` to reconcile it.' });
     }
   }
   const missingAgents = (state.agents || []).filter((id) => {
     const path = agentPath(target, root, id);
     return path && !existsSync(path);
-  }).map((id) => ({ id, action: 'Run `npx @damiangil/harness sync` to restore this managed agent.' }));
+  }).map((id) => ({ id, action: 'Run `npx @damiangilgonzalez/harness sync` to restore this managed agent.' }));
   const report = {
     target,
     installed: Object.keys(state.skills),
@@ -316,7 +316,7 @@ function duplicateEntryFindings(scopes) {
       summary: `The ${scope.label} scope wires the same hook more than once: ${list}. `
         + `Execution cost is ${worst}× processes per event — every session start, every turn, and every `
         + `Bash command spawns that many. ${contextNote}`,
-      action: 'Re-run an install or sync with a current rsc (`npx @damiangil/harness@latest`); one pass '
+      action: 'Re-run an install or sync with a current rsc (`npx @damiangilgonzalez/harness@latest`); one pass '
         + 'collapses the extra copies. No need to hand-edit settings.json.',
     });
   }
@@ -365,7 +365,7 @@ export function contextBudget({ target, home = homedir(), cwd = process.cwd() } 
       severity: 'high',
       summary: `rsc is wired in ${wired.length} scopes (${wired.map((s) => s.label).join(' + ')}), so every `
         + `injected block lands ${wired.length} times — about ${doubled} wasted bytes per session.`,
-      action: 'Keep ONE scope. Remove the other with `npx @damiangil/harness uninstall --all` run from that '
+      action: 'Keep ONE scope. Remove the other with `npx @damiangilgonzalez/harness uninstall --all` run from that '
         + 'root, or update both to a version that de-duplicates at runtime.',
     });
   }
@@ -379,7 +379,7 @@ export function contextBudget({ target, home = homedir(), cwd = process.cwd() } 
       summary: `${orphanScripts.length} hook script(s) named by the wiring are not on disk, so those hooks `
         + 'fail every time they fire. This is what a fresh clone looks like: the settings travelled, the '
         + 'scripts did not.',
-      action: 'Rebuild them with `npx @damiangil/harness repair` from this project root.',
+      action: 'Rebuild them with `npx @damiangilgonzalez/harness repair` from this project root.',
     });
   }
   const drift = divergence({ cwd, target, home });
@@ -397,7 +397,7 @@ export function contextBudget({ target, home = homedir(), cwd = process.cwd() } 
       summary: `This checkout does not match what .rsc.json declares: ${parts.join('; ')}.`,
       action: drift.ownMissing.length && !drift.missing.length && !drift.extra.length
         ? 'Those come from the repo, not from rsc — pull, or ask whoever wrote them.'
-        : 'Align with `npx @damiangil/harness sync`. Nothing is written until you run it.',
+        : 'Align with `npx @damiangilgonzalez/harness sync`. Nothing is written until you run it.',
     });
   }
   findings.push(...duplicateEntryFindings(scopes));

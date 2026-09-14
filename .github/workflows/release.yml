@@ -70,7 +70,7 @@ jobs:
       # the pipeline self-healing instead.
       - name: Reconcile version with the registry
         run: |
-          PUBLISHED="$(npm view @damiangil/harness version 2>/dev/null || echo 0.0.0)"
+          PUBLISHED="$(npm view @damiangilgonzalez/harness version 2>/dev/null || echo 0.0.0)"
           LOCAL="$(node -p "require('./package.json').version")"
           HIGHEST="$(printf '%s\n%s\n' "$PUBLISHED" "$LOCAL" | sort -V | tail -1)"
           echo "published=$PUBLISHED local=$LOCAL highest=$HIGHEST"

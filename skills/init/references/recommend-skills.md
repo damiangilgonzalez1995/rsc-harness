@@ -1,7 +1,7 @@
 # Recommend Skills — the skill map, sample printouts & the "siempre 3 opciones" pattern
 
 Phase 3 detail. Map discovery to individual rsc skills, print the exact
-`npx @damiangil/harness add` commands, and run the requirements-first 3-option decision pattern
+`npx @damiangilgonzalez/harness add` commands, and run the requirements-first 3-option decision pattern
 for any significant choice. A skill **cannot install anything** — it recommends
 and prints commands the user runs.
 
@@ -27,11 +27,11 @@ usually does NOT want `fastapi`/`nextjs` unless they're also building software.
 
 ## What to print
 
-One `npx @damiangil/harness add` line per recommendation (or batch them on one line), each with
+One `npx @damiangilgonzalez/harness add` line per recommendation (or batch them on one line), each with
 its *why* in the user's language and level.
 
 ```text
-npx @damiangil/harness add <skill> [<skill> ...]
+npx @damiangilgonzalez/harness add <skill> [<skill> ...]
 ```
 
 ### Sample printout — software, full-stack web app with marketing
@@ -40,11 +40,11 @@ npx @damiangil/harness add <skill> [<skill> ...]
 Based on what you described (a web app with a backend, a Next.js UI, a landing
 page, and you want to ship it securely), install these:
 
-npx @damiangil/harness add harness        # the control plane — scaffolds and governs the workspace
-npx @damiangil/harness add fastapi postgresdb   # the API and the database
-npx @damiangil/harness add nextjs design  # the web UI people see
-npx @damiangil/harness add marketing      # the words for your landing page
-npx @damiangil/harness add secure-coding deployment   # ship it safely
+npx @damiangilgonzalez/harness add harness        # the control plane — scaffolds and governs the workspace
+npx @damiangilgonzalez/harness add fastapi postgresdb   # the API and the database
+npx @damiangilgonzalez/harness add nextjs design  # the web UI people see
+npx @damiangilgonzalez/harness add marketing      # the words for your landing page
+npx @damiangilgonzalez/harness add secure-coding deployment   # ship it safely
 
 Once they're installed, run the harness skill and I'll build the project structure.
 ```
@@ -55,9 +55,9 @@ Once they're installed, run the harness skill and I'll build the project structu
 You're organizing how your agency runs — client emails, contracts, invoicing,
 and you want it all findable. That's a non-code harness; install:
 
-npx @damiangil/harness add harness        # your 01-TOOLS (connections) + docs (your second brain)
-npx @damiangil/harness add secure-coding deployment   # connect email, payments, drive — and keep credentials safe
-npx @damiangil/harness add marketing      # for the proposals, decks and copy you send clients
+npx @damiangilgonzalez/harness add harness        # your 01-TOOLS (connections) + docs (your second brain)
+npx @damiangilgonzalez/harness add secure-coding deployment   # connect email, payments, drive — and keep credentials safe
+npx @damiangilgonzalez/harness add marketing      # for the proposals, decks and copy you send clients
 
 Once installed, run the harness skill and I'll set up the structure that holds it all.
 ```
@@ -67,10 +67,10 @@ Once installed, run the harness skill and I'll set up the structure that holds i
 ```text
 You want an AI agent that answers questions over your own documents. Install:
 
-npx @damiangil/harness add harness            # the control plane
-npx @damiangil/harness add building-agents    # agent loops, tools, RAG
-npx @damiangil/harness add fastapi postgresdb # an API + database to serve it
-npx @damiangil/harness add secure-coding deployment   # ship it safely
+npx @damiangilgonzalez/harness add harness            # the control plane
+npx @damiangilgonzalez/harness add building-agents    # agent loops, tools, RAG
+npx @damiangilgonzalez/harness add fastapi postgresdb # an API + database to serve it
+npx @damiangilgonzalez/harness add secure-coding deployment   # ship it safely
 
 Then run the harness skill.
 ```
