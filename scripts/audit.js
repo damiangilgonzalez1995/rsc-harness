@@ -196,7 +196,7 @@ export function renderAuditMarkdown(report) {
   }
   if (report.summary.clean) L.push('Nothing to flag. The installed set fits the project.', '');
 
-  L.push('---', `_Advisory only. Trim with \`npx @damiangil/harness uninstall <id>\`. Re-run with \`npx @damiangil/harness audit\`._`);
+  L.push('---', `_Advisory only. Trim with \`npx @damiangilgonzalez/harness uninstall <id>\`. Re-run with \`npx @damiangilgonzalez/harness audit\`._`);
   return L.join('\n') + '\n';
 }
 

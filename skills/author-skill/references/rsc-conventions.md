@@ -2,7 +2,7 @@
 
 A skill is not done when `SKILL.md` reads well. It is done when it is *in the
 catalog* — frontmatter valid, indexed in the manifest, discoverable by the
-`npx @damiangil/harness` recommender, and reachable where the agent will find it. This reference
+`npx @damiangilgonzalez/harness` recommender, and reachable where the agent will find it. This reference
 is the rsc plumbing.
 
 ## The layout (single source of truth)
@@ -56,7 +56,7 @@ discovers project skills one level under `.claude/skills/`, so rsc skills instal
 **flat** at `.claude/skills/<id>/SKILL.md` (a nested `.claude/skills/rsc/<id>/`
 is never discovered). A skill is invoked by its `name`. The `suggest` detector is
 always installed (the floor) and proposes installing any skill a task needs via
-`npx @damiangil/harness add <id>`.
+`npx @damiangilgonzalez/harness add <id>`.
 
 ## Wiring steps for a new skill
 
