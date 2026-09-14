@@ -1,7 +1,7 @@
 #!/usr/bin/env node
+import { pathToFileURL } from 'node:url';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve, join, dirname } from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { capture, resume } from './session-memory-core.mjs';
 
 const LOCAL_TARGETS = new Set(['claude', 'codex', 'cursor', 'gemini', 'opencode']);

@@ -18,9 +18,9 @@
 // read. Anything it cannot read with certainty (editor commit, -F file, --amend
 // --no-edit, an unparseable command) is ALLOWED: a guard that guesses is a guard that
 // gets turned off. Every deny names its recovery. Opt out with .rsc/.no-gitmoji.
+import { pathToFileURL } from 'node:url';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { pathToFileURL } from 'node:url';
 
 // The official gitmoji set (gitmoji.dev/api/gitmojis), as data: [emoji, code, semver, meaning].
 // A table, not a chain of ifs — so a test can iterate it and the reference doc can be

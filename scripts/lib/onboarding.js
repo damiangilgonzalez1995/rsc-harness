@@ -74,6 +74,12 @@ export function scanProject(root = process.cwd()) {
       const rel = relative(absolute, path).split(sep).join('/');
       if (rel.startsWith('../') || rel === '..') throw new Error('project scan escaped the selected root');
       if (rel === 'docs/wiki/harness' || rel.startsWith('docs/wiki/harness/')) continue;
+      // Mismo motivo que la línea de arriba, y descubierto igual de tarde: el instalador escribe
+      // `01-TOOLS/_TEMPLATE/` y sus dos `.md` entraban como evidencia de proyecto, moviendo la
+      // identidad del plan. El segundo `onboard --accept-plan <id>` moría con RSC_PLAN_CHANGED, y
+      // con él el reintento que la documentación pide tras reparar el suelo. Los proveedores reales
+      // que el usuario añada bajo `01-TOOLS/` sí siguen contando: son suyos, no nuestros.
+      if (rel === '01-TOOLS/_TEMPLATE' || rel.startsWith('01-TOOLS/_TEMPLATE/')) continue;
       if (entry.isDirectory()) { visit(path); continue; }
       if (!entry.isFile()) continue;
       let isSignal = manifests.has(entry.name) || entry.name.endsWith('.md');
@@ -232,6 +238,14 @@ export function buildOnboardingPlan(record, evidence) {
     ...normalized.targets.flatMap((target) => managedPathsForInstall({ skillIds: skills, target, cwd: root, policy })
       .map((path) => relative(root, path).split(sep).join('/'))),
   ])].sort() : ['.rsc.json', '.rsc/', 'docs/wiki/harness/'];
+  // El suelo viaja dentro del plan a propósito: así un recibo aceptado por una versión anterior no
+  // lo trae y queda exento sin que exista ninguna lista de exentos (P3, el contenido es el ledger).
+  // Este fork no incluye constitución en el suelo: su flujo (grill-with-docs → to-spec → write-adr)
+  // no la escribe, así que exigirla dejaría todo proyecto de software en INCOMPLETE para siempre.
+  const floorPaths = [
+    '01-TOOLS/_TEMPLATE/',
+    'docs/wiki/harness/',
+  ].sort();
   return {
     schemaVersion: 1,
     record: normalized,
@@ -244,6 +258,7 @@ export function buildOnboardingPlan(record, evidence) {
     decisions,
     policy,
     governedPaths,
+    floorPaths,
   };
 }
 
