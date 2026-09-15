@@ -1,0 +1,39 @@
+---
+config:
+  look: handDrawn
+  handDrawnSeed: 7
+  theme: base
+  themeVariables:
+    fontFamily: "Segoe UI, sans-serif"
+    fontSize: "15px"
+    primaryColor: "#FDF6E3"
+    primaryTextColor: "#1b1b1f"
+    primaryBorderColor: "#1b1b1f"
+    lineColor: "#3d3d42"
+  flowchart:
+    curve: basis
+    nodeSpacing: 50
+    rankSpacing: 60
+---
+
+flowchart TD
+    IN(["Tarea que toca pantalla"]) --> Q1{"¿Qué construyes?"}
+    Q1 -->|"una landing"| DL["<b>diseno-landing</b>"]
+    Q1 -->|"otra cosa"| IDW["<b>ingeniero-diseno-web</b>"]
+
+    DL --> Q2
+    IDW --> Q2
+
+    Q2{"¿Tiene que<br/>impresionar?"}
+    Q2 -->|sí| SCP["<b>sitios-calidad-premio</b>"]
+    Q2 -->|"es una herramienta"| AN
+    SCP --> AN["<b>animar</b><br/>pasa la puerta de frecuencia"]
+
+    AN --> Q3{"¿Hay gestos<br/>o arrastre?"}
+    Q3 -->|sí| DA["<b>diseno-apple</b>"]
+    Q3 -->|no| RI
+    DA --> RI["<b>revision-interfaz</b><br/>orquesta las seis mejor-*"]
+
+    RI --> TM["<b>tastemaker</b><br/>que no parezca de IA"]
+    TM --> LY["<b>leyes-de-percepcion</b><br/><b>leyes-de-retencion</b>"]
+    LY --> OUT(["Revisar"])

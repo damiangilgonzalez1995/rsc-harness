@@ -529,15 +529,7 @@ decide when to fire them.
 The source of truth is a written document, not a chat message. The chain, as the per-turn gate
 routes it:
 
-```
-grill-with-docs  or  wayfinder            ground the idea
-        ↓
-superpowers:brainstorming  or  to-spec    write the spec   (+ write-adr for every hard-to-reverse decision)
-        ↓
-superpowers:writing-plans → superpowers:executing-plans    (after wayfinder: to-tickets → implement)
-        ↓
-code-review                               standards + spec, before merging
-```
+![The philosophy: spec-driven development](docs/img/00-filosofia.svg)
 
 Always: `superpowers:test-driven-development` and `superpowers:verification-before-completion`.
 Bugs start at `superpowers:systematic-debugging`.
@@ -545,6 +537,8 @@ Bugs start at `superpowers:systematic-debugging`.
 #### 1 · Plan
 
 Everything before code. What comes out is a spec and a plan, not an idea.
+
+![Plan phase flow](docs/img/01-planificar.svg)
 
 | Skill | What it does |
 |---|---|
@@ -564,6 +558,8 @@ inside `grill-with-docs`.
 
 #### 2 · Implement
 
+![Implement phase flow](docs/img/02-implementar.svg)
+
 | Skill | What it does |
 |---|---|
 | [implement](skills/implement/) | Builds one ticket from `to-tickets`. Ordinary work runs `superpowers:executing-plans` instead. |
@@ -571,6 +567,8 @@ inside `grill-with-docs`.
 #### 3 · Interface
 
 When the work touches a screen. Sixteen overlapping skills; pick the one that matches the job.
+
+![Interface chain flow](docs/img/03-interfaz.svg)
 
 | Skill | What it does |
 |---|---|
@@ -592,6 +590,8 @@ When the work touches a screen. Sixteen overlapping skills; pick the one that ma
 | [video-a-superprompt](skills/video-a-superprompt/) | Turns a reference video into a detailed recreation prompt. |
 
 #### 4 · Review and close
+
+![Review and close flow](docs/img/04-revisar.svg)
 
 | The work | Order |
 |---|---|

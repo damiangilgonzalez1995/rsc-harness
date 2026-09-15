@@ -1,0 +1,35 @@
+---
+config:
+  look: handDrawn
+  handDrawnSeed: 7
+  theme: base
+  themeVariables:
+    fontFamily: "Segoe UI, sans-serif"
+    fontSize: "15px"
+    primaryColor: "#FDF6E3"
+    primaryTextColor: "#1b1b1f"
+    primaryBorderColor: "#1b1b1f"
+    lineColor: "#3d3d42"
+  flowchart:
+    curve: basis
+    nodeSpacing: 55
+    rankSpacing: 60
+---
+
+flowchart TD
+    IN1(["Un plan de<br/>superpowers:writing-plans"]) --> Q0
+    IN2(["Un ticket de<br/>to-tickets"]) --> Q0
+
+    Q0{"¿Toca<br/>interfaz?"}
+    Q0 -->|no| EX["<b>superpowers:executing-plans</b><br/>o <b>implement</b> si es un ticket<br/>siempre con TDD"]
+    Q0 -->|sí| UI(["Pasa además por la<br/>cadena de interfaz"])
+    UI --> EX
+
+    EX --> Q{"¿Aparece algo que<br/>la spec no contempla?"}
+    Q -->|"es un dato externo"| RS["<b>research</b>"]
+    RS --> EX
+    Q -->|"falla algo"| DBG["<b>superpowers:systematic-debugging</b>"]
+    DBG --> EX
+    Q -->|"es una decisión<br/>de producto"| BACK(["Parar.<br/>Volver a la spec"])
+    Q -->|no| VER["<b>superpowers:verification-before-completion</b>"]
+    VER --> OUT(["Revisar"])
