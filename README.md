@@ -521,8 +521,8 @@ Three engines + engine-agnostic disciplines. Every engine skill pins the current
 
 ### 🇪🇸 Personal catalog — spec-driven development (Spanish)
 
-The user's own 37-skill catalog, grouped by the phase of the cycle where each one is used,
-the same way as in [claude-skills](https://github.com/damiangilgonzalez1995/claude-skills).
+The user's own 37-skill catalog, grouped by the phase of the cycle where each one is used.
+The full guide, in Spanish, with one page per phase and a version for teaching: [`docs/skills/`](docs/skills/).
 Bodies stay in Spanish; only each `description` was translated to English so Claude can still
 decide when to fire them.
 
