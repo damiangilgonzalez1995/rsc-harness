@@ -33,9 +33,11 @@ The shape of the chain:
 
 - Still fuzzy, or an open question? Open with `grill-with-docs`; reach for `wayfinder` instead
   when the effort will not fit one sitting.
-- Once the shape is known, capture it as a spec, noting any call that would be costly to undo.
-- Size the build: a single sitting runs straight through its own plan-then-build pair; anything
-  bigger, or anything that grew out of the wayfinding step, gets broken into tickets first.
+- Once the shape is known, capture it as a spec, and give any call that would be costly to undo
+  its own ADR.
+- Build from a written plan. Tickets are the exception: only work that grew out of the
+  wayfinding step is broken into them first.
+- Review the finished change against the repo's standards and against the spec before merging.
 
 Two exceptions, and say out loud when you take one:
 
@@ -53,9 +55,9 @@ whole run — advance through the phases without re-asking.
 If a step's skill is not installed, offer to add it (§2) before routing. `implement` always
 pairs with test-driven development and a verification pass before anything is called done.
 
-Exact skill names and order: `grill-with-docs` or `wayfinder` -> `to-spec` (and `write-adr` for
-decisions) -> `superpowers:writing-plans` -> `superpowers:executing-plans`, or `to-tickets` ->
-`implement`. On Claude Code this rule also arrives as a per-turn hook; the brevity here is
+Exact skill names and order: `grill-with-docs` or `wayfinder` -> `superpowers:brainstorming` or
+`to-spec` (and `write-adr` for decisions) -> `superpowers:writing-plans` ->
+`superpowers:executing-plans` (after `wayfinder`: `to-tickets` -> `implement`) -> `code-review`. On Claude Code this rule also arrives as a per-turn hook; the brevity here is
 deduplication, not relaxation.
 
 ---
