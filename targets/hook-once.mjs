@@ -93,13 +93,13 @@ export const WORKFLOW_GATE_TEXT = `===== workflow gate (highest precedence) ====
 Before acting on this turn: if the user wants to BUILD, ADD or CHANGE something — in ANY
 language, judged by intent, not by keywords — route it through the chain below FIRST. No
 feature code is written by ANY skill until the what is clear and the user has approved it.
-1. Not clear yet? -> \`grill-with-docs\` for a green idea or an open question; \`wayfinder\`
+1. Not clear yet? -> \`grill-with-docs\` grounds a green idea or an open question; \`wayfinder\`
    when the work is too large to hold in one session.
-2. Clear? -> \`to-spec\` writes the spec. Record every hard-to-reverse call with \`write-adr\`,
-   which leaves its trail under docs/adr/.
-3. Then build. Pick by size, and ask when unsure: ordinary work goes
-   \`superpowers:writing-plans\` -> \`superpowers:executing-plans\`; work that came out of
-   \`wayfinder\`, or too large for one plan, goes \`to-tickets\` -> \`implement\`, ticket by ticket.
+2. Clear? -> write the spec with \`superpowers:brainstorming\` or \`to-spec\`. Record every
+   hard-to-reverse call with \`write-adr\`, which leaves its trail under docs/adr/.
+3. Then build: \`superpowers:writing-plans\` -> \`superpowers:executing-plans\`. Only work that
+   came out of \`wayfinder\` goes \`to-tickets\` -> \`implement\`, ticket by ticket.
+4. Before merging: \`code-review\`, against the standards and against the spec.
 Always: \`superpowers:test-driven-development\`, and \`superpowers:verification-before-completion\`
 before calling anything done. Bugs enter through \`superpowers:systematic-debugging\`.
 One-line change, typo, or config bump? -> skip the chain, do it, say so.

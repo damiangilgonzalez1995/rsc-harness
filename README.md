@@ -423,11 +423,7 @@ Take a fuzzy intent to a shipped, verified change — phase by phase. `npx @dami
 
 [source-grounded-development](skills/source-grounded-development/) · [simplify-code](skills/simplify-code/)
 
-> The actual spec-first chain — clarify, specify, plan, break into tickets, build, verify, debug,
-> ship — now lives in the personal catalog below: `grill-with-docs`/`wayfinder` → `to-spec`
-> (+ `write-adr` for decisions) → `superpowers:writing-plans` → `superpowers:executing-plans`, or
-> `to-tickets` → `implement`, with `superpowers:systematic-debugging` for bugs and
-> `superpowers:verification-before-completion` before calling anything done. This section keeps
+> The actual spec-first chain lives in the personal catalog below, phase by phase. This section keeps
 > the two skills that stay stack-agnostic in-phase regardless of which chain built the code:
 > grounding an implementation or review in current version-specific docs, and simplifying working
 > code without changing its behaviour.
@@ -523,17 +519,100 @@ Three engines + engine-agnostic disciplines. Every engine skill pins the current
 
 [knowledge-ops](skills/knowledge-ops/) · [codebase-onboarding](skills/codebase-onboarding/) · [research-ops](skills/research-ops/) · [continuous-learning](skills/continuous-learning/) · [skill-scout](skills/skill-scout/) · [context-budget](skills/context-budget/) · [roast-me](skills/roast-me/) · [show-me](skills/show-me/) · [eli5](skills/eli5/) · [fable-operator](skills/fable-operator/)
 
-### 🇪🇸 Personal catalog — workflow (Spanish)
+### 🇪🇸 Personal catalog — spec-driven development (Spanish)
 
-The user's own 37-skill catalog, brought in as-is: bodies stay in Spanish, only each
-`description` was translated to English so Claude can still decide when to
-fire them. Split into a workflow half and an interface-design half.
+The user's own 37-skill catalog, grouped by the phase of the cycle where each one is used.
+The full guide, in Spanish, with one page per phase and a version for teaching: [`docs/skills/`](docs/skills/).
+Bodies stay in Spanish; only each `description` was translated to English so Claude can still
+decide when to fire them.
 
-[grill-me](skills/grill-me/) · [grill-with-docs](skills/grill-with-docs/) · [grilling](skills/grilling/) · [wayfinder](skills/wayfinder/) · [to-spec](skills/to-spec/) · [to-tickets](skills/to-tickets/) · [to-questionnaire](skills/to-questionnaire/) · [implement](skills/implement/) · [revision-de-cambios](skills/revision-de-cambios/) · [code-review](skills/code-review/) · [research](skills/research/) · [prototype](skills/prototype/) · [domain-modeling](skills/domain-modeling/) · [handoff](skills/handoff/) · [write-adr](skills/write-adr/) · [wait-what](skills/wait-what/) · [writing-for-agents](skills/writing-for-agents/) · [claude-project-setup](skills/claude-project-setup/) · [muscle-memory](skills/muscle-memory/) · [teach](skills/teach/)
+The source of truth is a written document, not a chat message. The chain, as the per-turn gate
+routes it:
 
-### 🇪🇸 Personal catalog — interface design (Spanish)
+![The philosophy: spec-driven development](docs/img/00-filosofia.svg)
 
-[animar](skills/animar/) · [diseno-apple](skills/diseno-apple/) · [diseno-landing](skills/diseno-landing/) · [ingeniero-diseno-web](skills/ingeniero-diseno-web/) · [leyes-de-percepcion](skills/leyes-de-percepcion/) · [leyes-de-retencion](skills/leyes-de-retencion/) · [mejor-accesibilidad](skills/mejor-accesibilidad/) · [mejor-colores](skills/mejor-colores/) · [mejor-layout](skills/mejor-layout/) · [mejor-redaccion](skills/mejor-redaccion/) · [mejor-tipografia](skills/mejor-tipografia/) · [mejor-ui](skills/mejor-ui/) · [sitios-calidad-premio](skills/sitios-calidad-premio/) · [tastemaker](skills/tastemaker/) · [video-a-superprompt](skills/video-a-superprompt/) · [vocabulario-animacion](skills/vocabulario-animacion/) · [revision-interfaz](skills/revision-interfaz/)
+Always: `superpowers:test-driven-development` and `superpowers:verification-before-completion`.
+Bugs start at `superpowers:systematic-debugging`.
+
+#### 1 · Plan
+
+Everything before code. What comes out is a spec and a plan, not an idea.
+
+![Plan phase flow](docs/img/01-planificar.svg)
+
+| Skill | What it does |
+|---|---|
+| [grill-with-docs](skills/grill-with-docs/) | Interrogates the plan and writes the glossary as it goes. The default way to ground an idea. |
+| [wayfinder](skills/wayfinder/) | Only when the work does not fit one session: a map of decision tickets. |
+| [to-spec](skills/to-spec/) | Turns the idea into a spec: what and why. `superpowers:brainstorming` is the alternative. |
+| [write-adr](skills/write-adr/) | Records every hard-to-reverse decision under `docs/adr/`. |
+| [research](skills/research/) | Investigates against primary sources and leaves the finding written and dated. |
+| [to-questionnaire](skills/to-questionnaire/) | Turns a decision you cannot make alone into a questionnaire for whoever can. |
+| [prototype](skills/prototype/) | A throwaway prototype to answer a design question. |
+| [to-tickets](skills/to-tickets/) | Splits the work into one-sitting tickets. Used after `wayfinder`. |
+| [claude-project-setup](skills/claude-project-setup/) | `CLAUDE.md`, rules, commands and agents. Once per repo. |
+
+`grilling`, `grill-me` and `domain-modeling` are installed but rarely called by hand: they run
+inside `grill-with-docs`.
+[grilling](skills/grilling/) · [grill-me](skills/grill-me/) · [domain-modeling](skills/domain-modeling/)
+
+#### 2 · Implement
+
+![Implement phase flow](docs/img/02-implementar.svg)
+
+| Skill | What it does |
+|---|---|
+| [implement](skills/implement/) | Builds one ticket from `to-tickets`. Ordinary work runs `superpowers:executing-plans` instead. |
+
+#### 3 · Interface
+
+When the work touches a screen. Sixteen overlapping skills; pick the one that matches the job.
+
+![Interface chain flow](docs/img/03-interfaz.svg)
+
+| Skill | What it does |
+|---|---|
+| [ingeniero-diseno-web](skills/ingeniero-diseno-web/) | Runs the whole job: art direction, a declared design system, checkpoints and a scored critique. |
+| [diseno-landing](skills/diseno-landing/) | A conversion landing end to end: structure, copy and a strict visual system. |
+| [sitios-calidad-premio](skills/sitios-calidad-premio/) | Cinematic sites: GSAP, one smooth-scroll engine, Three.js only with a purpose. |
+| [animar](skills/animar/) | Decides in order whether to animate, why, with what, which properties, curve and duration. |
+| [diseno-apple](skills/diseno-apple/) | Fluid, physical motion: springs, interruptibility, velocity hand-off, materials. |
+| [mejor-layout](skills/mejor-layout/) | Grouping, alignment, reading order, breakpoints, RTL. |
+| [mejor-tipografia](skills/mejor-tipografia/) | Scale, line height, variable fonts, wrapping, truncation, punctuation. |
+| [mejor-colores](skills/mejor-colores/) | Ramps, semantic tokens, measured contrast, dark mode. |
+| [mejor-accesibilidad](skills/mejor-accesibilidad/) | Native before ARIA, focus, keyboard, hit areas, forms. |
+| [mejor-ui](skills/mejor-ui/) | Concentric radii, optical alignment, surfaces, icon transitions. |
+| [mejor-redaccion](skills/mejor-redaccion/) | Voice and tone, verb buttons, errors that say how to fix them, empty states. |
+| [tastemaker](skills/tastemaker/) | UI that does not look AI-made: pixel-measured colour, generated palettes. |
+| [leyes-de-percepcion](skills/leyes-de-percepcion/) | Gestalt for interfaces: proximity, similarity, figure-ground, hierarchy. |
+| [leyes-de-retencion](skills/leyes-de-retencion/) | Why people abandon a flow: Hick, Fitts, Miller, Jakob, Doherty, peak-end. |
+| [vocabulario-animacion](skills/vocabulario-animacion/) | Reverse glossary: turns "that thing that bounces" into the exact term. |
+| [video-a-superprompt](skills/video-a-superprompt/) | Turns a reference video into a detailed recreation prompt. |
+
+#### 4 · Review and close
+
+![Review and close flow](docs/img/04-revisar.svg)
+
+| The work | Order |
+|---|---|
+| Did not touch a screen | `code-review` |
+| Touched a screen | `revision-de-cambios` → `revision-interfaz` → `code-review` |
+
+| Skill | What it does |
+|---|---|
+| [code-review](skills/code-review/) | Two axes in parallel: the repo's standards and the spec. |
+| [revision-de-cambios](skills/revision-de-cambios/) | Reviews the change, reads the removed lines and classifies each finding. Only if it touched a screen. |
+| [revision-interfaz](skills/revision-interfaz/) | Runs the six `mejor-*` skills as one report with a verdict. Only if it touched a screen. |
+| [handoff](skills/handoff/) | Compacts the session into a handoff document. Optional. |
+
+#### 9 · Other
+
+| Skill | What it does |
+|---|---|
+| [teach](skills/teach/) | Teaching across sessions. |
+| [muscle-memory](skills/muscle-memory/) | A Python kata gym. |
+| [wait-what](skills/wait-what/) | Handbrake: stop and restate. |
+| [writing-for-agents](skills/writing-for-agents/) | How to write documents an agent consumes. |
 
 ---
 

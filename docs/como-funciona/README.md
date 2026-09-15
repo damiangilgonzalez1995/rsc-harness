@@ -16,6 +16,6 @@ Claude Code, por sí solo, empieza cada conversación en blanco. Este harness le
 
 Este proyecto es un fork de [rsc-harness](https://github.com/ericrisco/rsc-harness), de Eric Risco. Las diferencias que afectan a lo que cuentan estos documentos:
 
-- La cadena de especificación original (`specify` → `plan` → `tasks` → `ship`) se ha sustituido por otro flujo: aclarar primero con `grill-with-docs` o `wayfinder`, escribir la spec con `to-spec`, registrar las decisiones en `docs/adr/`, y construir con `superpowers` o con `to-tickets` e `implement`.
+- La cadena de especificación original (`specify` → `plan` → `tasks` → `ship`) se ha sustituido por otro flujo: aclarar primero con `grill-with-docs` o `wayfinder`, escribir la spec con `superpowers:brainstorming` o `to-spec`, registrar las decisiones con `write-adr` en `docs/adr/`, construir con `superpowers:writing-plans` y `superpowers:executing-plans` (o con `to-tickets` e `implement` si se viene de `wayfinder`), y revisar con `code-review` antes de fusionar.
 - La documentación del proyecto vive en `docs/`, no en `02-DOCS/`.
 - El catálogo incluye las skills propias del autor del fork, junto a las del original que no se solapan con ellas.

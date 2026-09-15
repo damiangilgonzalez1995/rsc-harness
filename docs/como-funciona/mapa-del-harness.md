@@ -431,12 +431,12 @@ Las skills son los manuales del becario. Se activan solas cuando tu petición en
 |---|---|
 | `grill-with-docs` | "Quiero un buscador" → te interroga hasta que el qué y el cómo están claros, y va dejando las decisiones por escrito. |
 | `wayfinder` | Para trabajo que no cabe en una sesión: levanta un mapa de decisiones antes de tocar nada. |
-| `to-spec` | Recoge la conversación y la convierte en una spec publicada. |
+| `to-spec` o `superpowers:brainstorming` | Recoge la conversación y la convierte en una spec escrita. |
 | `write-adr` | Registra en `docs/adr/` cada decisión difícil de revertir, con las alternativas que se descartaron. |
 | `superpowers:writing-plans` | Convierte la spec en un plan con pasos pequeños, cada uno con su test. |
 | `superpowers:executing-plans` | Ejecuta ese plan, parando a revisar entre tareas. |
-| `to-tickets` + `implement` | La vía alternativa cuando el trabajo es enorme: se parte en tickets y se hacen de uno en uno. |
-| `revision-de-cambios` | Revisa lo programado contra lo que pedía la spec. |
+| `to-tickets` + `implement` | Solo cuando el trabajo salió de `wayfinder`: se parte en tickets y se hacen de uno en uno. |
+| `code-review` | Antes de fusionar, revisa lo programado en dos ejes: los estándares del repo y lo que pedía la spec. |
 
 Ese orden no es una sugerencia: el harness lo inyecta como regla en cada mensaje que escribes. Lo único exento es un cambio de una línea o un typo, y Claude tiene que decirte que se salta la cadena.
 

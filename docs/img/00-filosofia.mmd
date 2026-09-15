@@ -1,0 +1,37 @@
+---
+config:
+  look: handDrawn
+  handDrawnSeed: 7
+  theme: base
+  themeVariables:
+    fontFamily: "Segoe UI, sans-serif"
+    fontSize: "15px"
+    primaryColor: "#FDF6E3"
+    primaryTextColor: "#1b1b1f"
+    primaryBorderColor: "#1b1b1f"
+    lineColor: "#3d3d42"
+  flowchart:
+    curve: basis
+    nodeSpacing: 55
+    rankSpacing: 60
+---
+
+flowchart TD
+    C["<b>Constitución</b><br/>las reglas del proyecto<br/><i>claude-project-setup</i>"]
+    G["<b>Bajar a tierra</b><br/>cerrar el qué y el cómo<br/><i>grill-with-docs · wayfinder</i>"]
+    S["<b>Especificar</b><br/>el qué y el porqué<br/><i>superpowers:brainstorming</i><br/><i>o to-spec</i>"]
+    P["<b>Planificar</b><br/>tareas pequeñas con su test<br/><i>superpowers:writing-plans</i><br/><i>to-tickets, si viene de wayfinder</i>"]
+    I["<b>Implementar</b><br/><i>superpowers:executing-plans · implement</i><br/><i>TDD · cadena de interfaz</i>"]
+    R["<b>Revisar contra la spec</b><br/><i>code-review · revision-*</i>"]
+    H["<b>Cerrar</b><br/><i>handoff, opcional</i>"]
+
+    C --> G --> S --> P --> I --> R -.-> H
+
+    I -.->|"decisión de producto<br/>que la spec no recoge"| S
+    R -.->|"si no cumple<br/>lo especificado"| S
+
+    ADR{{"<b>write-adr</b><br/>cada decisión difícil<br/>de revertir, en docs/adr/"}}
+    ADR -.- S
+
+    SPEC{{"La spec es la fuente de verdad,<br/>no la conversación"}}
+    SPEC -.- S

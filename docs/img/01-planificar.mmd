@@ -1,0 +1,45 @@
+---
+config:
+  look: handDrawn
+  handDrawnSeed: 7
+  theme: base
+  themeVariables:
+    fontFamily: "Segoe UI, sans-serif"
+    fontSize: "15px"
+    primaryColor: "#FDF6E3"
+    primaryTextColor: "#1b1b1f"
+    primaryBorderColor: "#1b1b1f"
+    lineColor: "#3d3d42"
+  flowchart:
+    curve: basis
+    nodeSpacing: 50
+    rankSpacing: 60
+---
+
+flowchart TD
+    C["<b>claude-project-setup</b><br/>una vez por proyecto"] --> W{"¿Cabe en<br/>una sesión?"}
+
+    W -->|sí| G["<b>grill-with-docs</b><br/>baja la idea a tierra"]
+    W -->|no| WF["<b>wayfinder</b><br/>mapa de decisiones"]
+
+    G --> A{"¿Queda algo<br/>sin cerrar?"}
+
+    subgraph ACL["Cerrar el hueco"]
+        direction LR
+        R["<b>research</b><br/>me falta un dato"]
+        TQ["<b>to-questionnaire</b><br/>lo sabe otro"]
+        PR["<b>prototype</b><br/>hay que verlo"]
+        R ~~~ TQ ~~~ PR
+    end
+
+    A -->|sí| ACL
+    ACL -->|"vuelve al interrogatorio"| G
+
+    A -->|no| S["<b>superpowers:brainstorming</b><br/>o <b>to-spec</b><br/>escribe la spec"]
+    S -.- ADR{{"<b>write-adr</b><br/>decisiones difíciles<br/>de revertir"}}
+
+    S --> PL["<b>superpowers:writing-plans</b><br/>tareas pequeñas con su test"]
+    PL --> OUT(["Un plan"])
+
+    WF --> TT["<b>to-tickets</b><br/>trocear"]
+    TT --> OUT2(["Tickets de una sentada:<br/>backend o frontend"])
