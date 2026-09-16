@@ -89,21 +89,25 @@ export function claimOnce(key, { dir = markerDir(), windowMs = 30_000, now = Dat
 // The workflow gate text lives here, not inline in userprompt-gate.mjs, so it has exactly one
 // definition: the hook emits it and `rsc doctor` measures it from the same constant. Anything
 // that reports a byte count for text it does not own drifts the moment the text changes.
-export const WORKFLOW_GATE_TEXT = `===== workflow gate (highest precedence) =====
-Before acting on this turn: if the user wants to BUILD, ADD or CHANGE something — in ANY
-language, judged by intent, not by keywords — route it through the chain below FIRST. No
-feature code is written by ANY skill until the what is clear and the user has approved it.
-1. Not clear yet? -> \`grill-with-docs\` grounds a green idea or an open question; \`wayfinder\`
-   when the work is too large to hold in one session.
-2. Clear? -> write the spec with \`superpowers:brainstorming\` or \`to-spec\`. Record every
-   hard-to-reverse call with \`write-adr\`, which leaves its trail under docs/adr/.
-3. Then build: \`superpowers:writing-plans\` -> \`superpowers:executing-plans\`. Only work that
-   came out of \`wayfinder\` goes \`to-tickets\` -> \`implement\`, ticket by ticket.
-4. Before merging: \`code-review\`, against the standards and against the spec.
-Always: \`superpowers:test-driven-development\`, and \`superpowers:verification-before-completion\`
-before calling anything done. Bugs enter through \`superpowers:systematic-debugging\`.
-One-line change, typo, or config bump? -> skip the chain, do it, say so.
-==============================================
+export const WORKFLOW_GATE_TEXT = `===== workflow gate · metodologia (maxima prioridad) =====
+Si el usuario pide construir, anadir o cambiar algo (en cualquier idioma, se juzga la intencion),
+sigue esta cadena ANTES de escribir codigo. Ninguna skill escribe codigo de una feature hasta que
+el que esta claro y el usuario ha dado el visto bueno.
+1. Aclarar el que:
+   - Peticion concreta y acotada -> \`grill-with-docs\`.
+   - Tema amplio, o el usuario no sabe como abordarlo -> recomiendale \`wayfinder\`.
+   - \`superpowers:brainstorming\` vale para lo mismo si el usuario lo prefiere.
+   Cada decision dificil de revertir se registra con \`write-adr\`, en docs/adr/.
+2. Escribir la spec: \`to-spec\`, o \`superpowers:brainstorming\` para cerrarla por secciones.
+   Sin spec escrita no se programa.
+3. Construir: \`superpowers:writing-plans\` -> \`superpowers:executing-plans\`. Solo el trabajo que
+   salio de \`wayfinder\` va con \`to-tickets\` -> \`implement\`, ticket a ticket.
+   Si la tarea toca pantalla, invoca ademas \`flujo-interfaz\`: dice que skill de diseno manda.
+4. Antes de fusionar: \`code-review\` (estandares del repo + lo que pedia la spec).
+Siempre: \`superpowers:test-driven-development\` y \`superpowers:verification-before-completion\`
+antes de dar nada por terminado. Los bugs entran por \`superpowers:systematic-debugging\`.
+Cambio de una linea, typo o ajuste de configuracion -> hazlo y di que te saltas la cadena.
+==========================================================
 `;
 
 /**

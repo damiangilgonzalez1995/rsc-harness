@@ -572,6 +572,7 @@ When the work touches a screen. Sixteen overlapping skills; pick the one that ma
 
 | Skill | What it does |
 |---|---|
+| [flujo-interfaz](skills/flujo-interfaz/) | The router: which design skill leads and in what order the rest follow. Start here when the work touches a screen. |
 | [ingeniero-diseno-web](skills/ingeniero-diseno-web/) | Runs the whole job: art direction, a declared design system, checkpoints and a scored critique. |
 | [diseno-landing](skills/diseno-landing/) | A conversion landing end to end: structure, copy and a strict visual system. |
 | [sitios-calidad-premio](skills/sitios-calidad-premio/) | Cinematic sites: GSAP, one smooth-scroll engine, Three.js only with a purpose. |

@@ -36,7 +36,7 @@ The shape of the chain:
 - Once the shape is known, capture it as a spec, and give any call that would be costly to undo
   its own ADR.
 - Build from a written plan. Tickets are the exception: only work that grew out of the
-  wayfinding step is broken into them first.
+  wayfinding step is broken into them first. A screen also routes through `flujo-interfaz`.
 - Review the finished change against the repo's standards and against the spec before merging.
 
 Two exceptions, and say out loud when you take one:
@@ -57,8 +57,9 @@ pairs with test-driven development and a verification pass before anything is ca
 
 Exact skill names and order: `grill-with-docs` or `wayfinder` -> `superpowers:brainstorming` or
 `to-spec` (and `write-adr` for decisions) -> `superpowers:writing-plans` ->
-`superpowers:executing-plans` (after `wayfinder`: `to-tickets` -> `implement`) -> `code-review`. On Claude Code this rule also arrives as a per-turn hook; the brevity here is
-deduplication, not relaxation.
+`superpowers:executing-plans` (after `wayfinder`: `to-tickets` -> `implement`) -> `code-review`.
+On Claude Code this rule also arrives as a per-turn hook; the brevity here is deduplication,
+not relaxation.
 
 ---
 

@@ -28,7 +28,7 @@ export const DOMAINS = [
   { title: 'Design & content craft', ids: ['design-loop', 'design', 'design-dna', 'presentations', 'course-storytelling', 'course-builder', 'technical-writing', 'translation-l10n'] },
   { title: 'Knowledge & meta', ids: ['knowledge-ops', 'codebase-onboarding', 'research-ops', 'continuous-learning', 'skill-scout', 'context-budget', 'roast-me', 'show-me', 'eli5', 'fable-operator'] },
   { title: 'Personal catalog — workflow (Spanish)', ids: ['grill-me', 'grill-with-docs', 'grilling', 'wayfinder', 'to-spec', 'to-tickets', 'to-questionnaire', 'implement', 'revision-de-cambios', 'code-review', 'research', 'prototype', 'domain-modeling', 'handoff', 'write-adr', 'wait-what', 'writing-for-agents', 'claude-project-setup', 'muscle-memory', 'teach'] },
-  { title: 'Personal catalog — interface design (Spanish)', ids: ['animar', 'diseno-apple', 'diseno-landing', 'ingeniero-diseno-web', 'leyes-de-percepcion', 'leyes-de-retencion', 'mejor-accesibilidad', 'mejor-colores', 'mejor-layout', 'mejor-redaccion', 'mejor-tipografia', 'mejor-ui', 'sitios-calidad-premio', 'tastemaker', 'video-a-superprompt', 'vocabulario-animacion', 'revision-interfaz'] },
+  { title: 'Personal catalog — interface design (Spanish)', ids: ['flujo-interfaz', 'animar', 'diseno-apple', 'diseno-landing', 'ingeniero-diseno-web', 'leyes-de-percepcion', 'leyes-de-retencion', 'mejor-accesibilidad', 'mejor-colores', 'mejor-layout', 'mejor-redaccion', 'mejor-tipografia', 'mejor-ui', 'sitios-calidad-premio', 'tastemaker', 'video-a-superprompt', 'vocabulario-animacion', 'revision-interfaz'] },
 ];
 
 export function allDomainIds() {
