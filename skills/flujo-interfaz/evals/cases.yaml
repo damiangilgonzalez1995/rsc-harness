@@ -1,0 +1,32 @@
+skill: flujo-interfaz
+
+should_trigger:
+  - prompt: "Vamos a construir la pantalla de detalle de incidencia, por donde empiezo?"
+    why: "Trabajo que toca pantalla sin direccion elegida: flujo-interfaz decide que skill manda."
+  - prompt: "Tengo dieciseis skills de diseno y no se cual toca para esta pantalla."
+    why: "Disparador directo de flujo-interfaz: enrutar entre las skills de diseno."
+  - prompt: "Que skill de diseno uso para un dashboard nuevo?"
+    why: "La eleccion de direccion entre diseno-landing e ingeniero-diseno-web es de flujo-interfaz."
+  - prompt: "Empezamos el frontend de este modulo, cual es el orden de trabajo?"
+    why: "Pide el orden de la cadena de interfaz, que es lo que flujo-interfaz define."
+  - prompt: "Which design skill should lead this new app screen, and what comes after?"
+    why: "Disparador directo de flujo-interfaz en ingles: direccion primero, resto despues."
+
+should_not_trigger:
+  - prompt: "Revisa esta pantalla y dame un informe ordenado por severidad."
+    route_to: "revision-interfaz"
+    why: "Revisar la pantalla es el trabajo de revision-interfaz, no de flujo-interfaz, que solo enruta."
+  - prompt: "Donde guardo el estado de este formulario, en la URL o en el componente?"
+    route_to: "ui-engineering"
+    why: "La arquitectura de la interfaz es el trabajo de ui-engineering, no de flujo-interfaz."
+  - prompt: "Genera la paleta de colores de la marca desde cero."
+    route_to: "mejor-colores"
+    why: "Generar la paleta es el trabajo de mejor-colores, no de flujo-interfaz."
+  - prompt: "Implementa el endpoint que devuelve las incidencias del tecnico."
+    route_to: "implement"
+    why: "Un ticket de backend es el trabajo de implement, no de flujo-interfaz."
+
+capability:
+  - scenario: "El usuario va a construir una pantalla nueva y no sabe que skill de diseno manda."
+    must_include:
+      - "direccion"
