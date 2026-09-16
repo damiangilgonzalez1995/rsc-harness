@@ -8,7 +8,7 @@
 
 [![npm](https://img.shields.io/npm/v/@damiangilgonzalez/harness?color=63d68a&labelColor=12161c&label=npm)](https://www.npmjs.com/package/@damiangilgonzalez/harness)
 [![downloads](https://img.shields.io/npm/dm/@damiangilgonzalez/harness?color=63d68a&labelColor=12161c&label=downloads)](https://www.npmjs.com/package/@damiangilgonzalez/harness)
-[![skills](https://img.shields.io/badge/skills-290-63d68a?labelColor=12161c)](#the-catalog)
+[![skills](https://img.shields.io/badge/skills-291-63d68a?labelColor=12161c)](#the-catalog)
 [![license](https://img.shields.io/badge/license-MIT-63d68a?labelColor=12161c)](LICENSE)
 [![stars](https://img.shields.io/github/stars/ericrisco/rsc-harness?color=63d68a&labelColor=12161c)](https://github.com/ericrisco/rsc-harness/stargazers)
 
@@ -202,7 +202,7 @@ $ rsc onboard
  ██████╗ ███████╗ ██████╗     ← animated gradient wordmark
  ██╔══██╗██╔════╝██╔════╝
  ██████╔╝███████╗██║
-  290 skills · one CLI · zero bloat
+  291 skills · one CLI · zero bloat
 
 How technical should the conversation be?
 How much accompaniment do you want?
@@ -241,7 +241,7 @@ rsc add youtube-api remotion-video   # …grow a channel, edit with Remotion
 rsc add fastapi --target claude,codex   # install into several assistants at once
 rsc install --profile minimal        # the base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach
 rsc install --profile core           # floor + the full SDD workflow
-rsc install --profile full           # everything (all 290 skills)
+rsc install --profile full           # everything (all 291 skills)
 rsc install --profile full --without go
 rsc consult "I want to launch a SaaS"  # recommend only, no install
 rsc registry refresh                 # write .rsc/skill-registry.{json,md}
@@ -383,7 +383,7 @@ just asks in plain language.
 
 ## The catalog
 
-290 skills, grouped by what you're trying to do. Click any skill to read its
+291 skills, grouped by what you're trying to do. Click any skill to read its
 `SKILL.md`. It fires on its own when a task matches.
 
 ### 🧭 Core & control plane
@@ -572,6 +572,7 @@ When the work touches a screen. Sixteen overlapping skills; pick the one that ma
 
 | Skill | What it does |
 |---|---|
+| [flujo-interfaz](skills/flujo-interfaz/) | The router: which design skill leads and in what order the rest follow. Start here when the work touches a screen. |
 | [ingeniero-diseno-web](skills/ingeniero-diseno-web/) | Runs the whole job: art direction, a declared design system, checkpoints and a scored critique. |
 | [diseno-landing](skills/diseno-landing/) | A conversion landing end to end: structure, copy and a strict visual system. |
 | [sitios-calidad-premio](skills/sitios-calidad-premio/) | Cinematic sites: GSAP, one smooth-scroll engine, Three.js only with a purpose. |

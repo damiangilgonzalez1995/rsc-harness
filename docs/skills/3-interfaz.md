@@ -6,6 +6,9 @@ leerlas todas para saber cuál toca.
 **El orden, en una línea:** qué dice → cómo se ve → cómo se mueve → pulido → originalidad →
 psicología.
 
+La skill `flujo-interfaz` lleva esa decisión dentro: se activa sola cuando la tarea toca pantalla
+y dice cuál manda en cada paso. Este documento es su versión larga, para leerla tú.
+
 ![Flujo de la cadena de interfaz](../img/03-interfaz.svg)
 
 ---
