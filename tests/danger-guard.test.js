@@ -175,3 +175,14 @@ test('the materialized copy of the guard has not drifted from the source', (t) =
     'run `npx rsc sync` — this workspace is running stale guard code, not the code under test',
   );
 });
+
+// ── the guard runs under PowerShell too ─────────────────────────────────────────────────────
+// On Windows Claude Code's primary shell is the PowerShell tool. A guard that only listens for
+// `Bash` lets `git push --force` through there without ever being asked.
+test('a PowerShell tool call is guarded the same as a Bash one', () => {
+  const r = spawnSync('node', [GUARD, ROOT], {
+    input: JSON.stringify({ tool_name: 'PowerShell', tool_input: { command: `git push ${DASH}${DASH}force origin main` } }),
+    encoding: 'utf8',
+  });
+  assert.match(r.stdout, /"permissionDecision":"deny"/);
+});

@@ -4,6 +4,9 @@ import { fileURLToPath } from 'node:url';
 import { linkOrCopy } from './index.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
+// Shell tools the PreToolUse guards listen on. On Windows the primary shell is the PowerShell tool,
+// so a `Bash`-only matcher let `git push --force` or a commit without gitmoji through unasked.
+const SHELL_TOOLS = 'Bash|PowerShell';
 
 export function writeSkill(id, fromDir, toPath) {
   // Migrate away from the legacy nested layout (.claude/skills/rsc/<id>) that
@@ -142,7 +145,7 @@ export function wireHook(paths, sourceMd, policy = {}) {
   settings.hooks.PreToolUse = settings.hooks.PreToolUse.filter(
     (e) => !hookWiringOf(e).includes('.rsc/ship-guard.'),
   );
-  settings.hooks.PreToolUse.push({ matcher: 'Bash', hooks: [{ type: 'command', command: sgCmd }] });
+  settings.hooks.PreToolUse.push({ matcher: SHELL_TOOLS, hooks: [{ type: 'command', command: sgCmd }] });
 
   // Danger guard: a PreToolUse(Bash) hook that DENIES irreversible foot-gun commands
   // (rm -rf, git push --force, DROP/TRUNCATE, DELETE/UPDATE without WHERE, dd to /dev,
@@ -155,7 +158,7 @@ export function wireHook(paths, sourceMd, policy = {}) {
   settings.hooks.PreToolUse = settings.hooks.PreToolUse.filter(
     (e) => !hookWiringOf(e).includes('.rsc/danger-guard.'),
   );
-  settings.hooks.PreToolUse.push({ matcher: 'Bash', hooks: [{ type: 'command', command: dgCmd }] });
+  settings.hooks.PreToolUse.push({ matcher: SHELL_TOOLS, hooks: [{ type: 'command', command: dgCmd }] });
 
   // Gitmoji guard: a PreToolUse(Bash) hook that DENIES a `git commit` whose message
   // carries no gitmoji (gitmoji.dev) in front of the Conventional Commits header. The
@@ -170,7 +173,7 @@ export function wireHook(paths, sourceMd, policy = {}) {
   settings.hooks.PreToolUse = settings.hooks.PreToolUse.filter(
     (e) => !hookWiringOf(e).includes('.rsc/gitmoji-guard.'),
   );
-  settings.hooks.PreToolUse.push({ matcher: 'Bash', hooks: [{ type: 'command', command: gmCmd }] });
+  settings.hooks.PreToolUse.push({ matcher: SHELL_TOOLS, hooks: [{ type: 'command', command: gmCmd }] });
 
   // New-feature gate: a UserPromptSubmit hook that re-injects the SDD new-feature gate as
   // the most-recent instruction on every user turn. SessionStart injects the full gate (the

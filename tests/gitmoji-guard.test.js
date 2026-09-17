@@ -230,3 +230,11 @@ test('gitmoji-guard: .rsc/.no-gitmoji disarms it completely', () => {
   writeFileSync(join(root, '.rsc', '.no-gitmoji'), '');
   assert.equal(runGuard(root, 'git commit -m "feat: x"'), null, 'silent after the opt-out');
 });
+
+test('gitmoji: a PowerShell commit is held to the same rule as a Bash one', () => {
+  const r = spawnSync('node', [GUARD, freshRoot()], {
+    input: JSON.stringify({ tool_name: 'PowerShell', tool_input: { command: 'git commit -m "feat: sin emoji"' } }),
+    encoding: 'utf8',
+  });
+  assert.match(r.stdout, /"permissionDecision":"deny"/);
+});
