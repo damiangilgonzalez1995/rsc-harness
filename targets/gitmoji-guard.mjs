@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// rsc Gitmoji guard (claude). Wired by targets/claude.js onto PreToolUse (matcher Bash)
+// rsc Gitmoji guard (claude). Wired by targets/claude.js onto PreToolUse (matcher Bash|PowerShell)
 // as `node ...` so it runs on every platform including Windows.
 //   argv[2] = absolute project root   stdin = PreToolUse hook JSON
 //
@@ -230,7 +230,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
 
   let input = {};
   try { input = JSON.parse(readFileSync(0, 'utf8') || '{}'); } catch { allow(); }
-  if ((input.tool_name || input.toolName) !== 'Bash') allow();
+  if (!['Bash', 'PowerShell'].includes(input.tool_name || input.toolName)) allow();
   const command = input.tool_input?.command || input.toolInput?.command || '';
   if (typeof command !== 'string' || !command) allow();
 

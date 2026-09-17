@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, writeFileSync, existsSync, rmSync, realpathSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, existsSync, rmSync, realpathSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -752,4 +752,29 @@ test('36 · the sweep respects the opt-out, not only the library does', () => {
   mkdirSync(join(root, '.rsc'), { recursive: true });
   writeFileSync(join(root, '.rsc', '.no-worktree-cleanup'), '');
   assert.doesNotMatch(sweep(root), /worktree cleanup/, 'off means off at both entry points');
+});
+
+// ── the sweep is cached: git state unchanged → no re-scan ─────────────────────────────────────
+// Classifying spawns several git processes per worktree; with a dozen worktrees that was 1.2 s on
+// every session start. Verdicts only move when a worktree HEAD or the trunk moves, and `reap`
+// re-classifies before removing anything, so reusing the last notice is safe.
+test('37 · an unchanged repository reuses the cached sweep instead of re-scanning', () => {
+  const root = repo();
+  const wt = rscWorktree(root, 'tau');
+  write(wt.path, 'feature.txt', 'work\n');
+  git(wt.path, 'add', '-A'); git(wt.path, 'commit', '-qm', 'feat: tau');
+  mergeIntoTrunk(root, wt.branch);
+
+  assert.match(sweep(root), /tau/);
+  const cache = join(root, '.rsc', 'worktree-sweep.json');
+  assert.ok(existsSync(cache), 'the first sweep leaves its result behind');
+  const saved = JSON.parse(readFileSync(cache, 'utf8'));
+  writeFileSync(cache, JSON.stringify({ ...saved, text: 'CACHED-SWEEP\n' }));
+  assert.match(sweep(root), /CACHED-SWEEP/, 'same fingerprint → the cached notice, no re-scan');
+
+  // Moving the trunk changes the fingerprint, so the scan runs again.
+  write(root, 'other.txt', 'x\n'); git(root, 'add', '-A'); git(root, 'commit', '-qm', 'chore: move');
+  const fresh = sweep(root);
+  assert.doesNotMatch(fresh, /CACHED-SWEEP/);
+  assert.match(fresh, /tau/);
 });

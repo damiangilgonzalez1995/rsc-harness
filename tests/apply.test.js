@@ -261,6 +261,21 @@ test('claude: install wires the UserPromptSubmit new-feature gate (idempotent, o
   assert.equal(silenced.stdout.trim(), '', 'opt-out marker silences the gate');
 });
 
+test('userprompt-gate: names flujo-interfaz only when that skill is installed', async () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rsc-fg-'));
+  await applyInstall({ skillIds: ['suggest'], target: 'claude', cwd });
+  // An isolated HOME, so a flujo-interfaz installed on the machine running the tests cannot leak in.
+  const env = { ...process.env, HOME: cwd, USERPROFILE: cwd };
+  const run = () => spawnSync('node', [join(cwd, '.rsc/userprompt-gate.mjs'), cwd], { encoding: 'utf8', env }).stdout;
+
+  assert.ok(run().includes('workflow gate'));
+  assert.ok(!run().includes('flujo-interfaz'), 'a gate must not send the agent to a skill that is not there');
+
+  mkdirSync(join(cwd, '.claude/skills/flujo-interfaz'), { recursive: true });
+  writeFileSync(join(cwd, '.claude/skills/flujo-interfaz/SKILL.md'), '---\nname: flujo-interfaz\n---\n');
+  assert.ok(run().includes('flujo-interfaz'), 'once installed, the gate routes screen work through it');
+});
+
 // --- cross-scope de-duplication (spec: context-budget) --------------------------------
 // rsc wired in both user and project scope runs two copies of every hook, so the always-on
 // body and the SDD gate each land twice. Both copies see the same session_id / prompt_id.
@@ -653,7 +668,7 @@ test('claude: wires ship-guard on PreToolUse(Bash), materialized + idempotent', 
   const settings = JSON.parse(readFileSync(join(cwd, '.claude/settings.json'), 'utf8'));
   const guards = settings.hooks.PreToolUse.filter((e) => JSON.stringify(e).includes('ship-guard'));
   assert.equal(guards.length, 1, 'exactly one ship-guard PreToolUse entry');
-  assert.equal(guards[0].matcher, 'Bash', 'matches Bash tool calls');
+  assert.equal(guards[0].matcher, 'Bash|PowerShell', 'matches Bash and PowerShell tool calls');
   const cmd = guards[0].hooks[0].command;
   assert.ok(cmd.startsWith('node '), 'invoked via node (Windows-safe)');
   assert.ok(cmd.includes('.rsc/ship-guard.mjs'), 'runs the ship-guard script');
@@ -777,7 +792,7 @@ test('claude: wires danger-guard on PreToolUse(Bash) alongside ship-guard, mater
   const ship = settings.hooks.PreToolUse.filter((e) => JSON.stringify(e).includes('ship-guard'));
   assert.equal(danger.length, 1, 'exactly one danger-guard entry');
   assert.equal(ship.length, 1, 'ship-guard still wired (two distinct Bash guards)');
-  assert.equal(danger[0].matcher, 'Bash');
+  assert.equal(danger[0].matcher, 'Bash|PowerShell');
   assert.ok(danger[0].hooks[0].command.startsWith('node '));
   assert.ok(existsSync(join(cwd, '.rsc/danger-guard.mjs')), 'danger-guard.mjs materialized');
 });
@@ -790,7 +805,7 @@ test('claude: wires gitmoji-guard on PreToolUse(Bash) as a third distinct guard,
   const settings = JSON.parse(readFileSync(join(cwd, '.claude/settings.json'), 'utf8'));
   const gitmoji = settings.hooks.PreToolUse.filter((e) => JSON.stringify(e).includes('gitmoji-guard'));
   assert.equal(gitmoji.length, 1, 'exactly one gitmoji-guard entry');
-  assert.equal(gitmoji[0].matcher, 'Bash');
+  assert.equal(gitmoji[0].matcher, 'Bash|PowerShell');
   assert.ok(gitmoji[0].hooks[0].command.startsWith('node '));
   assert.ok(existsSync(join(cwd, '.rsc/gitmoji-guard.mjs')), 'gitmoji-guard.mjs materialized');
   // The three Bash guards coexist; wiring one must never drop another.

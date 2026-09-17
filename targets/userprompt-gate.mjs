@@ -13,6 +13,7 @@
 // Fail-open (never blocks a turn). Opt out per project with .rsc/.no-feature-gate.
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { homedir } from 'node:os';
 import { claimOnce, readHookInput, WORKFLOW_GATE_TEXT } from './hook-once.mjs';
 
 const root = process.argv[2] || process.cwd();
@@ -28,4 +29,8 @@ const hook = readHookInput();
 const turnKey = hook.prompt_id || (hook.prompt ? `p${hook.prompt.length}:${hook.prompt.slice(0, 64)}` : null);
 if (hook.session_id && turnKey && !claimOnce(`up:${hook.session_id}:${turnKey}`)) process.exit(0);
 
-process.stdout.write(WORKFLOW_GATE_TEXT);
+// The gate routes screen work through `flujo-interfaz`, but that skill is optional. Naming a skill
+// that is not installed sends the agent looking for something that does not exist, so the line only
+// ships when the skill is present in this project or in the user scope.
+const hasFlujo = [root, homedir()].some((r) => existsSync(join(r, '.claude', 'skills', 'flujo-interfaz', 'SKILL.md')));
+process.stdout.write(hasFlujo ? WORKFLOW_GATE_TEXT : WORKFLOW_GATE_TEXT.split('\n').filter((l) => !l.includes('flujo-interfaz')).join('\n'));

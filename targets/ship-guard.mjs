@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// rsc Ship guard (claude). Wired by targets/claude.js onto PreToolUse (matcher Bash)
+// rsc Ship guard (claude). Wired by targets/claude.js onto PreToolUse (matcher Bash|PowerShell)
 // as `node ...` so it runs on every platform including Windows.
 //   argv[2] = absolute project root   stdin = PreToolUse hook JSON
 //
@@ -39,7 +39,7 @@ if (!existsSync(join(root, '.git'))) allow();
 // Read the tool call. Only Bash commands can move branches.
 let input = {};
 try { input = JSON.parse(readFileSync(0, 'utf8') || '{}'); } catch { allow(); }
-if ((input.tool_name || input.toolName) !== 'Bash') allow();
+if (!['Bash', 'PowerShell'].includes(input.tool_name || input.toolName)) allow();
 const command = input.tool_input?.command || input.toolInput?.command || '';
 if (typeof command !== 'string' || !command) allow();
 

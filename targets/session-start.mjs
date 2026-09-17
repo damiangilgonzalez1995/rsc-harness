@@ -8,6 +8,7 @@
 import { readFileSync, existsSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { homedir } from 'node:os';
+import { spawnSync } from 'node:child_process';
 import { claimOnce, readHookInput } from './hook-once.mjs';
 
 const STALE_AUDIT_DAYS = 14; // periodic skill-audit cadence (kept in sync with scripts/audit.js)
@@ -26,6 +27,19 @@ const emitBody = hook.session_id
   : true;
 
 const has = (...p) => existsSync(join(root, ...p));
+
+// The npm lookup (up to 1.5 s) starts now and runs while the local checks below do their work;
+// the update block at the end only awaits it.
+const latestVersion = process.env.RSC_NO_UPDATE_CHECK ? Promise.resolve(null)
+  : process.env.RSC_LATEST ? Promise.resolve(process.env.RSC_LATEST)
+  : (async () => {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 1500);
+    try {
+      const res = await fetch('https://registry.npmjs.org/@damiangilgonzalez%2fharness/latest', { signal: ctrl.signal });
+      return (await res.json()).version;
+    } catch { return null; } finally { clearTimeout(timer); }
+  })();
 
 // Is a Context7 MCP server configured for this project (.mcp.json → mcpServers.context7)?
 function hasContext7() {
@@ -221,10 +235,24 @@ if (has('.git')) {
     // off, so a second check could never fail and would only look like protection (P2). Test 36 holds
     // the behaviour end to end, through this hook.
     const W = await import('./worktree-reaper.mjs');
-    {
+    // Classifying spawns several git processes per worktree (1.2 s with a dozen of them, on every
+    // session start). A verdict only moves when a worktree HEAD, the trunk or the opt-out moves, so
+    // those make the fingerprint and an unchanged one reuses the last notice. Safe because `reap`
+    // re-classifies before it removes anything.
+    const trunk = W.resolveTrunk(root);
+    const tip = trunk ? spawnSync('git', ['-C', root, 'rev-parse', trunk], { encoding: 'utf8' }).stdout : '';
+    const list = spawnSync('git', ['-C', root, 'worktree', 'list', '--porcelain'], { encoding: 'utf8' }).stdout;
+    const fingerprint = `${W.isCleanupEnabled(root)}\n${trunk}\n${tip}\n${list}`;
+    const cacheFile = join(root, '.rsc', 'worktree-sweep.json');
+    let cached = null;
+    try { cached = JSON.parse(readFileSync(cacheFile, 'utf8')); } catch { /* first run */ }
+    if (cached && cached.fingerprint === fingerprint && typeof cached.text === 'string') {
+      process.stdout.write(cached.text);
+    } else {
+      let text = '';
       const candidates = W.classifyWorktrees(root).filter((c) => c.verdict !== 'skip');
       if (candidates.length) {
-        process.stdout.write(`
+        text = `
 ===== rsc worktree cleanup =====
 ${candidates.length} worktree(s) hold work that is already in the trunk:
 ${candidates.map((c) => W.summarize(c, root)).join('\n')}
@@ -234,8 +262,13 @@ ACTION: offer to retire them in ONE line and wait for a yes. On a yes run:
 A yes in bulk covers only the safe ones; anything marked \`ask\` is confirmed on its own.
 A no holds for this session. Permanent off: .rsc/.no-worktree-cleanup
 ================================
-`);
+`;
       }
+      process.stdout.write(text);
+      try {
+        mkdirSync(join(root, '.rsc'), { recursive: true });
+        writeFileSync(cacheFile, JSON.stringify({ fingerprint, text }) + '\n');
+      } catch { /* unwritable → scan again next session */ }
     }
   } catch { /* reaper missing or git unhappy → say nothing; this is never worth breaking startup for */ }
 }
@@ -257,14 +290,7 @@ function isNewer(a, b) {
 if (!process.env.RSC_NO_UPDATE_CHECK) {
   try {
     const installed = readFileSync(join(root, '.rsc', '.version'), 'utf8').trim();
-    let latest = process.env.RSC_LATEST;
-    if (!latest) {
-      const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 1500);
-      const res = await fetch('https://registry.npmjs.org/@damiangilgonzalez%2fharness/latest', { signal: ctrl.signal });
-      clearTimeout(timer);
-      latest = (await res.json()).version;
-    }
+    const latest = await latestVersion;
     if (installed && latest && isNewer(latest, installed)) {
       process.stdout.write(`
 ===== rsc update available =====
