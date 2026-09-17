@@ -123,6 +123,12 @@ test('retention pruning, bounded rendering and compaction hints are deterministi
     settings: { editThreshold: 3, contextBytes: 180 }, now: '2026-09-02T00:01:00.000Z',
   });
   assert.equal(current.compactionHint, true);
+  const turn = memory.capture({ cwd, sessionId: 'new', target: 'cursor', event: 'stop', settings: { editThreshold: 3 }, now: '2026-09-02T00:01:10.000Z' });
+  assert.equal(turn.compactionHint, false, 'turn end never re-emits the hint');
+  const next = memory.capture({ cwd, sessionId: 'new', target: 'cursor', event: 'edit', editDelta: 1, settings: { editThreshold: 3 }, now: '2026-09-02T00:01:20.000Z' });
+  assert.equal(next.compactionHint, false, 'hint fires once per threshold crossed');
+  const compacted = memory.capture({ cwd, sessionId: 'new', target: 'cursor', event: 'compact', settings: { editThreshold: 3 }, now: '2026-09-02T00:01:30.000Z' });
+  assert.equal(compacted.record.editCount, 0, 'compaction resets the edit budget');
   const root = memory.chooseMemoryRoot(cwd).root;
   assert.deepEqual(readdirSync(join(root, 'sessions')).filter((name) => name.endsWith('.json')), ['cursor--new.json']);
   const resumed = memory.resume({ cwd, settings: { contextBytes: 180 }, now: '2026-09-02T00:02:00.000Z' });

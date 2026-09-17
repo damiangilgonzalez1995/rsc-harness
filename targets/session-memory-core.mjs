@@ -313,7 +313,13 @@ export function capture(input = {}) {
   if (input.event === 'start' && !existing) return { record: null, path: null, notice: null, compactionHint: false };
 
   const repo = snapshot(cwd, anchor.baselineHead);
-  const editCount = Math.max(0, (existing?.editCount || 0) + (finiteOrNull(input.editDelta, true) || 0));
+  // Compaction closes a context window, so the edit budget starts again from zero.
+  const previousEdits = input.event === 'compact' ? 0 : (existing?.editCount || 0);
+  const editCount = Math.max(0, previousEdits + (finiteOrNull(input.editDelta, true) || 0));
+  // Hint once per threshold crossed, and only on the edit that crosses it: re-emitting on
+  // every later event (Stop in particular) wakes the model again and loops.
+  const crossedThreshold = editCount > previousEdits
+    && Math.floor(editCount / config.editThreshold) > Math.floor(previousEdits / config.editThreshold);
   const baselineFiles = new Set(anchor.baselineFiles || []);
   const newDirtyPath = repo.files.some((path) => !baselineFiles.has(path));
   const baselineFingerprints = anchor.baselineFingerprints || {};
@@ -356,7 +362,7 @@ export function capture(input = {}) {
     record,
     path: recordPath,
     notice: consumeNotice(store),
-    compactionHint: Boolean(config.compactionHint && editCount >= config.editThreshold),
+    compactionHint: Boolean(config.compactionHint && crossedThreshold),
   };
 }
 
