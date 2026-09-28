@@ -3,6 +3,7 @@ name: write-adr
 description: "Use when you need to record an architecture decision, open an ADR, amend or replace an existing one, or when a change is hard to revert and someone will ask in six months why it's done this way (structural refactor, major dependency, API contract, data partitioning, module boundaries)."
 tags: ["adr", "architecture", "documentation"]
 profiles: [core, ui, full]
+origin: damiangil
 ---
 
 # Write an ADR

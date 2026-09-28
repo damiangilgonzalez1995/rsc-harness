@@ -3,6 +3,7 @@ name: mejor-redaccion
 description: "Use when writing or reviewing a product's copy — voice and tone, button labels, a flow's vocabulary, link text, capitalization, settings, error messages, empty states, and placeholders."
 tags: ["ux-writing", "microcopy", "content-design"]
 profiles: [ui, full]
+origin: damiangil
 ---
 
 # Redaccion de interfaz

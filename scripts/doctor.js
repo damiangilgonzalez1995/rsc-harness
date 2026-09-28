@@ -1,10 +1,12 @@
-import { existsSync, readFileSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { hooksDir, hooksDirIsOurs } from '../targets/worktree-reaper.mjs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { join, dirname } from 'node:path';
 import { homedir } from 'node:os';
 import { targetPaths, TARGET_IDS } from '../targets/index.js';
 import { readState } from './lib/state.js';
 import { divergence } from './lib/divergence.js';
 import { loadManifest } from './lib/manifest.js';
+import { readManifest as readProjectManifest } from './lib/manifest-file.js';
 import { listBackups } from './lib/backups.js';
 import { WORKFLOW_GATE_TEXT } from '../targets/hook-once.mjs';
 import { isEnabled, checkSello, readSello, countFindings, readEffectiveConfig, validateRiskConfig } from '../targets/sello.mjs';
@@ -15,6 +17,17 @@ import { resolveCommands, commandPath, targetHasCommands } from '../targets/comm
 import { inspectMemoryWiring } from '../targets/memory.js';
 import { metricsSummary } from '../targets/session-memory-core.mjs';
 import { agentPath } from '../targets/agents.js';
+import { projectOptOuts } from '../targets/opt-outs.js';
+import { versionReport } from './lib/versions.js';
+
+// Gates the committed manifest says the team disarmed, still armed here. Read through the same
+// partition the installer uses, so a machine-only switch somebody's older rsc wrote into the
+// manifest (`harness`, `context7`) is not reported as something to converge on.
+function optOutsNotApplied(root) {
+  let manifest = null;
+  try { manifest = readProjectManifest(root); } catch { return []; }
+  return projectOptOuts(manifest?.optOuts).filter((n) => !existsSync(join(root, '.rsc', `.no-${n}`)));
+}
 
 // The sello's health, surfaced where the user already looks (spec: non-blocking
 // findings live in the project and are SUMMARIZED here, never nagged about).
@@ -79,6 +92,75 @@ export function missingHookScripts({ target, home = homedir(), cwd = process.cwd
   return [...seen];
 }
 
+// Is the post-merge trigger actually armed in this clone? Three states, because they need three
+// different answers: armed, absent (repair it), or someone else's (leave it — chaining is our job
+// at install time, and overwriting a husky hook to fix a convenience would be indefensible).
+function worktreeCleanupStatus(root) {
+  if (!existsSync(join(root, '.git'))) return { state: 'not-a-repo' };
+  if (existsSync(join(root, '.rsc', '.no-worktree-cleanup'))) return { state: 'off-by-choice' };
+  // Ask git where hooks live instead of assuming `.git/hooks`. Until 2.0.1 this read the assumed
+  // path, so on a repo with its own `core.hooksPath` it found our inert file there and answered
+  // `armed` about a hook git would never run — the check confirming the exact failure it exists to
+  // catch. `unreachable` is its own state on purpose: `repair` re-runs the same install, so
+  // recommending it here would send the reader round the same loop (P6 wants a way out, not a ring).
+  const dir = hooksDir(root);
+  if (!hooksDirIsOurs(root, dir)) {
+    return {
+      state: 'unreachable',
+      action: `git reads hooks from ${dir}, which belongs to this repo or to another tool (husky, lefthook, a committed dispatcher). rsc will not write there. To arm the cleanup, add \`node "$(git rev-parse --show-toplevel)/.rsc/worktree-reaper.mjs" "$(git rev-parse --show-toplevel)" auto\` to your own post-merge hook.`,
+    };
+  }
+  const hook = join(dir, 'post-merge');
+  if (!existsSync(hook)) {
+    return { state: 'absent', action: 'Run `npx @damiangilgonzalez/harness repair` to arm the post-merge cleanup in this clone.' };
+  }
+  try {
+    const armed = readFileSync(hook, 'utf8').includes('rsc-managed worktree cleanup');
+    return armed
+      ? { state: 'armed' }
+      : { state: 'foreign', action: 'A post-merge hook from another tool is in place; `npx @damiangilgonzalez/harness repair` chains ours behind it.' };
+  } catch { return { state: 'unreadable' }; }
+}
+
+// Every skill this catalog ships declares its origin in its own frontmatter: `risco` for the skills
+// inherited from the original catalog, `damiangil` for the ones this fork added. So "is this ours?"
+// is answerable from the file itself, and does not need the list in
+// `.rsc.json` that nobody ever filled: that list is parallel accounting (P3), it has been empty in
+// every project since it was introduced, and `doctor` has been faithfully reporting on the emptiness.
+//
+// Failing towards "the user's" is deliberate. Reading a catalog skill as the user's leaves a file
+// that stops being updated; reading the user's as the catalog's invites something to overwrite it.
+// Only one of those loses work.
+const CATALOG_ORIGINS = new Set(['risco', 'damiangil']);
+
+function ownSkillsIn(paths, declared = []) {
+  const present = [];
+  let dir;
+  try { dir = dirname(paths.skillDir('_')); } catch { return { present, missing: [], declared }; }
+  let entries = [];
+  try { entries = readdirSync(dir, { withFileTypes: true }); } catch { /* nothing installed here yet */ }
+  for (const entry of entries) {
+    // Symlinks included, deliberately. rsc installs a catalog skill AS a symlink into `.rsc/skills/`
+    // and a hand-written one is a real directory, so the entry type is itself a provenance signal —
+    // and skipping symlinks would have made the frontmatter check below dead code that still looked
+    // like it worked. It did: a mutant that removed the check passed every test until this line was
+    // fixed. Both signals are read now, and the frontmatter is the one that decides.
+    if (!entry.isDirectory() && !entry.isSymbolicLink()) continue;
+    const md = join(dir, entry.name, 'SKILL.md');
+    if (!existsSync(md)) continue;
+    let origin = null;
+    try {
+      const head = readFileSync(md, 'utf8').slice(0, 2048);
+      origin = (/^origin:\s*(\S+)\s*$/m.exec(head) || [])[1] || null;
+    } catch { continue; }
+    if (!CATALOG_ORIGINS.has(origin)) present.push(entry.name);
+  }
+  // Declared-but-absent stays meaningful for anyone who did fill the list by hand, and it is the
+  // only half a derivation cannot cover: a file that is gone cannot describe itself.
+  const missing = declared.filter((name) => !existsSync(paths.skillDir(name)));
+  return { present: present.sort(), missing, declared };
+}
+
 export function doctor({ target, home, cwd }) {
   const root = cwd || process.cwd();
   const paths = targetPaths(target, home, cwd);
@@ -134,6 +216,11 @@ export function doctor({ target, home, cwd }) {
       latest: backups[0]?.id || null,
     },
     contextBudget: contextBudget({ target, home, cwd }),
+    // The worktree cleanup's trigger is a git hook, and `.git/hooks/` is not cloned. So a repo can
+    // carry a perfectly healthy harness and still never clean up, on every machine but the one that
+    // ran the installer. Reported, never nagged about: `repair` is what puts it back (P6).
+    worktreeCleanup: worktreeCleanupStatus(root),
+    ownSkills: ownSkillsIn(paths, readProjectManifest(root)?.ownSkills || []),
     sello: selloStatus(root),
     // Whether this harness has a design identity at all. `design` has always DECLARED that it
     // stops without one; until lib/design-identity.js nothing checked it (P2). Reported here,
@@ -148,6 +235,14 @@ export function doctor({ target, home, cwd }) {
     gitmojiGuard: state.policy?.gitmojiGuard === false
       ? 'deferred'
       : existsSync(join(root, '.rsc', '.no-gitmoji')) ? 'opted-out' : 'armed',
+    // The reverse of the same honesty, one level up: a gate the TEAM disarmed in the committed
+    // manifest and that is still armed on this machine. Nothing is applied from here — a pull
+    // never rewrites somebody's machine — so the only thing owed is saying it out loud, and
+    // saying it every run, because a notice offered once per session is a notice missed.
+    optOutsNotApplied: optOutsNotApplied(root),
+    // First thing to read on any bug report: a project behind its CLI runs old hooks, and "it is
+    // already fixed" only helps once the fix is in `.rsc/`.
+    versions: versionReport(root),
     // Counted, never interpreted — by spec, the gap log's reader is the user.
     automationGaps: countGaps(root),
     memory,
@@ -383,6 +478,18 @@ export function contextBudget({ target, home = homedir(), cwd = process.cwd() } 
     });
   }
   const drift = divergence({ cwd, target, home });
+  // A separate finding, not a fourth clause of the one below: that one says this checkout
+  // is behind its own team, and the fix is to align with the declaration. This one says the
+  // declaration itself is behind the catalog, so aligning with it changes nothing. Folded
+  // together, the report would name the right skill and the wrong reason.
+  if (drift.floorMissing?.length) {
+    findings.push({
+      id: 'floor-missing',
+      severity: 'high',
+      summary: `.rsc.json predates a skill the catalog now requires: ${drift.floorMissing.join(', ')}. The always-on body routes work to it, so that route currently answers nowhere.`,
+      action: 'Run `npx @damiangilgonzalez/harness sync` — it adds what the catalog requires and touches nothing else.',
+    });
+  }
   if (drift.missing.length || drift.extra.length || drift.ownMissing.length) {
     // The day-two case: a teammate changed the harness and this checkout has not caught
     // up. Reported always, even after someone declines to align — the divergence does not

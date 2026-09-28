@@ -25,7 +25,7 @@ const run = (cwd, args, input) => spawnSync(process.execPath, [CLI, ...args], { 
 // So answers have to be written progressively, each only after the prompt it answers appears.
 function driveWizard(cwd, steps) {
   return new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, [CLI], { cwd });
+    const child = spawn(process.execPath, [CLI], { cwd, env: { ...process.env, RSC_FORCE_WIZARD: '1' } });
     let out = '';
     let err = '';
     let next = 0;
@@ -69,10 +69,11 @@ test('re-running the wizard and choosing "Base install" does not wire the code-h
     assert.ok(existsSync(join(cwd, '.claude', 'skills', gateSkill)), `fixture: onboarding must have installed ${gateSkill}`);
   }
 
-  // Re-enter the wizard (no subcommand) and choose option 1 ("Base install"), accepting the
-  // detected/default assistant and confirming the install — the exact path from the bug report.
+  // Re-enter the wizard (no subcommand) and choose "Base install", accepting the detected/default
+  // assistant and confirming the install — the exact path from the bug report. It is option 2:
+  // a project that already declares a harness is offered "Update this project" first.
   const wizard = await driveWizard(cwd, [
-    { expect: 'What do you want to do?', answer: '1\n' },
+    { expect: 'What do you want to do?', answer: '2\n' },
     { expect: 'Comma-separated numbers', answer: '\n' },
     { expect: 'Install it?', answer: 'yes\n' },
   ]);

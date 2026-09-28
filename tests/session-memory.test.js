@@ -11,10 +11,10 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 let memory = {};
 try { memory = await import('../targets/session-memory-core.mjs'); } catch { /* RED: core absent */ }
 
-test('session-memory-adapter: el guardia de entrypoint usa pathToFileURL', () => {
+test('session-memory-adapter: el guardia de entrypoint compara rutas reales, no cadenas', () => {
   const src = readFileSync(join(ROOT, 'targets/session-memory-adapter.mjs'), 'utf8');
-  assert.match(src, /pathToFileURL\(process\.argv\[1\]\)\.href/,
-    'compara URLs con pathToFileURL; `file://${process.argv[1]}` nunca coincide en Windows');
+  assert.match(src, /realpathSync\(self\) === realpathSync\(invoked\)/,
+    'compara rutas resueltas; `file://${process.argv[1]}` nunca coincide en Windows');
   assert.doesNotMatch(src, /file:\/\/\$\{process\.argv\[1\]\}/);
 });
 

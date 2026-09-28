@@ -4,6 +4,7 @@ description: "Turns a decision you cannot answer alone into a questionnaire for 
 tags: ["planning", "questionnaire", "decision-making"]
 disable-model-invocation: true
 profiles: [core, ui, full]
+origin: damiangil
 ---
 
 Convierte algo que el usuario no puede responder solo en un **cuestionario**: un documento Markdown que entrega a una persona para rellenarlo de forma asíncrona, o para completarlo juntos en una reunión. El destinatario tiene un conocimiento que al usuario le falta; el cuestionario se lo extrae.

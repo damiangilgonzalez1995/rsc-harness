@@ -4,6 +4,7 @@ description: "Teaches the user a new skill or concept within this workspace. Use
 tags: ["teaching", "learning", "mentoring"]
 disable-model-invocation: true
 profiles: [minimal, core, ui, full]
+origin: damiangil
 ---
 
 El usuario te ha pedido que le enseñes algo. Es una petición con estado: pretende aprender el tema a lo largo de varias sesiones.

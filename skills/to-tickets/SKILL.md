@@ -4,6 +4,7 @@ description: "Breaks down a plan, a spec, or the current conversation into a set
 tags: ["tickets", "planning", "issue-tracker"]
 disable-model-invocation: true
 profiles: [core, ui, full]
+origin: damiangil
 ---
 
 

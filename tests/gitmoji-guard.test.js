@@ -16,10 +16,10 @@ import { GITMOJIS, EMOJI_SET, hasGitmoji, commitMessages, denyMessage } from '..
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-test('gitmoji-guard: el guardia de entrypoint usa pathToFileURL', () => {
+test('gitmoji-guard: el guardia de entrypoint compara rutas reales, no cadenas', () => {
   const src = readFileSync(join(ROOT, 'targets/gitmoji-guard.mjs'), 'utf8');
-  assert.match(src, /pathToFileURL\(process\.argv\[1\]\)\.href/,
-    'compara URLs con pathToFileURL; `file://${process.argv[1]}` nunca coincide en Windows');
+  assert.match(src, /realpathSync\(self\) === realpathSync\(invoked\)/,
+    'compara rutas resueltas; `file://${process.argv[1]}` nunca coincide en Windows');
   assert.doesNotMatch(src, /file:\/\/\$\{process\.argv\[1\]\}/);
 });
 

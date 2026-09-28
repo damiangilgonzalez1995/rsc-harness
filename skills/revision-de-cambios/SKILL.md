@@ -4,6 +4,7 @@ description: "Reviews a CHANGE (uncommitted work, a branch, a commit range, or a
 tags: ["code-review", "diff-review", "regression"]
 disable-model-invocation: true
 profiles: [core, ui, full]
+origin: damiangil
 ---
 
 # Revision de cambios

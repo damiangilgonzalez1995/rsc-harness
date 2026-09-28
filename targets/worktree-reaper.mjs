@@ -16,7 +16,7 @@
 //
 // Imported by `.rsc/session-start.mjs` (the sweep) and by `scripts/rsc.js` (`rsc worktrees`), so the
 // rule exists once and both entry points cannot drift apart. Same shape as `sello.mjs`.
-import { existsSync, realpathSync } from 'node:fs';
+import { existsSync, realpathSync, mkdirSync, readFileSync, writeFileSync, renameSync, chmodSync } from 'node:fs';
 import { join, resolve, dirname, basename, relative, sep } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
@@ -54,8 +54,20 @@ export const REGENERABLE_FILES = ['.DS_Store', 'Thumbs.db', '.coverage'];
 // Trunk candidates, most authoritative first. The remote tip beats a local branch that may be stale.
 const TRUNKS = ['origin/main', 'main', 'origin/master', 'master'];
 
-// Branch shapes `worktrees` imposes on the isolation it creates.
-const RSC_BRANCH = /^(?:feat|feature)\//;
+// Branch shapes the catalog's isolation produces.
+//
+// `worktrees` documents `feat/<slug>`, and while SDD was the only lane that was the whole set:
+// every isolated branch was a feature. 2.0.0 made FTD the default and FTD names a branch for what
+// it is — a fix is not a feature — so `fix/`, `docs/` and `chore/` fell outside, scored as half a
+// signal, and were never swept, while `ftd` promises in writing that the cleanup is automatic once
+// the branch lands. Found by using it: the two fixes released on 2026-09-18 both had to be removed
+// by hand. These are the Conventional Commits types, which is what the commit guard already
+// enforces on every commit in a project rsc governs — so the branch shape and the commit shape now
+// come from the same vocabulary instead of two that drifted apart.
+//
+// Widening one signal, never the conjunction: a branch outside this vocabulary is still `ambiguous`
+// wherever it sits, and one of these in a directory rsc does not own is still `ambiguous` too.
+const RSC_BRANCH = /^(?:feat|feature|fix|docs|chore|refactor|test|perf|ci|build|style)\//;
 
 function git(cwd, args) {
   // 64 MiB, because node's 1 MiB default kills git mid-write on any worktree with a few thousand
@@ -183,13 +195,23 @@ export function provenanceOf(root, wt) {
  * The reflog is git's own record of the ref moving; when it cannot answer, the answer is no, because
  * accumulating a stale worktree costs a directory and the other mistake costs someone's afternoon.
  */
-export function hasLandedWork(root, wt, trunk) {
-  const tip = git(root, ['rev-parse', `${trunk}^{commit}`]);
-  if (tip.ok && wt.head && tip.out === wt.head) return false;
+export function hasLandedWork(root, wt) {
   if (!wt.branch) return false;
+  // Ask the reflog FIRST. It is the only record that distinguishes the two states that look
+  // identical from the outside: a worktree sitting at the trunk because it was just created there,
+  // and one sitting at the trunk because its work landed by fast-forward and took the trunk with
+  // it. Until 2.0.3 the tip comparison below ran first and answered "nothing landed" for both, so
+  // every branch landed the ordinary FTD way — commit, push, fast-forward — was kept for ever.
+  // Found on 2026-09-18 watching this repo refuse to sweep its own branch for the wrong reason.
   const log = git(root, ['reflog', 'show', '--format=%gs', wt.branch]);
-  if (!log.ok || !log.out) return false;
-  return log.out.split('\n').some((line) => line.startsWith('commit'));
+  if (log.ok && log.out) return log.out.split('\n').some((line) => line.startsWith('commit'));
+  // No reflog to ask — a fresh clone, or a branch whose reflog has expired. There is then no
+  // evidence this branch ever carried anything, and this whole module fails towards keeping the
+  // directory: unproven is not proven. (The tip comparison that used to sit here is deliberately
+  // gone rather than kept as a fallback: both of its outcomes are this same answer, and a line
+  // that cannot change the result while reading like a guard is the kind of decoration that made
+  // the bug above hard to see.)
+  return false;
 }
 
 export function integrationOf(root, wt, trunk) {
@@ -283,7 +305,7 @@ export function classifyWorktrees(root) {
 
       const integration = integrationOf(root, wt, trunk);
       if (integration !== 'integrated') return { ...base, reasons: [integration] };
-      if (!hasLandedWork(root, wt, trunk)) return { ...base, reasons: ['nothing-landed'] };
+      if (!hasLandedWork(root, wt)) return { ...base, reasons: ['nothing-landed'] };
 
       const { dirty, outside, readable } = contentOutsideHistory(wt.path);
       if (!readable) return { ...base, reasons: ['unreadable'] };
@@ -373,6 +395,144 @@ export function reapWorktree(root, targetPath, { confirmed = false } = {}) {
  * README.md", judged that a nuisance, confirmed, and the confirmation landed on a `production.env`
  * the message never mentioned. The module knew. It just did not say.
  */
+/**
+ * The unattended half: remove what classification already called `safe`, and nothing else.
+ *
+ * `sweep` offers and never acts, on purpose — there is a human reading it. This runs from a git hook
+ * the moment work lands, where there is nobody to ask, so the two verdicts that would have become a
+ * question become a refusal instead. It adds NO judgement of its own: the judgement is the dangerous
+ * part, it is written above, and it is already tested in both directions.
+ *
+ * Two properties its caller depends on, both load-bearing:
+ *  - it never throws. The caller is git, mid-merge. A throw here would turn a cleanup into a failed
+ *    merge, which is a far worse bug than the one this fixes.
+ *  - it is silent when there is nothing to do, so the common merge prints nothing.
+ */
+export function autoReap(root) {
+  const result = { reaped: [], skipped: [], disabled: false };
+  try {
+    if (!isCleanupEnabled(root)) {
+      result.disabled = true;
+      return result;
+    }
+    for (const candidate of classifyWorktrees(root)) {
+      // Not the protection, and it must not be mistaken for one: `reapWorktree` refuses an `ask`
+      // on its own, and that refusal is the gate — mutation-tested by 18b and 23. Verified here on
+      // 2026-09-17 by removing this line: every test still passed. It stays because skipping early
+      // avoids re-classifying the whole repository once per candidate, and because the recorded
+      // reason is then the verdict itself rather than a message written for a human to read.
+      if (candidate.verdict !== 'safe') {
+        result.skipped.push({ path: candidate.path, reason: candidate.reasons.join(', ') || candidate.verdict });
+        continue;
+      }
+      const out = reapWorktree(root, candidate.path);
+      if (out.removed) result.reaped.push(candidate.path);
+      else result.skipped.push({ path: candidate.path, reason: out.reason });
+    }
+  } catch (err) {
+    // Swallowed deliberately, and recorded rather than discarded: the merge must survive whatever
+    // went wrong in here, but a silent failure that leaves no trace is how this rots unnoticed.
+    result.skipped.push({ path: root, reason: `cleanup could not run: ${err.message}` });
+  }
+  return result;
+}
+
+export const HOOK_MARKER = '# rsc-managed worktree cleanup (post-merge) v1';
+
+// Every branch exits 0. That is the whole contract with git: this hook runs in the middle of
+// somebody's merge, and a cleanup that can turn a good merge into a failed one is a worse bug than
+// the accumulation it exists to fix. Missing node, missing reaper, broken reaper, unreadable repo —
+// all of them are "do nothing", never "fail".
+const HOOK_BODY = `#!/bin/sh
+${'# rsc-managed worktree cleanup (post-merge) v1'}
+# Retires worktrees whose work has just landed. Installed by rsc; safe to delete.
+# Turn it off for this project with: .rsc/.no-worktree-cleanup
+hook_dir=$(dirname "$0")
+if [ -x "$hook_dir/post-merge.rsc-local" ]; then
+  "$hook_dir/post-merge.rsc-local" "$@" || true
+fi
+root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+[ -f "$root/.rsc/worktree-reaper.mjs" ] || exit 0
+command -v node >/dev/null 2>&1 || exit 0
+node "$root/.rsc/worktree-reaper.mjs" "$root" auto 2>/dev/null || true
+exit 0
+`;
+
+/**
+ * Where git will ACTUALLY look for hooks, asked of git rather than assumed.
+ *
+ * The assumption was `<root>/.git/hooks`, and it is wrong in three ordinary situations at once:
+ * a repo that sets `core.hooksPath` (husky v9 writes `.husky/_`, lefthook and committed
+ * `.githooks/` dispatchers do the same), a linked worktree where `.git` is a FILE and the mkdir
+ * raised ENOTDIR, and a submodule. Reported from a user's repo on 2026-09-18 against 2.0.1: rsc
+ * wrote the hook where git does not look, `doctor` read the same wrong path back, and the report
+ * said `armed` about something that could never run. Verified there and here that a single
+ * `rev-parse` answers all three.
+ *
+ * `--path-format=absolute` needs git 2.31 (Mar 2021). Older git gets the old path — which is
+ * correct whenever `core.hooksPath` is unset, i.e. the case it was always right about.
+ */
+export function hooksDir(root) {
+  const r = git(root, ['rev-parse', '--path-format=absolute', '--git-path', 'hooks']);
+  if (r.ok && r.out) return r.out;
+  return join(real(root), '.git', 'hooks');
+}
+
+// Whether that directory is ours to write in. Inside the repository's own git dir: yes, it is
+// private plumbing that is never cloned and never committed. Anywhere else it belongs to the user
+// or to another tool — a committed `.githooks/` is their source tree (writing there would put rsc
+// in their diff, and moving an existing hook aside would rename a TRACKED file), and `.husky/_` is
+// regenerated by husky, so anything we left there disappears on their next install. Report it and
+// let the person decide; that is P4, and it is the same reasoning the comment on this function has
+// claimed since the hook shipped, finally applied instead of only stated.
+export function hooksDirIsOurs(root, dir) {
+  const r = git(root, ['rev-parse', '--path-format=absolute', '--git-common-dir']);
+  if (!r.ok || !r.out) return false;
+  const gitDir = real(r.out);
+  const target = real(dir);
+  return target === gitDir || target.startsWith(gitDir + sep);
+}
+
+/**
+ * Install the trigger. The judgement has existed and been tested for a while; what never existed was
+ * something that runs it at the moment work lands. `post-merge` is that moment, and it covers both
+ * of ship's landing paths — a local `merge --no-ff` and the `pull --ff-only` after a forge merge.
+ *
+ * A hook lives in `.git/hooks/`, which is not cloned. So this is called on install AND on repair,
+ * and `doctor` reports its absence: a trigger nobody re-installs is a trigger that quietly stops
+ * existing on every machine but the one that ran the installer.
+ *
+ * Somebody else's post-merge is moved aside and chained, never overwritten. Husky and lefthook put
+ * real work in there, and eating it to install a convenience would be indefensible.
+ */
+export function installMergeHook(root) {
+  try {
+    const dir = hooksDir(root);
+    if (!hooksDirIsOurs(root, dir)) {
+      return { installed: false, state: 'unreachable', reason: `git reads hooks from ${dir}, which belongs to this repository or to another tool — rsc will not write there.` };
+    }
+    const hook = join(dir, 'post-merge');
+    mkdirSync(dir, { recursive: true });
+    if (existsSync(hook)) {
+      const current = readFileSync(hook, 'utf8');
+      if (current.includes(HOOK_MARKER)) {
+        // Already ours. Rewrite so an older body converges, but never chain ourselves behind
+        // ourselves — repair runs this repeatedly and stacking would run the cleanup N times.
+        writeFileSync(hook, HOOK_BODY);
+        chmodSync(hook, 0o755);
+        return { installed: true, chained: existsSync(join(dir, 'post-merge.rsc-local')) };
+      }
+      renameSync(hook, join(dir, 'post-merge.rsc-local'));
+      chmodSync(join(dir, 'post-merge.rsc-local'), 0o755);
+    }
+    writeFileSync(hook, HOOK_BODY);
+    chmodSync(hook, 0o755);
+    return { installed: true, chained: existsSync(join(dir, 'post-merge.rsc-local')) };
+  } catch (err) {
+    return { installed: false, state: 'failed', reason: err.message };
+  }
+}
+
 export function refusal(candidate) {
   const d = candidate.details || {};
   const parts = (candidate.reasons || []).map((reason) => {
@@ -449,7 +609,11 @@ export function summarize(candidate, root) {
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const root = resolve(process.argv[2] || process.cwd());
   const candidates = classifyWorktrees(root).filter((c) => c.verdict !== 'skip');
-  if (process.argv[3] === 'reap') {
+  if (process.argv[3] === 'auto') {
+    // The unattended entry point, called by the post-merge hook. Prints only what it actually did.
+    const out = autoReap(root);
+    for (const p of out.reaped) process.stdout.write(`rsc: retired worktree ${p}\n`);
+  } else if (process.argv[3] === 'reap') {
     const one = process.argv[4];
     const targets = one ? [resolve(one)] : candidates.filter((c) => c.verdict === 'safe').map((c) => c.path);
     for (const t of targets) {
