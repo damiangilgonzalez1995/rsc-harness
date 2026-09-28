@@ -4,6 +4,7 @@ description: "Plans a huge chunk of work — more than fits in a single agent se
 tags: ["planning", "issue-tracker", "large-scale-work"]
 disable-model-invocation: true
 profiles: [core, ui, full]
+origin: damiangil
 ---
 
 Ha llegado una idea difusa — demasiado grande para una sola sesión de agente, y envuelta en niebla: todavía no se ve el camino de aquí al **destino**. El wayfinding trata de encontrar ese camino, no de embestir contra el destino. Esta skill traza el camino como un **mapa compartido** en el issue tracker del repo, y luego trabaja sus **tickets de decisión** — preguntas cuya resolución es una decisión, no porciones de una construcción a ejecutar — de uno en uno hasta que la ruta está clara.

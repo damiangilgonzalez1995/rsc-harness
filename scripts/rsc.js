@@ -16,6 +16,7 @@ import { runUpgrade } from './lib/upgrade.js';
 import { diagnose, repair } from './lib/repair.js';
 import { DEFAULT_SKILL_FLOOR, withDefaultSkillFloor } from './lib/default-skill-floor.js';
 import { readManifest, writeManifest } from './lib/manifest-file.js';
+import { versionReport } from './lib/versions.js';
 import {
   normalizeOnboarding, missingOnboardingFields, scanProject,
   buildOnboardingPlan, decodeGoal, encodeGoal, identifyPlan, recommendDeferredComponents,
@@ -23,6 +24,20 @@ import {
 import { applyAcceptedOnboarding, verifyOnboarding, ensureHarnessSkeleton, harnessReadiness } from './lib/onboarding-apply.js';
 
 const rawArgv = process.argv.slice(2);
+
+// `rsc --version` — answered before anything else runs, offline, and in a shape a bug report can
+// paste. Two numbers because there are two things: the CLI you just ran, and the harness this
+// project was built with. When they differ the project is running old hooks, and a fix that was
+// published may simply not be here yet.
+if (['--version', '-v', 'version'].includes(rawArgv[0])) {
+  const v = versionReport(process.cwd());
+  const lines = [`rsc ${v.cli}`];
+  if (v.installed) lines.push(`installed in this project: ${v.installed}${v.behind ? ' (behind)' : ''}`);
+  else lines.push('installed in this project: none');
+  if (v.behind) lines.push('This project runs older hooks than this CLI. To catch up, run here:', '  npx @damiangilgonzalez/harness@latest');
+  process.stdout.write(`${lines.join('\n')}\n`);
+  process.exit(0);
+}
 const GLOBAL_VALUE_FLAGS = new Set([
   '--target', '--technical-level', '--accompaniment', '--project-kind', '--goal', '--goal-base64', '--software-scope', '--accept-plan',
 ]);
@@ -486,7 +501,18 @@ function printContextBudget(b) {
   say('════════════════════════════════════════════════\n');
 }
 
-async function wizard(flagTargets) {
+async function syncDeclared(targets, dry = false) {
+  for (const t of targets) {
+    const result = await syncInstalled({ target: t, dryRun: dry });
+    const verb = dry ? 'Would sync' : 'Synced';
+    say(`${verb} ${t}: ${result.synced.length ? result.synced.join(', ') : '(nothing to sync)'}`);
+    if (dry && result.paths?.length) {
+      for (const p of result.paths) say(`  ${p}`);
+    }
+  }
+}
+
+async function wizard(flagTargets, declaredTargets = []) {
   const m = loadManifest();
   await banner(m.counts.skills);
   say('  the skill catalog for your assistant (Claude Code · Codex · Cursor · Gemini · Antigravity)\n');
@@ -496,12 +522,16 @@ async function wizard(flagTargets) {
   const baseIds = skillsForProfile(m, 'minimal');
   // Navigable loop: esc / "← Back" / "no" all return here instead of quitting.
   for (;;) {
+    const declared = readManifest();
     const choice = await select('What do you want to do?', [
+      // First, because it is what someone who already has a harness came here for nine times in ten.
+      ...(declared ? [{ key: 'update', label: `Update this project — keeps its ${declared.skills.length} skills, refreshes hooks and content` }] : []),
       { key: 'base', label: `Base install — the essentials (${baseIds.length} skills)` },
       { key: 'workflow', label: 'Base + tu flujo de trabajo — grill-with-docs → to-spec → plan o tickets' },
       { key: 'manual', label: 'Pick skills by hand, by area' },
     ]);
     if (choice === null) { say('\nOK — nothing installed. Anytime: npx @damiangilgonzalez/harness'); return; }
+    if (choice === 'update') return syncDeclared(declaredTargets);
 
     let ids;
     if (choice === 'base') ids = baseIds;
@@ -560,6 +590,27 @@ async function guardCollisions(targets, ids) {
   return confirm('Replace them anyway?');
 }
 
+// The governed list that `sync` reads lives INSIDE the onboarding receipt, not in `manifest.skills`.
+// Updating one without the other is what deleted users' skills: `add` installed a skill and recorded
+// it in `manifest.skills`, `sync` then read a governed list that predated the install, and pruned
+// everything absent from it — recursively. Reported by a user, reproduced 2026-09-17: nine declared
+// skills against eight governed, visible in the manifest before sync was even run.
+//
+// So the two travel together, always. Any command that changes what is installed carries both, and
+// `applyInstall` persists the receipt rather than conserving the stale one.
+function governedBy(receipt, skills) {
+  // The receipt is hash-checked against the plan the user accepted, so its policy is NOT a place to
+  // record what happened afterwards: rewriting `plan.policy.skills` made every install report "the
+  // receipt does not match its accepted plan id", which is the integrity check doing its job.
+  //
+  // An earlier fix for the reported data loss did exactly that, and it was wrong — the right place
+  // was never `add`, it was `sync`, which treated the accepted plan as the only declaration and
+  // pruned everything absent from it. The policy still travels for hooks and agents; what must not
+  // travel is a rewritten receipt.
+  if (!receipt) return { policy: undefined, onboarding: undefined };
+  return { policy: { ...receipt.plan.policy, skills }, onboarding: undefined };
+}
+
 async function main() {
   // One resolution for every command, doctor included: `doctor` used to resolve on its
   // own and could report a different assistant than the one just installed into.
@@ -589,7 +640,16 @@ async function main() {
   const target = targets[0];
   switch (cmd) {
     case undefined:
-      return hasDeclaredHarness() ? wizard(f ? targets : null) : runOnboarding(f ? targets : []);
+      if (!hasDeclaredHarness()) return runOnboarding(f ? targets : []);
+      // A project that already has a harness: the bare command means "bring it up to date". It is
+      // what every update notice, the README and our own replies to users tell people to run, with
+      // the promise "that reinstalls and refreshes". It used to open the install wizard instead, and
+      // with no terminal — which is how an agent runs it when it obeys the notice — it did nothing.
+      // Restoring what the project already declared is not a decision, so there is nothing to ask.
+      // RSC_FORCE_WIZARD opens the wizard anyway, answering from piped stdin: that is how its
+      // choices are tested end to end, since a test has no terminal to offer.
+      if (!isInteractive() && !process.env.RSC_FORCE_WIZARD) return syncDeclared(targets);
+      return wizard(f ? targets : null, targets);
     case 'onboard':
       return runOnboarding(f ? targets : []);
     case 'reassess':
@@ -604,8 +664,8 @@ async function main() {
       const currentManifest = readManifest();
       const receipt = currentManifest?.onboarding;
       const maintainedIds = receipt ? [...new Set([...(currentManifest.skills || []), ...(receipt.plan.policy.skills || []), ...ids])].sort() : ids;
-      const policy = receipt ? { ...receipt.plan.policy, skills: maintainedIds } : undefined;
-      for (const t of targets) await applyInstall({ skillIds: maintainedIds, agentIds: selected.agents, target: t, policy });
+      const { policy, onboarding } = governedBy(receipt, maintainedIds);
+      for (const t of targets) await applyInstall({ skillIds: maintainedIds, agentIds: selected.agents, target: t, policy, onboarding });
       markMaintenanceDrift(`add ${requested.join(',')}`);
       say(`✅ Installed for ${targets.join(', ')}: ${requested.join(', ')}`);
       return void say('   ↻ Reload/restart your assistant so the new skill activates.');
@@ -727,18 +787,8 @@ async function main() {
       process.exitCode = 1;
       return;
     }
-    case 'sync': {
-      const dry = argv.includes('--dry-run');
-      for (const t of targets) {
-        const result = await syncInstalled({ target: t, dryRun: dry });
-        const verb = dry ? 'Would sync' : 'Synced';
-        say(`${verb} ${t}: ${result.synced.length ? result.synced.join(', ') : '(nothing to sync)'}`);
-        if (dry && result.paths?.length) {
-          for (const p of result.paths) say(`  ${p}`);
-        }
-      }
-      return;
-    }
+    case 'sync':
+      return syncDeclared(targets, argv.includes('--dry-run'));
     case 'backups': {
       const backups = listBackups();
       if (!backups.length) return void say('(no backups)');

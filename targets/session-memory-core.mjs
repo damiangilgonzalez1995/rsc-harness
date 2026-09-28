@@ -284,6 +284,12 @@ function readRecords(root) {
 
 export function capture(input = {}) {
   const cwd = resolve(input.cwd || process.cwd());
+  // WHERE the journal lives and WHO the session is are two different questions. `cwd` answers the
+  // first — the nearest harness, so a child with no manifest of its own does not scatter journals.
+  // The second has to be asked of git from where the agent actually works: asked from the harness,
+  // every worktree nested under it came back as the harness itself, and a sibling's record then
+  // "matched exactly". See GHSA-8gjp-3r7c-33f4.
+  const here = resolve(input.worktreeCwd || cwd);
   const config = settings(input.settings);
   if (!config.enabled) return { record: null, path: null, notice: null, compactionHint: false };
   const store = chooseMemoryRoot(cwd);
@@ -299,7 +305,7 @@ export function capture(input = {}) {
   const recordPath = join(store.root, 'sessions', `${storageId}.json`);
   let anchor = readJson(anchorPath);
   let existing = readJson(recordPath);
-  const firstSnapshot = snapshot(cwd, null);
+  const firstSnapshot = snapshot(here, null);
   if (!anchor) {
     anchor = {
       sessionId,
@@ -312,10 +318,23 @@ export function capture(input = {}) {
   }
   if (input.event === 'start' && !existing) return { record: null, path: null, notice: null, compactionHint: false };
 
-  const repo = snapshot(cwd, anchor.baselineHead);
+  const repo = snapshot(here, anchor.baselineHead);
+  // Count what CHANGED, not which tool changed it. `editDelta` is +1 per Edit/Write tool event, and
+  // on its own it was blind to everything done through the shell — a heredoc, `sed -i`, a script, a
+  // formatter — which is how automated sessions work. The session that found this had touched dozens
+  // of files and its record said editCount=1, so the compaction hint never reached the long sessions
+  // it exists for.
+  //
+  // `snapshot` already fingerprints every modified file on every event. Comparing those fingerprints
+  // with the previous event's counts a change from any source. `max`, not `+`: an Edit that changed a
+  // file shows up in BOTH signals, and must count once.
+  const previousFingerprints = anchor.lastFingerprints || anchor.baselineFingerprints || {};
+  const observed = Object.entries(repo.fingerprints || {})
+    .filter(([path, fingerprint]) => fingerprint && previousFingerprints[path] !== fingerprint).length;
+  const editDelta = Math.max(finiteOrNull(input.editDelta, true) || 0, observed);
   // Compaction closes a context window, so the edit budget starts again from zero.
   const previousEdits = input.event === 'compact' ? 0 : (existing?.editCount || 0);
-  const editCount = Math.max(0, previousEdits + (finiteOrNull(input.editDelta, true) || 0));
+  const editCount = Math.max(0, previousEdits + editDelta);
   // Hint once per threshold crossed, and only on the edit that crosses it: re-emitting on
   // every later event (Stop in particular) wakes the model again and loops.
   const crossedThreshold = editCount > previousEdits
@@ -358,11 +377,18 @@ export function capture(input = {}) {
   if (errors.length) return { record: null, path: null, notice: null, compactionHint: false, errors };
   atomicJson(recordPath, record);
   existing = record;
+  const compactionHint = Boolean(config.compactionHint && crossedThreshold);
+  // The fingerprints the next event compares against live on the ANCHOR, not on the record: the
+  // record's schema is closed and every field of it is required, so a new field there would fail
+  // validation on every record already written. Written only when they moved, so a read-only shell
+  // command costs no extra disk.
+  const fingerprintsMoved = observed > 0 || !anchor.lastFingerprints;
+  if (fingerprintsMoved) atomicJson(anchorPath, { ...anchor, lastFingerprints: repo.fingerprints || {} });
   return {
     record,
     path: recordPath,
     notice: consumeNotice(store),
-    compactionHint: Boolean(config.compactionHint && crossedThreshold),
+    compactionHint,
   };
 }
 
@@ -414,13 +440,19 @@ export function resume(input = {}) {
   ensureStore(store.root);
   const now = iso(input.now);
   prune(store.root, now, config);
-  const current = snapshot(cwd, null);
-  const records = readRecords(store.root).filter((record) => validAnchor(cwd, record))
+  const here = resolve(input.worktreeCwd || cwd);
+  const current = snapshot(here, null);
+  const records = readRecords(store.root).filter((record) => validAnchor(here, record))
     .sort((a, b) => b.timestamps.updatedAt.localeCompare(a.timestamps.updatedAt));
   let record = records.find((candidate) => candidate.branch === current.branch && candidate.worktree === current.worktree) || null;
   let match = record ? 'exact' : 'none';
+  // Only ever this worktree's own records. The chain used to end in `|| records[0]` — the newest
+  // record in the store, whoever wrote it — which a moved or renamed checkout reached every time,
+  // because its stale records match nothing. A shared store is a place to KEEP several worktrees'
+  // journals, never a reason to hand one of them to another. No continuation is the honest answer
+  // when there is nothing of yours to continue.
   if (!record) {
-    record = records.find((candidate) => candidate.worktree === current.worktree) || records[0] || null;
+    record = records.find((candidate) => candidate.worktree === current.worktree) || null;
     if (record) match = 'nearby';
   }
   const lessons = selectedLessons(store.root, config);

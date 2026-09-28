@@ -4,6 +4,7 @@ description: "Turns the current conversation into a spec (PRD) and publishes it 
 tags: ["spec", "prd", "issue-tracker"]
 disable-model-invocation: true
 profiles: [core, ui, full]
+origin: damiangil
 ---
 
 

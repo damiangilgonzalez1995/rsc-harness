@@ -2,13 +2,17 @@
 import { rmSync, existsSync, cpSync, lstatSync, mkdirSync, readFileSync, realpathSync, writeFileSync, appendFileSync, readdirSync } from 'node:fs';
 import { join, dirname, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { spawnSync } from 'node:child_process';
 import { planInstall } from './install-plan.js';
 import { targetPaths, writeSkill, wireHook, unwireHook, baseDir, TARGET_IDS } from '../targets/index.js';
+import { shadowTarget } from '../targets/agents-md-shadow.js';
 import {
   targetHasAgents, reconcileAgents, agentPath, agentNames,
-  resolveAgentNames, agentByName, allAgentNames, readDeveloperTier,
+  resolveAgentNames, agentByName, allAgentNames, readDeveloperTier, writeDeveloperTier,
 } from '../targets/agents.js';
+import { projectOptOuts } from '../targets/opt-outs.js';
 import { readState, writeState } from './lib/state.js';
+import { withDefaultSkillFloor } from './lib/default-skill-floor.js';
 import { readManifest, writeManifest } from './lib/manifest-file.js';
 import { createBackup } from './lib/backups.js';
 import {
@@ -66,6 +70,9 @@ function ensureBase(id, cwd, baseVersions) {
 export function generatedHookFiles({ target, cwd, policy }) {
   if (target !== 'claude') return [];
   const lifecycle = [
+    // Committed, not machine state — and therefore the one entry here that, if omitted, leaves an
+    // executable behind in a tree the user pushes.
+    join(cwd, '.claude', 'rsc-bootstrap.mjs'),
     join(cwd, '.rsc', 'session-start.mjs'),
     join(cwd, '.rsc', 'worklog-checkpoint.mjs'),
     join(cwd, '.rsc', 'hook-once.mjs'),
@@ -109,6 +116,12 @@ export function managedPathsForInstall({ skillIds, agentIds = [], target, home, 
       out.push(step.to, ...generatedHookFiles({ target, cwd, policy }));
     }
   }
+  // The shadow CLAUDE.md that keeps a natively-read AGENTS.md from doubling the always-on body.
+  // Written by whichever of the two adapters is wired second, so it is declared for both families,
+  // not just for claude. A claude install must assume its own wiring: settings.json does not name
+  // it yet at plan time.
+  const shadow = shadowTarget(cwd, { assumeClaudeWired: target === 'claude' });
+  if (shadow) out.push(shadow);
   return [...new Set(out)];
 }
 
@@ -116,15 +129,54 @@ export function managedPathsForInstall({ skillIds, agentIds = [], target, home, 
 // which is machine-local and therefore lost on every clone: a team that disarmed the
 // gitmoji guard found it armed again on the next checkout, with nobody having decided
 // that. They are decisions, so they belong in the committed declaration.
+//
+// Two distinctions this function exists to keep, both of which used to be collapsed:
+//
+//   ABSENT is not EMPTY. In a clone `.rsc/` does not exist, and reading "no markers here" as
+//   "the team re-armed everything" would have sync quietly delete the decision it came to
+//   rebuild. Unreadable returns null — "I know nothing" — and the caller keeps what was
+//   declared. A readable directory with no markers returns [], which IS a statement: somebody
+//   deleted the last marker, and deleting it is how a gate gets re-armed.
+//
+//   Not every switch is the team's to make. `.no-harness` and friends are decisions of one
+//   machine (see targets/opt-outs.js), and committing them would impose one laptop's answer on
+//   every future clone. They stay local, and never reach the declaration.
 function localDecisions(cwd) {
   const dir = join(cwd, '.rsc');
-  let optOuts = [];
+  let optOuts = null;
   try {
-    optOuts = readdirSync(dir).filter((f) => f.startsWith('.no-')).map((f) => f.slice(4)).sort();
-  } catch { /* no .rsc yet */ }
+    optOuts = projectOptOuts(readdirSync(dir).filter((f) => f.startsWith('.no-')).map((f) => f.slice(4)));
+  } catch { /* no .rsc yet → null, meaning "unknown", never "none" */ }
   let tier = null;
   try { tier = JSON.parse(readFileSync(join(dir, 'developer.json'), 'utf8')).tier ?? null; } catch { /* unset */ }
   return { optOuts, tier };
+}
+
+// The other half of the same promise: what the declaration says is rebuilt as the real local
+// state a hook can see. Hooks are materialized standalone under `.rsc/` and decide with one
+// `existsSync` — they cannot read the manifest, and making them read it would let a `git pull`
+// change how somebody's session behaves in silence, which `project-manifest` ruled out on
+// purpose. So the manifest is applied HERE, inside the install the person chose to run.
+//
+// Only ever on a machine where `.rsc/` did not exist: there, "no marker" carries no information
+// and the declaration is all there is. Where `.rsc/` is already built, the local state is the
+// authority — otherwise the next sync would silently undo a re-arm, and the gate coming back
+// would look like a bug in the guard rather than a decision nobody made.
+export function hydrateLocalDecisions(cwd, manifest) {
+  const applied = { optOuts: [], tier: null };
+  if (!manifest) return applied;
+  const dir = join(cwd, '.rsc');
+  for (const name of projectOptOuts(manifest.optOuts)) {
+    const file = join(dir, `.no-${name}`);
+    if (existsSync(file)) continue;
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(file, `Declared in .rsc.json by this project; rebuilt here by rsc ${CLI_VERSION}.\n`);
+    applied.optOuts.push(name);
+  }
+  if (manifest.tier && !existsSync(join(dir, 'developer.json'))) {
+    applied.tier = writeDeveloperTier(cwd, manifest.tier);
+  }
+  return applied;
 }
 
 // Record the decision, merging so a second assistant never erases the first: installing
@@ -146,17 +198,25 @@ export function recordInManifest({ cwd, target, skillIds, agentIds = [], catalog
     ownSkills: prev.ownSkills || [],
     catalogVersion,
     tier: tier ?? prev.tier ?? null,
-    optOuts: optOuts.length ? optOuts : (prev.optOuts || []),
+    optOuts: optOuts ?? projectOptOuts(prev.optOuts),
     memory: prev.memory,
     onboarding: onboarding ?? prev.onboarding,
   });
 }
 
 export async function applyInstall({ skillIds = [], agentIds = [], target, home, cwd = process.cwd(), operation = 'install', dryRun = false, policy, onboarding }) {
+  // Read BEFORE anything can create it — the backup writes under `.rsc/`, and one line later the
+  // answer would always be "yes, it exists". This single boolean is what separates a clone (the
+  // declaration is the only thing that knows what the team decided) from a built machine (the
+  // local markers are the authority, and a pull must not overwrite them).
+  const fromScratch = !existsSync(join(cwd, '.rsc'));
   const paths = targetPaths(target, home, cwd);
   const plan = planInstall({ skillIds, target, home, cwd, hooks: policy?.alwaysOn !== false });
   const managedPaths = managedPathsForInstall({ skillIds, agentIds, target, home, cwd, policy });
   if (dryRun) return { dryRun: true, skills: skillIds, agents: agentIds, paths: managedPaths };
+  // Rebuild the declared decisions first, so everything below (the agent tier especially) reads
+  // the state the team declared rather than the default it would otherwise assume.
+  if (fromScratch) hydrateLocalDecisions(cwd, readManifest(cwd));
   const state = readState(paths.stateFile);
   const backup = createBackup({ cwd, operation, target, paths: managedPaths, cliVersion: CLI_VERSION });
   // Decide base refresh per skill (see baseVersionsFile): a base is re-materialized when
@@ -237,8 +297,30 @@ export async function applyInstall({ skillIds = [], agentIds = [], target, home,
   mkdirSync(dirname(versionFile(cwd)), { recursive: true });
   writeFileSync(versionFile(cwd), CLI_VERSION + '\n');
   recordInManifest({ cwd, target, skillIds, agentIds, onboarding });
+  // The worktree cleanup's trigger. It lives in `.git/hooks/`, which is NOT cloned, so it has to be
+  // (re)written by every operation that touches a user's repo — install, sync and repair all land
+  // here. Target-agnostic on purpose: it is a git hook, not an assistant hook, and a cleanup that
+  // only worked for one of the sixteen assistants would be a cleanup nobody could rely on. The
+  // reaper travels with it for the same reason; until now only the Claude adapter materialized it,
+  // although `managedPathsForInstall` has always declared it for every target.
+  // Only where the accepted plan governs code hooks. An operations harness — company, research,
+  // content — declares a narrower set of paths, and writing a git hook it never agreed to would be
+  // acting outside the plan the user accepted (P4). Caught by the onboarding route-inventory gate,
+  // which is exactly the kind of catch that justifies its existence.
+  // The answer used to be discarded, so a hook that could not arm looked exactly like one that
+  // did — and the only place that could have noticed, `doctor`, was reading the same wrong path.
+  // Reported 2026-09-18. Carried out, never thrown: the harness installing is the point, and the
+  // merge hook is a convenience layered on top of it.
+  let mergeHook = { installed: false, state: 'skipped' };
+  try {
+    if (policy?.codeHooks === false) throw new Error('code hooks not governed by the accepted plan');
+    mkdirSync(join(cwd, '.rsc'), { recursive: true });
+    cpSync(join(ROOT, 'targets', 'worktree-reaper.mjs'), join(cwd, '.rsc', 'worktree-reaper.mjs'));
+    const { installMergeHook } = await import('../targets/worktree-reaper.mjs');
+    if (existsSync(join(cwd, '.git'))) mergeHook = installMergeHook(cwd);
+  } catch (err) { mergeHook = { installed: false, state: 'skipped', reason: err.message }; }
   ignoreLocalState(cwd, target);
-  return { ...state, backup };
+  return { ...state, backup, mergeHook };
 }
 
 // `.rsc/` holds local machine state — hook scripts, install markers, the sello's
@@ -287,6 +369,32 @@ export function ignoreLocalState(cwd = process.cwd(), target) {
   // keeps this idempotent against a .gitignore a human wrote in their own spelling.
   const norm = (l) => l.trim().replace(/^\//, '').replace(/\/$/, '');
   const present = new Set(text.split('\n').map(norm));
+  // `.rsc/` is machine state and stays ignored. The two files below are the opposite: they are the
+  // whole reason a clone can help itself, and a project that excluded the assistant's directory
+  // wholesale (rsc's own repo does exactly that, so copying the example is likely) swallows both with
+  // no symptom at all.
+  //
+  // Asked of GIT, not of the pattern. The first attempt at this reasoned about spellings and shipped
+  // a negation that was INERT in every case it fired: git does not descend into an excluded
+  // directory, so `!.claude/rsc-bootstrap.mjs` under `.claude/` rescues nothing. Measured, not
+  // argued — and the lesson is the one this repo keeps relearning, that a rule believed and untrue is
+  // worse than no rule.
+  const RESCUE = ['.claude/rsc-bootstrap.mjs', '.claude/settings.json'];
+  const swallowed = RESCUE.filter((f) => {
+    try {
+      return spawnSync('git', ['check-ignore', '-q', '--', f], { cwd }).status === 0;
+    } catch {
+      return false;
+    }
+  });
+  if (swallowed.length) {
+    // Append-only, and this exact order is what makes it work at all: re-include the directory so git
+    // will descend into it, exclude everything inside it again, then rescue by name. Verified against
+    // git itself — `settings.local.json` and the skill entries stay ignored.
+    const dir = swallowed[0].split('/')[0];
+    for (const line of [`!${dir}/`, `${dir}/*`, ...swallowed.map((f) => `!${f}`)]) wanted.push(line);
+  }
+
   const add = wanted.filter((w) => !present.has(norm(w)));
   if (!add.length) return null;
 
@@ -482,7 +590,19 @@ export async function syncInstalled({ target, home, cwd = process.cwd(), dryRun 
   const ids = Object.keys(state.skills || {});
   const manifest = readManifest(cwd);
   const governedSkills = manifest?.onboarding?.plan?.policy?.skills;
-  const declared = governedSkills || (ids.length ? ids : (manifest?.skills || []));
+  // The accepted plan is a FLOOR, not a ceiling. Reading it as the whole declaration is what deleted
+  // users' skills: `add` recorded the new skill in `manifest.skills` — the living list — and sync
+  // then rebuilt from a governed list that predated it and pruned the difference, recursively.
+  // Reported by a user and reproduced 2026-09-17. The receipt stays untouched, because it is
+  // hash-checked against what the user accepted and is not a log of what happened since.
+  const declaredRaw = governedSkills
+    ? [...new Set([...governedSkills, ...(manifest?.skills || [])])].sort()
+    : (ids.length ? ids : (manifest?.skills || []));
+  // A declaration is frozen at the moment it was written, so a skill the catalog later makes
+  // mandatory never reaches an existing harness: `add` and `install` apply the floor, sync did
+  // not, and sync is the only one an upgrade runs. Applied only to a harness that already declares
+  // something: a directory declaring nothing is not a harness missing its floor.
+  const declared = declaredRaw.length ? withDefaultSkillFloor(declaredRaw) : declaredRaw;
   const declaredAgents = state.explicitAgents?.length ? state.explicitAgents : (manifest?.agents || []);
   if (!declared.length && !declaredAgents.length) return dryRun ? { dryRun: true, synced: [], syncedAgents: [], paths: [] } : { synced: [], syncedAgents: [], backup: null };
   if (dryRun) {

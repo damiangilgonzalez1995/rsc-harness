@@ -4,6 +4,7 @@ description: "A relentless interrogation to sharpen a plan or design, which also
 tags: ["planning", "questioning", "documentation", "adr"]
 disable-model-invocation: true
 profiles: [core, ui, full]
+origin: damiangil
 ---
 
 Lanza una sesión de `/grilling`, usando la skill `/domain-modeling`.

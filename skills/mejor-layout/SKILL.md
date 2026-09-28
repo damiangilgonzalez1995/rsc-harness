@@ -3,6 +3,7 @@ name: mejor-layout
 description: "Use when building or reviewing a screen's layout — grouping, alignment, reading order, progressive disclosure, spacing, breakpoints, translated-text growth, and RTL."
 tags: ["layout", "responsive-design", "ui-design"]
 profiles: [ui, full]
+origin: damiangil
 ---
 
 # Layout

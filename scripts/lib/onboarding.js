@@ -4,6 +4,7 @@ import { dirname, join, relative, resolve, sep } from 'node:path';
 import { TARGET_IDS } from '../../targets/index.js';
 import { resolveAgentNames } from '../../targets/agents.js';
 import { loadManifest, skillsForProfile } from './manifest.js';
+import { readManifest } from './manifest-file.js';
 import { managedPathsForInstall } from '../install-apply.js';
 
 export const ONBOARDING_SCHEMA_VERSION = 1;
@@ -68,7 +69,17 @@ export function scanProject(root = process.cwd()) {
   let markdownCount = 0;
   let sourceFileCount = 0;
   const visit = (dir) => {
-    for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    // A directory we are not allowed to open is a fact about that directory, not a reason to abandon
+    // the install. Reported from a real Windows box: the global harness died walking `Temp\WinSAT`,
+    // which Windows protects, on 1.3.2 and again on 1.3.6 — so it had never worked there at all.
+    // The safe form already existed in `detect-repo.js` and was simply not reused here.
+    let entries;
+    try {
+      entries = readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name));
+    } catch {
+      return;
+    }
+    for (const entry of entries) {
       if (ignored.has(entry.name) || entry.isSymbolicLink()) continue;
       const path = join(dir, entry.name);
       const rel = relative(absolute, path).split(sep).join('/');
@@ -169,7 +180,21 @@ export function buildOnboardingPlan(record, evidence) {
   const catalog = loadManifest();
   const catalogIds = new Set(catalog.skills.map((skill) => skill.id));
   const detectedSkills = (evidence.stacks || []).filter((stack) => catalogIds.has(stack));
-  const skills = [...new Set([...skillsForProfile(catalog, profile), ...detectedSkills])].sort();
+  // Skills the user asked for BY NAME are kept across an update; skills a profile handed out are not.
+  //
+  // Without this, an update recomputed the set from the profile and the detected stacks alone, and
+  // the install step then deleted from disk whatever was not in that fresh set — every `rsc add`,
+  // on every update. But choosing a narrower scope on purpose still has to be able to REMOVE what the
+  // wider one installed, so the difference comes from where the skill came from: a profile skill
+  // declares its profiles, and a skill you can only get by naming it declares none. What a profile
+  // gave you, a profile may take away; what you asked for by name, only you may. Filtered against the
+  // catalog on the way in, because preserving a declaration is not the same as trusting it.
+  //
+  // `readManifest` returns null on a first install, which is the most common path of all.
+  const inAnyProfile = new Set(catalog.skills.filter((s) => (s.profiles || []).length).map((s) => s.id));
+  const declared = (readManifest(evidence.root ?? process.cwd())?.skills ?? [])
+    .filter((id) => catalogIds.has(id) && !inAnyProfile.has(id));
+  const skills = [...new Set([...skillsForProfile(catalog, profile), ...detectedSkills, ...declared])].sort();
   const baseAgents = needsWorkflow;
   const hooks = needsWorkflow;
   const agents = baseAgents ? resolveAgentNames(skills, []).sort() : [];

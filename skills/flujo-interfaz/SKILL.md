@@ -4,6 +4,7 @@ description: "Use when work touches a screen — building or reshaping a landing
 tags: ["ui-design", "routing", "workflow"]
 profiles: [ui, full]
 recommends: [ingeniero-diseno-web, diseno-landing, revision-interfaz]
+origin: damiangil
 ---
 
 # Flujo de interfaz — quien manda en cada paso
