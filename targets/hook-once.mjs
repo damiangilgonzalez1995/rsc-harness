@@ -90,6 +90,7 @@ export function claimOnce(key, { dir = markerDir(), windowMs = 30_000, now = Dat
 // definition: the hook emits it and `rsc doctor` measures it from the same constant. Anything
 // that reports a byte count for text it does not own drifts the moment the text changes.
 export const WORKFLOW_GATE_TEXT = `===== workflow gate · metodologia (maxima prioridad) =====
+Responde en el idioma en que escribe la persona, no en el de este texto.
 Si el usuario pide construir, anadir o cambiar algo (en cualquier idioma, se juzga la intencion),
 sigue esta cadena ANTES de escribir codigo. Ninguna skill escribe codigo de una feature hasta que
 el que esta claro y el usuario ha dado el visto bueno.
