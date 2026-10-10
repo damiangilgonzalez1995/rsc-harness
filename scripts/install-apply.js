@@ -400,12 +400,24 @@ export function ignoreLocalState(cwd = process.cwd(), target) {
   }
 
   const add = wanted.filter((w) => !present.has(norm(w)));
-  if (!add.length) return null;
+  // Every append used to open a new block with its own header, so a project synced across a dozen
+  // versions carried a dozen copies of it. Adjacent rsc blocks are one block: fold them (only our
+  // header lines and the blank seams between our blocks go; every entry stays, in order).
+  const folded = foldIgnoreBlocks(text);
+  if (!add.length) {
+    if (folded === text) return null;
+    try { writeFileSync(gi, folded); return gi; } catch { return null; }
+  }
 
-  // Append only. Never rewrite, never reorder: the rest of that file is theirs.
-  const prefix = text === '' ? '' : (text.endsWith('\n') ? '' : '\n');
+  // Never reorder, never touch a line of theirs. When the file already ends with our block, the new
+  // entries join it; otherwise they open one.
+  const base = folded === '' || folded.endsWith('\n') ? folded : `${folded}\n`;
+  const next = endsWithIgnoreBlock(base)
+    ? `${base}${add.join('\n')}\n`
+    : `${base}${base === '' ? '' : '\n'}${RSC_IGNORE_HEADER}\n${add.join('\n')}\n`;
   try {
-    appendFileSync(gi, `${prefix}\n# rsc local state (hooks, seals, logs) and managed skill links — machine-local\n${add.join('\n')}\n`);
+    if (folded === text && next.startsWith(text)) appendFileSync(gi, next.slice(text.length));
+    else writeFileSync(gi, next);
     if (target) {
       const statePath = targetPaths(target, undefined, cwd).stateFile;
       const state = readState(statePath);
@@ -644,6 +656,43 @@ export async function syncInstalled({ target, home, cwd = process.cwd(), dryRun 
 // own knowledge — kept unless `withDocs` is set. Returns the paths touched.
 // Note: backups live under `.rsc/backups/`, which this removes — so purge does not
 // snapshot (a pre-purge backup would delete itself). It is the deliberate escape hatch.
+const RSC_IGNORE_HEADER = '# rsc local state (hooks, seals, logs) and managed skill links — machine-local';
+
+// Merge consecutive rsc blocks into the first: drop a repeated header and the blank seam before it
+// when the block above was ours too. A block of the user's in between ends ours, so nothing of
+// theirs is ever moved or absorbed.
+export function foldIgnoreBlocks(text) {
+  const out = [];
+  let ours = false;
+  let afterBlank = false;
+  for (const line of text.split('\n')) {
+    if (line === RSC_IGNORE_HEADER) {
+      if (ours && afterBlank) {
+        while (out.length && out[out.length - 1].trim() === '') out.pop();
+        afterBlank = false;
+        continue;
+      }
+      ours = true;
+    } else if (line.trim() === '') {
+      afterBlank = true;
+      out.push(line);
+      continue;
+    } else if (afterBlank) {
+      ours = false;
+    }
+    afterBlank = false;
+    out.push(line);
+  }
+  return out.join('\n');
+}
+
+function endsWithIgnoreBlock(text) {
+  const lines = text.replace(/\n+$/, '').split('\n');
+  let i = lines.length - 1;
+  while (i > 0 && lines[i - 1].trim() !== '') i -= 1;
+  return lines[i] === RSC_IGNORE_HEADER;
+}
+
 export async function purge({ home, cwd = process.cwd(), withDocs = false, dryRun = false } = {}) {
   const removed = [];
   const drop = (p, recursive = false) => {
