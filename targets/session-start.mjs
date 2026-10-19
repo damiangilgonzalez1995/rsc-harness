@@ -255,8 +255,8 @@ if (has('.git')) {
     // those make the fingerprint and an unchanged one reuses the last notice. Safe because `reap`
     // re-classifies before it removes anything.
     const trunk = W.resolveTrunk(root);
-    const tip = trunk ? spawnSync('git', ['-C', root, 'rev-parse', trunk], { encoding: 'utf8' }).stdout : '';
-    const list = spawnSync('git', ['-C', root, 'worktree', 'list', '--porcelain'], { encoding: 'utf8' }).stdout;
+    const tip = trunk ? spawnSync('git', ['-C', root, 'rev-parse', trunk], { encoding: 'utf8', windowsHide: true }).stdout : '';
+    const list = spawnSync('git', ['-C', root, 'worktree', 'list', '--porcelain'], { encoding: 'utf8', windowsHide: true }).stdout;
     const fingerprint = `${W.isCleanupEnabled(root)}\n${trunk}\n${tip}\n${list}`;
     const cacheFile = join(root, '.rsc', 'worktree-sweep.json');
     let cached = null;
