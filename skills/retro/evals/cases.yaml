@@ -22,6 +22,9 @@ should_not_trigger:
   - prompt: "Escribe una skill nueva para esto."
     route_to: "writing-for-agents"
     why: "Escribir documentos para agentes es el trabajo de writing-for-agents, no de retro."
+  - prompt: "Escribe el cuerpo de la PR de esta rama."
+    route_to: "pr"
+    why: "El cuerpo de la PR es el trabajo de pr, no de retro."
 
 capability:
   - scenario: "El usuario quiere saber qué cambiar en el entorno del agente tras una sesión."

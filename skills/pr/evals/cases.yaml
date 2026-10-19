@@ -22,6 +22,9 @@ should_not_trigger:
   - prompt: "Implementa la spec entera."
     route_to: "implement-spec"
     why: "Implementar la spec es el trabajo de implement-spec, no de pr."
+  - prompt: "Escribe la spec de esta funcionalidad antes de tocar código."
+    route_to: "to-spec"
+    why: "Redactar la spec es el trabajo de to-spec, no de pr."
 
 capability:
   - scenario: "El usuario quiere el cuerpo de una PR que se revise de un vistazo."
