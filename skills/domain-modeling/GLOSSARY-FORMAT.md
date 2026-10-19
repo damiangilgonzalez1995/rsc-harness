@@ -1,4 +1,4 @@
-# Formato de CONTEXT.md
+# Formato de GLOSSARY.md
 
 ## Estructura
 
@@ -31,18 +31,18 @@ _Evitar_: Comprador, usuario, cuenta
 
 ## Repos de contexto único vs. múltiple
 
-**Contexto único (la mayoría de los repos):** Un solo `CONTEXT.md` en la raíz del repo.
+**Contexto único (la mayoría de los repos):** Un solo `GLOSSARY.md` en la raíz del repo.
 
-**Múltiples contextos:** Un `CONTEXT-MAP.md` en la raíz lista los contextos, dónde viven y cómo se relacionan entre sí:
+**Múltiples contextos:** Un `GLOSSARY-MAP.md` en la raíz lista los contextos, dónde viven y cómo se relacionan entre sí:
 
 ```md
 # Mapa de Contextos
 
 ## Contextos
 
-- [Ordering](./src/ordering/CONTEXT.md) — recibe y rastrea los pedidos de clientes
-- [Billing](./src/billing/CONTEXT.md) — genera facturas y procesa pagos
-- [Fulfillment](./src/fulfillment/CONTEXT.md) — gestiona el picking y el envío en el almacén
+- [Ordering](./src/ordering/GLOSSARY.md) — recibe y rastrea los pedidos de clientes
+- [Billing](./src/billing/GLOSSARY.md) — genera facturas y procesa pagos
+- [Fulfillment](./src/fulfillment/GLOSSARY.md) — gestiona el picking y el envío en el almacén
 
 ## Relaciones
 
@@ -53,8 +53,8 @@ _Evitar_: Comprador, usuario, cuenta
 
 La skill infiere qué estructura aplica:
 
-- Si existe `CONTEXT-MAP.md`, léelo para encontrar los contextos
-- Si solo existe un `CONTEXT.md` en la raíz, es contexto único
-- Si no existe ninguno, crea un `CONTEXT.md` en la raíz de forma perezosa cuando se resuelva el primer término
+- Si existe `GLOSSARY-MAP.md`, léelo para encontrar los contextos
+- Si solo existe un `GLOSSARY.md` en la raíz, es contexto único
+- Si no existe ninguno, crea un `GLOSSARY.md` en la raíz de forma perezosa cuando se resuelva el primer término
 
 Cuando existen múltiples contextos, infiere a cuál corresponde el tema actual. Si no está claro, pregunta.
