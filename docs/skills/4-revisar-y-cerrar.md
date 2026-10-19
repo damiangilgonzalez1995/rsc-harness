@@ -22,7 +22,27 @@ estilo. El segundo eje es el que lo caza, y es el que se olvida.
 Desde main.
 ```
 
-Si el trabajo no ha tocado interfaz, es la única que necesitas. Si la ha tocado, va la última.
+Si el trabajo no ha tocado interfaz, es la única revisión que necesitas. Si la ha tocado, va la
+última.
+
+---
+
+## `pr` — el cuerpo de la PR, al cerrar
+
+**Cuándo.** Vas a abrir la PR, después de `code-review`.
+
+**Qué hace.** Escribe el cuerpo con una plantilla fija, para que la revisión humana sea rápida:
+
+- **Resumen** — el dibujo más pequeño que explica el cambio: pseudocódigo, árbol de llamadas,
+  árbol de ficheros, Mermaid o un diff.
+- **Evidencia** — antes y después: una captura si el cambio es visual, o el test que fallaba y
+  ahora pasa.
+- **Peligro de fusión** — si es una puerta de dos sentidos (se revierte fácil) o de un sentido
+  (irreversible), y el radio de impacto.
+
+```
+/pr
+```
 
 ---
 

@@ -1,7 +1,7 @@
 {
   "version": "1.3.6",
   "counts": {
-    "skills": 291,
+    "skills": 294,
     "agents": 34,
     "commands": 43,
     "fixedCommands": 10
@@ -1395,7 +1395,7 @@
     },
     {
       "id": "domain-modeling",
-      "description": "Build and refine the project's domain model. Use when the user wants to pin down domain terminology or a ubiquitous language, record an architectural decision, or when another skill needs to keep the domain model up to date.",
+      "description": "Build and sharpen the project's domain model. Use when discussing codebase terminology, writing or editing a GLOSSARY.md, or recording or editing an ADR.",
       "tags": [
         "domain-modeling",
         "glossary",
@@ -2459,6 +2459,23 @@
         "implementation",
         "spec",
         "tickets"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "implement-spec",
+      "description": "Implement the result of /to-spec and /to-tickets in code, orchestrating parallel implementer subagents over the ticket graph.",
+      "tags": [
+        "implementation",
+        "spec",
+        "tickets",
+        "subagents",
+        "orchestration"
       ],
       "recommends": [],
       "profiles": [
@@ -3787,6 +3804,22 @@
       ]
     },
     {
+      "id": "pr",
+      "description": "Use when writing a PR body: a visual summary, before/after evidence, and the merge danger (one-way or two-way door, blast radius).",
+      "tags": [
+        "pull-request",
+        "review",
+        "evidence",
+        "risk"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
       "id": "presentations",
       "description": "Use when building, theming, or exporting a presentation deck — pitch, sales, keynote, board/QBR, leave-behind one-pager — from slide structure to a token-based theme to PDF or editable PPTX (Marp, Slidev, python-pptx). NOT the words (that is `marketing`), NOT the visual tokens (that is `design`), NOT the investor story arc (that is `pitch-deck`).",
       "tags": [
@@ -4287,6 +4320,21 @@
         "review-management"
       ],
       "profiles": []
+    },
+    {
+      "id": "retro",
+      "description": "Conduct a retrospective on a coding session: find what in the agent's environment (navigation, checks, standards, steering files, tooling) should change so future runs go better.",
+      "tags": [
+        "retrospective",
+        "session-review",
+        "agent-environment"
+      ],
+      "recommends": [],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "review-management",

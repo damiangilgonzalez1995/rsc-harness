@@ -12,11 +12,26 @@ interfaz, pasa además por [la cadena de interfaz](3-interfaz.md).
 | Llegas con… | Skill |
 |---|---|
 | Un plan de `superpowers:writing-plans` | `superpowers:executing-plans`, tarea a tarea, parando a revisar entre ellas. Si prefieres repartir las tareas entre subagentes en la misma sesión, `superpowers:subagent-driven-development`. |
-| Un ticket de `to-tickets` (vienes de `wayfinder`) | `implement` |
+| Una spec con sus tickets de `to-tickets` (spec grande, o vienes de `wayfinder`) | `implement-spec` |
+| Un solo ticket suelto de `to-tickets` | `implement` |
+
+## `implement-spec`
+
+**Cuándo.** Tienes una spec y sus tickets, y quieres construirla entera.
+
+**Qué hace.** Lee los tickets como un grafo de tareas con bloqueos. Lanza un subagente por cada
+ticket que ya se puede coger, cada uno en su worktree y con TDD, y va fusionando su trabajo en
+una sola rama de integración. Cuando acaban todos, pasa `code-review` y deja la PR lista con `pr`.
+
+```
+/implement-spec
+
+Spec: docs/specs/pagos.md
+```
 
 ## `implement`
 
-**Cuándo.** Tienes un ticket de `to-tickets`.
+**Cuándo.** Tienes un solo ticket de `to-tickets`.
 
 **Qué hace.** Ejecuta la implementación de ese ticket. Uno, no varios.
 

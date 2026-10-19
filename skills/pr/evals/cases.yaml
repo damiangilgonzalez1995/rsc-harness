@@ -1,0 +1,30 @@
+skill: pr
+
+should_trigger:
+  - prompt: "Escribe el cuerpo de la PR de esta rama."
+    why: "Disparador directo de pr."
+  - prompt: "Abre la PR y explica el cambio con un diagrama y el antes y después."
+    why: "Disparador directo de pr: resumen visual y evidencia."
+  - prompt: "Write the PR description for these changes."
+    why: "Disparador directo de pr."
+  - prompt: "Prepara la descripción del pull request con el riesgo de fusionarlo."
+    why: "Disparador directo de pr: peligro de fusión y radio de impacto."
+  - prompt: "¿Qué pongo en la PR para que se revise rápido?"
+    why: "Disparador directo de pr."
+
+should_not_trigger:
+  - prompt: "Revisa el código de esta PR."
+    route_to: "code-review"
+    why: "Revisar el código es el trabajo de code-review, no de pr."
+  - prompt: "Haz el commit de estos cambios con un buen mensaje."
+    route_to: "git-workflow"
+    why: "El mensaje de commit es el trabajo de git-workflow, no de pr."
+  - prompt: "Implementa la spec entera."
+    route_to: "implement-spec"
+    why: "Implementar la spec es el trabajo de implement-spec, no de pr."
+
+capability:
+  - scenario: "El usuario quiere el cuerpo de una PR que se revise de un vistazo."
+    must_include:
+      - "Peligro de fusión"
+      - "Radio de impacto"
