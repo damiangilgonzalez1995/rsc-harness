@@ -101,10 +101,12 @@ el que esta claro y el usuario ha dado el visto bueno.
    Cada decision dificil de revertir se registra con \`write-adr\`, en docs/adr/.
 2. Escribir la spec: \`to-spec\`, o \`superpowers:brainstorming\` para cerrarla por secciones.
    Sin spec escrita no se programa.
-3. Construir: \`superpowers:writing-plans\` -> \`superpowers:executing-plans\`. Solo el trabajo que
-   salio de \`wayfinder\` va con \`to-tickets\` -> \`implement\`, ticket a ticket.
+3. Construir: \`superpowers:writing-plans\` -> \`superpowers:executing-plans\`. Spec grande o que
+   salio de \`wayfinder\` -> \`to-tickets\` -> \`implement-spec\` (subagentes en paralelo sobre el
+   grafo de tickets); un solo ticket suelto -> \`implement\`.
    Si la tarea toca pantalla, invoca ademas \`flujo-interfaz\`: dice que skill de diseno manda.
-4. Antes de fusionar: \`code-review\` (estandares del repo + lo que pedia la spec).
+4. Antes de fusionar: \`code-review\` (estandares del repo + lo que pedia la spec), y el cuerpo
+   de la PR con \`pr\` (resumen visual, evidencia antes/despues, peligro de fusion).
 Siempre: \`superpowers:test-driven-development\` y \`superpowers:verification-before-completion\`
 antes de dar nada por terminado. Los bugs entran por \`superpowers:systematic-debugging\`.
 Cambio de una linea, typo o ajuste de configuracion -> hazlo y di que te saltas la cadena.

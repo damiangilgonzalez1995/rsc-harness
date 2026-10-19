@@ -1,6 +1,6 @@
 ---
 name: domain-modeling
-description: "Build and refine the project's domain model. Use when the user wants to pin down domain terminology or a ubiquitous language, record an architectural decision, or when another skill needs to keep the domain model up to date."
+description: "Build and sharpen the project's domain model. Use when discussing codebase terminology, writing or editing a GLOSSARY.md, or recording or editing an ADR."
 tags: ["domain-modeling", "glossary", "architecture"]
 profiles: [core, ui, full]
 origin: damiangil
@@ -8,7 +8,7 @@ origin: damiangil
 
 # Modelado de Dominio
 
-Construye y afina activamente el modelo de dominio del proyecto a medida que diseñas. Esta es la disciplina *activa*: cuestionar términos, inventar escenarios límite y escribir el glosario y las decisiones en el momento en que se cristalizan. (Simplemente *leer* `CONTEXT.md` para sacar vocabulario no es esta skill — eso es un hábito de una línea que cualquier skill puede hacer. Esta skill es para cuando estás *cambiando* el modelo, no solo consumiéndolo.)
+Construye y afina activamente el modelo de dominio del proyecto a medida que diseñas. Esta es la disciplina *activa*: cuestionar términos, inventar escenarios límite y escribir el glosario y las decisiones en el momento en que se cristalizan. (Simplemente *leer* `GLOSSARY.md` para sacar vocabulario no es esta skill — eso es un hábito de una línea que cualquier skill puede hacer. Esta skill es para cuando estás *cambiando* el modelo, no solo consumiéndolo.)
 
 ## Estructura de ficheros
 
@@ -16,7 +16,7 @@ La mayoría de los repos tienen un único contexto:
 
 ```
 /
-├── CONTEXT.md
+├── GLOSSARY.md
 ├── docs/
 │   └── adr/
 │       ├── 0001-orders-event-sourced.md
@@ -24,29 +24,31 @@ La mayoría de los repos tienen un único contexto:
 └── src/
 ```
 
-Si existe un `CONTEXT-MAP.md` en la raíz, el repo tiene varios contextos. El mapa indica dónde vive cada uno:
+Si existe un `GLOSSARY-MAP.md` en la raíz, el repo tiene varios contextos. El mapa indica dónde vive cada uno:
 
 ```
 /
-├── CONTEXT-MAP.md
+├── GLOSSARY-MAP.md
 ├── docs/
 │   └── adr/                          ← decisiones de todo el sistema
 ├── src/
 │   ├── ordering/
-│   │   ├── CONTEXT.md
+│   │   ├── GLOSSARY.md
 │   │   └── docs/adr/                 ← decisiones específicas del contexto
 │   └── billing/
-│       ├── CONTEXT.md
+│       ├── GLOSSARY.md
 │       └── docs/adr/
 ```
 
-Crea los ficheros de forma perezosa: solo cuando tengas algo que escribir. Si no existe `CONTEXT.md`, créalo cuando se resuelva el primer término. Si no existe `docs/adr/`, créalo cuando haga falta el primer ADR.
+Si el repo todavía tiene un `CONTEXT.md` (o `CONTEXT-MAP.md`) de antes del cambio de nombre, renómbralo con `git mv` a `GLOSSARY.md` (o `GLOSSARY-MAP.md`) antes de seguir, y díselo al usuario en una línea.
+
+Crea los ficheros de forma perezosa: solo cuando tengas algo que escribir. Si no existe `GLOSSARY.md`, créalo cuando se resuelva el primer término. Si no existe `docs/adr/`, créalo cuando haga falta el primer ADR.
 
 ## Durante la sesión
 
 ### Contrasta contra el glosario
 
-Cuando el usuario use un término que entre en conflicto con el lenguaje ya existente en `CONTEXT.md`, señálalo de inmediato. "Tu glosario define 'cancelación' como X, pero parece que te refieres a Y — ¿cuál es?"
+Cuando el usuario use un término que entre en conflicto con el lenguaje ya existente en `GLOSSARY.md`, señálalo de inmediato. "Tu glosario define 'cancelación' como X, pero parece que te refieres a Y — ¿cuál es?"
 
 ### Afina el lenguaje difuso
 
@@ -60,11 +62,11 @@ Cuando se estén discutiendo relaciones del dominio, ponlas a prueba con escenar
 
 Cuando el usuario afirme cómo funciona algo, comprueba si el código coincide. Si encuentras una contradicción, sácala a la luz: "Tu código cancela Pedidos enteros, pero acabas de decir que la cancelación parcial es posible — ¿cuál es la correcta?"
 
-### Actualiza CONTEXT.md sobre la marcha
+### Actualiza GLOSSARY.md sobre la marcha
 
-Cuando un término quede resuelto, actualiza `CONTEXT.md` ahí mismo. No los acumules — captúralos según ocurren. Usa el formato de [CONTEXT-FORMAT.md](./CONTEXT-FORMAT.md).
+Cuando un término quede resuelto, actualiza `GLOSSARY.md` ahí mismo. No los acumules — captúralos según ocurren. Usa el formato de [GLOSSARY-FORMAT.md](./GLOSSARY-FORMAT.md).
 
-`CONTEXT.md` debe estar totalmente libre de detalles de implementación. No trates `CONTEXT.md` como una especificación, un borrador, ni un repositorio de decisiones de implementación. Es un glosario y nada más.
+`GLOSSARY.md` debe estar totalmente libre de detalles de implementación. No trates `GLOSSARY.md` como una especificación, un borrador, ni un repositorio de decisiones de implementación. Es un glosario y nada más.
 
 ### Ofrece ADRs con moderación
 

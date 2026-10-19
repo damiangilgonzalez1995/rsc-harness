@@ -53,4 +53,21 @@ modificar `CLAUDE.md` o `AGENTS.md`.
 
 Es la meta-skill: la que se usa para escribir las demás.
 
+---
+
+## `retro`
+
+**Cuándo.** Después de una sesión larga o que se torció.
+
+**Qué hace.** Lee la sesión (por defecto, la actual) y busca qué cambiar en el **entorno** del
+agente para que la próxima salga mejor: punteros de navegación, comprobaciones automáticas que
+faltan, reglas para el revisor, instrucciones que sobran en `CLAUDE.md`, herramientas que gastan
+demasiados tokens. Te lo presenta ordenado por gravedad.
+
+No aplica nada: tú decides qué se cambia. Así no entra en bucles de corregirse a sí misma.
+
+```
+/retro
+```
+
 **Volver al índice:** [README](README.md)

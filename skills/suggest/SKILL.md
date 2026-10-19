@@ -56,7 +56,7 @@ pairs with test-driven development and a verification pass before anything is ca
 
 Exact skill names and order: `grill-with-docs` or `wayfinder` -> `superpowers:brainstorming` or
 `to-spec` (and `write-adr` for decisions) -> `superpowers:writing-plans` ->
-`superpowers:executing-plans` (after `wayfinder`: `to-tickets` -> `implement`) -> `code-review`.
+`superpowers:executing-plans` (big spec: `to-tickets` -> `implement-spec`) -> `code-review` -> `pr`.
 On Claude Code this rule also arrives as a per-turn hook; the brevity here is deduplication,
 not relaxation.
 

@@ -8,7 +8,7 @@
 
 [![npm](https://img.shields.io/npm/v/@damiangilgonzalez/harness?color=63d68a&labelColor=12161c&label=npm)](https://www.npmjs.com/package/@damiangilgonzalez/harness)
 [![downloads](https://img.shields.io/npm/dm/@damiangilgonzalez/harness?color=63d68a&labelColor=12161c&label=downloads)](https://www.npmjs.com/package/@damiangilgonzalez/harness)
-[![skills](https://img.shields.io/badge/skills-291-63d68a?labelColor=12161c)](#the-catalog)
+[![skills](https://img.shields.io/badge/skills-294-63d68a?labelColor=12161c)](#the-catalog)
 [![license](https://img.shields.io/badge/license-MIT-63d68a?labelColor=12161c)](LICENSE)
 [![stars](https://img.shields.io/github/stars/ericrisco/rsc-harness?color=63d68a&labelColor=12161c)](https://github.com/ericrisco/rsc-harness/stargazers)
 
@@ -205,7 +205,7 @@ $ rsc onboard
  ██████╗ ███████╗ ██████╗     ← animated gradient wordmark
  ██╔══██╗██╔════╝██╔════╝
  ██████╔╝███████╗██║
-  291 skills · one CLI · zero bloat
+  294 skills · one CLI · zero bloat
 
 How technical should the conversation be?
 How much accompaniment do you want?
@@ -244,7 +244,7 @@ rsc add youtube-api remotion-video   # …grow a channel, edit with Remotion
 rsc add fastapi --target claude,codex   # install into several assistants at once
 rsc install --profile minimal        # the base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach
 rsc install --profile core           # floor + the full SDD workflow
-rsc install --profile full           # everything (all 291 skills)
+rsc install --profile full           # everything (all 294 skills)
 rsc install --profile full --without go
 rsc consult "I want to launch a SaaS"  # recommend only, no install
 rsc registry refresh                 # write .rsc/skill-registry.{json,md}
@@ -408,7 +408,7 @@ just asks in plain language.
 
 ## The catalog
 
-291 skills, grouped by what you're trying to do. Click any skill to read its
+294 skills, grouped by what you're trying to do. Click any skill to read its
 `SKILL.md`. It fires on its own when a task matches.
 
 ### 🧭 Core & control plane
@@ -587,7 +587,8 @@ inside `grill-with-docs`.
 
 | Skill | What it does |
 |---|---|
-| [implement](skills/implement/) | Builds one ticket from `to-tickets`. Ordinary work runs `superpowers:executing-plans` instead. |
+| [implement-spec](skills/implement-spec/) | Builds a whole spec from its `to-tickets` graph: parallel subagents in worktrees, one integration branch, `code-review` at the end. |
+| [implement](skills/implement/) | Builds one loose ticket from `to-tickets`. Ordinary work runs `superpowers:executing-plans` instead. |
 
 #### 3 · Interface
 
@@ -621,14 +622,15 @@ When the work touches a screen. Sixteen overlapping skills; pick the one that ma
 
 | The work | Order |
 |---|---|
-| Did not touch a screen | `code-review` |
-| Touched a screen | `revision-de-cambios` → `revision-interfaz` → `code-review` |
+| Did not touch a screen | `code-review` → `pr` |
+| Touched a screen | `revision-de-cambios` → `revision-interfaz` → `code-review` → `pr` |
 
 | Skill | What it does |
 |---|---|
 | [code-review](skills/code-review/) | Two axes in parallel: the repo's standards and the spec. |
 | [revision-de-cambios](skills/revision-de-cambios/) | Reviews the change, reads the removed lines and classifies each finding. Only if it touched a screen. |
 | [revision-interfaz](skills/revision-interfaz/) | Runs the six `mejor-*` skills as one report with a verdict. Only if it touched a screen. |
+| [pr](skills/pr/) | Writes the PR body: a visual summary, before/after evidence, and the merge danger (one-way or two-way door, blast radius). |
 | [handoff](skills/handoff/) | Compacts the session into a handoff document. Optional. |
 
 #### 9 · Other
@@ -638,6 +640,7 @@ When the work touches a screen. Sixteen overlapping skills; pick the one that ma
 | [teach](skills/teach/) | Teaching across sessions. |
 | [muscle-memory](skills/muscle-memory/) | A Python kata gym. |
 | [wait-what](skills/wait-what/) | Handbrake: stop and restate. |
+| [retro](skills/retro/) | Retrospective on a session: what to change in the agent's environment. You approve every change. |
 | [writing-for-agents](skills/writing-for-agents/) | How to write documents an agent consumes. |
 
 ---

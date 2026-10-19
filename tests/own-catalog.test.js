@@ -22,6 +22,7 @@ const OWN = [
   'sitios-calidad-premio', 'tastemaker', 'video-a-superprompt', 'vocabulario-animacion',
   'code-review', 'handoff', 'revision-de-cambios', 'revision-interfaz', 'muscle-memory',
   'teach', 'wait-what', 'writing-for-agents', 'write-adr',
+  'implement-spec', 'pr', 'retro',
 ];
 
 test('el catalogo propio esta completo', () => {

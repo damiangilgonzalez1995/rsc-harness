@@ -1,0 +1,33 @@
+skill: implement-spec
+
+should_trigger:
+  - prompt: "Implementa la spec entera con sus tickets, en paralelo."
+    why: "Disparador directo de implement-spec: la spec completa sobre el grafo de tickets."
+  - prompt: "Ya tenemos la spec y los tickets; orquesta subagentes para construirlo todo."
+    why: "Disparador directo de implement-spec."
+  - prompt: "Lanza implementadores en worktrees para cada ticket de la spec y júntalo en una rama de integración."
+    why: "Disparador directo de implement-spec."
+  - prompt: "Implement the whole spec from /to-spec and /to-tickets."
+    why: "Disparador directo de implement-spec."
+  - prompt: "Construye todos los tickets de esta spec respetando los bloqueos entre ellos."
+    why: "Disparador directo de implement-spec: la frontera del grafo de tareas."
+
+should_not_trigger:
+  - prompt: "Implementa solo este ticket."
+    route_to: "implement"
+    why: "Un único ticket es el trabajo de implement, no de implement-spec."
+  - prompt: "Escribe la spec antes de implementar nada."
+    route_to: "to-spec"
+    why: "Escribir la spec es el trabajo de to-spec, no de implement-spec."
+  - prompt: "Descompón la spec en tickets primero."
+    route_to: "to-tickets"
+    why: "Descomponer en tickets es el trabajo de to-tickets, no de implement-spec."
+  - prompt: "Revisa el código de la rama de integración."
+    route_to: "code-review"
+    why: "Revisar el código es el trabajo de code-review, no de implement-spec."
+
+capability:
+  - scenario: "El usuario tiene una spec con tickets y quiere implementarla entera con subagentes en paralelo."
+    must_include:
+      - "rama de integración"
+      - "frontera"

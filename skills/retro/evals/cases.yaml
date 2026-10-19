@@ -1,0 +1,32 @@
+skill: retro
+
+should_trigger:
+  - prompt: "Haz una retrospectiva de esta sesión."
+    why: "Disparador directo de retro."
+  - prompt: "Revisa la conversación de ayer y dime qué falló en el entorno del agente."
+    why: "Disparador directo de retro: leer sesiones pasadas."
+  - prompt: "Run a retro on the last coding session."
+    why: "Disparador directo de retro."
+  - prompt: "¿Qué hooks o comprobaciones habrían evitado los errores de esta sesión?"
+    why: "Disparador directo de retro: comprobaciones automáticas."
+  - prompt: "Audita la sesión y propón mejoras para el CLAUDE.md y las herramientas."
+    why: "Disparador directo de retro."
+
+should_not_trigger:
+  - prompt: "Revisa el código de esta rama."
+    route_to: "code-review"
+    why: "Revisar código es el trabajo de code-review, no de retro."
+  - prompt: "Resume la conversación para que otro agente siga."
+    route_to: "handoff"
+    why: "El traspaso de la sesión es el trabajo de handoff, no de retro."
+  - prompt: "Escribe una skill nueva para esto."
+    route_to: "writing-for-agents"
+    why: "Escribir documentos para agentes es el trabajo de writing-for-agents, no de retro."
+  - prompt: "Escribe el cuerpo de la PR de esta rama."
+    route_to: "pr"
+    why: "El cuerpo de la PR es el trabajo de pr, no de retro."
+
+capability:
+  - scenario: "El usuario quiere saber qué cambiar en el entorno del agente tras una sesión."
+    must_include:
+      - "gravedad"

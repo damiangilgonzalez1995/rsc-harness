@@ -96,3 +96,32 @@ test('a directory with no harness is not reported as missing its floor', async (
   const d = repo();
   assert.deepEqual(divergence({ cwd: d, target: 'claude' }).floorMissing, []);
 });
+
+// El gate de código nombra el flujo entero. Una declaración escrita antes de que el gate nombrara
+// `implement-spec` y `pr` quedaba con el gate apuntando a skills que nunca se instalaron.
+test('con el gate conectado, el update trae las skills nuevas del flujo', async () => {
+  const { CODE_FLOW_FLOOR } = await import('../scripts/lib/default-skill-floor.js');
+  const d = repo();
+  writeManifest(d, {
+    targets: ['claude'], skills: ['orient', 'suggest', 'bro', 'to-spec', 'implement'], ownSkills: [],
+    catalogVersion: '1.3.13', tier: null, optOuts: [],
+  });
+  const r = await syncInstalled({ target: 'claude', home: d, cwd: d });
+  for (const id of ['implement-spec', 'pr', 'retro']) {
+    assert.ok(r.synced.includes(id), `${id} debe llegar con el update`);
+    assert.ok(existsSync(join(d, '.claude', 'skills', id, 'SKILL.md')), `${id} debe estar en disco`);
+  }
+  assert.ok(CODE_FLOW_FLOOR.every((id) => r.synced.includes(id)));
+});
+
+test('sin gate (codeHooks: false), el update no añade el flujo', async () => {
+  const { withCodeFlowFloor } = await import('../scripts/lib/default-skill-floor.js');
+  assert.deepEqual(withCodeFlowFloor(['orient'], { codeHooks: false }), ['orient']);
+});
+
+test('cada skill del suelo del flujo existe en el catálogo', async () => {
+  const { CODE_FLOW_FLOOR } = await import('../scripts/lib/default-skill-floor.js');
+  for (const id of CODE_FLOW_FLOOR) {
+    assert.ok(existsSync(join(import.meta.dirname, '..', 'skills', id, 'SKILL.md')), `${id} no existe en skills/`);
+  }
+});

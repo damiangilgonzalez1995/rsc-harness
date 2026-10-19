@@ -36,9 +36,11 @@ grill-with-docs  o  wayfinder                 bajar la idea a tierra
 superpowers:brainstorming  o  to-spec         escribir la spec  (+ write-adr)
         ↓
 superpowers:writing-plans → superpowers:executing-plans
-        (si vienes de wayfinder: to-tickets → implement)
+        (spec grande o de wayfinder: to-tickets → implement-spec)
         ↓
 code-review                                   estándares + spec, antes de fusionar
+        ↓
+pr                                            el cuerpo de la PR: resumen, evidencia, peligro
 ```
 
 Es el mismo flujo que el harness inyecta como regla en cada mensaje (`targets/hook-once.mjs`).
@@ -51,10 +53,10 @@ Si cambias uno, cambia el otro.
 | Fase | Skills | Guía |
 |---|---|---|
 | **1 · Planificar** | `claude-project-setup`, `grill-with-docs`, `wayfinder`, `research`, `to-questionnaire`, `prototype`, `to-spec`, `write-adr`, `to-tickets` | [1-planificar.md](1-planificar.md) |
-| **2 · Implementar** | `implement` (y `superpowers:executing-plans`) | [2-implementar.md](2-implementar.md) |
+| **2 · Implementar** | `implement-spec`, `implement` (y `superpowers:executing-plans`) | [2-implementar.md](2-implementar.md) |
 | **3 · Interfaz** | Las 16 de diseño | [3-interfaz.md](3-interfaz.md) |
-| **4 · Revisar y cerrar** | `code-review`, `revision-de-cambios`, `revision-interfaz`, `handoff` | [4-revisar-y-cerrar.md](4-revisar-y-cerrar.md) |
-| **9 · Otras** | `teach`, `muscle-memory`, `wait-what`, `writing-for-agents` | [9-otras.md](9-otras.md) |
+| **4 · Revisar y cerrar** | `code-review`, `pr`, `revision-de-cambios`, `revision-interfaz`, `handoff` | [4-revisar-y-cerrar.md](4-revisar-y-cerrar.md) |
+| **9 · Otras** | `teach`, `muscle-memory`, `wait-what`, `writing-for-agents`, `retro` | [9-otras.md](9-otras.md) |
 
 `grilling`, `grill-me` y `domain-modeling` están instaladas, pero no hace falta invocarlas: van
 dentro de `grill-with-docs`.
