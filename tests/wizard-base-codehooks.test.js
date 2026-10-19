@@ -85,6 +85,8 @@ test('re-running the wizard and choosing "Base install" does not wire the code-h
 
   const settings = JSON.parse(readFileSync(join(cwd, '.claude', 'settings.json'), 'utf8'));
   const hookJson = JSON.stringify(settings.hooks || {});
-  assert.doesNotMatch(hookJson, /ship-guard\.mjs|danger-guard\.mjs|gitmoji-guard\.mjs|userprompt-gate\.mjs|sello\.mjs/,
+  // danger-guard no es parte del gate de código: va por nivel técnico (#273) y en un usuario
+  // technical se queda instalado pero no actúa.
+  assert.doesNotMatch(hookJson, /ship-guard\.mjs|gitmoji-guard\.mjs|userprompt-gate\.mjs|sello\.mjs/,
     'Base install wired the full code-hooks gate even though none of the skills it names were installed');
 });

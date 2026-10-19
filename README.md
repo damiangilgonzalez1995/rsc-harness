@@ -685,7 +685,7 @@ The richer surfaces are intentionally narrower than skill support:
 | Windsurf, Cline, Roo | unsupported | yes | unsupported |
 | Antigravity, Zed, Continue, Amp, Jules, Aider | unsupported | unsupported | unsupported |
 
-`manifest.json` is the generated public inventory: 33 agents (4 base + 29
+`manifest.json` is the generated public inventory: 34 agents (5 base + 29
 selective specialists) and 43 command entries (10 fixed + 33 stack aliases).
 Unsupported means rsc writes nothing for that surface; it does not emulate a
 provider feature with an unverified file.
