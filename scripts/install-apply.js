@@ -12,7 +12,7 @@ import {
 } from '../targets/agents.js';
 import { projectOptOuts } from '../targets/opt-outs.js';
 import { readState, writeState } from './lib/state.js';
-import { withDefaultSkillFloor } from './lib/default-skill-floor.js';
+import { withCodeFlowFloor, withDefaultSkillFloor } from './lib/default-skill-floor.js';
 import { readManifest, writeManifest } from './lib/manifest-file.js';
 import { createBackup } from './lib/backups.js';
 import {
@@ -626,7 +626,10 @@ export async function syncInstalled({ target, home, cwd = process.cwd(), dryRun 
   // mandatory never reaches an existing harness: `add` and `install` apply the floor, sync did
   // not, and sync is the only one an upgrade runs. Applied only to a harness that already declares
   // something: a directory declaring nothing is not a harness missing its floor.
-  const declared = declaredRaw.length ? withDefaultSkillFloor(declaredRaw) : declaredRaw;
+  // Lo mismo con el flujo del gate: si el gate está conectado, sus skills llegan con el update.
+  const declared = declaredRaw.length
+    ? withCodeFlowFloor(withDefaultSkillFloor(declaredRaw), manifest?.onboarding?.plan?.policy)
+    : declaredRaw;
   const declaredAgents = state.explicitAgents?.length ? state.explicitAgents : (manifest?.agents || []);
   if (!declared.length && !declaredAgents.length) return dryRun ? { dryRun: true, synced: [], syncedAgents: [], paths: [] } : { synced: [], syncedAgents: [], backup: null };
   if (dryRun) {

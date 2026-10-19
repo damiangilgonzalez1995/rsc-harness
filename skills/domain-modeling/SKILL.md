@@ -40,6 +40,8 @@ Si existe un `GLOSSARY-MAP.md` en la raíz, el repo tiene varios contextos. El m
 │       └── docs/adr/
 ```
 
+Si el repo todavía tiene un `CONTEXT.md` (o `CONTEXT-MAP.md`) de antes del cambio de nombre, renómbralo con `git mv` a `GLOSSARY.md` (o `GLOSSARY-MAP.md`) antes de seguir, y díselo al usuario en una línea.
+
 Crea los ficheros de forma perezosa: solo cuando tengas algo que escribir. Si no existe `GLOSSARY.md`, créalo cuando se resuelva el primer término. Si no existe `docs/adr/`, créalo cuando haga falta el primer ADR.
 
 ## Durante la sesión
