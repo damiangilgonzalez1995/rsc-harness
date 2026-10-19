@@ -73,6 +73,9 @@ accompaniment, project kind and goal **before it writes anything**, reads only t
 root, and shows every selected or deferred skill, agent and hook with its reason. Relay those
 questions to the user; never invent or default their answers. The first pass writes nothing and
 prints a SHA-256 plan id. Only rerun with `--accept-plan <id>` after the user accepts that exact plan.
+If the project already has a skill of its own with a catalog name, the plan lists it under
+**Your own skills this plan replaces** — tell the user before accepting; renaming their folder and
+regenerating the plan keeps theirs.
 
 For a non-interactive agent, collect the answers and preview the same plan explicitly:
 
@@ -247,7 +250,7 @@ rsc consult "I want to launch a SaaS"  # recommend only, no install
 rsc registry refresh                 # write .rsc/skill-registry.{json,md}
 rsc list                             # installed skills, agents and commands
 rsc capabilities                    # installed/available surfaces + memory mode
-rsc doctor                           # health, missing backing, hooks and local memory
+rsc doctor                           # health, missing backing, hooks and local memory; exits 1 when unhealthy
 rsc memory status                    # full / assisted / unsupported / degraded
 rsc memory save --session handoff    # force a deterministic local checkpoint
 rsc memory resume                    # print this branch/worktree continuation
@@ -682,7 +685,7 @@ The richer surfaces are intentionally narrower than skill support:
 | Windsurf, Cline, Roo | unsupported | yes | unsupported |
 | Antigravity, Zed, Continue, Amp, Jules, Aider | unsupported | unsupported | unsupported |
 
-`manifest.json` is the generated public inventory: 33 agents (4 base + 29
+`manifest.json` is the generated public inventory: 34 agents (5 base + 29
 selective specialists) and 43 command entries (10 fixed + 33 stack aliases).
 Unsupported means rsc writes nothing for that surface; it does not emulate a
 provider feature with an unverified file.

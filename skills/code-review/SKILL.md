@@ -76,7 +76,23 @@ Envía un único mensaje con dos llamadas a la herramienta `Agent`. Usa el subag
 
 Si falta el spec, sáltate el sub-agente de Spec y anótalo en el reporte final.
 
-### 5. Agregar
+### 5. Verificar los graves antes de presentarlos
+
+Un sub-agente que busca problemas puede exagerar uno. Antes de agregar, **dentro de cada eje
+por separado** (nunca mezclando Estándares con Spec):
+
+1. **Agrupar.** Pide a cada sub-agente que termine con un bloque ` ```json findings ` (`lens`, `severity`
+   blocker|should-fix|nit|question, `file`, `line`, `claim`, `failure_scenario`, `evidence`). Guarda
+   cada reporte y ejecuta `npx @damiangilgonzalez/harness review consolidate <reporte>`. Junta los
+   duplicados y baja a pregunta un blocker o should-fix sin `file:line` o sin escenario de fallo.
+2. **Verificar.** Cada hallazgo que marque `verify` va al agente **`finding-verifier`** (si el
+   proyecto no lo tiene, a un `general-purpose` con esa misma postura): contexto limpio, parte de que
+   el hallazgo es falso y devuelve **CONFIRMED** (con la prueba), **REFUTED** (cita lo que lo hace
+   imposible) o **UNPROVEN** (pasa a pregunta). Solo CONFIRMED se presenta como grave.
+
+Di la cuenta con honestidad ("7 reportados → 5 únicos → 2 confirmados") y lista lo refutado y por qué.
+
+### 6. Agregar
 
 Presenta los dos reportes bajo los encabezados `## Estándares` y `## Spec`, verbatim o ligeramente limpiados. **No** fusiones ni reordenes los hallazgos — los dos ejes son deliberadamente separados (ver _Por qué dos ejes_).
 

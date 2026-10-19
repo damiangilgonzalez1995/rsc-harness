@@ -2,7 +2,7 @@
   "version": "1.3.6",
   "counts": {
     "skills": 291,
-    "agents": 33,
+    "agents": 34,
     "commands": 43,
     "fixedCommands": 10
   },
@@ -5987,6 +5987,14 @@
       "skills": [
         "fastapi"
       ]
+    },
+    {
+      "id": "finding-verifier",
+      "description": "Adversarial verifier of review findings: takes ONE consolidated finding and tries to prove it false against the code. Default stance: the finding is false; only a reproduced or traced failure is CONFIRMED. Fresh context, edits nothing.",
+      "role": "refuter",
+      "tier": "balanced",
+      "tools": null,
+      "skills": []
     },
     {
       "id": "flutter-build-resolver",

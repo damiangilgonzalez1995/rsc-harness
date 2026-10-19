@@ -199,6 +199,13 @@ export function buildOnboardingPlan(record, evidence) {
   const hooks = needsWorkflow;
   const agents = baseAgents ? resolveAgentNames(skills, []).sort() : [];
   const gitmojiGuard = hooks && normalized.targets.includes('claude');
+  // The danger guard is NOT code machinery, and tying it to `hooks` was the mistake behind #273. The
+  // three guards above need a code project with git — a branch to protect, a commit to lint. This one
+  // stops recursive deletes, history-rewriting pushes and friends, which are exactly as irreversible
+  // in an invoicing workspace, and `init` promises it by technical level: non-technical and mixed get
+  // it, whatever the project is. The guard also decides at runtime from the profile, so the plan only
+  // chooses whether it is present, never whether it bites.
+  const dangerGuard = normalized.technicalLevel !== 'technical';
   const decisions = skills.map((id) => detectedSkills.includes(id)
     ? selected(id, 'skill', `Detected ${id} evidence inside the selected project root.`, 'workspace-evidence')
     : selected(id, 'skill', needsWorkflow
@@ -248,6 +255,7 @@ export function buildOnboardingPlan(record, evidence) {
     alwaysOn: true,
     codeHooks: needsWorkflow,
     gitmojiGuard,
+    dangerGuard,
     memory: true,
     context7: false,
     plugins: needsWorkflow ? ['superpowers@claude-plugins-official'] : [],

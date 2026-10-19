@@ -4,14 +4,14 @@ import { detectTarget, installedTargets, resolveTargets, TARGETS } from '../targ
 import { detectRepo } from './detect-repo.js';
 import { rank } from './consult.js';
 import { expandRecommends, toOutcomes, hasOutcome } from './lib/recommend.js';
-import { applyInstall, listInstalled, listInstalledAgents, listInstalledCommands, uninstall, syncInstalled, purge, collisions } from './install-apply.js';
+import { applyInstall, listInstalled, listInstalledAgents, listInstalledCommands, uninstall, syncInstalled, purge, collisions, ownSkillPaths } from './install-apply.js';
 import { stackAgentNames } from '../targets/agents.js';
 import { doctor } from './doctor.js';
 import { ask, say, select, pickFrom, banner, confirm, isInteractive } from './lib/ui.js';
 import { refreshRegistry, registryStatus } from './lib/registry.js';
 import { audit, writeAuditReport } from './audit.js';
 import { DOMAINS } from './lib/domains.js';
-import { listBackups, restoreBackup } from './lib/backups.js';
+import { listBackups, restoreBackup, whereKept } from './lib/backups.js';
 import { runUpgrade } from './lib/upgrade.js';
 import { diagnose, repair } from './lib/repair.js';
 import { DEFAULT_SKILL_FLOOR, withDefaultSkillFloor } from './lib/default-skill-floor.js';
@@ -41,7 +41,7 @@ if (['--version', '-v', 'version'].includes(rawArgv[0])) {
 const GLOBAL_VALUE_FLAGS = new Set([
   '--target', '--technical-level', '--accompaniment', '--project-kind', '--goal', '--goal-base64', '--software-scope', '--accept-plan',
 ]);
-const COMMANDS = new Set(['onboard', 'reassess', 'add', 'install', 'consult', 'catalog', 'audit', 'list', 'doctor', 'memory', 'sync', 'backups', 'restore', 'upgrade', 'registry', 'worktrees', 'capabilities', 'sello', 'repair', 'uninstall', 'purge']);
+const COMMANDS = new Set(['onboard', 'reassess', 'add', 'install', 'consult', 'catalog', 'audit', 'list', 'doctor', 'memory', 'sync', 'backups', 'restore', 'upgrade', 'registry', 'worktrees', 'capabilities', 'review', 'sello', 'repair', 'uninstall', 'purge']);
 function positionalTokens(input) {
   const out = [];
   for (let i = 0; i < input.length; i++) {
@@ -142,6 +142,12 @@ function renderPlan(plan, planId) {
   for (const decision of plan.decisions.filter((d) => d.state === 'excluded')) say(`  × ${decision.kind}/${decision.id} — ${decision.reason}`);
   say('Managed paths:');
   for (const path of plan.governedPaths) say(`  ${path}`);
+  if (plan.replacesUserSkills?.length) {
+    say('Your own skills this plan replaces:');
+    for (const path of plan.replacesUserSkills) say(`  ! ${path} — already here and not put by rsc; the catalog skill of the same name takes its place, and yours is kept in .rsc/backups/`);
+    say('  To keep yours, rename its folder (for example review → review-own) and generate the plan again.');
+    say('  AGENT: name each of these to the user before accepting, and ask whether to replace or rename.');
+  }
   if (plan.evidence.parentHarness) say(`Parent harness detected at ${plan.evidence.parentHarness}; it is not inherited by this plan.`);
   const pieces = [
     'npx @damiangilgonzalez/harness@latest onboard',
@@ -201,6 +207,11 @@ async function runOnboarding(targets) {
     return;
   }
   const plan = buildOnboardingPlan(record, scanProject(process.cwd()));
+  // #275 — a folder where a catalog skill goes that rsc did not put is the user's own work. It goes
+  // INTO the plan, so the id they accept names it: an id made before that folder existed no longer
+  // applies, and accepting is never consent to something the plan did not show.
+  const replacesUserSkills = ownSkillPaths({ cwd: process.cwd(), targets: plan.policy.targets, skillIds: plan.policy.skills });
+  if (replacesUserSkills.length) plan.replacesUserSkills = replacesUserSkills;
   const planId = identifyPlan(plan);
   const accepted = flag('accept-plan');
   if (!accepted) {
@@ -228,6 +239,10 @@ async function runOnboarding(targets) {
     ensureHarnessSkeleton(process.cwd());
   } catch (error) {
     say(`RSC_SKELETON_FAILED ${error.message}`);
+  }
+  for (const path of plan.replacesUserSkills || []) {
+    const kept = whereKept({ cwd: process.cwd(), relPath: path });
+    if (kept) say(`Your previous ${path} is kept in ${kept}`);
   }
   emitHarnessReadiness(plan, planId);
 }
@@ -735,6 +750,8 @@ async function main() {
     }
     case 'doctor': {
       const report = doctor({ target });
+      // #277 — an automation on top of rsc reads the exit code, not the prose.
+      if (!report.healthy) process.exitCode = 1;
       if (argv.includes('--json')) return void say(JSON.stringify(report, null, 2));
       printContextBudget(report.contextBudget);
       return void say(JSON.stringify({ ...report, contextBudget: undefined }, null, 2));
@@ -826,6 +843,37 @@ async function main() {
         return;
       }
       say('Use: npx @damiangilgonzalez/harness registry refresh | registry status');
+      return;
+    }
+    case 'review': {
+      // `review consolidate` — the deterministic half of the refuter panel (P1): the three lenses
+      // often report one defect three ways, so grouping happens here, by location and evidence, and
+      // only the unique serious findings go on to `finding-verifier`, which is judgement.
+      const USE = 'Use: npx @damiangilgonzalez/harness review consolidate [report.md|findings.json ...] [--json] [--window <lines>]\n  Without files it reads stdin. Each lens report carries its findings in ```json findings blocks.';
+      if (argv[1] !== 'consolidate') { say(USE); if (argv[1]) process.exitCode = 1; return; }
+      const { readFileSync } = await import('node:fs');
+      const R = await import('./lib/review-findings.js');
+      const w = flag('window');
+      const window = w === undefined ? R.DEFAULT_WINDOW : Number(w);
+      if (!Number.isInteger(window) || window < 0) { say(`rsc: --window takes a whole number of lines, got '${w}'.\n${USE}`); process.exitCode = 1; return; }
+      const rest = argv.slice(2);
+      const files = rest.filter((a, i) => !a.startsWith('--') && rest[i - 1] !== '--window');
+      const sources = [];
+      try {
+        if (files.length) for (const f of files) sources.push([readFileSync(f, 'utf8'), f]);
+        else if (!process.stdin.isTTY) sources.push([readFileSync(0, 'utf8'), 'stdin']);
+      } catch (e) { say(`rsc: cannot read ${e.path || 'stdin'} (${e.code || e.message}).`); process.exitCode = 1; return; }
+      if (!sources.length) { say(USE); process.exitCode = 1; return; }
+      const all = []; const errors = [];
+      for (const [raw, src] of sources) {
+        const parsed = R.parseFindings(raw, src);
+        all.push(...parsed.findings); errors.push(...parsed.errors);
+      }
+      const result = R.consolidate(all, { window });
+      if (argv.includes('--json')) say(JSON.stringify({ ...result, errors }, null, 2));
+      else say(R.renderConsolidation(result, errors));
+      // An unreadable block is a finding that may have been lost: say it with the exit code too.
+      if (errors.length) process.exitCode = 1;
       return;
     }
     case 'worktrees': {
