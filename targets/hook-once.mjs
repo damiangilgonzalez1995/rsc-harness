@@ -94,19 +94,19 @@ Responde en el idioma en que escribe la persona, no en el de este texto.
 Si el usuario pide construir, anadir o cambiar algo (en cualquier idioma, se juzga la intencion),
 sigue esta cadena ANTES de escribir codigo. Ninguna skill escribe codigo de una feature hasta que
 el que esta claro y el usuario ha dado el visto bueno.
-1. Aclarar el que:
-   - Peticion concreta y acotada -> \`grill-with-docs\`.
-   - Tema amplio, o el usuario no sabe como abordarlo -> recomiendale \`wayfinder\`.
-   - \`superpowers:brainstorming\` vale para lo mismo si el usuario lo prefiere.
-   Cada decision dificil de revertir se registra con \`write-adr\`, en docs/adr/.
-2. Escribir la spec: \`to-spec\`, o \`superpowers:brainstorming\` para cerrarla por secciones.
-   Sin spec escrita no se programa.
-3. Construir: \`superpowers:writing-plans\` -> \`superpowers:executing-plans\`. Spec grande o que
-   salio de \`wayfinder\` -> \`to-tickets\` -> \`implement-spec\` (subagentes en paralelo sobre el
-   grafo de tickets); un solo ticket suelto -> \`implement\`.
-   Si la tarea toca pantalla, invoca ademas \`flujo-interfaz\`: dice que skill de diseno manda.
-4. Antes de fusionar: \`code-review\` (estandares del repo + lo que pedia la spec), y el cuerpo
-   de la PR con \`pr\` (resumen visual, evidencia antes/despues, peligro de fusion).
+Elige la cadena por el tamano y encadena tu mismo cada paso, sin esperar a que el usuario lo pida:
+- Pequeno (cabe en una sesion, un solo ticket):
+  1. Aclarar: \`superpowers:brainstorming\` si la idea aun esta verde; \`grill-with-docs\` si ya
+     hay un plan que endurecer.
+  2. Construir: \`implement\`.
+- Grande (varias sesiones o muchas piezas):
+  1. Aclarar: \`grill-with-docs\`; tema amplio o sin camino claro -> \`wayfinder\`.
+  2. Escribir la spec: \`to-spec\`. Sin spec escrita no se programa.
+  3. Partirla: \`to-tickets\` (grafo de tickets con bloqueos). Sin tickets no hay \`implement-spec\`.
+  4. Construir: \`implement-spec\` (subagentes en paralelo sobre el grafo de tickets).
+En ambas: cada decision dificil de revertir va a \`write-adr\`, en docs/adr/.
+Si la tarea toca pantalla, invoca ademas \`flujo-interfaz\`: dice que skill de diseno manda.
+Antes de fusionar: \`code-review\` (estandares del repo + lo que pedia la spec), y la PR con \`pr\`.
 Siempre: \`superpowers:test-driven-development\` y \`superpowers:verification-before-completion\`
 antes de dar nada por terminado. Los bugs entran por \`superpowers:systematic-debugging\`.
 Cambio de una linea, typo o ajuste de configuracion -> hazlo y di que te saltas la cadena.

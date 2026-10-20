@@ -2,7 +2,6 @@
 name: to-spec
 description: "Turns the current conversation into a spec (PRD) and publishes it to the project's issue tracker — no interview, just a synthesis of what has already been discussed."
 tags: ["spec", "prd", "issue-tracker"]
-disable-model-invocation: true
 profiles: [core, ui, full]
 origin: damiangil
 ---

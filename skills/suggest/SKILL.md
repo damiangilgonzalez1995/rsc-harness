@@ -34,8 +34,8 @@ The shape of the chain:
   when the effort will not fit one sitting.
 - Once the shape is known, capture it as a spec, and give any call that would be costly to undo
   its own ADR.
-- Build from a written plan. Tickets are the exception: only work that grew out of the
-  wayfinding step is broken into them first. A screen also routes through `flujo-interfaz`.
+- Small work builds straight from the clarified ask; big work is split into tickets first and
+  built from them. A screen also routes through `flujo-interfaz`.
 - Review the finished change against the repo's standards and against the spec before merging.
 
 Two exceptions, and say out loud when you take one:
@@ -54,9 +54,9 @@ whole run — advance through the phases without re-asking.
 If a step's skill is not installed, offer to add it (§2) before routing. `implement` always
 pairs with test-driven development and a verification pass before anything is called done.
 
-Exact skill names and order: `grill-with-docs` or `wayfinder` -> `superpowers:brainstorming` or
-`to-spec` (and `write-adr` for decisions) -> `superpowers:writing-plans` ->
-`superpowers:executing-plans` (big spec: `to-tickets` -> `implement-spec`) -> `code-review` -> `pr`.
+Exact skill names, by size. Small: `superpowers:brainstorming` or `grill-with-docs` ->
+`implement`. Big: `grill-with-docs` or `wayfinder` -> `to-spec` -> `to-tickets` ->
+`implement-spec`. Both: `write-adr` for decisions, then `code-review` -> `pr`.
 On Claude Code this rule also arrives as a per-turn hook; the brevity here is deduplication,
 not relaxation.
 

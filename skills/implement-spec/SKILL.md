@@ -2,12 +2,11 @@
 name: implement-spec
 description: "Implement the result of /to-spec and /to-tickets in code, orchestrating parallel implementer subagents over the ticket graph."
 tags: ["implementation", "spec", "tickets", "subagents", "orchestration"]
-disable-model-invocation: true
 profiles: [core, ui, full]
 origin: damiangil
 ---
 
-Te han dado una spec. Esa spec debería tener tickets asociados que describen cómo implementarla.
+Te han dado una spec. Esa spec debería tener tickets asociados que describen cómo implementarla. Si no los tiene, **para**: lanza `to-tickets` sobre la spec y vuelve aquí con el grafo ya publicado. Sin tickets no hay frontera que repartir, y esto se convierte en una implementación a ciegas.
 
 El issue tracker debería estar descrito en `docs/agents/issue-tracker.md`. Si falta, pregunta al usuario dónde viven los tickets y cómo se cierra el trabajo (PR, issue, fichero).
 

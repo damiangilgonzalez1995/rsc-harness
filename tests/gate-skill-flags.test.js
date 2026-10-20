@@ -87,3 +87,14 @@ test('CODE_FLOW_FLOOR trae cada skill que nombra el gate', () => {
   const missing = gateSkillIds().filter((id) => !OPTIONAL.has(id) && !CODE_FLOW_FLOOR.includes(id));
   assert.deepEqual(missing, []);
 });
+
+test('las skills de la cadena del gate las puede lanzar el agente: ninguna lleva disable-model-invocation', () => {
+  // El agente encadena él solo to-spec -> to-tickets -> implement-spec; una marca obliga al usuario
+  // a escribir cada /comando y, peor, el agente se salta el paso (así se perdían los tickets).
+  const flagged = gateSkillIds().filter((id) => {
+    const file = join(ROOT, 'skills', id, 'SKILL.md');
+    if (!existsSync(file)) return false;
+    return /^disable-model-invocation:\s*true\s*$/m.test(readFileSync(file, 'utf8').split(/\r?\n---/)[0]);
+  });
+  assert.deepEqual(flagged, []);
+});
