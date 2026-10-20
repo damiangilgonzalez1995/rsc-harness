@@ -417,7 +417,9 @@ safety rule the curation pass honors.
 ### Steps
 
 1. **Capture.** Write the worklog to `raw/worklog/YYYY-MM-DD-<slug>.md`
-   (`status: unprocessed`). Infer `topic` from content.
+   (`status: unprocessed`). Infer `topic` from content. If `raw/worklog/` does
+   not exist yet, create it (`mkdir -p`) — never list it blindly: the checkpoint
+   hook already says whether it exists and how many worklogs it holds.
 2. **Compile.** Run the normal Compile (Fetch is a no-op — the worklog is already
    `raw`): distill durable points into `wiki/<topic>/` articles (update existing
    before creating new), add markdown-link cross-refs + `## Related`, cascade.

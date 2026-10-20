@@ -225,3 +225,44 @@ test('the local CLI exposes machine-readable status without a network dependency
   assert.equal(status.sessions, 0);
   assert.ok(['wiki-worklog', 'local-state'].includes(status.kind));
 });
+
+test('a deleted dirty file does not send every other file down the per-file hashing path', () => {
+  // One `rm` was enough: `--stdin-paths` aborted on it and the fallback spawned one git per file,
+  // ~20 s for 400 files on Windows, which is how PreCompact ended in "Hook cancelled".
+  const src = readFileSync(join(ROOT, 'targets/session-memory-core.mjs'), 'utf8');
+  assert.match(src, /statSync\(join\(worktree, path\)\)\.isFile\(\)/);
+  const cwd = repo();
+  writeFileSync(join(cwd, 'gone.md'), 'tracked\n');
+  git(cwd, ['add', 'gone.md']);
+  git(cwd, ['commit', '-qm', 'gone']);
+  memory.capture({ cwd, sessionId: 'deleted', target: 'claude', event: 'start' });
+  unlinkSync(join(cwd, 'gone.md'));
+  for (let i = 0; i < 5; i += 1) writeFileSync(join(cwd, `new-${i}.md`), `${i}\n`);
+  const first = memory.capture({ cwd, sessionId: 'deleted', target: 'claude', event: 'request' });
+  assert.ok(first.record.files.includes('gone.md'));
+  assert.equal(first.record.editCount, 5, 'the readable files are fingerprinted and counted');
+  const again = memory.capture({ cwd, sessionId: 'deleted', target: 'claude', event: 'request' });
+  assert.equal(again.record.editCount, 5, 'nothing moved, nothing more counted');
+});
+
+test('PreCompact gets a longer hook timeout than the per-turn events', async () => {
+  const { wireMemory } = await import('../targets/memory.js');
+  const cwd = repo();
+  wireMemory('claude', cwd);
+  const hooks = JSON.parse(readFileSync(join(cwd, '.claude', 'settings.local.json'), 'utf8')).hooks;
+  assert.equal(hooks.PreCompact[0].hooks[0].timeout, 15);
+  assert.equal(hooks.Stop[0].hooks[0].timeout, 5);
+});
+
+test('worklog checkpoint tolerates a missing docs/raw/worklog and never asks to list it', () => {
+  const script = join(ROOT, 'targets/worklog-checkpoint.mjs');
+  const cwd = mkdtempSync(join(tmpdir(), 'rsc-worklog-'));
+  mkdirSync(join(cwd, 'docs', 'wiki'), { recursive: true });
+  const missing = execFileSync(process.execPath, [script, cwd], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+  assert.match(missing, /does not exist yet: create it first/);
+  mkdirSync(join(cwd, 'docs', 'raw', 'worklog'), { recursive: true });
+  writeFileSync(join(cwd, 'docs', 'raw', 'worklog', '2026-10-20-x.md'), '---\n');
+  assert.match(execFileSync(process.execPath, [script, cwd], { encoding: 'utf8' }), /exists with 1 worklog file/);
+  const none = mkdtempSync(join(tmpdir(), 'rsc-worklog-none-'));
+  assert.equal(execFileSync(process.execPath, [script, none], { encoding: 'utf8' }), '', 'no wiki, no output');
+});

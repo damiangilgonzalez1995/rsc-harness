@@ -108,7 +108,10 @@ export function handleLifecycle({ target, event, native = {}, cwd, settings } = 
     const id = sessionId(native, target);
     const eventName = hookEventName(target, event, native);
     if (event === 'start') {
-      const started = capture({ cwd: project, worktreeCwd: here, sessionId: id, target, event: 'start', settings: config });
+      // `source: "compact"` is the SessionStart that follows a compaction. It resets the edit budget
+      // on its own, so the count still restarts when the PreCompact hook itself never finished.
+      const reset = native?.source === 'compact';
+      const started = capture({ cwd: project, worktreeCwd: here, sessionId: id, target, event: 'start', reset, settings: config });
       const resumed = resume({ cwd: project, worktreeCwd: here, target, settings: config });
       return {
         output: nativeOutput(target, eventName, resumed.context),
