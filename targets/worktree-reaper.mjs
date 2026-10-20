@@ -115,7 +115,125 @@ export function isCleanupEnabled(root) {
 
 /** The first trunk ref that actually exists, or null when there is nothing to compare against. */
 export function resolveTrunk(root) {
+  // What the remote itself calls its default branch comes first: a trunk called `develop` or
+  // `trunk` is invisible to the table below, and guessing `main` there compares against nothing.
+  const announced = remoteDefault(root);
+  if (announced) return announced.ref;
   return TRUNKS.find((ref) => git(root, ['rev-parse', '--verify', '--quiet', `${ref}^{commit}`]).ok) || null;
+}
+
+// `origin/HEAD` as the remote announced it, or null. A plain `git init` + `remote add` never writes
+// that ref (only `clone` and `remote set-head` do), so null is common and is not an error.
+function remoteDefault(root) {
+  const sym = git(root, ['symbolic-ref', '--quiet', 'refs/remotes/origin/HEAD']);
+  if (!sym.ok || !sym.out.startsWith('refs/remotes/origin/')) return null;
+  const name = sym.out.slice('refs/remotes/origin/'.length);
+  if (!git(root, ['rev-parse', '--verify', '--quiet', `origin/${name}^{commit}`]).ok) return null;
+  return { ref: `origin/${name}`, name };
+}
+
+/**
+ * The branch a new worktree starts from: origin's default, never the local one.
+ *
+ * Measured in a user's project: the local `main` was 400 commits behind origin, and a worktree cut
+ * from it starts 400 commits in the past — every review and every merge after that pays for it.
+ * The remote tip is the only base that is current by construction. Null when there is no origin.
+ */
+export function defaultBranch(root) {
+  const announced = remoteDefault(root);
+  if (announced) return announced;
+  for (const name of ['main', 'master']) {
+    if (git(root, ['rev-parse', '--verify', '--quiet', `origin/${name}^{commit}`]).ok) return { ref: `origin/${name}`, name };
+  }
+  return null;
+}
+
+/** `git fetch origin`, reported rather than thrown: offline is a warning, not a crash. */
+export function fetchOrigin(root) {
+  const r = git(root, ['fetch', '--quiet', 'origin']);
+  return { ok: r.ok, err: r.err };
+}
+
+// A worktree name becomes a directory under `.claude/worktrees/` and, by default, a branch. One
+// segment of plain characters, so `../../elsewhere` or an absolute path can never be where it lands.
+const WORKTREE_NAME = /^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$/;
+
+/** Why this name cannot be used, or null when it can. */
+export function invalidWorktreeName(name) {
+  if (typeof name !== 'string' || !name) return 'a name is required';
+  if (!WORKTREE_NAME.test(name) || name.includes('..') || name.endsWith('.lock') || name.endsWith('.')) {
+    return `"${name}" is not a valid worktree name: use letters, digits, '.', '_' or '-' (no '/', no '..')`;
+  }
+  return null;
+}
+
+/**
+ * The preparation hook a project defines for a new worktree, or null.
+ *
+ * A worktree is born with what git tracks and nothing else: no `.env`, no dependencies. What each
+ * project needs to be runnable is the project's knowledge, not ours, so rsc does not guess it — it
+ * runs the project's own script if there is one. The new worktree's copy wins (it is the code of
+ * the branch that will run), the main checkout's is the fallback (a hook not yet committed).
+ */
+export const PREPARE_HOOKS = ['scripts/dev/preparar-worktree.sh', 'scripts/dev/preparar-worktree.mjs'];
+export function findPrepareHook(...dirs) {
+  for (const dir of dirs) {
+    for (const rel of PREPARE_HOOKS) if (existsSync(join(dir, rel))) return join(dir, rel);
+  }
+  return null;
+}
+
+/**
+ * Create a worktree at `.claude/worktrees/<name>` on a NEW branch cut from origin's default branch.
+ *
+ * `--no-track` because a branch cut from `origin/main` would otherwise track `origin/main`, and
+ * the first `git pull` from the worktree would merge the trunk into the feature behind your back.
+ * The branch gets its own upstream on its first `git push -u`.
+ */
+export function createWorktree(root, name, { branch } = {}) {
+  const bad = invalidWorktreeName(name);
+  if (bad) return { created: false, reason: bad };
+  const ref = branch || name;
+  if (!git(root, ['check-ref-format', '--branch', ref]).ok) return { created: false, reason: `"${ref}" is not a valid branch name` };
+  if (git(root, ['rev-parse', '--verify', '--quiet', `refs/heads/${ref}`]).ok) {
+    return { created: false, reason: `branch ${ref} already exists; pick another with --branch <rama>` };
+  }
+  const path = join(real(root), '.claude', 'worktrees', name);
+  if (existsSync(path)) return { created: false, reason: `${path} already exists` };
+
+  const fetched = fetchOrigin(root);
+  const base = defaultBranch(root);
+  if (!base) {
+    return { created: false, reason: 'no origin default branch to start from (no `origin` remote, or neither origin/main nor origin/master exists). Add the remote and push the trunk first.' };
+  }
+  mkdirSync(dirname(path), { recursive: true });
+  const add = git(root, ['worktree', 'add', '--quiet', '--no-track', '-b', ref, path, base.ref]);
+  if (!add.ok) return { created: false, reason: `git refused to create it: ${add.err || add.out}` };
+  return { created: true, path: real(path), branch: ref, base: base.ref, fetched: fetched.ok, fetchError: fetched.ok ? null : fetched.err };
+}
+
+/** Run the preparation hook inside the new worktree. Its output goes straight to the person. */
+export function runPrepareHook(hook, worktreePath, mainRoot) {
+  const runner = hook.endsWith('.mjs') ? process.execPath : 'bash';
+  const r = spawnSync(runner, [hook], {
+    cwd: worktreePath,
+    stdio: 'inherit',
+    windowsHide: true,
+    env: { ...process.env, RSC_MAIN_WORKTREE: real(mainRoot), RSC_WORKTREE: worktreePath },
+  });
+  if (r.error) return { ok: false, reason: `could not start ${runner}: ${r.error.message}` };
+  return { ok: r.status === 0, reason: r.status === 0 ? null : `exited with code ${r.status}` };
+}
+
+/**
+ * The candidates a bulk `reap --merged` may take: landed and empty of anything unsaved, where the
+ * only thing missing is certainty about provenance. That doubt is what `--confirm` accepts, once,
+ * for the whole list the person was just shown. Nothing else is: a dirty worktree, or one holding a
+ * file in no commit, is never part of a bulk yes (test 14's rule, unchanged).
+ */
+export function mergedCandidates(classified) {
+  return classified.filter((c) => c.verdict === 'safe'
+    || (c.verdict === 'ask' && c.reasons.length && c.reasons.every((r) => r === 'provenance-ambiguous')));
 }
 
 /** Every working tree git knows about. The first entry is always the main one. */
@@ -166,8 +284,12 @@ export function provenanceOf(root, wt) {
   const p = wt.path;
   const home = real(root);
   const inside = (dir) => p === dir || p.startsWith(dir + sep);
+  // `.claude/worktrees/` is where Claude Code puts the worktrees it opens, and where
+  // `rsc worktrees new` puts them too. Left out, every one of them read as foreign: up to fourteen
+  // piled up in one user's project, invisible to the cleanup, until they were removed by hand.
   const location = inside(join(home, '.worktrees'))
     || inside(join(home, 'worktrees'))
+    || inside(join(home, '.claude', 'worktrees'))
     || (dirname(p) === dirname(home) && basename(p).startsWith(`${basename(home)}-`));
   const branch = Boolean(wt.branch && RSC_BRANCH.test(wt.branch));
   if (location && branch) return 'rsc';
@@ -236,7 +358,7 @@ export function integrationOf(root, wt, trunk) {
  * with nothing pending can still hold the only copy of an .env, a local database or a page of notes,
  * and removing the directory takes them with it. `--ignored` is the only way to be told they exist.
  */
-export function contentOutsideHistory(wtPath) {
+export function contentOutsideHistory(wtPath, mainRoot) {
   const { ok, raw } = git(wtPath, ['status', '--porcelain', '-z', '-uall', '--ignored=matching']);
   const dirty = [];
   const outside = [];
@@ -252,10 +374,25 @@ export function contentOutsideHistory(wtPath) {
     // does not exist — the exact failure the `raw` comment above exists to prevent (P6).
     if (code[0] === 'R' || code[0] === 'C') { i++; dirty.push(path); continue; }
     if (code === '??' || code === '!!') {
-      if (!isRegenerable(path)) outside.push(path);
+      if (!isRegenerable(path) && !copiedFromMain(wtPath, mainRoot, path)) outside.push(path);
     } else dirty.push(path);
   }
   return { dirty, outside, readable: true };
+}
+
+// A file byte-identical to the same path in the main checkout is a copy, not the only copy: the
+// preparation hook of `rsc worktrees new` puts the `.env` there exactly that way. Without this, every
+// prepared worktree would hold "a file in no commit" for ever and no cleanup could take it. Compared
+// by content, never by name: an `.env` edited inside the worktree differs and still blocks.
+function copiedFromMain(wtPath, mainRoot, path) {
+  if (!mainRoot || path.endsWith('/')) return false;
+  const original = join(mainRoot, path);
+  if (real(original) === real(join(wtPath, path))) return false;
+  try {
+    return readFileSync(original).equals(readFileSync(join(wtPath, path)));
+  } catch {
+    return false;
+  }
 }
 
 // A directory name counts anywhere it is used as a DIRECTORY; a filename counts only as a filename.
@@ -307,7 +444,7 @@ export function classifyWorktrees(root) {
       if (integration !== 'integrated') return { ...base, reasons: [integration] };
       if (!hasLandedWork(root, wt)) return { ...base, reasons: ['nothing-landed'] };
 
-      const { dirty, outside, readable } = contentOutsideHistory(wt.path);
+      const { dirty, outside, readable } = contentOutsideHistory(wt.path, real(root));
       if (!readable) return { ...base, reasons: ['unreadable'] };
 
       const reasons = [];
@@ -371,7 +508,10 @@ export function reapWorktree(root, targetPath, { confirmed = false } = {}) {
   // `-d` refuses an unmerged branch, which is the recovery net — but it happily deletes the TRUNK,
   // which is an ancestor of everything. A sibling checkout of `main` classified as ambiguous, the user
   // confirmed removing a stray directory, and the trunk ref went with it.
-  const branchDeleted = candidate.branch && !isTrunkName(candidate.branch)
+  // The default branch the remote announces is a trunk too, whatever it is called.
+  const announced = remoteDefault(root);
+  const isTrunk = isTrunkName(candidate.branch || '') || Boolean(announced && candidate.branch === announced.name);
+  const branchDeleted = candidate.branch && !isTrunk
     ? git(root, ['branch', '-d', candidate.branch]).ok
     : false;
   // No `git worktree prune` here. It has no expiry of its own, so running it while another worktree's

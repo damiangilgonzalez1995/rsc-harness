@@ -262,7 +262,22 @@ rsc restore latest --dry-run         # preview restoring the newest snapshot
 rsc restore <snapshot-id>            # restore a project-local snapshot
 rsc upgrade --dry-run                # show npm upgrade + sync commands
 rsc uninstall postgresdb --dry-run   # preview a removal
+rsc worktrees new login              # fetch, then .claude/worktrees/login on branch login from origin's default branch
+rsc worktrees new login --branch feat/login
+rsc worktrees                        # list worktrees whose work has landed
+rsc worktrees reap --merged          # list every merged, clean worktree…
+rsc worktrees reap --merged --confirm   # …and remove them all in one go (branch -d, never -D)
 ```
+
+**Worktrees.** `rsc worktrees new <nombre>` runs `git fetch origin` and cuts the new branch from
+`origin/<default>` (read from `origin/HEAD`, falling back to `main`/`master`), never from a local
+`main` that may be far behind. A worktree is born with only what git tracks: `.env` files and
+dependencies are **not** copied. To prepare each new worktree, commit a hook at
+`scripts/dev/preparar-worktree.sh` (run with `bash`) or `scripts/dev/preparar-worktree.mjs` (run
+with `node`); it runs with the new worktree as its working directory and `RSC_MAIN_WORKTREE` pointing
+at the main checkout, e.g. `cp "$RSC_MAIN_WORKTREE/.env" . && npm ci`. A file byte-identical to the
+main checkout's copy does not block the cleanup; one edited inside the worktree does. `reap --merged`
+never takes a dirty worktree, one holding a file in no commit, or one whose branch has not landed.
 
 ---
 

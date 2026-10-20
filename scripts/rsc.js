@@ -885,8 +885,69 @@ async function main() {
       const root = W.resolveMainRoot(process.cwd());
       const sub = argv[1];
 
+      if (sub === 'new') {
+        // Creating is not cleaning, so the cleanup opt-out does not apply here. Two things a worktree
+        // was measured lacking when it is born: a current base (local main was 400 commits behind
+        // origin) and what git does not track (.env, dependencies). The base is fixed here; the rest
+        // is the project's own hook, because only the project knows what makes it runnable.
+        const branchAt = argv.indexOf('--branch');
+        const branch = branchAt >= 0 ? argv[branchAt + 1] : undefined;
+        if (branchAt >= 0 && (!branch || branch.startsWith('--'))) { say('rsc: --branch needs a branch name.'); process.exitCode = 1; return; }
+        const name = argv.slice(2).find((a, i, all) => !a.startsWith('--') && all[i - 1] !== '--branch');
+        if (!name) { say('Use: npx @damiangilgonzalez/harness worktrees new <nombre> [--branch <rama>]'); process.exitCode = 1; return; }
+        const out = W.createWorktree(root, name, { branch });
+        if (!out.created) { say(`rsc: ${out.reason}`); process.exitCode = 1; return; }
+        if (!out.fetched) say(`⚠️  git fetch origin failed (${out.fetchError || 'no detail'}); starting from the last known ${out.base}, which may be stale.`);
+        say(`✅ worktree ${out.path}`);
+        say(`   branch ${out.branch}, from ${out.base}`);
+        const hook = W.findPrepareHook(out.path, root);
+        if (hook) {
+          say(`   preparing it: ${hook}`);
+          const ran = W.runPrepareHook(hook, out.path, root);
+          if (!ran.ok) { say(`⚠️  the preparation hook failed (${ran.reason}). The worktree exists; finish preparing it by hand.`); process.exitCode = 1; }
+        } else {
+          say(`   No preparation hook (${W.PREPARE_HOOKS.join(' or ')}): .env files and dependencies are NOT copied — create the hook to do it on every new worktree.`);
+        }
+        say(`Next: cd "${out.path}"`);
+        return;
+      }
+
       if (!W.isCleanupEnabled(root)) {
         say(`worktree cleanup is off for this project (.rsc/${W.OPT_OUT}). Delete that file to turn it back on.`);
+        return;
+      }
+
+      if (sub === 'reap' && argv.includes('--merged')) {
+        // The bulk answer to "delete the worktrees" — asked four times in one project, with up to
+        // fourteen open. Merged is judged against origin's trunk AFTER a fetch, so a branch landed in
+        // the forge an hour ago counts. Without --confirm this only lists: one look, then one yes.
+        const fetched = W.fetchOrigin(root);
+        if (!fetched.ok) say(`⚠️  git fetch origin failed (${fetched.err || 'no detail'}); judging against the last known trunk.`);
+        const all = W.classifyWorktrees(root);
+        const merged = W.mergedCandidates(all);
+        const held = all.filter((c) => c.verdict === 'ask' && !merged.includes(c));
+        if (!merged.length) say('No merged worktree that can be removed in bulk.');
+        if (!argv.includes('--confirm')) {
+          if (merged.length) {
+            say(`${merged.length} merged worktree(s), clean, removable in one go:`);
+            for (const c of merged) say(`  ${c.path}${c.branch ? ` (${c.branch})` : ''}`);
+          }
+          for (const c of held) say(W.describe(c));
+          if (merged.length) say('\nRemove them all:  npx @damiangilgonzalez/harness worktrees reap --merged --confirm');
+          return;
+        }
+        for (const c of merged) {
+          const out = W.reapWorktree(root, c.path, { confirmed: true });
+          if (out.removed) {
+            say(`✅ removed ${out.path}`);
+            if (out.branchKept) say(`   branch ${out.branch} kept — git will not delete it safely, and while it exists the commits are recoverable.`);
+          } else {
+            say(`⏸  kept ${c.path} — ${out.reason}`);
+            process.exitCode = 1;
+          }
+        }
+        // What a bulk yes never covers, said out loud so nobody thinks it was forgotten.
+        for (const c of held) say(`⏸  kept ${c.path} — ${W.refusal(c)}`);
         return;
       }
 
@@ -920,6 +981,7 @@ async function main() {
       say('');
       say('Remove the safe ones:  npx @damiangilgonzalez/harness worktrees reap');
       say('Remove one by name:    npx @damiangilgonzalez/harness worktrees reap <path> [--confirm]');
+      say('Remove every merged:   npx @damiangilgonzalez/harness worktrees reap --merged [--confirm]');
       return;
     }
     case 'capabilities': {
@@ -1195,7 +1257,7 @@ async function main() {
       return void (await runPurge(argv.includes('--dry-run'), argv.includes('--with-docs')));
     default:
       say(`rsc: unknown command '${cmd}'.`);
-      say('Use: npx @damiangilgonzalez/harness onboard | reassess | add <id...> | install --profile <p> | consult "<text>" | list | capabilities [--full|gap-log] | audit | registry refresh | doctor | sync | memory <on|off|status|save|resume|learn|metrics> | sello <on|off|status|…> | worktrees [reap [path] [--confirm]] | backups | restore <id|latest> | upgrade | repair | uninstall <id> | purge');
+      say('Use: npx @damiangilgonzalez/harness onboard | reassess | add <id...> | install --profile <p> | consult "<text>" | list | capabilities [--full|gap-log] | audit | registry refresh | doctor | sync | memory <on|off|status|save|resume|learn|metrics> | sello <on|off|status|…> | worktrees [new <nombre> [--branch <rama>] | reap [path|--merged] [--confirm]] | backups | restore <id|latest> | upgrade | repair | uninstall <id> | purge');
       say('Any command takes --target <claude|codex|cursor|copilot|gemini|…> (comma-separate for several)');
       say('   → without it, rsc uses the assistant already installed here; if two are, it asks instead of guessing.');
       process.exitCode = 1;
