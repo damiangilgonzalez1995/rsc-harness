@@ -42,8 +42,15 @@ test('every domain has a title and at least one skill', () => {
   }
 });
 
-test('README links a folder for every skill in the manifest', () => {
+// The full catalog moved out of the README into docs/catalogo.md (the README links to it), so the
+// "every skill has a link to its folder" guarantee follows the catalog to its new home.
+test('the catalog doc links a folder for every skill in the manifest', () => {
+  const catalog = readFileSync(join(ROOT, 'docs', 'catalogo.md'), 'utf8');
+  const missing = skillDirs().filter((id) => !catalog.includes(`(../skills/${id}/)`));
+  assert.deepEqual(missing, [], `skills missing a docs/catalogo.md link: ${missing.join(', ')}`);
+});
+
+test('the README links the full catalog', () => {
   const readme = readFileSync(join(ROOT, 'README.md'), 'utf8');
-  const missing = skillDirs().filter((id) => !readme.includes(`(skills/${id}/)`));
-  assert.deepEqual(missing, [], `skills missing a README catalog link: ${missing.join(', ')}`);
+  assert.match(readme, /\(docs\/catalogo\.md\)/, 'the README must point readers at docs/catalogo.md');
 });

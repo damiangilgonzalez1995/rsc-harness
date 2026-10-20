@@ -21,7 +21,7 @@ test('every public surface sends humans and chat agents through canonical onboar
 });
 
 test('public claims state the real guarantee boundary and no longer promise an opaque profile menu', () => {
-  assert.match(docs.README, /before (?:it )?writes|writes nothing/i);
+  assert.match(docs.README, /before (?:it )?writes|writes nothing|no escribe nada antes|antes de escribir/i);
   assert.match(docs.English, /writes nothing|before writing/i);
   assert.match(docs.Spanish, /no escribe|antes de escribir/i);
   for (const body of Object.values(docs)) {

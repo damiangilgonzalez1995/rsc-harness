@@ -43,8 +43,8 @@ Canonical non-interactive preview:
 
 - npm: https://www.npmjs.com/package/@damiangilgonzalez/harness
 - README: https://github.com/damiangilgonzalez1995/rsc-harness
-- English: https://ericrisco.github.io/rsc-harness/
-- Español: https://ericrisco.github.io/rsc-harness/es/
+- Skill catalog: https://github.com/damiangilgonzalez1995/rsc-harness/blob/main/docs/catalogo.md
+- Technical reference: https://github.com/damiangilgonzalez1995/rsc-harness/blob/main/docs/referencia-tecnica.md
 - Agent Skills: https://agentskills.io/specification
 
 ## Facts
