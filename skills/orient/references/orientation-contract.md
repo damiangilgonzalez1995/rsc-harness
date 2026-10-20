@@ -28,6 +28,15 @@ Read `docs/wiki/harness/user-profile.md`. Two fields combine: `accompaniment_lev
 
 `technical_level` is orthogonal (plain language for `non-technical` even at L0; skip 101s for `technical` even at L3). Missing profile → assume `non-technical` + **L3** and offer to set the dial.
 
+## When a front closes
+
+A front ("frente") closes when its PR is merged or opened, or its ticket is done. That turn's `➡️`
+proposes `handoff` and a new session as the first option, instead of starting the next front here.
+A session that runs for days through several `/compact` loses what the user just said: each
+compaction and each subagent hand-back pushes the latest instructions further out. A handoff
+document carries what matters; the new session starts with room for it. If the user prefers to
+continue, continue — offer once per front, not every turn.
+
 ## Division of labor
 
 - `orient` guides the **person** (this contract).

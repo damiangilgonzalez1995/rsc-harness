@@ -30,9 +30,11 @@ Lanza los **subagentes implementadores** en segundo plano siempre que se pueda, 
 4. Usa **subagentes implementadores** para implementar cada ticket, cada uno en su propio worktree y en su propia rama (`superpowers:using-git-worktrees`). Cada subagente implementador:
    - confirma que su worktree parte de la rama de integración antes de empezar, y se reinicia sobre ella si no;
    - llama a la herramienta Skill con `superpowers:test-driven-development` para construir el ticket;
-   - fusiona la punta de la rama de integración en su propia rama antes de decir que ha terminado.
+   - fusiona la punta de la rama de integración en su propia rama antes de decir que ha terminado;
+   - si el ticket cambia algo visible, adjunta una captura del entorno donde el usuario lo va a probar;
+   - entrega un informe final de **150 palabras como máximo**: qué cambió, ficheros, resultado de los tests y bloqueos. El detalle va al commit o al ticket, no a la respuesta. Pon este tope literal en el prompt de cada subagente: cada entrega entra entera en tu contexto, y decenas de entregas largas te hacen olvidar lo que acaba de decir el usuario.
 
-5. Cuando un **subagente implementador** termina, fusiona su trabajo en la rama de integración con un **subagente fusionador**.
+5. Cuando un **subagente implementador** termina, revisa su entrega antes de fusionar. Si toca algo visible y no trae captura, o dice que no lo ha mirado en un navegador, **no está hecho**: devuélvesela para que lo mire. Si la entrega es buena, fusiona su trabajo en la rama de integración con un **subagente fusionador**.
 
 6. Si eso cambia la **frontera** de tickets disponibles, lanza más **subagentes implementadores** para los tickets nuevos. Así se mantiene la máxima concurrencia.
 

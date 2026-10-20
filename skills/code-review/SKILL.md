@@ -38,6 +38,8 @@ Busca el spec de origen, en este orden:
 
 Cualquier cosa en el repo que documente cómo debe escribirse el código, como `CODING_STANDARDS.md` o `CONTRIBUTING.md`. (En este proyecto: `CLAUDE.md` y `docs/CARTA-MAGNA.md`.)
 
+Si no encuentras ninguna, **no lo calles**: el eje de Estándares solo tendrá el smell baseline, y el reporte final debe decirlo en su primera línea ("Estándares: el repo no documenta estándares; solo se revisó el smell baseline"). Ofrece generar un `CODING_STANDARDS.md` inicial a partir de las convenciones que se observan en el repo (nombres, estructura, manejo de errores, tests). No lo escribas sin un sí del usuario.
+
 Además de lo que el repo documente, el eje de Estándares siempre lleva el **smell baseline** de abajo — un conjunto fijo de code smells de Fowler (_Refactoring_, cap. 3) que aplica incluso cuando el repo no documenta nada. Dos reglas lo condicionan:
 
 - **El repo manda.** Un estándar documentado del repo siempre gana; donde el repo avale algo que el baseline marcaría, suprime el smell.
@@ -74,7 +76,7 @@ Envía un único mensaje con dos llamadas a la herramienta `Agent`. Usa el subag
 - La ruta o el contenido recuperado del spec.
 - El encargo: "Reporta: (a) requisitos que el spec pedía y que faltan o están parciales; (b) comportamiento en el diff que no se pidió (scope creep); (c) requisitos que parecen implementados pero cuya implementación parece incorrecta. Cita la línea del spec por cada hallazgo. Menos de 400 palabras."
 
-Si falta el spec, sáltate el sub-agente de Spec y anótalo en el reporte final.
+Si falta el spec, sáltate el sub-agente de Spec y anótalo en el reporte final. Si faltan las fuentes de estándares, lanza igual el de Estándares con el baseline, y anótalo también junto con la oferta del `CODING_STANDARDS.md`.
 
 ### 5. Verificar los graves antes de presentarlos
 

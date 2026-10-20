@@ -3805,7 +3805,7 @@
     },
     {
       "id": "pr",
-      "description": "Use when writing a PR body: a visual summary, before/after evidence, and the merge danger (one-way or two-way door, blast radius).",
+      "description": "Use when writing a PR body or opening a PR: a visual summary, before/after evidence, the merge danger (one-way or two-way door, blast radius), and a title checked against the repo's CI title rule before `gh pr create`.",
       "tags": [
         "pull-request",
         "review",

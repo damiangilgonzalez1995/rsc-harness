@@ -80,6 +80,13 @@ de las skills de diseno. Las mecanicas del framework son de `angular`, `react` o
 | Un flujo pierde usuarios a mitad | `leyes-de-retencion` -> `mejor-redaccion` -> `mejor-accesibilidad` |
 | Solo pulir lo que ya hay | `revision-interfaz` |
 
+## Cuando cuenta como hecho
+
+Un cambio visual no esta hecho sin una **captura del entorno donde el usuario lo va a probar**
+(su navegador, su URL, su viewport; no un test ni un render aislado si el usuario no prueba ahi).
+Que compile y pasen los tests no dice nada de como se ve. Si no puedes abrirlo, dilo y no lo
+declares terminado: "no lo he mirado en un navegador" es un trabajo sin acabar, no un matiz.
+
 ## Donde encaja en la metodologia
 
 Esta cadena vive **dentro** del paso de construir, no lo sustituye. El trabajo sigue llegando con
