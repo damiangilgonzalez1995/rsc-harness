@@ -245,7 +245,8 @@ tu-proyecto/
 
 **Cuatro perfiles, uno dentro de otro.** Círculos concéntricos con la cifra grande en cada anillo:
 
-- `minimal` · **9** skills: lo imprescindible (`orient`, `suggest`, `bro`…)
+- `minimal` · **9** skills: lo imprescindible (`orient`, `suggest`, `bro`, `init`, `harness`,
+  `teach`, `eli5`, `show-me`, `unslop`)
 - `core` · **36**: más el método completo
 - `ui` · **55**: más las de diseño de interfaz
 - `full` · **294**: todo el catálogo
