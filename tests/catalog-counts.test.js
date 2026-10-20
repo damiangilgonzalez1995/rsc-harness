@@ -16,11 +16,8 @@ const MANIFEST = JSON.parse(readFileSync(join(ROOT, 'manifest.json'), 'utf8'));
 
 const DOCS = [
   'README.md',
-  'site/llms.txt',
-  'site/index.html',
-  'site/es/index.html',
-  'site/cover.html',
-  'site/cover-anatomy.html',
+  'docs/catalogo.md',
+  'docs/referencia-tecnica.md',
 ];
 
 // The stat blocks put the number and its label in separate elements, so tags come out first.
@@ -51,14 +48,18 @@ test('every "N domains" claim matches the domain map', () => {
   assert.deepEqual(wrong, [], `stale domain counts:\n  ${wrong.join('\n  ')}`);
 });
 
+// The README and the technical reference are written in Spanish ("34 agentes", "43 entradas de
+// comando"); the English forms stay accepted so a sentence in either language is checked.
 test('README agent and command inventory claims match the generated manifest', () => {
-  const body = text('README.md');
-  const agents = [...body.matchAll(/(\d+)\s+agents\b/gi)].map((match) => Number(match[1]));
-  const commands = [...body.matchAll(/(\d+)\s+command entries\b/gi)].map((match) => Number(match[1]));
-  assert.ok(agents.length > 0, 'README must publish the agent count');
-  assert.ok(commands.length > 0, 'README must publish the command count');
-  assert.ok(agents.every((count) => count === MANIFEST.counts.agents));
-  assert.ok(commands.every((count) => count === MANIFEST.counts.commands));
+  for (const file of ['README.md', 'docs/referencia-tecnica.md']) {
+    const body = text(file);
+    const agents = [...body.matchAll(/(\d+)\s+(?:agents|agentes)\b/gi)].map((match) => Number(match[1]));
+    const commands = [...body.matchAll(/(\d+)\s+(?:command entries|entradas de comando)\b/gi)].map((match) => Number(match[1]));
+    assert.ok(agents.length > 0, `${file} must publish the agent count`);
+    assert.ok(commands.length > 0, `${file} must publish the command count`);
+    assert.ok(agents.every((count) => count === MANIFEST.counts.agents), `${file}: agents ${agents} vs ${MANIFEST.counts.agents}`);
+    assert.ok(commands.every((count) => count === MANIFEST.counts.commands), `${file}: commands ${commands} vs ${MANIFEST.counts.commands}`);
+  }
 });
 
 // NOT checked here, on purpose: composed sentences where the number is not next to its noun

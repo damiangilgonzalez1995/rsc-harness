@@ -4,7 +4,7 @@
 
 Use GitHub's private reporting, which is enabled on this repository:
 
-**[Report a vulnerability](https://github.com/ericrisco/rsc-harness/security/advisories/new)** — or
+**[Report a vulnerability](https://github.com/damiangilgonzalez1995/rsc-harness/security/advisories/new)** — or
 Security → Advisories → Report a vulnerability.
 
 That channel is private between you and the maintainer. Please use it instead of a public issue for

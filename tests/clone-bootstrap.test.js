@@ -361,7 +361,8 @@ test('AC#19 — the always-on body stays under its declared ceiling', () => {
 
 test('AC#25 — the README does not send a clone to @latest while promising a pin', () => {
   const readme = readFileSync(new URL('../README.md', import.meta.url), 'utf8');
-  const sharing = readme.slice(readme.indexOf('Whoever clones'), readme.indexOf('**Own skills.**'));
+  // The README is in Spanish: the sharing section runs from "Quien clona" to "**Skills propias.**".
+  const sharing = readme.slice(readme.indexOf('Quien clona'), readme.indexOf('**Skills propias.**'));
   assert.ok(sharing.length > 0, 'the sharing section must still exist');
   assert.doesNotMatch(
     sharing,
@@ -373,8 +374,8 @@ test('AC#25 — the README does not send a clone to @latest while promising a pi
 
 test('AC#25 — the README describes the clone by symptom, and says the assistant announces it', () => {
   const readme = readFileSync(new URL('../README.md', import.meta.url), 'utf8').replace(/\s+/g, ' ');
-  assert.match(readme, /tells you, in the first message/i, 'a clone no longer needs the symptom recognised by hand');
-  assert.match(readme, /naming the pinned version/i, 'what it hands you must be the pinned command');
+  assert.match(readme, /te lo dice en el primer mensaje/i, 'a clone no longer needs the symptom recognised by hand');
+  assert.match(readme, /con la versión fijada/i, 'what it hands you must be the pinned command');
 });
 
 // ── the other half of the ask: "si no está actualizado que lo actualice" (AC#7, #14) ─────────────

@@ -261,7 +261,7 @@ export function doctor({ target, home, cwd }) {
   // #277 — the three "missing" lists share one shape, { id, path, action }, so whoever builds on top
   // of doctor reads them the same way; and `healthy` is what the exit code says.
   for (const [id, e] of Object.entries(state.skills)) {
-    for (const f of e.files) if (!existsSync(f)) report.missing.push({ id, path: f, action: 'Run `npx @ericrisco/rsc sync` to restore this managed skill.' });
+    for (const f of e.files) if (!existsSync(f)) report.missing.push({ id, path: f, action: 'Run `npx @damiangilgonzalez/harness sync` to restore this managed skill.' });
   }
   report.healthy = report.hookWired && !report.missing.length && !missingAgents.length && !missingCommands.length;
   return report;

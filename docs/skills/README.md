@@ -13,7 +13,7 @@ La fuente de verdad es un **documento escrito**, no un mensaje de chat. Primero 
 tierra, después se escribe la spec, se planifica, se implementa y al final se revisa contra lo
 especificado. Cada skill ocupa un sitio en ese ciclo.
 
-![La filosofía: spec-driven development](../img/00-filosofia.svg)
+![La filosofía: spec-driven development](../img/00-filosofia.png)
 
 Tres cosas hacen que funcione, y son las que más se saltan:
 
@@ -29,7 +29,7 @@ Tres cosas hacen que funcione, y son las que más se saltan:
 La cadena depende del **tamaño** de la tarea, y el agente encadena cada paso él solo: no hace
 falta escribir cada `/comando`.
 
-![Mapa de implementación: la cadena según el tamaño](../img/05-mapa-implementacion.svg)
+![Mapa de implementación: la cadena según el tamaño](../img/05-mapa-implementacion.png)
 
 | Tamaño | Cadena |
 |---|---|
@@ -95,9 +95,7 @@ Para añadir una skill suelta: `npx @damiangilgonzalez/harness@latest add <nombr
 
 ## Los esquemas
 
-Cada imagen de `docs/img/` se genera desde su `.mmd`. Para cambiar un esquema, edita el `.mmd` y
-regenera el `.svg`:
-
-```bash
-mmdc -i docs/img/01-planificar.mmd -o docs/img/01-planificar.svg -b transparent
-```
+Las imágenes de `docs/img/` y `docs/img/readme/` están diseñadas a partir de
+[`docs/design/brief-imagenes.md`](../design/brief-imagenes.md), que dice qué cuenta cada una. El
+`.mmd` de cada esquema es su estructura. Para cambiar un esquema: edita su `.mmd` y su ficha en el
+brief, y vuelve a generar el PNG con el mismo nombre.
