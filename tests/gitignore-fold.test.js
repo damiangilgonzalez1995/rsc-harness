@@ -53,3 +53,13 @@ test('a fresh repo still gets exactly one block', () => {
   const t = readFileSync(join(d, '.gitignore'), 'utf8');
   assert.equal(t, `${H}\n.rsc/\n`);
 });
+
+test('a Claude Code install ignores .claude/worktrees/, where each isolated branch is checked out', () => {
+  // Unignored, every file of every worktree was untracked: 964 of them made the memory hook take 54 s.
+  const d = repo();
+  ignoreLocalState(d, 'claude');
+  assert.ok(entries(readFileSync(join(d, '.gitignore'), 'utf8')).includes('.claude/worktrees/'));
+  const other = repo();
+  ignoreLocalState(other, 'codex');
+  assert.ok(!entries(readFileSync(join(other, '.gitignore'), 'utf8')).includes('.claude/worktrees/'));
+});

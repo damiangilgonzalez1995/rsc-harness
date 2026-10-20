@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, unlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -68,6 +68,27 @@ test('a later edit to a file already dirty at session start is still recorded', 
   writeFileSync(join(cwd, 'README.md'), 'edited during session\n');
   const boundary = memory.capture({ cwd, sessionId: 'dirty-edited', target: 'claude', event: 'request' });
   assert.deepEqual(boundary.record.files, ['README.md']);
+});
+
+test('dirty files are fingerprinted by one git process, not one per file', () => {
+  // Per file, a few hundred untracked files took 54 s on Windows against the 5 s hook timeout.
+  const src = readFileSync(join(ROOT, 'targets/session-memory-core.mjs'), 'utf8');
+  assert.match(src, /'hash-object', '--no-filters', '--stdin-paths'/);
+});
+
+test('a batch with an unreadable path still fingerprints the rest of the dirty files', () => {
+  // `--stdin-paths` aborts at a deleted file; the per-file fallback must keep the others.
+  const cwd = repo();
+  writeFileSync(join(cwd, 'gone.md'), 'tracked\n');
+  git(cwd, ['add', 'gone.md']);
+  git(cwd, ['commit', '-qm', 'gone']);
+  for (let i = 0; i < 40; i += 1) writeFileSync(join(cwd, `untracked-${i}.md`), `${i}\n`);
+  memory.capture({ cwd, sessionId: 'batch', target: 'claude', event: 'start' });
+  unlinkSync(join(cwd, 'gone.md'));
+  writeFileSync(join(cwd, 'README.md'), 'edited during session\n');
+  const result = memory.capture({ cwd, sessionId: 'batch', target: 'claude', event: 'request' });
+  assert.ok(result.record.files.includes('README.md'));
+  assert.ok(result.record.files.includes('untracked-39.md'));
 });
 
 test('a rename records both repository paths', () => {
