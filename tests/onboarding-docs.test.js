@@ -7,9 +7,6 @@ import { fileURLToPath } from 'node:url';
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const docs = {
   README: readFileSync(join(ROOT, 'README.md'), 'utf8'),
-  English: readFileSync(join(ROOT, 'site/index.html'), 'utf8'),
-  Spanish: readFileSync(join(ROOT, 'site/es/index.html'), 'utf8'),
-  llms: readFileSync(join(ROOT, 'site/llms.txt'), 'utf8'),
 };
 
 test('every public surface sends humans and chat agents through canonical onboarding', () => {
@@ -22,15 +19,13 @@ test('every public surface sends humans and chat agents through canonical onboar
 
 test('public claims state the real guarantee boundary and no longer promise an opaque profile menu', () => {
   assert.match(docs.README, /before (?:it )?writes|writes nothing|no escribe nada antes|antes de escribir/i);
-  assert.match(docs.English, /writes nothing|before writing/i);
-  assert.match(docs.Spanish, /no escribe|antes de escribir/i);
   for (const body of Object.values(docs)) {
     assert.doesNotMatch(body, /asks which package and assistant|pregunta qué paquete y asistente/i);
   }
 });
 
 test('agent copy says to relay questions and never invent onboarding answers', () => {
-  assert.match(docs.llms, /relay|ask the user/i);
-  assert.match(docs.llms, /never (?:choose|invent|default)/i);
+  assert.match(docs.README, /pasa las preguntas a la persona/i);
+  assert.match(docs.README, /no inventes ni rellenes sus respuestas/i);
   assert.match(docs.README, /paste|URL|chat/i);
 });

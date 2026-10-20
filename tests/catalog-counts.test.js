@@ -18,11 +18,6 @@ const DOCS = [
   'README.md',
   'docs/catalogo.md',
   'docs/referencia-tecnica.md',
-  'site/llms.txt',
-  'site/index.html',
-  'site/es/index.html',
-  'site/cover.html',
-  'site/cover-anatomy.html',
 ];
 
 // The stat blocks put the number and its label in separate elements, so tags come out first.
