@@ -569,7 +569,7 @@ Everything before code. What comes out is a spec and a plan, not an idea.
 |---|---|
 | [grill-with-docs](skills/grill-with-docs/) | Interrogates the plan and writes the glossary as it goes. The default way to ground an idea. |
 | [wayfinder](skills/wayfinder/) | Only when the work does not fit one session: a map of decision tickets. |
-| [to-spec](skills/to-spec/) | Turns the idea into a spec: what and why. `superpowers:brainstorming` is the alternative. |
+| [to-spec](skills/to-spec/) | Turns the idea into a spec for big work: what and why. Small work skips it. |
 | [write-adr](skills/write-adr/) | Records every hard-to-reverse decision under `docs/adr/`. |
 | [research](skills/research/) | Investigates against primary sources and leaves the finding written and dated. |
 | [to-questionnaire](skills/to-questionnaire/) | Turns a decision you cannot make alone into a questionnaire for whoever can. |
@@ -588,7 +588,7 @@ inside `grill-with-docs`.
 | Skill | What it does |
 |---|---|
 | [implement-spec](skills/implement-spec/) | Builds a whole spec from its `to-tickets` graph: parallel subagents in worktrees, one integration branch, `code-review` at the end. |
-| [implement](skills/implement/) | Builds one loose ticket from `to-tickets`. Ordinary work runs `superpowers:executing-plans` instead. |
+| [implement](skills/implement/) | Builds small work (one sitting, one ticket) with TDD. Big work goes through `implement-spec`. |
 
 #### 3 · Interface
 

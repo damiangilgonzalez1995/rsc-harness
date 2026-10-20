@@ -19,9 +19,18 @@ convenciones.
 
 ---
 
-## Bajar a tierra: `grill-with-docs` o `wayfinder`
+## Bajar a tierra: `brainstorming`, `grill-with-docs` o `wayfinder`
 
-La primera pregunta es si el trabajo **cabe en una sesión**.
+La primera pregunta es si el trabajo **cabe en una sesión** (pequeño) o no (grande). El mapa
+completo está en el [índice](README.md#el-mapa-de-implementación).
+
+### `superpowers:brainstorming` — trabajo pequeño con la idea aún verde
+
+**Cuándo.** Todavía no sabes bien qué quieres.
+
+**Qué hace.** Una conversación abierta: pregunta por casos reales, te repite lo que ha entendido
+y calcula el tamaño. Saca la idea; `grill-with-docs` la endurece cuando ya hay plan. En trabajo
+pequeño, de aquí se pasa directo a `implement`.
 
 ### `grill-with-docs` — lo normal
 
@@ -87,17 +96,13 @@ no era un prototipo.
 
 ---
 
-## Escribir la spec: `superpowers:brainstorming` o `to-spec`
+## Escribir la spec: `to-spec` (trabajo grande)
 
-**Cuándo.** Ya está claro qué quieres construir. Antes de tocar código.
+**Cuándo.** Trabajo grande, y ya está claro qué quieres construir. Antes de tocar código.
 
 **Qué hace.** Convierte la idea en una spec: qué se construye, qué queda fuera, qué
-comportamiento se espera y qué decisiones están cerradas.
-
-| Skill | Cuándo |
-|---|---|
-| `superpowers:brainstorming` | Quieres cerrar el diseño por partes, aprobando cada sección. Deja la spec en `docs/superpowers/specs/`. |
-| `to-spec` | Ya está todo hablado. Pasa a limpio lo decidido sin volver a preguntar. |
+comportamiento se espera y qué decisiones están cerradas. Pasa a limpio lo decidido sin volver a
+preguntar. Después viene `to-tickets`.
 
 **Por qué importa.** Una spec escrita es lo que permite revisar después si lo construido es lo
 pedido. Sin ella, "está terminado" es una opinión.
@@ -126,16 +131,7 @@ decisión se vuelve a discutir, o peor, se deshace sin saber el motivo.
 
 ---
 
-## Planificar: `superpowers:writing-plans`
-
-**Cuándo.** Tienes la spec aprobada.
-
-**Qué hace.** Convierte la spec en un plan de tareas pequeñas, cada una con su test, en
-`docs/superpowers/plans/`. Es lo que después ejecuta `superpowers:executing-plans`.
-
----
-
-## `to-tickets` — trocear, cuando vienes de `wayfinder`
+## `to-tickets` — trocear el trabajo grande
 
 Descompone el trabajo en tickets accionables, cada uno resoluble de una sentada y revisable de un
 vistazo. Es lo que evita el PR de cuarenta ficheros.
