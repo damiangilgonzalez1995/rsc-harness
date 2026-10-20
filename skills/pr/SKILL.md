@@ -1,6 +1,6 @@
 ---
 name: pr
-description: "Use when writing a PR body: a visual summary, before/after evidence, and the merge danger (one-way or two-way door, blast radius)."
+description: "Use when writing a PR body or opening a PR: a visual summary, before/after evidence, the merge danger (one-way or two-way door, blast radius), and a title checked against the repo's CI title rule before `gh pr create`."
 tags: ["pull-request", "review", "evidence", "risk"]
 profiles: [core, ui, full]
 origin: damiangil
@@ -171,3 +171,17 @@ La evidencia basada en ejecución va justo detrás: resultados de tests, salida 
 Di si es una puerta de un sentido o de dos sentidos. Por una puerta de dos sentidos se puede volver atrás; por una de un sentido, no. Una PR que es barata de revertir tiene menos riesgo. Los cambios que implican acciones destructivas o decisiones difíciles de revertir son puertas de un sentido.
 
 El radio de impacto es el alcance posible de los efectos que introduce la PR. Considera todas las posibilidades. Ejemplos: saltos de layout, roturas para quien consume el código, el comportamiento en móvil, etc.
+
+## Título
+
+Antes de `gh pr create`, comprueba que el título pasa el check de CI del repo. Un título mal formado tumba la PR aunque el código esté bien.
+
+1. Busca la regla: `grep -rnE "semantic-pull-request|pull_request\.title|commitlint" .github/workflows/` y, si aparece commitlint, su configuración (`commitlint.config.*`, `.commitlintrc*`, `package.json`). En `amannn/action-semantic-pull-request` mira `types`, `scopes`, `requireScope` y `subjectPattern`.
+2. Saca la regex o los tipos permitidos y prueba el título:
+
+   ```bash
+   node -e 'const re=/^(feat|fix|docs|refactor|test|chore)(\([\w-]+\))?!?: .+/u; const t=process.argv[1]; console.log(re.test(t)?"OK":"FALLA: "+t)' "fix(pr): valida el título"
+   ```
+
+   Si el repo antepone un gitmoji u otro prefijo, inclúyelo en la regex tal como lo pida la regla.
+3. Si falla, corrige el título antes de crear la PR. Si no hay ningún check de título, sigue la convención de los commits recientes (`git log --oneline -10`).

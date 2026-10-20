@@ -11,6 +11,8 @@ should_trigger:
     why: "Disparador directo de pr: peligro de fusión y radio de impacto."
   - prompt: "¿Qué pongo en la PR para que se revise rápido?"
     why: "Disparador directo de pr."
+  - prompt: "Abre la PR, pero que el título no vuelva a tumbar el CI."
+    why: "Disparador directo de pr: el título se valida contra el check del repo."
 
 should_not_trigger:
   - prompt: "Revisa el código de esta PR."
@@ -31,3 +33,7 @@ capability:
     must_include:
       - "Peligro de fusión"
       - "Radio de impacto"
+  - scenario: "El repo tiene un check de título de PR en sus workflows."
+    must_include:
+      - ".github/workflows"
+      - "gh pr create"
