@@ -354,6 +354,11 @@ export function ignoreLocalState(cwd = process.cwd(), target) {
   if (target) {
     const paths = targetPaths(target, undefined, cwd);
     const rel = (abs) => relative(cwd, abs).split(sep).join('/');
+    // `.claude/worktrees/` is where Claude Code puts the checkout of each isolated branch. Nothing
+    // ignored it, so every file of every worktree showed up as untracked: noise in `git status`, a
+    // `git add .` away from being committed, and the memory hook fingerprinted them all on each turn
+    // (54 s on a project with 964 of them, against a 5 s timeout).
+    if (target === 'claude') wanted.push(CLAUDE_WORKTREES);
     for (const id of Object.keys(readState(paths.stateFile).skills || {})) wanted.push(rel(paths.skillDir(id)));
     // The per-file ledger is derived AND platform-shaped (symlink here, real copy on
     // Windows), so committing it puts two incompatible inventories of one thing in one
@@ -530,7 +535,7 @@ export async function uninstall({ skillIds = [], agentIds = [], target, home, cw
 export function removeTargetInstall({ target, home, cwd = process.cwd() }) {
   const paths = targetPaths(target, home, cwd);
   const state = readState(paths.stateFile);
-  const ignored = [paths.stateFile];
+  const ignored = [paths.stateFile, ...(target === 'claude' ? [join(cwd, CLAUDE_WORKTREES)] : [])];
   const ownedIgnoreEntries = new Set(state.ignoreEntriesAdded || []);
   const owned = [
     ...Object.values(state.skills || {}).flatMap((entry) => entry.files || []),
@@ -659,6 +664,7 @@ export async function syncInstalled({ target, home, cwd = process.cwd(), dryRun 
 // own knowledge — kept unless `withDocs` is set. Returns the paths touched.
 // Note: backups live under `.rsc/backups/`, which this removes — so purge does not
 // snapshot (a pre-purge backup would delete itself). It is the deliberate escape hatch.
+const CLAUDE_WORKTREES = '.claude/worktrees/';
 const RSC_IGNORE_HEADER = '# rsc local state (hooks, seals, logs) and managed skill links — machine-local';
 
 // Merge consecutive rsc blocks into the first: drop a repeated header and the blank seam before it
