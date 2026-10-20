@@ -46,9 +46,10 @@ function cleanId(value, prefix = 'session') {
   return `${prefix}-${hash}`;
 }
 
-function git(cwd, args) {
+function git(cwd, args, input) {
   try {
-    return { ok: true, out: execFileSync('git', args, { windowsHide: true, cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 2 * 1024 * 1024 }).trim() };
+    const stdin = input === undefined ? 'ignore' : 'pipe';
+    return { ok: true, out: execFileSync('git', args, { windowsHide: true, cwd, input, encoding: 'utf8', stdio: [stdin, 'pipe', 'ignore'], maxBuffer: 16 * 1024 * 1024 }).trim() };
   } catch {
     return { ok: false, out: '' };
   }
@@ -162,7 +163,15 @@ function parseStatus(output) {
   return files;
 }
 
+// One `git` for every file, not one per file. Spawning a process costs ~25 ms on Windows, and this
+// runs on every hook event: a few hundred dirty files were enough to blow the 5 s hook timeout.
+// `--stdin-paths` stops at the first path it cannot read (a deleted file), so on failure each file
+// is hashed on its own, which keeps the old per-file `null` for the unreadable ones.
 function fingerprintFiles(worktree, files) {
+  if (!files.length) return {};
+  const batch = git(worktree, ['hash-object', '--no-filters', '--stdin-paths'], `${files.join('\n')}\n`);
+  const hashes = batch.ok ? batch.out.split('\n') : [];
+  if (hashes.length === files.length) return Object.fromEntries(files.map((path, i) => [path, hashes[i]]));
   return Object.fromEntries(files.map((path) => {
     const result = git(worktree, ['hash-object', '--no-filters', '--', path]);
     return [path, result.ok ? result.out : null];
@@ -305,7 +314,8 @@ export function capture(input = {}) {
   const recordPath = join(store.root, 'sessions', `${storageId}.json`);
   let anchor = readJson(anchorPath);
   let existing = readJson(recordPath);
-  const firstSnapshot = snapshot(here, null);
+  // The first snapshot only seeds a new anchor; an existing one already has its baseline.
+  const firstSnapshot = anchor ? null : snapshot(here, null);
   if (!anchor) {
     anchor = {
       sessionId,
@@ -318,7 +328,11 @@ export function capture(input = {}) {
   }
   if (input.event === 'start' && !existing) return { record: null, path: null, notice: null, compactionHint: false };
 
-  const repo = snapshot(here, anchor.baselineHead);
+  // Against its own HEAD as baseline there is nothing committed to diff, so a fresh anchor's
+  // snapshot already is the repo state: reuse it instead of walking the tree a second time.
+  const repo = firstSnapshot && anchor.baselineHead === firstSnapshot.head
+    ? firstSnapshot
+    : snapshot(here, anchor.baselineHead);
   // Count what CHANGED, not which tool changed it. `editDelta` is +1 per Edit/Write tool event, and
   // on its own it was blind to everything done through the shell — a heredoc, `sed -i`, a script, a
   // formatter — which is how automated sessions work. The session that found this had touched dozens
