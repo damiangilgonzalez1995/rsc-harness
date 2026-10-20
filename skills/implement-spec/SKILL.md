@@ -31,7 +31,8 @@ Lanza los **subagentes implementadores** en segundo plano siempre que se pueda, 
    - confirma que su worktree parte de la rama de integración antes de empezar, y se reinicia sobre ella si no;
    - llama a la herramienta Skill con `superpowers:test-driven-development` para construir el ticket;
    - fusiona la punta de la rama de integración en su propia rama antes de decir que ha terminado;
-   - si el ticket cambia algo visible, adjunta una captura del entorno donde el usuario lo va a probar.
+   - si el ticket cambia algo visible, adjunta una captura del entorno donde el usuario lo va a probar;
+   - entrega un informe final de **150 palabras como máximo**: qué cambió, ficheros, resultado de los tests y bloqueos. El detalle va al commit o al ticket, no a la respuesta. Pon este tope literal en el prompt de cada subagente: cada entrega entra entera en tu contexto, y decenas de entregas largas te hacen olvidar lo que acaba de decir el usuario.
 
 5. Cuando un **subagente implementador** termina, revisa su entrega antes de fusionar. Si toca algo visible y no trae captura, o dice que no lo ha mirado en un navegador, **no está hecho**: devuélvesela para que lo mire. Si la entrega es buena, fusiona su trabajo en la rama de integración con un **subagente fusionador**.
 

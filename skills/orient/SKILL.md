@@ -63,6 +63,9 @@ The dial is spoken, not configured: when the user says "explícame más / menos"
 tanto" or "enséñame", update `accompaniment_level` in the profile, confirm in one line, and apply
 the new depth from this turn on.
 
+When a front closes (PR merged or opened, ticket done), `➡️` offers `handoff` and a fresh session
+before more work in this one; see the contract.
+
 At a real fork, ask. Deciding alone is faster and wrong — the fork is the moment the person's
 judgment is worth more than yours.
 
