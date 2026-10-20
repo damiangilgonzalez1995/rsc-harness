@@ -14,7 +14,7 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
-import { claimOnce, readHookInput, WORKFLOW_GATE_TEXT } from './hook-once.mjs';
+import { claimOnce, readHookInput, renderGate, WORKFLOW_GATE_TEXT } from './hook-once.mjs';
 
 const root = process.argv[2] || process.cwd();
 
@@ -33,4 +33,9 @@ if (hook.session_id && turnKey && !claimOnce(`up:${hook.session_id}:${turnKey}`)
 // that is not installed sends the agent looking for something that does not exist, so the line only
 // ships when the skill is present in this project or in the user scope.
 const hasFlujo = [root, homedir()].some((r) => existsSync(join(r, '.claude', 'skills', 'flujo-interfaz', 'SKILL.md')));
-process.stdout.write(hasFlujo ? WORKFLOW_GATE_TEXT : WORKFLOW_GATE_TEXT.split('\n').filter((l) => !l.includes('flujo-interfaz')).join('\n'));
+const gate = hasFlujo ? WORKFLOW_GATE_TEXT : WORKFLOW_GATE_TEXT.split('\n').filter((l) => !l.includes('flujo-interfaz')).join('\n');
+// Skills marked `disable-model-invocation: true` are rendered as the slash command the user types,
+// read from the installed SKILL.md so the gate cannot contradict the skill (see renderGate).
+let out = gate;
+try { out = renderGate(gate, [root, homedir()]); } catch { /* fail-safe: keep the plain gate */ }
+process.stdout.write(out);

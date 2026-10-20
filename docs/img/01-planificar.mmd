@@ -19,8 +19,14 @@ config:
 flowchart TD
     C["<b>claude-project-setup</b><br/>una vez por proyecto"] --> W{"¿Cabe en<br/>una sesión?"}
 
-    W -->|sí| G["<b>grill-with-docs</b><br/>baja la idea a tierra"]
-    W -->|no| WF["<b>wayfinder</b><br/>mapa de decisiones"]
+    W -->|"sí: pequeño"| V{"¿La idea<br/>está clara?"}
+    V -->|"aún verde"| BS["<b>superpowers:brainstorming</b><br/>descubre qué quieres"]
+    V -->|"hay un plan"| G["<b>grill-with-docs</b><br/>endurece el plan"]
+    BS --> OUT(["Listo para <b>implement</b>"])
+
+    W -->|"no: grande"| B{"¿Se ve<br/>el camino?"}
+    B -->|sí| G
+    B -->|no| WF["<b>wayfinder</b><br/>mapa de decisiones"]
 
     G --> A{"¿Queda algo<br/>sin cerrar?"}
 
@@ -35,11 +41,9 @@ flowchart TD
     A -->|sí| ACL
     ACL -->|"vuelve al interrogatorio"| G
 
-    A -->|no| S["<b>superpowers:brainstorming</b><br/>o <b>to-spec</b><br/>escribe la spec"]
+    A -->|"no, pequeño"| OUT
+    A -->|"no, grande"| S["<b>to-spec</b><br/>escribe la spec"]
+    WF --> S
     S -.- ADR{{"<b>write-adr</b><br/>decisiones difíciles<br/>de revertir"}}
-
-    S --> PL["<b>superpowers:writing-plans</b><br/>tareas pequeñas con su test"]
-    PL --> OUT(["Un plan"])
-
-    WF --> TT["<b>to-tickets</b><br/>trocear"]
-    TT --> OUT2(["Tickets de una sentada:<br/>backend o frontend"])
+    S --> TT["<b>to-tickets</b><br/>grafo de tickets con bloqueos"]
+    TT --> OUT2(["Listo para <b>implement-spec</b>"])

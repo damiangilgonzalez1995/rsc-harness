@@ -144,7 +144,7 @@ Hay tres hooks que **inyectan texto** así, y tres que **bloquean** comandos. Lo
 | session-start | Al abrir | Le dice a Claude que lea tu perfil y le pasa avisos pendientes |
 | userprompt-gate | En cada mensaje tuyo | Le recuerda: "feature nueva pasa por spec antes de código" |
 | worklog-checkpoint | Al cerrar | Le pide que apunte qué hizo en la sesión |
-| danger-guard | Antes de cada comando | Bloquea `rm -rf`, `push --force`, `reset --hard` |
+| danger-guard | Antes de cada comando | Te pide confirmar `rm -rf`, `push --force`, `reset --hard` (perfil `mixed`: solo avisa) |
 | gitmoji-guard | Antes de cada commit | Bloquea commits sin emoji al principio |
 | ship-guard | Antes de cambiar de rama | Bloquea salir de tu rama con cambios sin guardar |
 | session-memory | En 7 momentos | Apunta en el cuaderno (ver sección 5) |
@@ -431,11 +431,11 @@ Las skills son los manuales del becario. Se activan solas cuando tu petición en
 |---|---|
 | `grill-with-docs` | "Quiero un buscador" → te interroga hasta que el qué y el cómo están claros, y va dejando las decisiones por escrito. |
 | `wayfinder` | Para trabajo que no cabe en una sesión: levanta un mapa de decisiones antes de tocar nada. |
-| `to-spec` o `superpowers:brainstorming` | Recoge la conversación y la convierte en una spec escrita. |
+| `superpowers:brainstorming` | Trabajo pequeño con la idea aún verde: descubre qué quieres antes de construirlo. |
+| `to-spec` | Trabajo grande: recoge la conversación y la convierte en una spec escrita. |
 | `write-adr` | Registra en `docs/adr/` cada decisión difícil de revertir, con las alternativas que se descartaron. |
-| `superpowers:writing-plans` | Convierte la spec en un plan con pasos pequeños, cada uno con su test. |
-| `superpowers:executing-plans` | Ejecuta ese plan, parando a revisar entre tareas. |
-| `to-tickets` + `implement` | Solo cuando el trabajo salió de `wayfinder`: se parte en tickets y se hacen de uno en uno. |
+| `to-tickets` + `implement-spec` | Trabajo grande: la spec se parte en un grafo de tickets y se construye con subagentes en paralelo. |
+| `implement` | Trabajo pequeño: un solo ticket, con TDD. |
 | `code-review` | Antes de fusionar, revisa lo programado en dos ejes: los estándares del repo y lo que pedía la spec. |
 
 Ese orden no es una sugerencia: el harness lo inyecta como regla en cada mensaje que escribes. Lo único exento es un cambio de una línea o un typo, y Claude tiene que decirte que se salta la cadena.
@@ -482,7 +482,7 @@ flowchart TD
 
     t2["⏱ MOMENTO 2 · Claude va a ejecutar un comando"]:::trigger
     t2a["🛡 ship-guard<br>¿sales de tu rama con cambios? → BLOQUEA"]:::guard
-    t2b["🛡 danger-guard<br>¿rm -rf, push --force? → BLOQUEA<br>(solo si tu perfil no es técnico)"]:::guard
+    t2b["🛡 danger-guard<br>¿rm -rf, push --force? → PIDE CONFIRMACIÓN<br>(mixed: solo avisa; technical: nada)"]:::guard
     t2c["🛡 gitmoji-guard<br>¿commit sin emoji? → BLOQUEA"]:::guard
     t2d["▶ El comando se ejecuta<br>(si nadie bloqueó)"]
     t2e["📓 memory · boundary<br>vuelve a mirar git por si hubo commit"]:::memo

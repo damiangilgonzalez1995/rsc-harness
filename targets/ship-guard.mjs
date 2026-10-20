@@ -5,9 +5,10 @@
 //
 // Enforces the "close the feature before you leave it" rule at the one deterministic
 // moment it matters: when a Bash command tries to switch to the trunk (main/master)
-// or merge into it. If the current feature branch has uncommitted changes or commits
-// that were never pushed, the guard DENIES the command and tells the agent to run
-// `ship` (commit → push → PR). Opening the PR itself is `ship`'s job and the skill's
+// or merge into it. If the current feature branch has commits that were never pushed,
+// the guard DENIES the command and tells the agent to run `ship` (commit → push → PR).
+// Uncommitted changes alone only earn a hint: they may be the user's own work, and git
+// already refuses a switch that would overwrite them. Opening the PR itself is `ship`'s job and the skill's
 // hard rule; this hook guarantees you cannot quietly abandon unsaved/unpushed work.
 //
 // Design: precise (only fires on a trunk switch/merge), local-only (no network, no gh),
@@ -77,10 +78,26 @@ if (!branch || branch === 'HEAD' || branch === 'main' || branch === 'master') al
 
 const tail = '\n(If this is intentional and you accept the risk, create .rsc/.no-ship-guard to disable this guard.)';
 
-// 1) Uncommitted work would be carried off the feature branch.
+// 1) Uncommitted changes are NOT a reason to deny. They may well be the user's own work in the main
+// checkout, not the agent's: in real sessions this denied five branch switches over a diff the agent
+// had no business committing, and "commit them first" pushed it to do exactly that. Git itself
+// refuses a switch that would overwrite local changes, and carries the rest along untouched, so the
+// switch is left to git and the agent gets a hint: leave that diff alone and work in a worktree.
+// The unpushed-commits rule below is the guard's real purpose and still denies.
 const dirty = git('status', '--porcelain');
-if (dirty && dirty.length > 0) {
-  deny(`You're leaving feature branch "${branch}" with uncommitted changes. Commit them first — run the \`ship\` skill (commit → push → PR), don't abandon the diff.${tail}`);
+const worktreeHint = dirty && dirty.length > 0
+  ? `The working tree on "${branch}" has uncommitted changes, and they may be the user's, not yours: ` +
+    `do not commit, stash or discard them to make room. If git refuses the switch, work in a separate ` +
+    `worktree instead: \`git worktree add .claude/worktrees/<name> -b <branch> origin/main\` ` +
+    `(or \`npx @damiangilgonzalez/harness worktrees new <name>\`).`
+  : '';
+function hint() {
+  if (!worktreeHint) allow();
+  process.stdout.write(JSON.stringify({
+    systemMessage: 'ship-guard: hay cambios sin commitear en el árbol; no se tocan.',
+    hookSpecificOutput: { hookEventName: 'PreToolUse', additionalContext: worktreeHint },
+  }));
+  process.exit(0);
 }
 
 // 2) Commits exist but were never pushed.
@@ -88,14 +105,14 @@ const upstream = git('rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{u}'
 if (upstream) {
   const ahead = git('rev-list', '--count', `${upstream}..HEAD`);
   if (ahead && Number(ahead) > 0) {
-    deny(`Feature branch "${branch}" has ${ahead} commit(s) not pushed to ${upstream}. Push them and open the PR — run the \`ship\` skill — before switching to the trunk.${tail}`);
+    deny(`Feature branch "${branch}" has ${ahead} commit(s) not pushed to ${upstream}. Push them and open the PR — run the \`ship\` skill — before switching to the trunk.${worktreeHint ? `\n${worktreeHint}` : ''}${tail}`);
   }
 } else {
   // No upstream at all: if the branch carries commits beyond the trunk, it was never pushed.
   const aheadOfTrunk = git('rev-list', '--count', 'main..HEAD') ?? git('rev-list', '--count', 'master..HEAD');
   if (aheadOfTrunk && Number(aheadOfTrunk) > 0) {
-    deny(`Feature branch "${branch}" was never pushed (no upstream, ${aheadOfTrunk} commit(s) ahead of the trunk). Push it and open a PR — run the \`ship\` skill — before leaving it.${tail}`);
+    deny(`Feature branch "${branch}" was never pushed (no upstream, ${aheadOfTrunk} commit(s) ahead of the trunk). Push it and open a PR — run the \`ship\` skill — before leaving it.${worktreeHint ? `\n${worktreeHint}` : ''}${tail}`);
   }
 }
 
-allow();
+hint();

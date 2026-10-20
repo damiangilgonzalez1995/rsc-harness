@@ -24,6 +24,23 @@ Tres cosas hacen que funcione, y son las que más se saltan:
 - **La revisión se hace contra la spec**, no contra el gusto de quien revisa. Si el código no
   cumple lo especificado, se vuelve a la spec, no se discute en el PR.
 
+## El mapa de implementación
+
+La cadena depende del **tamaño** de la tarea, y el agente encadena cada paso él solo: no hace
+falta escribir cada `/comando`.
+
+![Mapa de implementación: la cadena según el tamaño](../img/05-mapa-implementacion.svg)
+
+| Tamaño | Cadena |
+|---|---|
+| Una línea (errata, config) | Hacerlo sin más, diciendo que se salta la cadena |
+| Pequeño (una sesión, un ticket) | `superpowers:brainstorming` si la idea está verde, o `grill-with-docs` si ya hay plan → `implement` → `code-review` → `pr` |
+| Grande (varias sesiones o muchas piezas) | `grill-with-docs` o `wayfinder` → `to-spec` (+ `write-adr`) → `to-tickets` → `implement-spec` → `code-review` → `pr` |
+
+`superpowers:writing-plans` y `superpowers:executing-plans` ya no forman parte de la cadena:
+hacían lo mismo que `to-tickets` e `implement`, y mezclar las dos cadenas hacía que se perdieran
+los tickets.
+
 Siempre, en cualquier fase que toque código: `superpowers:test-driven-development` y
 `superpowers:verification-before-completion` antes de dar algo por terminado. Los bugs empiezan
 por `superpowers:systematic-debugging`.
@@ -31,16 +48,9 @@ por `superpowers:systematic-debugging`.
 ## El flujo en una línea
 
 ```
-grill-with-docs  o  wayfinder                 bajar la idea a tierra
-        ↓
-superpowers:brainstorming  o  to-spec         escribir la spec  (+ write-adr)
-        ↓
-superpowers:writing-plans → superpowers:executing-plans
-        (spec grande o de wayfinder: to-tickets → implement-spec)
-        ↓
-code-review                                   estándares + spec, antes de fusionar
-        ↓
-pr                                            el cuerpo de la PR: resumen, evidencia, peligro
+Pequeño:  brainstorming (idea verde)  o  grill-with-docs (hay plan)  →  implement
+Grande:   grill-with-docs  o  wayfinder  →  to-spec (+ write-adr)  →  to-tickets  →  implement-spec
+Ambos:    →  code-review (estándares + spec)  →  pr (resumen, evidencia, peligro de fusión)
 ```
 
 Es el mismo flujo que el harness inyecta como regla en cada mensaje (`targets/hook-once.mjs`).
@@ -52,8 +62,8 @@ Si cambias uno, cambia el otro.
 
 | Fase | Skills | Guía |
 |---|---|---|
-| **1 · Planificar** | `claude-project-setup`, `grill-with-docs`, `wayfinder`, `research`, `to-questionnaire`, `prototype`, `to-spec`, `write-adr`, `to-tickets` | [1-planificar.md](1-planificar.md) |
-| **2 · Implementar** | `implement-spec`, `implement` (y `superpowers:executing-plans`) | [2-implementar.md](2-implementar.md) |
+| **1 · Planificar** | `claude-project-setup`, `superpowers:brainstorming`, `grill-with-docs`, `wayfinder`, `research`, `to-questionnaire`, `prototype`, `to-spec`, `write-adr`, `to-tickets` | [1-planificar.md](1-planificar.md) |
+| **2 · Implementar** | `implement` (pequeño), `implement-spec` (grande) | [2-implementar.md](2-implementar.md) |
 | **3 · Interfaz** | Las 16 de diseño | [3-interfaz.md](3-interfaz.md) |
 | **4 · Revisar y cerrar** | `code-review`, `pr`, `revision-de-cambios`, `revision-interfaz`, `handoff` | [4-revisar-y-cerrar.md](4-revisar-y-cerrar.md) |
 | **9 · Otras** | `teach`, `muscle-memory`, `wait-what`, `writing-for-agents`, `retro` | [9-otras.md](9-otras.md) |

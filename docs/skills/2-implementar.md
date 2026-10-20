@@ -11,9 +11,8 @@ interfaz, pasa además por [la cadena de interfaz](3-interfaz.md).
 
 | Llegas con… | Skill |
 |---|---|
-| Un plan de `superpowers:writing-plans` | `superpowers:executing-plans`, tarea a tarea, parando a revisar entre ellas. Si prefieres repartir las tareas entre subagentes en la misma sesión, `superpowers:subagent-driven-development`. |
-| Una spec con sus tickets de `to-tickets` (spec grande, o vienes de `wayfinder`) | `implement-spec` |
-| Un solo ticket suelto de `to-tickets` | `implement` |
+| Trabajo pequeño, con la idea ya aclarada | `implement` |
+| Trabajo grande: una spec con sus tickets de `to-tickets` | `implement-spec`. Si la spec no tiene tickets, se para y lanza `to-tickets` primero. |
 
 ## `implement-spec`
 

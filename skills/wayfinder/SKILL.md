@@ -2,7 +2,6 @@
 name: wayfinder
 description: "Plans a huge chunk of work — more than fits in a single agent session — as a shared map of decision tickets in the repo's issue tracker, and resolves them one at a time until the path to the destination is clear."
 tags: ["planning", "issue-tracker", "large-scale-work"]
-disable-model-invocation: true
 profiles: [core, ui, full]
 origin: damiangil
 ---

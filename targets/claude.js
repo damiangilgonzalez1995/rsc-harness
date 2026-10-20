@@ -175,7 +175,8 @@ export function wireHook(paths, sourceMd, policy = {}) {
 
   if (policy.codeHooks !== false) {
   // Ship guard: a PreToolUse(Bash) hook that DENIES switching to / merging the trunk
-  // while the current feature branch has uncommitted or unpushed work — forcing the
+  // while the current feature branch has unpushed commits (uncommitted changes only get a
+  // worktree hint: they may be the user's own) — forcing the
   // commit → push → PR close (the `ship` skill). Materialized + node-run (Windows-safe),
   // registered idempotently, fail-open, opt-out via .rsc/.no-ship-guard. Other
   // (non-rsc) PreToolUse hooks are preserved.

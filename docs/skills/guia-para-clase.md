@@ -46,8 +46,10 @@ llegan los albañiles (construir). Nadie levanta paredes sin planos.
 | **`/research`** | Busca información fiable sobre un tema mientras tú sigues con otra cosa. | Mandar a alguien a la biblioteca a buscar datos. |
 | **`/to-spec`** | Coge todo lo hablado y lo pasa a limpio en un documento oficial. | El acta de una reunión. |
 | **`/write-adr`** | Deja por escrito cada decisión importante y por qué se tomó. | El libro de actas de la comunidad de vecinos. |
-| **`writing-plans`** | Convierte el documento en un plan de pasos pequeños, cada uno con su comprobación. | El plano de obra con el orden de los trabajos. |
-| **`executing-plans`** | Construye el plan paso a paso, comprobando que cada paso funciona. | El obrero que ejecuta el plano. |
+| **`brainstorming`** | Conversa contigo para descubrir qué quieres cuando la idea aún está verde. | Una charla con un arquitecto antes de pedir el plano. |
+| **`/to-tickets`** | Parte un trabajo grande en tareas pequeñas, marcando cuál depende de cuál. | El plano de obra con el orden de los trabajos. |
+| **`/implement`** | Construye un trabajo pequeño, con su prueba primero. | El obrero que hace una reforma pequeña. |
+| **`/implement-spec`** | Construye un trabajo grande repartiendo las tareas entre varios ayudantes a la vez. | El jefe de obra que coordina a varias cuadrillas. |
 | **`/code-review`** | Revisa el trabajo terminado: ¿está bien hecho? ¿hace lo que se pedía? | Un corrector de exámenes. |
 
 ---
@@ -139,20 +141,18 @@ iPhone antiguos."
 
 ---
 
-### 4.6 `writing-plans` y `executing-plans` — construir con un plan
+### 4.6 `/to-tickets`, `/implement` e `/implement-spec` — construir
 
-**En una frase:** `writing-plans` convierte el documento en **pasos pequeños**, cada uno con su
-comprobación; `executing-plans` los construye de uno en uno, comprobando que cada paso funciona
-antes de pasar al siguiente.
+**En una frase:** lo **pequeño** se construye directamente con `/implement`; lo **grande** se
+parte primero en tareas con `/to-tickets` y se construye con `/implement-spec`, que reparte las
+tareas entre varios ayudantes a la vez.
 
 **Idea importante:** primero se escribe la **prueba** ("el aviso tiene que llegar") y después se
 construye lo que la hace pasar. Así nunca se da por hecho algo que no funciona.
 
 **Analogía:** el plano de obra con el orden de los trabajos. 1) cimientos, 2) paredes (necesita
-el paso 1), 3) tejado (necesita el paso 2). Y el aparejador comprueba cada fase.
-
-**La otra vía, para lo enorme:** si el trabajo vino de `wayfinder`, se trocea en tickets con
-`/to-tickets` y se construye ticket a ticket con `/implement`.
+el paso 1), 3) tejado (necesita el paso 2). Las tareas que no dependen de otras se hacen a la
+vez, y el aparejador comprueba cada fase.
 
 ---
 
@@ -174,22 +174,19 @@ revisión lo caza, porque el documento lo pedía.
 La gracia es que **se usan en cadena**, cada una recoge el trabajo de la anterior:
 
 ```
-   idea que cabe en una sesión            idea ENORME y confusa
+   idea PEQUEÑA (una sesión)              idea GRANDE (varias sesiones)
             |                                     |
             v                                     v
-     /grill-with-docs                        /wayfinder
-   (preguntas hasta                     (mapa de decisiones)
-    que está clara)                               |
-            |                                     |
-            v                                     |
-   /to-spec  o  brainstorming                     |
-   (el documento + /write-adr)                    |
+   brainstorming (idea verde)            /grill-with-docs  o  /wayfinder
+   o /grill-with-docs (hay plan)                  |
             |                                     v
-            v                                /to-tickets
-      writing-plans                          (tareas ordenadas)
+            |                            /to-spec  (+ /write-adr)
+            |                                     |
+            |                                     v
+            |                            /to-tickets  (tareas con orden)
             |                                     |
             v                                     v
-     executing-plans                         /implement
+       /implement                         /implement-spec  (en paralelo)
             |                                     |
             +------------------+------------------+
                                v
@@ -212,9 +209,10 @@ Idea inicial: **"Quiero añadir avisos a mi aplicación."**
 2. **`/to-spec`** — Con las dudas resueltas, se escribe el documento oficial: qué avisos habrá,
    quién los recibe, qué puede configurar el usuario. La elección del servicio queda en un
    **`/write-adr`**.
-3. **`writing-plans`** — El documento se convierte en pasos pequeños (guardar preferencias →
-   enviar email → pantalla de configuración), cada uno con su prueba.
-4. **`executing-plans`** — Se construye paso a paso, comprobando que cada uno funciona.
+3. **`/to-tickets`** — El documento se parte en tareas (guardar preferencias → enviar email →
+   pantalla de configuración), cada una con lo que la bloquea.
+4. **`/implement-spec`** — Se construyen las tareas, varias a la vez cuando no dependen entre sí,
+   cada una con su prueba.
 5. **`/code-review`** — Se revisa que esté bien hecho y que haga lo que decía el documento.
 
 Resultado: se pasó de una frase difusa a algo construido y comprobado, **sin atascos**, porque
@@ -242,7 +240,9 @@ cada paso preparó el terreno al siguiente.
 - **`/research`**: busca datos fiables mientras tú sigues.
 - **`/to-spec`**: pasa a limpio lo hablado en un documento.
 - **`/write-adr`**: apunta cada decisión importante y su porqué.
-- **`writing-plans` → `executing-plans`**: planifica en pasos pequeños y los construye.
+- **`brainstorming`**: descubre qué quieres cuando la idea aún está verde.
+- **`/to-tickets` → `/implement-spec`**: parte lo grande en tareas y las construye en paralelo.
+- **`/implement`**: construye lo pequeño, con la prueba primero.
 - **`/code-review`**: revisa que esté bien hecho y que sea lo pedido.
 - Apoyo: **prototype** (maqueta), **to-questionnaire** (preguntar a quien sabe), **handoff**
   (pasa el testigo).
