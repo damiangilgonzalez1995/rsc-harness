@@ -126,3 +126,51 @@ test('records written before this change are still valid', () => {
     assert.equal(record.compactionHinted, undefined, 'the hint flag must not have leaked into the record');
   }
 });
+
+// Field report (ATI, nine sessions): the Stop hook said "consider compacting" on every turn and the
+// session filled with ~150 empty assistant replies. The files stay dirty the whole time, so every
+// event re-reads the same fingerprints; only a change against the LAST event may count, and no turn
+// end may carry the hint at all.
+const said = (out) => /consider compacting/i.test(out.systemMessage || '');
+const dirty = (cwd, tag, files = 25) => {
+  for (let i = 0; i < files; i++) writeFileSync(join(cwd, `f${i}.txt`), `${tag}${i}`);
+};
+
+test('many consecutive Stop events over dirty files say the hint at most once, and never on Stop', () => {
+  const cwd = project();
+  const native = { session_id: 'L1', cwd };
+  handleLifecycle({ target: 'claude', event: 'start', native, cwd });
+  dirty(cwd, 'v');
+  let total = 0;
+  for (let i = 0; i < 40; i++) {
+    assert.equal(said(run(cwd, 'turn', native)), false, 'a Stop hook that speaks can wake the model again');
+  }
+  const record = handleLifecycle({ target: 'claude', event: 'turn', native, cwd }).capture.record;
+  assert.equal(record.editCount, 25, 'the same dirty files are counted once, not once per event');
+  // The crossing seen at a turn end is said by the next event that is not one, and only once.
+  for (let i = 0; i < 5; i++) {
+    if (said(run(cwd, 'request', native))) total += 1;
+    for (let j = 0; j < 5; j++) if (said(run(cwd, 'turn', native))) total += 1;
+  }
+  assert.equal(total, 1, `the hint was said ${total} times`);
+});
+
+test('after a compaction the count restarts, from PreCompact or from SessionStart source=compact', () => {
+  for (const via of ['compact', 'start']) {
+    const cwd = project();
+    const native = { session_id: `L2-${via}`, cwd };
+    handleLifecycle({ target: 'claude', event: 'start', native, cwd });
+    dirty(cwd, 'v');
+    assert.ok(said(run(cwd, 'boundary', native)), 'the first crossing is said');
+    const reset = via === 'compact'
+      ? handleLifecycle({ target: 'claude', event: 'compact', native, cwd })
+      : handleLifecycle({ target: 'claude', event: 'start', native: { ...native, source: 'compact' }, cwd });
+    assert.equal(said(reset.output), false, `${via} never says the hint`);
+    assert.equal(reset.capture.record.editCount, 0, `${via} restarts the count`);
+    for (let i = 0; i < 10; i++) assert.equal(said(run(cwd, 'turn', native)), false);
+    // A new window, a new budget: twenty-five fresh edits cross it again, once.
+    dirty(cwd, 'again');
+    assert.ok(said(run(cwd, 'boundary', native)), `a real crossing after ${via} is said`);
+    assert.equal(said(run(cwd, 'boundary', native)), false);
+  }
+});

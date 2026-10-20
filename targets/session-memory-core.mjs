@@ -1,5 +1,5 @@
 import {
-  appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync,
+  appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, statSync, writeFileSync,
 } from 'node:fs';
 import { createHash, randomUUID } from 'node:crypto';
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
@@ -167,11 +167,22 @@ function parseStatus(output) {
 // runs on every hook event: a few hundred dirty files were enough to blow the 5 s hook timeout.
 // `--stdin-paths` stops at the first path it cannot read (a deleted file), so on failure each file
 // is hashed on its own, which keeps the old per-file `null` for the unreadable ones.
+//
+// A deleted file is the ordinary case, not the exotic one — any `rm` or `git rm` puts one in the
+// status — and it used to send EVERY file down the per-file path, back over the timeout (400 dirty
+// files and one deletion: ~20 s per event, so PreCompact was cancelled). So paths that are not a
+// readable regular file are settled here, as `null`, before the batch ever sees them.
 function fingerprintFiles(worktree, files) {
   if (!files.length) return {};
-  const batch = git(worktree, ['hash-object', '--no-filters', '--stdin-paths'], `${files.join('\n')}\n`);
+  const readable = files.filter((path) => {
+    try { return statSync(join(worktree, path)).isFile(); } catch { return false; }
+  });
+  const isReadable = new Set(readable);
+  const missing = Object.fromEntries(files.filter((path) => !isReadable.has(path)).map((path) => [path, null]));
+  if (!readable.length) return missing;
+  const batch = git(worktree, ['hash-object', '--no-filters', '--stdin-paths'], `${readable.join('\n')}\n`);
   const hashes = batch.ok ? batch.out.split('\n') : [];
-  if (hashes.length === files.length) return Object.fromEntries(files.map((path, i) => [path, hashes[i]]));
+  if (hashes.length === readable.length) return { ...missing, ...Object.fromEntries(readable.map((path, i) => [path, hashes[i]])) };
   return Object.fromEntries(files.map((path) => {
     const result = git(worktree, ['hash-object', '--no-filters', '--', path]);
     return [path, result.ok ? result.out : null];
@@ -346,13 +357,27 @@ export function capture(input = {}) {
   const observed = Object.entries(repo.fingerprints || {})
     .filter(([path, fingerprint]) => fingerprint && previousFingerprints[path] !== fingerprint).length;
   const editDelta = Math.max(finiteOrNull(input.editDelta, true) || 0, observed);
-  // Compaction closes a context window, so the edit budget starts again from zero.
-  const previousEdits = input.event === 'compact' ? 0 : (existing?.editCount || 0);
+  // Compaction closes a context window, so the edit budget starts again from zero. Two signals say
+  // it happened, and either is enough: PreCompact (`compact`) and the SessionStart that follows it
+  // (`reset`, from `source: "compact"`). Relying on PreCompact alone meant a cancelled PreCompact
+  // hook — which is what the 5 s timeout did on a dirty tree — left the old count standing.
+  const resetsBudget = input.event === 'compact' || input.reset === true;
+  const previousEdits = resetsBudget ? 0 : (existing?.editCount || 0);
   const editCount = Math.max(0, previousEdits + editDelta);
   // Hint once per threshold crossed, and only on the edit that crosses it: re-emitting on
   // every later event (Stop in particular) wakes the model again and loops.
   const crossedThreshold = editCount > previousEdits
     && Math.floor(editCount / config.editThreshold) > Math.floor(previousEdits / config.editThreshold);
+  // And never ON a turn end, even the one that crosses. A Stop hook that speaks is a Stop hook that
+  // can start another turn, and that turn ends in another Stop: the field report is ~150 empty
+  // assistant replies in a row. A crossing seen at a turn end is kept on the anchor and said by the
+  // next event that is not one (the person's next prompt, or the next tool call). Compaction and
+  // start never say it either — "consider compacting" while compacting is noise — and a reset
+  // drops whatever was pending, because the window it was about is gone.
+  const mutedEvents = ['turn', 'stop', 'compact', 'start', 'end', 'sessionEnd'];
+  const hintDue = !resetsBudget && (crossedThreshold || anchor.hintPending === true);
+  const speaks = !mutedEvents.includes(input.event);
+  const hintPending = hintDue && !speaks;
   const baselineFiles = new Set(anchor.baselineFiles || []);
   const newDirtyPath = repo.files.some((path) => !baselineFiles.has(path));
   const baselineFingerprints = anchor.baselineFingerprints || {};
@@ -391,13 +416,20 @@ export function capture(input = {}) {
   if (errors.length) return { record: null, path: null, notice: null, compactionHint: false, errors };
   atomicJson(recordPath, record);
   existing = record;
-  const compactionHint = Boolean(config.compactionHint && crossedThreshold);
+  const compactionHint = Boolean(config.compactionHint && hintDue && speaks);
   // The fingerprints the next event compares against live on the ANCHOR, not on the record: the
   // record's schema is closed and every field of it is required, so a new field there would fail
   // validation on every record already written. Written only when they moved, so a read-only shell
-  // command costs no extra disk.
+  // command costs no extra disk. The pending hint lives there for the same reason.
   const fingerprintsMoved = observed > 0 || !anchor.lastFingerprints;
-  if (fingerprintsMoved) atomicJson(anchorPath, { ...anchor, lastFingerprints: repo.fingerprints || {} });
+  if (fingerprintsMoved || Boolean(anchor.hintPending) !== hintPending) {
+    const { hintPending: _previous, ...rest } = anchor;
+    atomicJson(anchorPath, {
+      ...rest,
+      lastFingerprints: fingerprintsMoved ? (repo.fingerprints || {}) : anchor.lastFingerprints,
+      ...(hintPending ? { hintPending: true } : {}),
+    });
+  }
   return {
     record,
     path: recordPath,

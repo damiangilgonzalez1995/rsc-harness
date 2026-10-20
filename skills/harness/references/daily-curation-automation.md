@@ -42,7 +42,8 @@ process inbox/, then scan the workspace (minus .rscignore) for un-ingested docum
 applying Clean-as-you-go (move loose root-level + inbox files into raw/ after a
 verified ingest; copy files nested in user-maintained folders and propose
 consolidation), record them in wiki/.ingested.json, and list ambiguous folders as
-proposals (do not grab them). Then compile pending raw/worklog/ material into wiki/
+proposals (do not grab them). Then compile pending raw/worklog/ material (skip this
+step if raw/worklog/ does not exist; do not list a missing folder) into wiki/
 pages (update existing before creating new), keep frontmatter + relative markdown
 links OKF-consistent, append significant decisions to wiki/harness/decisions.md,
 refresh the .base-backed navigation, recompute scores.json + the score: property,

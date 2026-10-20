@@ -76,10 +76,15 @@ function handler(target, event) {
     : target === 'codex'
       ? '"$(git rev-parse --show-toplevel)/.rsc/session-memory-adapter.mjs"'
       : '".rsc/session-memory-adapter.mjs"';
+  // PreCompact gets more room than the per-turn events. It runs once, right before a compaction that
+  // itself takes tens of seconds, so a longer ceiling costs nothing in the normal case; and a
+  // cancelled PreCompact is the one that loses the budget reset. The per-turn events keep 5 s:
+  // they run on every tool call and must stay cheap.
+  const seconds = event === 'compact' ? 15 : event === 'end' && target === 'codex' ? 3 : 5;
   const value = {
     type: 'command',
     command: `node ${unixScript} ${target} ${event}`,
-    timeout: target === 'gemini' ? 5000 : event === 'end' && target === 'codex' ? 3 : 5,
+    timeout: target === 'gemini' ? seconds * 1000 : seconds,
   };
   if (target === 'codex') {
     value.commandWindows = `node \"$((git rev-parse --show-toplevel).Trim())/.rsc/session-memory-adapter.mjs\" ${target} ${event}`;
