@@ -274,7 +274,8 @@ ${candidates.map((c) => W.summarize(c, root)).join('\n')}
 ACTION: offer to retire them in ONE line and wait for a yes. On a yes run:
   npx @damiangilgonzalez/harness worktrees reap          (the ones marked safe)
   npx @damiangilgonzalez/harness worktrees reap <path>   (one the user confirmed by name)
-A yes in bulk covers only the safe ones; anything marked \`ask\` is confirmed on its own.
+  npx @damiangilgonzalez/harness worktrees reap --merged --confirm   (safe + "provenance unclear" only, after a fetch; say so when offering)
+A yes in bulk covers only those; any other \`ask\` (uncommitted changes, files in no commit) is confirmed on its own.
 A no holds for this session. Permanent off: .rsc/.no-worktree-cleanup
 ================================
 `;
