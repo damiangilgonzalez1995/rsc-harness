@@ -165,11 +165,13 @@ means the user starts clean.
    machine and flags overlap or skills with no footprint, so the project starts with the right set
    rather than a pile. Summarize at their level.
 4. **Tell them about the danger guard.** A `technical_level` of `non-technical` or `mixed` (and the
-   state before any profile exists) turns on a `PreToolUse` guard that blocks irreversible commands —
-   `rm -rf`, `git push --force`, `git reset --hard`, `DROP`/`TRUNCATE`, `DELETE`/`UPDATE` with no
-   `WHERE`, `dd` to a device, `curl | bash` — and asks for a safer alternative. A fully `technical`
-   user is never guarded. It turns off only if the user explicitly asks: `.rsc/.no-danger-guard`.
-   Mention it when you set a non-technical level, so a later block is not a surprise.
+   state before any profile exists) turns on a `PreToolUse` guard for irreversible commands —
+   `rm -rf`, `git push --force`, `git reset --hard`, `git branch -D`, `DROP`/`TRUNCATE`,
+   `DELETE`/`UPDATE` with no `WHERE`, `dd` to a device, `curl | bash`. For `non-technical` (or no
+   profile) Claude Code asks the user to confirm each one, saying what the command destroys; their
+   yes is the order that runs it. For `mixed` it only warns. A fully `technical` user is never
+   guarded. It turns off only if the user explicitly asks: `.rsc/.no-danger-guard`.
+   Mention it when you set a non-technical level, so a later confirmation is not a surprise.
 
 ### Phase 5 — HANDOFF
 

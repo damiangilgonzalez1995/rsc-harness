@@ -144,7 +144,7 @@ Hay tres hooks que **inyectan texto** así, y tres que **bloquean** comandos. Lo
 | session-start | Al abrir | Le dice a Claude que lea tu perfil y le pasa avisos pendientes |
 | userprompt-gate | En cada mensaje tuyo | Le recuerda: "feature nueva pasa por spec antes de código" |
 | worklog-checkpoint | Al cerrar | Le pide que apunte qué hizo en la sesión |
-| danger-guard | Antes de cada comando | Bloquea `rm -rf`, `push --force`, `reset --hard` |
+| danger-guard | Antes de cada comando | Te pide confirmar `rm -rf`, `push --force`, `reset --hard` (perfil `mixed`: solo avisa) |
 | gitmoji-guard | Antes de cada commit | Bloquea commits sin emoji al principio |
 | ship-guard | Antes de cambiar de rama | Bloquea salir de tu rama con cambios sin guardar |
 | session-memory | En 7 momentos | Apunta en el cuaderno (ver sección 5) |
@@ -482,7 +482,7 @@ flowchart TD
 
     t2["⏱ MOMENTO 2 · Claude va a ejecutar un comando"]:::trigger
     t2a["🛡 ship-guard<br>¿sales de tu rama con cambios? → BLOQUEA"]:::guard
-    t2b["🛡 danger-guard<br>¿rm -rf, push --force? → BLOQUEA<br>(solo si tu perfil no es técnico)"]:::guard
+    t2b["🛡 danger-guard<br>¿rm -rf, push --force? → PIDE CONFIRMACIÓN<br>(mixed: solo avisa; technical: nada)"]:::guard
     t2c["🛡 gitmoji-guard<br>¿commit sin emoji? → BLOQUEA"]:::guard
     t2d["▶ El comando se ejecuta<br>(si nadie bloqueó)"]
     t2e["📓 memory · boundary<br>vuelve a mirar git por si hubo commit"]:::memo

@@ -767,13 +767,13 @@ test('session-start: .rsc/.no-audit silences the skill-audit nudge', () => {
 
 const DANGER_GUARD = join(dirname(fileURLToPath(import.meta.url)), '..', 'targets', 'danger-guard.mjs');
 
-// Run danger-guard with a Bash command and return true if it DENIED.
+// Run danger-guard with a Bash command and return true if it STOPPED it (ask for a person to confirm).
 function denied(root, command) {
   const out = spawnSync('node', [DANGER_GUARD, root], {
     input: JSON.stringify({ tool_name: 'Bash', tool_input: { command } }),
     encoding: 'utf8',
   }).stdout;
-  return out.includes('"permissionDecision":"deny"');
+  return /"permissionDecision":"(deny|ask)"/.test(out);
 }
 function profileDir(level) {
   const root = mkdtempSync(join(tmpdir(), 'rsc-dg-'));
