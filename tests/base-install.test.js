@@ -94,5 +94,29 @@ test('a policy with plugins writes enabledPlugins into .claude/settings.json', a
 
   assert.ok(existsSync(hookTarget), 'settings.json was written');
   const settings = JSON.parse(readFileSync(hookTarget, 'utf8'));
-  assert.deepEqual(settings.enabledPlugins, { 'superpowers@claude-plugins-official': true });
+  assert.equal(settings.enabledPlugins['superpowers@claude-plugins-official'], true);
+});
+
+test('cada install deja activados los mods de Claude Code y respeta un false puesto a mano', async () => {
+  const { mkdtempSync, mkdirSync, readFileSync, writeFileSync } = await import('node:fs');
+  const { join } = await import('node:path');
+  const { tmpdir } = await import('node:os');
+  const { wireHook, CLAUDE_CODE_MODS } = await import('../targets/claude.js');
+
+  const root = mkdtempSync(join(tmpdir(), 'rsc-mods-'));
+  mkdirSync(join(root, '.claude'), { recursive: true });
+  const hookTarget = join(root, '.claude', 'settings.json');
+  writeFileSync(hookTarget, JSON.stringify({ enabledPlugins: { 'cache-tax@claude-code-mods': false } }));
+  const paths = { projectRoot: root, hookTarget, skillDir: (id) => join(root, '.claude', 'skills', id) };
+  mkdirSync(paths.skillDir('suggest'), { recursive: true });
+
+  // Sin flujo de código: los mods no dependen del plan.
+  wireHook(paths, undefined, { codeHooks: false });
+  const settings = JSON.parse(readFileSync(hookTarget, 'utf8'));
+  assert.deepEqual(CLAUDE_CODE_MODS.map((m) => m.id).sort(),
+    ['cache-tax@claude-code-mods', 'filetree@claude-code-filetree', 'savvy-progress@claude-kit', 'skins@hellosverre-mods']);
+  for (const { id, marketplace, repo } of CLAUDE_CODE_MODS) {
+    assert.deepEqual(settings.extraKnownMarketplaces[marketplace], { source: { source: 'github', repo } });
+    assert.equal(settings.enabledPlugins[id], id === 'cache-tax@claude-code-mods' ? false : true);
+  }
 });

@@ -9,6 +9,15 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 // so a `Bash`-only matcher let `git push --force` or a commit without gitmoji through unasked.
 const SHELL_TOOLS = 'Bash|PowerShell';
 
+// Mods de la terminal de Claude Code que el harness deja activados en cada proyecto.
+// `cache-tax` mantiene caliente la caché del prompt en las pausas, y eso gasta tokens.
+export const CLAUDE_CODE_MODS = Object.freeze([
+  { id: 'skins@hellosverre-mods', marketplace: 'hellosverre-mods', repo: 'hellosverre/claude-skins' },
+  { id: 'savvy-progress@claude-kit', marketplace: 'claude-kit', repo: 'johnnyvizz/claude-kit' },
+  { id: 'filetree@claude-code-filetree', marketplace: 'claude-code-filetree', repo: 'data-goblin/claude-code-filetree' },
+  { id: 'cache-tax@claude-code-mods', marketplace: 'claude-code-mods', repo: 'karanb192/claude-code-mods' },
+]);
+
 export function writeSkill(id, fromDir, toPath) {
   // Migrate away from the legacy nested layout (.claude/skills/rsc/<id>) that
   // Claude Code never discovered — it only reads .claude/skills/<name>/SKILL.md.
@@ -233,6 +242,16 @@ export function wireHook(paths, sourceMd, policy = {}) {
   if (policy.plugins?.length) {
     settings.enabledPlugins ||= {};
     for (const id of policy.plugins) settings.enabledPlugins[id] = true;
+  }
+
+  // Los mods de Claude Code van en cada install y update, se use el flujo o no. Con el marketplace
+  // en `extraKnownMarketplaces`, Claude Code ofrece instalarlos al abrir el proyecto. Un `false`
+  // que alguien puso a mano es una decisión suya y se respeta.
+  settings.extraKnownMarketplaces ||= {};
+  settings.enabledPlugins ||= {};
+  for (const { id, marketplace, repo } of CLAUDE_CODE_MODS) {
+    settings.extraKnownMarketplaces[marketplace] ||= { source: { source: 'github', repo } };
+    if (settings.enabledPlugins[id] !== false) settings.enabledPlugins[id] = true;
   }
 
   // Danger guard: its own decision, not part of the code-hook block above (#273). `init` promises it
