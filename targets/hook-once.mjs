@@ -113,6 +113,37 @@ Cambio de una linea, typo o ajuste de configuracion -> hazlo y di que te saltas 
 ==========================================================
 `;
 
+// Some skills the gate names carry `disable-model-invocation: true`: the Skill tool refuses them,
+// so telling the agent to "use `to-spec`" sends it into a refusal and the user ends up typing the
+// command anyway. The flag lives in each SKILL.md, so the gate reads it from there at emit time
+// instead of keeping a second, hand-written list that drifts. Each flagged id is rendered as the
+// slash command the user has to type, plus one line saying so. `roots` are searched in order
+// (project, then user scope); the first SKILL.md found decides. Fail-safe: a skill whose file
+// cannot be read keeps the current wording — this runs every turn and must never break the gate.
+const GATE_ID = /`([a-z][a-z0-9-]*)`/g;
+export function renderGate(text, roots = []) {
+  const manual = [];
+  for (const id of new Set([...text.matchAll(GATE_ID)].map((m) => m[1]))) {
+    for (const r of roots) {
+      let md;
+      try { md = readFileSync(join(r, '.claude', 'skills', id, 'SKILL.md'), 'utf8'); } catch { continue; }
+      const fm = md.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+      if (fm && /^disable-model-invocation:\s*true\s*$/m.test(fm[1])) manual.push(id);
+      break;
+    }
+  }
+  if (!manual.length) return text;
+  const flagged = new Set(manual);
+  const lines = text.replace(GATE_ID, (m, id) => (flagged.has(id) ? `\`/${id}\`` : m)).split('\n');
+  const note = `Las que van con / (${manual.map((id) => `\`/${id}\``).join(', ')}) no las lances tu: la\n` +
+    `herramienta Skill las rechaza. Pide al usuario que escriba \`/<skill>\` (p. ej. \`/${manual[0]}\`).`;
+  let close = lines.length - 1;
+  while (close > 0 && !lines[close].startsWith('=====')) close -= 1;
+  if (close <= 0) return `${lines.join('\n')}\n${note}\n`;
+  lines.splice(close, 0, note);
+  return lines.join('\n');
+}
+
 /**
  * Parse the hook payload Claude Code writes to stdin.
  * Pass `raw` explicitly in tests; in a hook, call with no argument to read fd 0.
