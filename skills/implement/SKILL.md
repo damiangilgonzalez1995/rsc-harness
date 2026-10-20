@@ -14,6 +14,8 @@ Usa TDD (superpowers:test-driven-development) donde sea posible, en las costuras
 
 Ejecuta el typechecking con regularidad, archivos de test sueltos con regularidad, y la suite de tests completa una vez al final.
 
+Si el trabajo cambia algo visible, no está hecho hasta que lo hayas mirado: adjunta una captura del entorno donde el usuario lo va a probar. Si no puedes abrirlo, dilo y no lo des por terminado.
+
 Al terminar, usa /code-review para revisar el trabajo.
 
 Commitea tu trabajo en la rama actual.
