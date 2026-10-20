@@ -2,7 +2,7 @@
 
 El camino depende de si el trabajo ha tocado interfaz o no.
 
-![Flujo de la fase de revisar y cerrar](../img/04-revisar.svg)
+![Flujo de la fase de revisar y cerrar](../img/04-revisar.png)
 
 ---
 

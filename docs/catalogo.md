@@ -161,7 +161,7 @@ activarlas.
 La fuente de verdad es un documento escrito, no un mensaje de chat. La cadena, tal como la
 recuerda el gate de cada turno:
 
-![La filosofía: desarrollo guiado por spec](img/00-filosofia.svg)
+![La filosofía: desarrollo guiado por spec](img/00-filosofia.png)
 
 Siempre: `superpowers:test-driven-development` y `superpowers:verification-before-completion`.
 Los bugs empiezan en `superpowers:systematic-debugging`.
@@ -170,7 +170,7 @@ Los bugs empiezan en `superpowers:systematic-debugging`.
 
 Todo lo que va antes del código. Lo que sale es una spec y un plan, no una idea.
 
-![Fase de planificar](img/01-planificar.svg)
+![Fase de planificar](img/01-planificar.png)
 
 | Skill | Qué hace |
 |---|---|
@@ -190,7 +190,7 @@ dentro de `grill-with-docs`.
 
 ### 2 · Implementar
 
-![Fase de implementar](img/02-implementar.svg)
+![Fase de implementar](img/02-implementar.png)
 
 | Skill | Qué hace |
 |---|---|
@@ -202,7 +202,7 @@ dentro de `grill-with-docs`.
 Cuando el trabajo toca una pantalla. Hay muchas skills que se solapan; elige la que encaja con el
 encargo.
 
-![La cadena de interfaz](img/03-interfaz.svg)
+![La cadena de interfaz](img/03-interfaz.png)
 
 | Skill | Qué hace |
 |---|---|
@@ -226,7 +226,7 @@ encargo.
 
 ### 4 · Revisar y cerrar
 
-![Revisar y cerrar](img/04-revisar.svg)
+![Revisar y cerrar](img/04-revisar.png)
 
 | El trabajo | Orden |
 |---|---|

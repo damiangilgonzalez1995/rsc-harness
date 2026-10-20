@@ -120,7 +120,7 @@ Tira cómica de cuatro viñetas: el ejemplo tonto de un vistazo. Personaje: una 
 ### `readme-04-metodo.png` · 1600 × 1100 · **la más importante**
 
 **El mapa de implementación: la cadena depende del tamaño.** Versión cuidada de
-`docs/img/05-mapa-implementacion.svg`.
+`docs/img/05-mapa-implementacion.mmd`.
 
 Tres carriles verticales que salen de una pregunta, *¿Qué tamaño tiene?*:
 
