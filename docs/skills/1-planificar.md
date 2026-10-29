@@ -5,7 +5,7 @@ Todo lo que pasa **antes de escribir código**. Sale una spec y un plan, no una 
 Sigue el método *spec-driven development*: la fuente de verdad es un documento escrito, no un
 mensaje de chat. Las fases de bajar a tierra, especificar, aclarar y planificar caen todas aquí.
 
-![Flujo de la fase de planificar](../img/01-planificar.svg)
+![Flujo de la fase de planificar](../img/01-planificar.png)
 
 ---
 

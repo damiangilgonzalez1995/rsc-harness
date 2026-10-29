@@ -3,7 +3,7 @@
 Aquí el trabajo ya está decidido en la spec y lo que queda es ejecutarlo. Si la tarea toca
 interfaz, pasa además por [la cadena de interfaz](3-interfaz.md).
 
-![Flujo de la fase de implementar](../img/02-implementar.svg)
+![Flujo de la fase de implementar](../img/02-implementar.png)
 
 ---
 
