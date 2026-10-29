@@ -1,12 +1,13 @@
 # Cómo funciona este harness
 
-Tres documentos para entender qué hace este proyecto cuando lo instalas y trabajas con Claude Code. Están escritos sin tecnicismos y se leen en este orden.
+Cuatro documentos para entender qué hace este proyecto cuando lo instalas y trabajas con Claude Code. Están escritos sin tecnicismos y se leen en este orden.
 
 | Documento | Qué responde | Formato |
 |---|---|---|
 | [El harness explicado para cualquiera](mapa-del-harness.md) | Qué es, qué instala, qué pasa en cada turno de conversación, qué hace cada pieza. Doce secciones con diagramas y ejemplos. | Markdown |
 | [Tres sesiones con memoria](tres-sesiones-con-memoria.html) | Qué cambia de verdad entre la sesión uno y la sesión tres: qué recuerda el proyecto, quién lo escribe y dónde. Se lee como una línea de tiempo. | HTML, ábrelo en el navegador |
 | [Anatomía del harness](anatomia-del-harness.html) | El detalle técnico hook a hook: cuándo se dispara cada uno, qué inyecta y qué bloquea. | HTML, ábrelo en el navegador |
+| [La memoria del harness](memoria.md) | Las tres capas de memoria (wiki, diario de sesión y sincronización con el equipo), qué guarda cada una y los comandos para usarlas y comprobarlas. | Markdown |
 
 ## La idea en una frase
 

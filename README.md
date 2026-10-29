@@ -152,6 +152,19 @@ secrets. It stays in a git-excluded project-local path, retains 30 days, and
 injects at most 4,096 bytes. Disable every memory surface for a project with
 `rsc memory off`; re-enable it with `rsc memory on`.
 
+### Knowledge sync
+
+The session journal stays on your machine; the project's knowledge travels. On by
+default, `01-TOOLS/`, `docs/wiki/` and `docs/attachments/` are committed when a turn
+ends and pushed in the background to the `rsc/knowledge` branch of `origin` (with
+`[skip ci]`); before each message, what teammates pushed there comes down into your
+working branch. It reaches `main` inside your ordinary pull requests, and never commits
+on a default branch that is closed for the agent (CI, a deployment or a team). It never
+pushes code, a commit that is not its own, or the personal profile. Turn it off for the
+whole project with `rsc knowledge-sync off`. «Recuerda esto» writes the fact into its
+`docs/wiki/` page and says the path. Guide in Spanish:
+[docs/como-funciona/memoria.md](docs/como-funciona/memoria.md).
+
 ---
 
 ## Install
@@ -256,6 +269,8 @@ rsc memory save --session handoff    # force a deterministic local checkpoint
 rsc memory resume                    # print this branch/worktree continuation
 rsc memory learn --text "…" --evidence "…" --confidence 0.8 --approve
 rsc memory off                       # disable hooks, commands and injection project-wide
+rsc knowledge-sync status            # is 01-TOOLS/ + docs/ syncing through rsc/knowledge, and if not, why
+rsc knowledge-sync off               # stop syncing knowledge for the whole project (recorded in .rsc.json)
 rsc sync --target claude,codex       # refresh managed skills/hooks from the current package version
 rsc backups                          # list project-local snapshots
 rsc restore latest --dry-run         # preview restoring the newest snapshot

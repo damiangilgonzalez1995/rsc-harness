@@ -104,6 +104,7 @@ const nestedEvents = {
     ['PostToolUse', 'edit', 'apply_patch|Edit|Write'], ['PostToolUse', 'boundary', 'Bash'],
     ['Stop', 'turn'], ['PreCompact', 'compact'], ['SessionEnd', 'end'],
   ],
+  // DeepSeek Harness runs Codex-format hooks through rsc's bridge: only these five points exist there.
   gemini: [
     ['SessionStart', 'start'], ['BeforeAgent', 'request'], ['AfterTool', 'edit', 'write_file|replace'],
     ['AfterTool', 'boundary', 'run_shell_command'], ['AfterAgent', 'turn'], ['PreCompress', 'compact'], ['SessionEnd', 'end'],
