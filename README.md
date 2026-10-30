@@ -204,8 +204,20 @@ responde a una pregunta distinta:
 | **3. Lecciones aprobadas** | Reglas cortas para cada sesión de este proyecto | `.rsc/memory/lessons/` (solo tu máquina) | Tú, con `rsc memory learn … --approve` |
 | **4. Memoria de Claude Code** | *Cómo te gusta trabajar a ti* | `~/.claude/projects/` (fuera del repo) | Claude, cuando le hablas de ti |
 
-«Recuerda que…» siempre va al nivel 1, y el agente te dice la ruta de la página. Si no te da una
-ruta dentro de `docs/wiki/`, no lo ha guardado en el proyecto.
+![Quién escribe cada nivel, cómo se activa y cuándo se lee](docs/img/readme/readme-20-memoria-quien-cuando.png)
+
+**Nada guarda tus conversaciones.** Solo se recuerda lo que alguien escribe en uno de los cuatro
+sitios:
+
+| Nivel | ¿Cómo se escribe? | ¿Qué haces tú? | ¿Cuándo lo lee el agente? |
+|---|---|---|---|
+| **1. Wiki** | El agente, cuando se lo pides, o una skill que documenta su trabajo (`harness`, `continuous-learning`…) | Decir «recuerda que…» | Cuando la tarea lo pide: `CLAUDE.md` le dice que existe `docs/wiki/index.md` |
+| **2. Diario** | Automático: los hooks, en cada evento | Nada | Automático, al abrir sesión |
+| **3. Lecciones** | Solo con un comando, y solo con `--approve` | `rsc memory learn --text "…" --approve` | Automático, al abrir sesión |
+| **4. Memoria de Claude** | Claude Code, cuando le cuentas algo de ti | Decir «recuerda que prefiero…» | Automático, al abrir sesión (`MEMORY.md`) |
+
+«Recuerda que…» sobre el proyecto va al nivel 1, y el agente te dice la ruta de la página. Si no
+te da una ruta dentro de `docs/wiki/`, no lo ha guardado en el proyecto.
 
 **Qué pasa en cada mensaje** (no al abrir rama ni sesión: en cada mensaje):
 
