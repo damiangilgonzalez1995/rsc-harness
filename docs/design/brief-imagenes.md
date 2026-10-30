@@ -287,6 +287,87 @@ compactar o para un `handoff`.*
 
 ---
 
+### `readme-19-memoria-niveles.png` · 1600 × 1100
+
+**Los cuatro niveles de memoria y qué pasa en cada mensaje.** Mismo estilo que
+`readme-13-memoria.png` (fondo claro, tarjetas gris muy claro, acento ocre). Dos bandas.
+
+**Arriba · "Cuatro niveles de memoria."** Cuatro tarjetas en fila, cada una con número, icono,
+nombre, la pregunta que responde y la ruta en mono. Debajo, una regla que las agrupa por dónde
+viven: *en el repo* (1) · *solo en tu máquina* (2 y 3) · *fuera del proyecto* (4).
+
+| # | Nombre | Pregunta | Ruta | Icono |
+|---|---|---|---|---|
+| 1 | Wiki del proyecto | ¿Qué sabe el proyecto? | `docs/wiki/` | libro |
+| 2 | Diario de sesión | ¿Dónde lo dejé? | `.rsc/memory/` | cuaderno |
+| 3 | Lecciones aprobadas | ¿Qué no se puede olvidar aquí? | `.rsc/memory/lessons/` | check en escudo |
+| 4 | Memoria de Claude | ¿Cómo trabajo yo? | `~/.claude/projects/` | persona |
+
+La tarjeta 1 destaca (borde en acento): es la que importa. Una nota junto a ella:
+*«Recuerda que…» → aquí, y te dice la ruta.*
+
+**Abajo · "Qué pasa en cada mensaje."** Un ciclo horizontal de cuatro pasos, en acento:
+
+1. **Envías un mensaje.**
+2. **📥 Trae** — un hook mete en *tu rama actual* lo nuevo de `rsc/knowledge` (solo `docs/wiki/`,
+   `docs/attachments/`, `01-TOOLS/`).
+3. **El agente responde** — con la wiki al día, el diario y las lecciones.
+4. **📝 Sube** — al terminar, otro hook sube a `rsc/knowledge` lo que cambió en esas carpetas.
+
+Una flecha de vuelta del 4 al 1 (*siguiente mensaje*). A la derecha, una caja en mono
+`origin/rsc/knowledge` con flechas de doble sentido a los pasos 2 y 4, y otra persona
+("compañero o tu otra rama") conectada a la misma caja. De esa caja sale una flecha discontinua
+en `texto-suave` hacia `main` con la etiqueta *solo por tus PR*.
+
+Remate: *Al abrir rama no pasa nada: se pone al día en su primer mensaje.*
+
+```mermaid
+flowchart LR
+  M[Envías un mensaje] --> T["📥 Trae de rsc/knowledge<br/>a tu rama actual"]
+  T --> R[El agente responde]
+  R --> S["📝 Sube a rsc/knowledge<br/>lo que cambió"]
+  S -. siguiente mensaje .-> M
+  K[(origin/rsc/knowledge)] --> T
+  S --> K
+  C[Compañero o tu otra rama] <--> K
+  K -. solo por tus PR .-> MAIN[main]
+```
+
+---
+
+### `readme-20-memoria-quien-cuando.png` · 1600 × 1000
+
+**Quién escribe cada nivel, cómo se activa y cuándo se lee.** Mismo estilo que
+`readme-13-memoria.png`. Responde a «¿esto se guarda solo o lo tengo que pedir?».
+
+Título: *¿Quién lo escribe? ¿Cuándo se lee?* Subtítulo grande en acento:
+**Nada guarda tus conversaciones. Solo se recuerda lo que alguien escribe.**
+
+Una tabla visual de cuatro filas (una por nivel) y tres columnas. Cada celda de la columna
+central lleva una **etiqueta de color** con el modo de activación:
+
+- `automático` en verde (acento): nadie hace nada;
+- `lo pides tú` en ámbar (`acento-2`): una frase en el chat;
+- `comando` en gris oscuro: hay que ejecutarlo.
+
+| Nivel | Cómo se escribe | Cuándo lo lee el agente |
+|---|---|---|
+| **1 · Wiki** `docs/wiki/` | `lo pides tú` — *«Recuerda que los pagos van por Stripe»* → el agente escribe `docs/wiki/pagos.md` y te dice la ruta. También la escriben skills que documentan (`harness`, `continuous-learning`). | **Cuando la tarea lo pide.** No se carga entera: `CLAUDE.md` le dice que existe `docs/wiki/index.md` y abre la página que necesita. |
+| **2 · Diario** `.rsc/memory/` | `automático` — los hooks apuntan rama, ficheros y commits. Nunca el texto de la conversación. | `automático` al abrir sesión: *«Retomas en feat/avisos…»* |
+| **3 · Lecciones** `.rsc/memory/lessons/` | `comando` — `rsc memory learn --text "…" --approve`. Sin `--approve` no se guarda. | `automático` al abrir sesión (hasta 5). |
+| **4 · Memoria de Claude** `~/.claude/projects/` | `lo pides tú` — *«Recuerda que prefiero que me hables de tú»*. | `automático` al abrir sesión (`MEMORY.md`). |
+
+Al pie, una franja con dos ejemplos de chat lado a lado, como burbujas:
+
+- *«Recuerda que facturamos con una sola sociedad»* → flecha → tarjeta `docs/wiki/facturacion.md`
+  (nivel 1, en el repo).
+- *«Recuerda que no me expliques git»* → flecha → tarjeta `~/.claude/projects/…` (nivel 4, solo
+  tú).
+
+Remate: *Si el agente no te dice una ruta, no lo ha guardado.*
+
+---
+
 ### `readme-14-doctor.png` · 1200 × 600
 
 **¿Algo raro? Un comando.** Terminal grande:
@@ -405,7 +486,9 @@ El orden en que aparece cada imagen, para insertarlas sin pensar:
 4. **Instalar:** `readme-08-instalacion.png`, `readme-10-perfiles.png`
 5. **Qué se instala:** `readme-09-que-se-instala.png`, `readme-07-guardias.png`,
    `readme-16-plugins.png`
-6. **El día a día:** `readme-11-actualizar.png`, `readme-12-equipo.png`, `readme-13-memoria.png`,
+6. **El día a día:** `readme-11-actualizar.png`, `readme-12-equipo.png`,
    `readme-18-worktrees.png`, `readme-14-doctor.png`
-7. **Catálogo:** `readme-15-catalogo.png` + enlace a `docs/catalogo.md`
-8. **Créditos:** una línea, sin imagen
+7. **La memoria:** `readme-19-memoria-niveles.png`, `readme-20-memoria-quien-cuando.png`,
+   `readme-13-memoria.png`
+8. **Catálogo:** `readme-15-catalogo.png` + enlace a `docs/catalogo.md`
+9. **Créditos:** una línea, sin imagen

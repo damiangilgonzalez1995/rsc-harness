@@ -1,14 +1,15 @@
 # La memoria del harness: qué recuerda, dónde y cómo usarla
 
-Claude Code empieza cada conversación en blanco. El harness le da memoria guardándola en ficheros, en tres capas distintas. Cada una responde a una pregunta diferente:
+Claude Code empieza cada conversación en blanco. El harness le da memoria guardándola en ficheros, en cuatro niveles. Cada uno responde a una pregunta diferente:
 
-| Capa | Qué guarda | Dónde | Quién la escribe | ¿Viaja con el repo? |
+| Nivel | Qué guarda | Dónde | Quién lo escribe | ¿Sale de tu máquina? |
 |---|---|---|---|---|
-| **1. La wiki del proyecto** | Lo que el proyecto *sabe*: decisiones, stack, cómo se hace cada cosa, hechos del negocio | `docs/wiki/` (y `docs/attachments/`, `01-TOOLS/`) | El agente y tú, mientras trabajáis | Sí, es un fichero más del repo |
-| **2. El diario de sesión** | *Dónde lo dejaste*: rama, ficheros tocados, commits, lecciones aprobadas | `.rsc/memory/` o `docs/raw/worklog/.rsc-memory/` | Los hooks, solos | No, nunca sale de tu máquina |
-| **3. La sincronización del conocimiento** | Lo mismo que la capa 1, pero llevado a tu equipo sin pensar en git | Rama `rsc/knowledge` del remoto | Los hooks, solos | Sí, a través de `origin` |
+| **1. La wiki del proyecto** | Lo que el proyecto *sabe*: decisiones, stack, cómo se hace cada cosa, hechos del negocio | `docs/wiki/` (y `docs/attachments/`, `01-TOOLS/`) | El agente cuando dices «recuerda que…», o tú | Sí: está en git, y la sincronización la lleva a tus otras ramas y a tu equipo |
+| **2. El diario de sesión** | *Dónde lo dejaste*: rama, ficheros tocados, commits | `.rsc/memory/` o `docs/raw/worklog/.rsc-memory/` | Los hooks, solos | No |
+| **3. Las lecciones aprobadas** | Reglas cortas que quieres en cada sesión de este proyecto | `lessons/`, junto al diario | Tú, con `memory learn … --approve` | No |
+| **4. La memoria de Claude Code** | *Cómo te gusta trabajar a ti* | `~/.claude/projects/<proyecto>/memory/` | Claude, cuando le hablas de ti | No, y no está en el repo |
 
-Hay una cuarta memoria que **no** es del harness: la propia de Claude Code, en `~/.claude/projects/`. Está fuera del proyecto, no la ves en el repo y ningún compañero que clone la recibe. El harness la reserva para *cómo te gusta trabajar a ti* (tus preferencias personales), nunca para hechos del proyecto.
+La **sincronización del conocimiento** (rama `rsc/knowledge`) no es un nivel: no guarda nada propio, solo transporta el nivel 1 entre ramas y personas. Se explica al final.
 
 ---
 
@@ -42,7 +43,7 @@ Al abrir una sesión nueva en la misma rama, el agente recibe un resumen corto (
 
 **Lo que nunca guarda:** tus mensajes, las respuestas, la salida de las herramientas, el contenido de los ficheros ni nada con forma de secreto. Se borra a los 30 días y nunca hace peticiones de red.
 
-### Lecciones aprobadas
+## 3. Las lecciones aprobadas
 
 Puedes fijar una lección para que se inyecte en cada sesión de este proyecto. Solo se guarda si la apruebas expresamente:
 
@@ -54,7 +55,7 @@ npx @damiangilgonzalez/harness@latest memory learn \
 
 Para lecciones que deben cambiar el comportamiento del agente de forma duradera (una regla, una comprobación), es mejor la skill `continuous-learning`, que las lleva a `CLAUDE.md`, a una skill o a la wiki.
 
-### Comandos
+### Comandos del diario y las lecciones
 
 | Comando | Qué hace |
 |---|---|
@@ -68,16 +69,26 @@ Todos se lanzan como `npx @damiangilgonzalez/harness@latest <comando>` desde la 
 
 ---
 
-## 3. La sincronización del conocimiento (`rsc/knowledge`)
+## 4. La memoria de Claude Code
 
-Sirve para que la capa 1 esté igual en todas las máquinas del equipo sin que nadie piense en git. Está **encendida por defecto**.
+La escribe Claude Code, no el harness, en `~/.claude/projects/<proyecto>/memory/` (un `MEMORY.md` con el índice y un fichero por recuerdo). Está fuera del proyecto: no la ves en el repo y nadie que clone la recibe. El harness la reserva para tus preferencias («háblame de tú», «no me expliques git»), nunca para hechos del proyecto.
+
+---
+
+## La sincronización del conocimiento (`rsc/knowledge`)
+
+Transporta el nivel 1: hace que la wiki esté igual en todas tus ramas, en tus otros ordenadores y en los de tu equipo, sin que nadie piense en git. Está **encendida por defecto**.
+
+`rsc/knowledge` es una rama de intercambio en el remoto, no una PR: lo que escribe un compañero llega a tu rama sin revisión. A `main` sí llega por PR, dentro de las vuestras.
+
+**Cuándo ocurre: en cada mensaje que envías**, no al abrir rama ni sesión. Una rama recién abierta se pone al día en su primer mensaje.
 
 **Qué sincroniza:** `01-TOOLS/`, `docs/wiki/` y `docs/attachments/`. Nada más: ni el código, ni el resto de `docs/`, ni tu perfil, ni la plantilla `01-TOOLS/_TEMPLATE/`.
 
 **Cómo funciona:**
 
-1. **Al acabar cada turno del agente**, lo que haya cambiado en esas carpetas se comitea en tu rama (`📝 docs(auto): …`) y se sube en segundo plano a la rama `rsc/knowledge` del remoto, con `[skip ci]` para no lanzar despliegues.
-2. **Antes de cada mensaje tuyo**, lo que tus compañeros han subido a `rsc/knowledge` baja a tu rama de trabajo (`📥 docs(auto): sync desde rsc/knowledge`) y se te dice en una línea quién cambió qué.
+1. **Antes de que el agente lea tu mensaje** (hook `UserPromptSubmit`), lo que tus compañeros han subido a `rsc/knowledge` baja a tu rama actual (`📥 docs(auto): sync desde rsc/knowledge`) y se te dice en una línea quién cambió qué.
+2. **Al acabar el turno del agente** (hook `Stop`), lo que haya cambiado en esas carpetas se comitea en tu rama (`📝 docs(auto): …`) y se sube en segundo plano a la rama `rsc/knowledge` del remoto, con `[skip ci]` para no lanzar despliegues.
 3. **Llega a `main` dentro de vuestras pull requests normales**: cada rama ya lleva el conocimiento, así que entra con la primera que se fusione.
 
 **Lo que nunca hace:**

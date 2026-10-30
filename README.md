@@ -169,16 +169,6 @@ Un `git pull` no escribe nada en tu máquina; `rsc doctor` te dice qué ya no cu
 **Skills propias.** Las que escribe tu equipo viven en el repo y funcionan al clonar.
 rsc nunca las instala, actualiza ni sobrescribe: su versión es el commit.
 
-![Memoria entre sesiones: cada sesión retoma donde lo dejó la anterior](docs/img/readme/readme-13-memoria.png)
-
-Al cerrar, guarda rama, ficheros y commits; al abrir, te dice dónde lo dejaste.
-Nunca guarda prompts, respuestas ni secretos, y no sale de tu máquina. `rsc memory off` lo apaga.
-
-Lo que el proyecto *sabe* va a `docs/wiki/`: dile «recuerda que…» y te dirá en qué página lo
-guardó. Esa wiki, `docs/attachments/` y `01-TOOLS/` viajan solas a tu equipo por la rama
-`rsc/knowledge` y llegan a `main` dentro de vuestras PRs. `rsc knowledge-sync off` lo apaga.
-Cómo funciona todo junto: [la memoria del harness](docs/como-funciona/memoria.md).
-
 ![Una rama, una copia de trabajo](docs/img/readme/readme-18-worktrees.png)
 
 Cada rama en su worktree, cortada siempre desde `origin`.
@@ -199,6 +189,63 @@ npx @damiangilgonzalez/harness@latest repair --dry-run
 ```
 
 ---
+
+## La memoria
+
+![Los cuatro niveles de memoria y qué pasa en cada mensaje](docs/img/readme/readme-19-memoria-niveles.png)
+
+El agente empieza cada conversación en blanco. Lo que recuerda está en cuatro sitios, y cada uno
+responde a una pregunta distinta:
+
+| Nivel | Qué guarda | Dónde | Quién lo escribe |
+|---|---|---|---|
+| **1. Wiki del proyecto** | Lo que el proyecto *sabe*: decisiones, stack, hechos del negocio | `docs/wiki/` (en git) | El agente cuando dices «recuerda que…» |
+| **2. Diario de sesión** | *Dónde lo dejaste*: rama, ficheros tocados, commits | `.rsc/memory/` (solo tu máquina, 30 días) | Los hooks, solos |
+| **3. Lecciones aprobadas** | Reglas cortas para cada sesión de este proyecto | `.rsc/memory/lessons/` (solo tu máquina) | Tú, con `rsc memory learn … --approve` |
+| **4. Memoria de Claude Code** | *Cómo te gusta trabajar a ti* | `~/.claude/projects/` (fuera del repo) | Claude, cuando le hablas de ti |
+
+![Quién escribe cada nivel, cómo se activa y cuándo se lee](docs/img/readme/readme-20-memoria-quien-cuando.png)
+
+**Nada guarda tus conversaciones.** Solo se recuerda lo que alguien escribe en uno de los cuatro
+sitios:
+
+| Nivel | ¿Cómo se escribe? | ¿Qué haces tú? | ¿Cuándo lo lee el agente? |
+|---|---|---|---|
+| **1. Wiki** | El agente, cuando se lo pides, o una skill que documenta su trabajo (`harness`, `continuous-learning`…) | Decir «recuerda que…» | Cuando la tarea lo pide: `CLAUDE.md` le dice que existe `docs/wiki/index.md` |
+| **2. Diario** | Automático: los hooks, en cada evento | Nada | Automático, al abrir sesión |
+| **3. Lecciones** | Solo con un comando, y solo con `--approve` | `rsc memory learn --text "…" --approve` | Automático, al abrir sesión |
+| **4. Memoria de Claude** | Claude Code, cuando le cuentas algo de ti | Decir «recuerda que prefiero…» | Automático, al abrir sesión (`MEMORY.md`) |
+
+«Recuerda que…» sobre el proyecto va al nivel 1, y el agente te dice la ruta de la página. Si no
+te da una ruta dentro de `docs/wiki/`, no lo ha guardado en el proyecto.
+
+**Qué pasa en cada mensaje** (no al abrir rama ni sesión: en cada mensaje):
+
+1. Envías un mensaje.
+2. Antes de que el agente lo lea, un hook trae a **tu rama actual** lo nuevo de la rama
+   `rsc/knowledge` del remoto (solo `docs/wiki/`, `docs/attachments/` y `01-TOOLS/`) y te avisa
+   con una línea `📥 Traídos…`.
+3. El agente responde con la wiki al día.
+4. Al terminar, otro hook sube a `rsc/knowledge` lo que cambió en esas carpetas.
+
+`rsc/knowledge` es una rama de intercambio, no una PR: lo que escribe un compañero te llega sin
+revisión, y llega a `main` dentro de vuestras PRs normales. Nunca trae código, nunca pisa un
+fichero que estás editando y nunca comitea en una `main` cerrada. Trabajando solo, sirve para que
+lo que anotas en una rama aparezca en las demás. Lo que se trae es lo que se descargó en el
+mensaje anterior; si la última descarga tiene más de 3 minutos, descarga antes (3 s como mucho).
+
+![Memoria entre sesiones: cada sesión retoma donde lo dejó la anterior](docs/img/readme/readme-13-memoria.png)
+
+El diario (nivel 2) nunca guarda prompts, respuestas ni secretos, y no sale de tu máquina.
+
+```bash
+npx @damiangilgonzalez/harness memory resume            # lo que recibirá el agente al abrir sesión
+npx @damiangilgonzalez/harness knowledge-sync status    # ¿se sincroniza la wiki? y si no, por qué
+npx @damiangilgonzalez/harness memory off               # apaga el diario y las lecciones
+npx @damiangilgonzalez/harness knowledge-sync off       # apaga la sincronización (todo el proyecto)
+```
+
+Guía completa: [la memoria del harness](docs/como-funciona/memoria.md).
 
 ## Catálogo
 
