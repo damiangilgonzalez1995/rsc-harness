@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import { fileURLToPath } from 'node:url';
 import { existsSync, readFileSync, realpathSync } from 'node:fs';
-import { resolve, join, dirname } from 'node:path';
-import { capture, resume } from './session-memory-core.mjs';
+import { resolve, join, dirname, isAbsolute, sep } from 'node:path';
+import { capture, otherActiveSessions, resume } from './session-memory-core.mjs';
 
 const LOCAL_TARGETS = new Set(['claude', 'codex', 'cursor', 'gemini', 'opencode']);
 
@@ -20,14 +20,37 @@ function projectSettings(cwd) {
 // The hook payload's `cwd` is only where the tool call happened to run; inside a container of child
 // repos that is routinely a subdirectory with no harness of its own, and anchoring there scatters
 // one session's journal across children. With no harness anywhere above, the cwd stays the project.
-function nearestHarness(dir) {
+//
+// One exception, and it is the team workflow: a worktree under `<project>/.worktrees/<branch>/`
+// checks out its OWN committed `.rsc.json`, so the walk stopped there and the session's later events
+// went to a second store inside the worktree — while its open record stayed in the project's store
+// and kept telling every later session in the main checkout that someone was working there (team
+// simulation W1). A worktree the project made belongs to the project: its journal lives in the
+// project's store, with the worktree recorded as WHERE the session works.
+export function nearestHarness(dir) {
   let current = dir;
   for (;;) {
-    if (existsSync(join(current, '.rsc.json'))) return current;
+    if (existsSync(join(current, '.rsc.json'))) return parentProjectOf(current) || current;
     const parent = dirname(current);
     if (parent === current) return dir;
     current = parent;
   }
+}
+
+function parentProjectOf(dir) {
+  const parts = resolve(dir).split(sep);
+  for (let index = 1; index < parts.length; index += 1) {
+    if (parts[index] !== '.worktrees') continue;
+    const project = parts.slice(0, index).join(sep) || sep;
+    if (existsSync(join(project, '.rsc.json'))) return project;
+  }
+  return null;
+}
+
+function editedPath(native) {
+  const input = native?.tool_input || native?.toolInput || {};
+  const path = input.file_path || input.notebook_path || input.path || native?.file_path || null;
+  return typeof path === 'string' && isAbsolute(path) ? path : null;
 }
 
 function sessionId(native, target) {
@@ -88,6 +111,23 @@ function nativeOutput(target, eventName, context = '', notice = null, compaction
   };
 }
 
+/**
+ * team-safe-default B, the half the skills act on: when another session is working in this same
+ * checkout, the model is told — every message, while it lasts — to do new work in a worktree. Local
+ * journal only, no network (the memory's promise stands). `.no-worktree-isolation` turns it off.
+ */
+export function isolationContext({ project, here, sessionId, target }) {
+  if (existsSync(join(project, '.rsc', '.no-worktree-isolation'))) return '';
+  const others = otherActiveSessions({ cwd: project, worktreeCwd: here, sessionId, target });
+  if (!others.length) return '';
+  const who = others.map((o) => `${o.target}${o.branch ? ` en «${o.branch}»` : ''}`).join(', ');
+  return `rsc · aislamiento: otra sesión está trabajando en esta misma carpeta (${who}). ` +
+    'Cualquier cambio de esta petición se hace en un worktree en `.worktrees/` de la raíz, nunca dentro de una carpeta de proyecto: ' +
+    '`git worktree add .worktrees/<rama> -b <rama>` (si el proyecto está en una subcarpeta, `git -C <proyecto> worktree add <raíz>/.worktrees/<proyecto>-<rama> -b <rama>`, con la ruta absoluta) y se trabaja dentro. ' +
+    'No cambies de rama en esta carpeta. Dile a la persona en una línea dónde estás trabajando, para que ' +
+    'abra o levante el proyecto desde allí.';
+}
+
 export function contextFromNativeOutput(target, output = {}) {
   if (target === 'cursor') return output.additional_context || '';
   if (target === 'opencode') return output.context || '';
@@ -130,6 +170,7 @@ export function handleLifecycle({ target, event, native = {}, cwd, settings } = 
       editDelta: event === 'edit' ? 1 : 0,
       settings: config,
     };
+    if (event === 'edit' && editedPath(native)) captureInput.filePath = editedPath(native);
     if (typeof native.cost === 'number') captureInput.cost = native.cost;
     if (Number.isInteger(native.tool_calls)) captureInput.toolCalls = native.tool_calls;
     const captured = capture(captureInput);
@@ -138,8 +179,9 @@ export function handleLifecycle({ target, event, native = {}, cwd, settings } = 
     // nine rounds of hook → "—" → hook before the client broke the loop. Record the turn, say
     // nothing.
     const silenced = event === 'turn' && Boolean(native?.stop_hook_active);
+    const isolation = event === 'request' ? isolationContext({ project, here, sessionId: id, target }) : '';
     return {
-      output: silenced ? {} : nativeOutput(target, eventName, '', captured.notice, captured.compactionHint),
+      output: silenced ? {} : nativeOutput(target, eventName, isolation, captured.notice, captured.compactionHint),
       capture: captured,
       remote: false,
       degraded: false,

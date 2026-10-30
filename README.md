@@ -174,6 +174,11 @@ rsc nunca las instala, actualiza ni sobrescribe: su versión es el commit.
 Al cerrar, guarda rama, ficheros y commits; al abrir, te dice dónde lo dejaste.
 Nunca guarda prompts, respuestas ni secretos, y no sale de tu máquina. `rsc memory off` lo apaga.
 
+Lo que el proyecto *sabe* va a `docs/wiki/`: dile «recuerda que…» y te dirá en qué página lo
+guardó. Esa wiki, `docs/attachments/` y `01-TOOLS/` viajan solas a tu equipo por la rama
+`rsc/knowledge` y llegan a `main` dentro de vuestras PRs. `rsc knowledge-sync off` lo apaga.
+Cómo funciona todo junto: [la memoria del harness](docs/como-funciona/memoria.md).
+
 ![Una rama, una copia de trabajo](docs/img/readme/readme-18-worktrees.png)
 
 Cada rama en su worktree, cortada siempre desde `origin`.

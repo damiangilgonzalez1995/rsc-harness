@@ -86,9 +86,12 @@ test('a batch with an unreadable path still fingerprints the rest of the dirty f
   memory.capture({ cwd, sessionId: 'batch', target: 'claude', event: 'start' });
   unlinkSync(join(cwd, 'gone.md'));
   writeFileSync(join(cwd, 'README.md'), 'edited during session\n');
+  writeFileSync(join(cwd, 'untracked-39.md'), 'edited during session\n');
   const result = memory.capture({ cwd, sessionId: 'batch', target: 'claude', event: 'request' });
   assert.ok(result.record.files.includes('README.md'));
   assert.ok(result.record.files.includes('untracked-39.md'));
+  // Dirty before the session and untouched since: only a real fingerprint keeps it out of the record.
+  assert.ok(!result.record.files.includes('untracked-0.md'));
 });
 
 test('a rename records both repository paths', () => {

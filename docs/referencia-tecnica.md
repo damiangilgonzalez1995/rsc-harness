@@ -122,6 +122,8 @@ rsc memory save --session handoff    # fuerza un checkpoint local determinista
 rsc memory resume                    # imprime la continuación de esta rama/worktree
 rsc memory learn --text "…" --evidence "…" --confidence 0.8 --approve
 rsc memory off                       # apaga hooks, comandos e inyección en todo el proyecto
+rsc knowledge-sync status            # ¿se sincronizan 01-TOOLS/ y docs/ por rsc/knowledge? y si no, por qué
+rsc knowledge-sync off               # deja de sincronizar el conocimiento en todo el proyecto (queda en .rsc.json)
 rsc sync --target claude,codex       # refresca skills/hooks gestionados desde la versión actual
 rsc backups                          # lista las instantáneas locales del proyecto
 rsc restore latest --dry-run         # previsualiza restaurar la más reciente
@@ -178,6 +180,18 @@ cerrara antes de su evento normal de fin de sesión.
 El diario nunca guarda prompts, respuestas, salidas de herramientas, contenido de ficheros ni
 secretos. Vive en una ruta local excluida de git, se queda 30 días e inyecta como mucho 4.096
 bytes. `rsc memory off` apaga toda la memoria del proyecto; `rsc memory on` la vuelve a encender.
+
+## Sincronización del conocimiento
+
+El diario se queda en tu máquina; el conocimiento del proyecto viaja. Encendida por defecto,
+`01-TOOLS/`, `docs/wiki/` y `docs/attachments/` se comitean al acabar cada turno y suben en
+segundo plano a la rama `rsc/knowledge` de `origin` (con `[skip ci]`). Antes de cada mensaje, lo
+que han subido los compañeros baja a tu rama de trabajo. Llega a `main` dentro de las PRs normales
+y nunca se comitea en una rama principal cerrada para el agente (CI, despliegue o equipo). Nunca
+sube código, un commit que no sea suyo ni el perfil personal. Es un hook aparte de la memoria:
+`rsc memory off` no la apaga, y `rsc knowledge-sync off` la apaga para todo el proyecto.
+«Recuerda esto» guarda el hecho en su página de `docs/wiki/` y dice la ruta. Guía completa:
+[la memoria del harness](como-funciona/memoria.md).
 
 ## Cómo recomienda
 
