@@ -114,7 +114,7 @@ test('cada install deja activados los mods de Claude Code y respeta un false pue
   wireHook(paths, undefined, { codeHooks: false });
   const settings = JSON.parse(readFileSync(hookTarget, 'utf8'));
   assert.deepEqual(CLAUDE_CODE_MODS.map((m) => m.id).sort(),
-    ['cache-tax@claude-code-mods', 'filetree@claude-code-filetree', 'savvy-progress@claude-kit', 'skins@hellosverre-mods']);
+    ['cache-tax@claude-code-mods', 'savvy-progress@claude-kit', 'skins@hellosverre-mods']);
   for (const { id, marketplace, repo } of CLAUDE_CODE_MODS) {
     assert.deepEqual(settings.extraKnownMarketplaces[marketplace], { source: { source: 'github', repo } });
     assert.equal(settings.enabledPlugins[id], id === 'cache-tax@claude-code-mods' ? false : true);

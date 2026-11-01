@@ -14,7 +14,6 @@ const SHELL_TOOLS = 'Bash|PowerShell';
 export const CLAUDE_CODE_MODS = Object.freeze([
   { id: 'skins@hellosverre-mods', marketplace: 'hellosverre-mods', repo: 'hellosverre/claude-skins' },
   { id: 'savvy-progress@claude-kit', marketplace: 'claude-kit', repo: 'johnnyvizz/claude-kit' },
-  { id: 'filetree@claude-code-filetree', marketplace: 'claude-code-filetree', repo: 'data-goblin/claude-code-filetree' },
   { id: 'cache-tax@claude-code-mods', marketplace: 'claude-code-mods', repo: 'karanb192/claude-code-mods' },
 ]);
 
