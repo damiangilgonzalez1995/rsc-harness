@@ -126,9 +126,9 @@ Lo que se comparte va a git; el estado de la máquina, no.
 Hooks que vigilan por ti: recuerdan la cadena, piden confirmación antes de un `rm -rf` o un
 `git push --force` y paran antes de volver a `main` sin abrir la PR.
 
-![Plugins de serie: superpowers, skins, savvy-progress, filetree y cache-tax](docs/img/readme/readme-16-plugins.png)
+![Plugins de serie: superpowers, skins, savvy-progress y cache-tax](docs/img/readme/readme-16-plugins.png)
 
-En Claude Code quedan activados `skins`, `savvy-progress`, `filetree` y `cache-tax`
+En Claude Code quedan activados `skins`, `savvy-progress` y `cache-tax`
 (mantiene caliente la caché, y eso gasta tokens). `superpowers` llega cuando el proyecto usa el método.
 
 En cifras: 294 skills, 34 agentes y 43 entradas de comando, para 17 asistentes

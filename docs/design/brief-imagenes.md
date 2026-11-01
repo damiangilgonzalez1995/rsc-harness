@@ -422,14 +422,13 @@ Las dos baldosas propias (catálogo personal) van destacadas en `acento`.
 
 ### `readme-16-plugins.png` · 1600 × 700
 
-**Plugins que vienen de serie.** Cinco tarjetas: nombre, de dónde sale y una línea.
+**Plugins que vienen de serie.** Cuatro tarjetas: nombre, de dónde sale y una línea.
 
 | Plugin | Origen | Para qué |
 |---|---|---|
 | `superpowers` | oficial | TDD, depuración, verificación, brainstorming |
 | `skins` | hellosverre | temas y tarjetas en la terminal, `/skin` |
 | `savvy-progress` | claude-kit | barra de progreso y panel de subagentes |
-| `filetree` | data-goblin | árbol de ficheros con lo que toca Claude |
 | `cache-tax` | karanb192 | mantiene caliente la caché del prompt (gasta tokens) |
 
 ---
