@@ -16,7 +16,7 @@ const rscCli = readFileSync(join(ROOT, 'scripts/rsc.js'), 'utf8');
 const readme = readFileSync(join(ROOT, 'README.md'), 'utf8');
 
 // The set, spelled out once. Changing the base install means changing this line ON PURPOSE.
-const BASE = ['bro', 'eli5', 'harness', 'init', 'orient', 'show-me', 'suggest', 'teach', 'unslop'];
+const BASE = ['bro', 'eli5', 'hardening', 'harness', 'init', 'orient', 'show-me', 'suggest', 'teach', 'tunel-ngrok', 'unslop'];
 
 test('the base install is exactly the declared set', () => {
   assert.deepEqual(skillsForProfile(manifest, 'minimal').sort(), [...BASE].sort());
