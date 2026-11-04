@@ -31,6 +31,7 @@ should_not_trigger:
 capability:
   - scenario: "El usuario quiere el cuerpo de una PR que se revise de un vistazo."
     must_include:
+      - "La historia"
       - "Peligro de fusión"
       - "Radio de impacto"
   - scenario: "El repo tiene un check de título de PR en sus workflows."

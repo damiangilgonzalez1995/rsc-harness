@@ -1,0 +1,32 @@
+skill: tunel-ngrok
+
+should_trigger:
+  - prompt: "Quiero probar el front desde el movil sin desplegar."
+    why: "Disparador directo de tunel-ngrok."
+  - prompt: "Monta ngrok en este proyecto."
+    why: "Disparador directo de tunel-ngrok."
+  - prompt: "Necesito HTTPS en local para que el microfono funcione en el movil."
+    why: "Disparador directo de tunel-ngrok."
+  - prompt: "Open my local frontend on my phone through a public URL."
+    why: "Disparador directo de tunel-ngrok."
+  - prompt: "Comparte mi entorno local con una URL publica para ensenarselo a alguien."
+    why: "Disparador directo de tunel-ngrok."
+
+should_not_trigger:
+  - prompt: "Despliega la app en produccion."
+    route_to: "deployment"
+    why: "Desplegar de verdad es el trabajo de deployment, no de tunel-ngrok."
+  - prompt: "Configura los registros DNS de mi dominio."
+    route_to: "domains-dns"
+    why: "El DNS de un dominio propio es el trabajo de domains-dns, no de tunel-ngrok."
+  - prompt: "Haz una auditoria de seguridad del producto."
+    route_to: "hardening"
+    why: "Auditar la seguridad es el trabajo de hardening, no de tunel-ngrok."
+  - prompt: "Configura el pipeline de CI para que pase los tests en cada push."
+    route_to: "github-actions"
+    why: "Montar la CI es el trabajo de github-actions, no de tunel-ngrok."
+
+capability:
+  - scenario: "El usuario quiere abrir el front local en el movil."
+    must_include:
+      - "ngrok"

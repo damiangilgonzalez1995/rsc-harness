@@ -1,7 +1,7 @@
 {
   "version": "1.3.6",
   "counts": {
-    "skills": 294,
+    "skills": 296,
     "agents": 34,
     "commands": 43,
     "fixedCommands": 10
@@ -2342,6 +2342,31 @@
       ]
     },
     {
+      "id": "hardening",
+      "description": "Use when the user asks for hardening, a security or privacy audit of the product, or aligning it with SOC 2, ISO 27001 or ISO 27701: audits by zones with read-only subagents, checks every finding by hand, gives the list by severity, the user decides, and the chosen fixes go to spec and tickets. NOT a quick scan of a diff (that is `security-scan`), NOT secure-coding rules while writing code (that is `secure-coding`).",
+      "tags": [
+        "security",
+        "hardening",
+        "soc2",
+        "iso27001",
+        "iso27701",
+        "privacy",
+        "audit"
+      ],
+      "recommends": [
+        "to-spec",
+        "to-tickets",
+        "write-adr",
+        "implement-spec"
+      ],
+      "profiles": [
+        "minimal",
+        "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
       "id": "harness",
       "description": "Use when governing a workspace's control plane, code or not — the `01-TOOLS/` tooling layer, the `docs/` chaos→knowledge wiki, the root Knowledge map. Audits it, migrates legacy `XX-*` folders, scaffolds provider tooling, sweeps the inbox, writes root CLAUDE.md/AGENTS.md. NOT the bootstrap front door (that is `init`, which hands off here).",
       "tags": [
@@ -3805,7 +3830,7 @@
     },
     {
       "id": "pr",
-      "description": "Use when writing a PR body or opening a PR: a visual summary, before/after evidence, the merge danger (one-way or two-way door, blast radius), and a title checked against the repo's CI title rule before `gh pr create`.",
+      "description": "Use when writing a PR body or opening a PR: a short plain-language story of what was broken or missing and why it changed, a visual summary, before/after evidence, the merge danger (one-way or two-way door, blast radius), and a title checked against the repo's CI title rule before `gh pr create`.",
       "tags": [
         "pull-request",
         "review",
@@ -5350,6 +5375,26 @@
         "content-engine"
       ],
       "profiles": []
+    },
+    {
+      "id": "tunel-ngrok",
+      "description": "Use when the user wants to open a local project's frontend on their phone without deploying, share the local environment through a public URL, get HTTPS for the microphone or camera, or set up ngrok in a project. One ngrok tunnel to the frontend port; the frontend proxies the API so the phone sees a single HTTPS origin. NOT deploying to a real host (that is `deployment`).",
+      "tags": [
+        "ngrok",
+        "tunnel",
+        "mobile",
+        "https",
+        "local-dev"
+      ],
+      "recommends": [
+        "deployment"
+      ],
+      "profiles": [
+        "minimal",
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "typescript",

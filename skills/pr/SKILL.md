@@ -1,6 +1,6 @@
 ---
 name: pr
-description: "Use when writing a PR body or opening a PR: a visual summary, before/after evidence, the merge danger (one-way or two-way door, blast radius), and a title checked against the repo's CI title rule before `gh pr create`."
+description: "Use when writing a PR body or opening a PR: a short plain-language story of what was broken or missing and why it changed, a visual summary, before/after evidence, the merge danger (one-way or two-way door, blast radius), and a title checked against the repo's CI title rule before `gh pr create`."
 tags: ["pull-request", "review", "evidence", "risk"]
 profiles: [core, ui, full]
 origin: damiangil
@@ -15,6 +15,10 @@ metadata:
 Usa esta plantilla para escribir el cuerpo de la PR:
 
 ```markdown
+## La historia
+
+<tres a cinco frases, en coloquial: qué fallaba o faltaba, qué se ha hecho y qué cambia ahora>
+
 ## Resumen
 
 <diagrama, esbozo de diff o árbol>
@@ -38,6 +42,22 @@ Usa esta plantilla para escribir el cuerpo de la PR:
 ## Secciones
 
 Sáltate los preámbulos y deja la prosa breve. Usa el lenguaje del dominio del usuario que está en `GLOSSARY.md`.
+
+### La historia
+
+Va siempre, la primera. Cuenta el porqué y el qué como se lo contarías a un amigo que no ha visto el código: cercano, coloquial y entendible de un vistazo. Tres a cinco frases que siguen este hilo:
+
+1. El problema: qué fallaba o qué faltaba, y a quién le afectaba.
+2. Lo que se ha hecho, en palabras de la calle.
+3. Cómo queda ahora.
+
+Habla de lo que nota quien usa el producto. Los nombres de ficheros, funciones y la jerga técnica van en las secciones de abajo.
+
+Ejemplo del tono:
+
+> Vamos a ver: cuando alguien guardaba un formulario dos veces seguidas, se creaban dos pedidos iguales y luego tocaba borrarlos a mano. Lo que pasaba es que el botón no se bloqueaba mientras se guardaba. Ahora el botón se desactiva hasta que termina, y si aun así llega un pedido repetido, se ignora. Resultado: un clic, un pedido.
+
+**Hecha cuando** alguien que no ha visto el código entiende, solo con leerla, qué pasaba y qué cambia.
 
 ### Resumen
 

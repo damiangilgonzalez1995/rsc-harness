@@ -1,0 +1,32 @@
+skill: hardening
+
+should_trigger:
+  - prompt: "Haz un hardening del producto."
+    why: "Disparador directo de hardening."
+  - prompt: "Audita la seguridad y la privacidad de la aplicacion."
+    why: "Disparador directo de hardening."
+  - prompt: "Quiero alinear el producto con SOC 2 e ISO 27001."
+    why: "Disparador directo de hardening."
+  - prompt: "Run a security and privacy audit against ISO 27701."
+    why: "Disparador directo de hardening."
+  - prompt: "Revisa por zonas que fallos de seguridad tiene el proyecto y dame la lista por gravedad."
+    why: "Disparador directo de hardening."
+
+should_not_trigger:
+  - prompt: "Abre el front en el movil con ngrok."
+    route_to: "tunel-ngrok"
+    why: "Abrir el front en el movil es el trabajo de tunel-ngrok, no de hardening."
+  - prompt: "Documenta la decision de arquitectura."
+    route_to: "write-adr"
+    why: "Documentar una decision de arquitectura es el trabajo de write-adr, no de hardening."
+  - prompt: "Parte esta spec en tickets."
+    route_to: "to-tickets"
+    why: "Partir una spec en tickets es el trabajo de to-tickets, no de hardening."
+  - prompt: "Configura el pipeline de CI para que pase los tests en cada push."
+    route_to: "github-actions"
+    why: "Montar la CI es el trabajo de github-actions, no de hardening."
+
+capability:
+  - scenario: "El usuario pide una auditoria de seguridad del producto."
+    must_include:
+      - "gravedad"
