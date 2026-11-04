@@ -22,6 +22,9 @@ should_not_trigger:
   - prompt: "Haz una auditoria de seguridad del producto."
     route_to: "hardening"
     why: "Auditar la seguridad es el trabajo de hardening, no de tunel-ngrok."
+  - prompt: "Configura el pipeline de CI para que pase los tests en cada push."
+    route_to: "github-actions"
+    why: "Montar la CI es el trabajo de github-actions, no de tunel-ngrok."
 
 capability:
   - scenario: "El usuario quiere abrir el front local en el movil."

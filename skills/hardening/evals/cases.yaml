@@ -22,6 +22,9 @@ should_not_trigger:
   - prompt: "Parte esta spec en tickets."
     route_to: "to-tickets"
     why: "Partir una spec en tickets es el trabajo de to-tickets, no de hardening."
+  - prompt: "Configura el pipeline de CI para que pase los tests en cada push."
+    route_to: "github-actions"
+    why: "Montar la CI es el trabajo de github-actions, no de hardening."
 
 capability:
   - scenario: "El usuario pide una auditoria de seguridad del producto."
