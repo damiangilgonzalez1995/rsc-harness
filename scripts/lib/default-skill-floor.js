@@ -6,7 +6,7 @@
 // without paying for its body on unrelated turns. `tunel-ngrok` y `hardening` son
 // obligatorias por decisión del usuario: van al suelo para que también lleguen con
 // el update a los proyectos que ya existían, no solo a las instalaciones nuevas.
-export const DEFAULT_SKILL_FLOOR = Object.freeze(['orient', 'suggest', 'bro', 'tunel-ngrok', 'hardening']);
+export const DEFAULT_SKILL_FLOOR = Object.freeze(['orient', 'suggest', 'bro', 'tunel-ngrok', 'hardening', 'no-me-rayes']);
 
 export function withDefaultSkillFloor(skillIds = []) {
   return [...new Set([...DEFAULT_SKILL_FLOOR, ...skillIds])];

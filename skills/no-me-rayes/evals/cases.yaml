@@ -1,0 +1,33 @@
+skill: no-me-rayes
+
+should_trigger:
+  - prompt: "Hablas demasiado, dime solo qué has hecho."
+    why: "Disparador directo de no-me-rayes."
+  - prompt: "No me rayes con párrafos, ponlo en viñetas."
+    why: "Disparador directo de no-me-rayes."
+  - prompt: "Dame un parte de cómo va la tarea: qué está hecho, qué haces ahora y qué te bloquea."
+    why: "Disparador directo de no-me-rayes."
+  - prompt: "Acabas de tocar siete archivos. Resúmelo en viñetas con emojis."
+    why: "Disparador directo de no-me-rayes."
+  - prompt: "Your answers are too long; give me done, doing and blocked as short bullets."
+    why: "Disparador directo de no-me-rayes."
+
+should_not_trigger:
+  - prompt: "Reescribe este correo para que suene más natural y humano."
+    route_to: "bro"
+    why: "Reescribir un texto para que suene humano es el trabajo de bro, no de no-me-rayes."
+  - prompt: "Explícame qué es un túnel como si tuviera cinco años."
+    route_to: "eli5"
+    why: "Explicar sin jerga es el trabajo de eli5, no de no-me-rayes."
+  - prompt: "Prepara un documento de traspaso para que otro agente continúe esta conversación."
+    route_to: "handoff"
+    why: "El documento de traspaso entre agentes es el trabajo de handoff, no de no-me-rayes."
+  - prompt: "Haz una retrospectiva de esta sesión y dime qué cambiar en el entorno del agente."
+    route_to: "retro"
+    why: "La retrospectiva de una sesión es el trabajo de retro, no de no-me-rayes."
+
+capability:
+  - scenario: "El agente acaba de hacer varios cambios y debe contárselo al usuario."
+    must_include:
+      - "✅"
+      - "📌"

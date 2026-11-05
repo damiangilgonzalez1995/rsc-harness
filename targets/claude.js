@@ -10,11 +10,17 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const SHELL_TOOLS = 'Bash|PowerShell';
 
 // Mods de la terminal de Claude Code que el harness deja activados en cada proyecto.
+// Los cuatro `@harness-mods` viven en este mismo repo (`mods/plugins/`, catálogo en
+// `.claude-plugin/marketplace.json`): context-bar, prompt-enhancer, modelo-justo y where-am-i.
 // `cache-tax` mantiene caliente la caché del prompt en las pausas, y eso gasta tokens.
 export const CLAUDE_CODE_MODS = Object.freeze([
   { id: 'skins@hellosverre-mods', marketplace: 'hellosverre-mods', repo: 'hellosverre/claude-skins' },
   { id: 'savvy-progress@claude-kit', marketplace: 'claude-kit', repo: 'johnnyvizz/claude-kit' },
   { id: 'cache-tax@claude-code-mods', marketplace: 'claude-code-mods', repo: 'karanb192/claude-code-mods' },
+  { id: 'context-bar@harness-mods', marketplace: 'harness-mods', repo: 'damiangilgonzalez1995/rsc-harness' },
+  { id: 'prompt-enhancer@harness-mods', marketplace: 'harness-mods', repo: 'damiangilgonzalez1995/rsc-harness' },
+  { id: 'modelo-justo@harness-mods', marketplace: 'harness-mods', repo: 'damiangilgonzalez1995/rsc-harness' },
+  { id: 'where-am-i@harness-mods', marketplace: 'harness-mods', repo: 'damiangilgonzalez1995/rsc-harness' },
 ]);
 
 export function writeSkill(id, fromDir, toPath) {
