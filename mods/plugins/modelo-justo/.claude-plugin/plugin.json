@@ -1,0 +1,1 @@
+{ "name": "modelo-justo", "version": "0.1.0", "description": "Clasifica cada petición como simple, normal o compleja y usa Haiku, Sonnet u Opus. /modelo-justo on|off." }

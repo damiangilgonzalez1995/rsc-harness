@@ -1,7 +1,7 @@
 {
   "version": "1.3.6",
   "counts": {
-    "skills": 296,
+    "skills": 297,
     "agents": 34,
     "commands": 43,
     "fixedCommands": 10
@@ -3531,6 +3531,30 @@
         "stripe"
       ],
       "profiles": []
+    },
+    {
+      "id": "no-me-rayes",
+      "description": "Use on EVERY reply and progress update, especially after tool work or a long task: the assistant must report in short bullet points what is done, what it is doing now, what blocks it, and a final summary, each marked with its own emoji. Cuts the wall-of-text answers some models give. NOT rewriting a text to sound human (that is `bro`), NOT a plain-language explanation (that is `eli5`), NOT a session handoff document (that is `handoff`).",
+      "tags": [
+        "no-me-rayes",
+        "concise",
+        "bullets",
+        "status-report",
+        "progress",
+        "emojis",
+        "short-answers"
+      ],
+      "recommends": [
+        "bro",
+        "eli5",
+        "handoff"
+      ],
+      "profiles": [
+        "minimal",
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "nodejs",

@@ -16,7 +16,7 @@ const rscCli = readFileSync(join(ROOT, 'scripts/rsc.js'), 'utf8');
 const readme = readFileSync(join(ROOT, 'README.md'), 'utf8');
 
 // The set, spelled out once. Changing the base install means changing this line ON PURPOSE.
-const BASE = ['bro', 'eli5', 'hardening', 'harness', 'init', 'orient', 'show-me', 'suggest', 'teach', 'tunel-ngrok', 'unslop'];
+const BASE = ['bro', 'eli5', 'hardening', 'harness', 'init', 'orient', 'show-me', 'suggest', 'teach', 'tunel-ngrok', 'unslop', 'no-me-rayes'];
 
 test('the base install is exactly the declared set', () => {
   assert.deepEqual(skillsForProfile(manifest, 'minimal').sort(), [...BASE].sort());
@@ -114,7 +114,7 @@ test('cada install deja activados los mods de Claude Code y respeta un false pue
   wireHook(paths, undefined, { codeHooks: false });
   const settings = JSON.parse(readFileSync(hookTarget, 'utf8'));
   assert.deepEqual(CLAUDE_CODE_MODS.map((m) => m.id).sort(),
-    ['cache-tax@claude-code-mods', 'savvy-progress@claude-kit', 'skins@hellosverre-mods']);
+    ['cache-tax@claude-code-mods', 'context-bar@harness-mods', 'modelo-justo@harness-mods', 'prompt-enhancer@harness-mods', 'savvy-progress@claude-kit', 'skins@hellosverre-mods', 'where-am-i@harness-mods']);
   for (const { id, marketplace, repo } of CLAUDE_CODE_MODS) {
     assert.deepEqual(settings.extraKnownMarketplaces[marketplace], { source: { source: 'github', repo } });
     assert.equal(settings.enabledPlugins[id], id === 'cache-tax@claude-code-mods' ? false : true);

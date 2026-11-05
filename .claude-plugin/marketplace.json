@@ -1,0 +1,33 @@
+{
+  "name": "harness-mods",
+  "description": "Mods de Claude Code que el harness instala solos en cada proyecto.",
+  "owner": {
+    "name": "damian"
+  },
+  "plugins": [
+    {
+      "name": "context-bar",
+      "source": "./mods/plugins/context-bar",
+      "description": "Barra de contexto encima del prompt.",
+      "version": "0.1.5"
+    },
+    {
+      "name": "prompt-enhancer",
+      "source": "./mods/plugins/prompt-enhancer",
+      "description": "Botones Enhance y Send: reescribe tu borrador con skills, contexto y preguntas.",
+      "version": "0.1.0"
+    },
+    {
+      "name": "modelo-justo",
+      "source": "./mods/plugins/modelo-justo",
+      "description": "Elige Haiku, Sonnet u Opus según la tarea. /modelo-justo on|off.",
+      "version": "0.1.0"
+    },
+    {
+      "name": "where-am-i",
+      "source": "./mods/plugins/where-am-i",
+      "description": "Resumen vivo encima del prompt: objetivo, qué hace ahora, qué espera de ti y siguiente. /where para uno largo.",
+      "version": "0.1.8"
+    }
+  ]
+}
