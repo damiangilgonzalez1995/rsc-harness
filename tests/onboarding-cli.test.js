@@ -9,6 +9,10 @@ import { identifyPlan } from '../scripts/lib/onboarding.js';
 
 const preToolUseGuards = (settings) => (settings.hooks.PreToolUse || [])
   .flatMap((e) => e.hooks.map((h) => /\.rsc\/([a-z-]+)\.mjs/.exec(h.command)?.[1]).filter(Boolean)).sort();
+// Sin hooks de código, lo único que queda en UserPromptSubmit es el registro de overview: es de suelo
+// y no inyecta nada. Lo que no debe estar es el gate del flujo.
+const promptHooks = (settings) => (settings.hooks.UserPromptSubmit || [])
+  .flatMap((e) => e.hooks.map((h) => /\.rsc\/([a-z-]+)\.mjs/.exec(h.command)?.[1]).filter(Boolean)).sort();
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const CLI = join(ROOT, 'scripts/rsc.js');
@@ -119,7 +123,7 @@ test('operations on Claude keeps SessionStart but omits feature, ship and gitmoj
   assert.equal(run(cwd, ['onboard', ...args, '--accept-plan', id]).status, 0);
   const settings = JSON.parse(readFileSync(join(cwd, '.claude/settings.json'), 'utf8'));
   assert.ok(settings.hooks.SessionStart?.length);
-  assert.equal(settings.hooks.UserPromptSubmit, undefined);
+  assert.deepEqual(promptHooks(settings), ['overview-prompt-hook']);
   // Was `PreToolUse === undefined` until #273: that encoded the bug as the contract. A `mixed` user
   // is promised the danger guard by `init` whatever the project is; what an operations harness must
   // still omit is the CODE machinery — ship, gitmoji and the SDD gate — which is what this test is for.
@@ -142,7 +146,7 @@ test('re-onboarding from software to operations unwires previously installed cod
   const settings = JSON.parse(readFileSync(join(cwd, '.claude/settings.json'), 'utf8'));
   // The code hooks are unwired; the danger guard stays, because the user is still `mixed` (#273).
   assert.deepEqual(preToolUseGuards(settings), ['danger-guard']);
-  assert.equal(settings.hooks.UserPromptSubmit, undefined);
+  assert.deepEqual(promptHooks(settings), ['overview-prompt-hook']);
 });
 
 test('preview inventories every RSC-owned applied route', () => {
@@ -205,7 +209,7 @@ test('install --profile recalculates codeHooks for the requested profile instead
   const settings = JSON.parse(readFileSync(join(cwd, '.claude/settings.json'), 'utf8'));
   // El freno de peligro va por nivel técnico, no por perfil: a un usuario mixed se lo deja puesto.
   assert.deepEqual(preToolUseGuards(settings), ['danger-guard'], 'minimal profile must not gate tool use for flow skills it never installed');
-  assert.equal(settings.hooks.UserPromptSubmit, undefined, 'minimal profile must not gate prompts for flow skills it never installed');
+  assert.deepEqual(promptHooks(settings), ['overview-prompt-hook'], 'minimal profile must not gate prompts for flow skills it never installed');
 });
 
 // ─────────────────────────────────────────────────────────────────────────────

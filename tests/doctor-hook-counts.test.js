@@ -191,7 +191,8 @@ test('the CLI still exits 0 when duplication is found', () => {
   // #277 is a BROKEN harness (a missing piece, an unwired hook), so the scripts exist here: this scope
   // is duplicated and nothing else.
   const root = wiredScope({ copies: 4 });
-  for (const script of ['session-start.mjs', 'worklog-checkpoint.mjs', 'ship-guard.mjs', 'danger-guard.mjs', 'gitmoji-guard.mjs', 'userprompt-gate.mjs']) {
+  for (const script of ['session-start.mjs', 'worklog-checkpoint.mjs', 'ship-guard.mjs', 'danger-guard.mjs', 'gitmoji-guard.mjs', 'userprompt-gate.mjs',
+    'overview-skill-hook.mjs', 'overview-prompt-hook.mjs']) {
     writeFileSync(join(root, '.rsc', script), '// hook\n');
   }
   const r = spawnSync('node', [CLI, 'doctor'], { cwd: root, encoding: 'utf8', env: { ...process.env, HOME: emptyHome() } });
