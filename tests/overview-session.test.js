@@ -53,7 +53,11 @@ function project({ config = CONFIG, stale = [] } = {}) {
   return root;
 }
 
-function sessionStart(root, { markers = mkdtempSync(join(tmpdir(), 'rsc-ovss-mark-')), session = `s-${Math.random()}`, extra = {} } = {}) {
+// El tope real es ~800 ms. Bajo la carga de la suite completa un scan legítimo puede pasarse, así que
+// los tests que esperan la línea le dan margen; el tope tiene su propio test.
+const ROOMY = { RSC_OVERVIEW_BUDGET_MS: '20000' };
+
+function sessionStart(root, { markers = mkdtempSync(join(tmpdir(), 'rsc-ovss-mark-')), session = `s-${Math.random()}`, extra = ROOMY } = {}) {
   const home = mkdtempSync(join(tmpdir(), 'rsc-ovss-home-'));
   const r = spawnSync('node', [join(root, '.rsc', 'session-start.mjs'), SUGGEST, root], {
     cwd: root, encoding: 'utf8', windowsHide: true,
