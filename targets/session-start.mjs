@@ -206,7 +206,11 @@ When building the front: component (a boundary, not a file) · state (outermost 
 needs it: URL, server, shared parent, component; derive, never mirror) · hooks (an effect syncs
 with the outside world, it does not compute) · rendering (pure, runs on every change) · hydration
 (server HTML and first client render must match: no Date.now/Math.random/window in render).
-Secrets and server-only data never go into a client component.${skillIn('react') || skillIn('nextjs') ? ' Detail: skills `react`, `nextjs` (references/mental-model.md, rendering-hydration.md).' : ''}
+Secrets and server-only data never go into a client component.${skillIn('react') || skillIn('nextjs') ? ' Detail: skills `react`, `nextjs` (references/mental-model.md, rendering-hydration.md).' : ''}${has('PRODUCT.md') ? '' : `
+Design context: there is no PRODUCT.md. Before designing the FIRST screen of this project, ask the user once
+whether to run \`/impeccable init\` (install: \`npx impeccable install\`); it records audience, purpose and
+constraints that every later critique reads. If the UI already exists and there is no DESIGN.md, offer
+\`/impeccable document\` instead. If they decline, do not ask again.${skillIn('flujo-interfaz') ? ' Which design skill leads each step: `flujo-interfaz`.' : ''}`}
 Opt out with .rsc/.no-stack-hints.
 ===============================
 `);

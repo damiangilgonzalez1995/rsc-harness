@@ -1,0 +1,33 @@
+skill: animation-performance
+
+should_trigger:
+  - prompt: "My animation drops frames; fix it."
+    why: "Direct trigger for animation-performance."
+  - prompt: "This scroll animation is janky."
+    why: "Direct trigger for animation-performance."
+  - prompt: "Make this animation run on the compositor."
+    why: "Direct trigger for animation-performance."
+  - prompt: "Why does this transition stutter on mobile?"
+    why: "Direct trigger for animation-performance."
+  - prompt: "Keep this animation inside the frame budget."
+    why: "Direct trigger for animation-performance."
+
+should_not_trigger:
+  - prompt: "Decide whether this should animate at all."
+    route_to: "animar"
+    why: "Outside the scope of animation-performance."
+  - prompt: "Remove unneeded animations."
+    route_to: "remove-animations"
+    why: "Outside the scope of animation-performance."
+  - prompt: "Review this motion diff."
+    route_to: "review-animations"
+    why: "Outside the scope of animation-performance."
+  - prompt: "Improve my page load speed."
+    route_to: "none"
+    why: "Outside the scope of animation-performance."
+
+capability:
+  - scenario: "A user reports a stuttering animation."
+    must_include:
+      - "transform"
+      - "opacity"

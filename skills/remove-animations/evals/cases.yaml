@@ -1,0 +1,33 @@
+skill: remove-animations
+
+should_trigger:
+  - prompt: "This app feels slow; remove the animations we do not need."
+    why: "Direct trigger for remove-animations."
+  - prompt: "Cut the motion on keyboard actions."
+    why: "Direct trigger for remove-animations."
+  - prompt: "Too many things animate here; trim them."
+    why: "Direct trigger for remove-animations."
+  - prompt: "Strip decorative animations from the high-frequency paths."
+    why: "Direct trigger for remove-animations."
+  - prompt: "Which animations should I delete?"
+    why: "Direct trigger for remove-animations."
+
+should_not_trigger:
+  - prompt: "Add a smooth transition to this tab."
+    route_to: "animar"
+    why: "Outside the scope of remove-animations."
+  - prompt: "Find where animation is missing."
+    route_to: "find-animation-opportunities"
+    why: "Outside the scope of remove-animations."
+  - prompt: "Fix dropped frames in this animation."
+    route_to: "animation-performance"
+    why: "Outside the scope of remove-animations."
+  - prompt: "Review this animation diff."
+    route_to: "review-animations"
+    why: "Outside the scope of remove-animations."
+
+capability:
+  - scenario: "A user says the product feels sluggish from over-animation."
+    must_include:
+      - "remove"
+      - "frequen"

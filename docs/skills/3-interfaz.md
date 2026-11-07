@@ -1,15 +1,47 @@
 # 3 · Interfaz
 
-Dieciséis skills, y ese es el problema: se solapan. Este documento existe para que no tengas que
-leerlas todas para saber cuál toca.
+Hay muchas skills de diseño, y ese es el problema: se solapan. Este documento existe para que no
+tengas que leerlas todas para saber cuál toca.
 
-**El orden, en una línea:** qué dice → cómo se ve → cómo se mueve → pulido → originalidad →
-psicología.
+**El orden, en una línea:** contexto → qué dice → cómo se ve → cómo se mueve → pulido →
+originalidad → psicología → casos extremos.
 
 La skill `flujo-interfaz` lleva esa decisión dentro: se activa sola cuando la tarea toca pantalla
 y dice cuál manda en cada paso. Este documento es su versión larga, para leerla tú.
 
-![Flujo de la cadena de interfaz](../img/03-interfaz.png)
+![Diseñar una pantalla: qué skill manda en cada paso](../img/07-interfaz-que-skill-manda.png)
+
+¿No sabes cuál usar? Parte de lo que notas:
+
+![Tengo este problema, uso esta skill](../img/08-interfaz-cuando-uso-que.png)
+
+Y cuándo se ejecuta `impeccable init`:
+
+![Cuándo se ejecuta impeccable init](../img/09-interfaz-impeccable-init.png)
+
+---
+
+## Paso 0 · Contexto del proyecto (una vez, al empezar)
+
+`impeccable` (externa, de pbakaus) guarda dos ficheros en la raíz que leen todos sus comandos:
+`PRODUCT.md` (para quién es, qué hace, restricciones) y `DESIGN.md` (el sistema visual). Sin ellos
+critica y audita a ciegas.
+
+| Situación | Qué hacer | Cuándo |
+|---|---|---|
+| No hay `PRODUCT.md` y vas a diseñar la **primera pantalla** | `/impeccable init` | Antes de elegir dirección. Una vez por proyecto, no a mitad de una pantalla. |
+| Ya hay interfaz y no hay `DESIGN.md` | `/impeccable document` | Antes de criticar, auditar o rehacer algo existente. |
+| Cambia el público o el producto | Repetir `init` | Solo entonces. |
+
+**El harness te lo recuerda solo:** al iniciar sesión en un proyecto de front sin `PRODUCT.md`, el
+agente te ofrece `/impeccable init` una vez (si dices que no, no insiste). Se apaga con
+`.rsc/.no-stack-hints`.
+
+**Instalarla:** `npx impeccable install` (te pregunta si por proyecto o global; luego recarga y
+ejecuta `/impeccable init`). No viene dentro del catálogo a propósito: trae su propio motor y sus
+propios hooks, y instalarla es decisión tuya. Dos avisos: pide direcciones visuales a
+impeccable.style (`npx impeccable telemetry off` lo apaga) y sus hooks se ejecutan aunque deniegues
+sus comandos.
 
 ---
 
@@ -61,6 +93,20 @@ Solo si hay gestos, arrastre u hojas deslizantes. Añade muelles con física rea
 interrumpibilidad y traspaso de velocidad: lo que separa "correcto" de "fluido". Para un fundido o
 un hover no la necesitas.
 
+### Las de Emil Kowalski
+
+Todas comparten su filosofía (`emil-design-eng`): el mejor movimiento a veces es ninguno.
+
+| Necesitas | Skill |
+|---|---|
+| Varios elementos a la vez | `choreograph` |
+| Va a trompicones | `animation-performance` |
+| Revisar un diff con movimiento | `review-animations` (tabla antes/después, veredicto Block/Approve) |
+| Auditar todo el movimiento del código | `improve-animations` |
+| Ver dónde faltaría movimiento | `find-animation-opportunities` |
+| Sobra movimiento | `remove-animations` |
+| React Native / Expo | `animate-expo` |
+
 ### Dos utilidades que no construyen nada
 
 - `vocabulario-animacion` — le describes un efecto y te da su nombre exacto, para poder pedirlo
@@ -85,6 +131,14 @@ Las seis `mejor-*` son reglas concretas con valores exactos, y no se pisan:
 
 **No las invoques a mano una a una.** Usa `revision-interfaz`, que las orquesta en orden y
 consolida un único informe. Una suelta, solo para una duda puntual de su terreno.
+
+**Con `impeccable` instalada** se añade encima: `/impeccable critique` (UX puntuada, qué arreglar
+primero) → `audit` (accesibilidad, rendimiento, responsive; de P0 bloqueante a P3 pulido) →
+`polish` (la pasada final antes de publicar). Si ya corriste `audit`, no repitas accesibilidad: usa
+`revision-interfaz` para lo que no cubre (copy, tipografía, color).
+
+**En móvil:** `mobile-native` arregla lo que delata una web (hover, `100vh`, zoom en inputs, safe
+areas).
 
 ---
 
@@ -112,8 +166,8 @@ Restorff, jerarquía. Trae un diagnóstico de seis puntos que se pasa en dos min
 
 ### `leyes-de-retencion`
 
-Nueve leyes, una por cada clase de abandono. Su tabla síntoma → ley es lo más rentable de las
-dieciséis:
+Nueve leyes, una por cada clase de abandono. Su tabla síntoma → ley es lo más rentable de
+todas:
 
 | Síntoma | Ley |
 |---|---|
@@ -129,10 +183,22 @@ dieciséis:
 
 ---
 
+## Paso 7 · Casos extremos
+
+`break-ui` alimenta el componente con el peor dato posible (nombres larguísimos, listas vacías,
+emoji, cifras enormes) detrás de un interruptor y lista todo lo que se rompe. Va al final, cuando la
+pantalla ya está bien en el caso feliz. Aparte: `ask-sonner` (toasts) y `pick-ui-library` (qué
+librería elegir).
+
+---
+
 ## Atajos
 
 | Situación | Cadena |
 |---|---|
+| Proyecto nuevo, primera pantalla | `impeccable init` → dirección |
+| Antes de publicar | `impeccable audit` → `polish` → `revision-interfaz` → `break-ui` |
+| Se siente lento o recargado | `find-animation-opportunities` / `remove-animations` → `animation-performance` |
 | Landing nueva | `diseno-landing` → `animar` → `revision-interfaz` |
 | Dashboard nuevo | `ingeniero-diseno-web` → `revision-interfaz` |
 | Pantalla que "parece de IA" | `tastemaker` (auditar) → `leyes-de-percepcion` |

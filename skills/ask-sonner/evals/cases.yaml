@@ -1,0 +1,33 @@
+skill: ask-sonner
+
+should_trigger:
+  - prompt: "How do I set up Sonner toasts?"
+    why: "Direct trigger for ask-sonner."
+  - prompt: "Add a toast.promise for this request."
+    why: "Direct trigger for ask-sonner."
+  - prompt: "Style the Sonner toaster to match my theme."
+    why: "Direct trigger for ask-sonner."
+  - prompt: "My Sonner toast does not show; why?"
+    why: "Direct trigger for ask-sonner."
+  - prompt: "How do I make a custom toast with Sonner?"
+    why: "Direct trigger for ask-sonner."
+
+should_not_trigger:
+  - prompt: "Build a modal dialog."
+    route_to: "ui-engineering"
+    why: "Outside the scope of ask-sonner."
+  - prompt: "Animate this notification manually."
+    route_to: "animar"
+    why: "Outside the scope of ask-sonner."
+  - prompt: "Write the copy for an error message."
+    route_to: "mejor-redaccion"
+    why: "Outside the scope of ask-sonner."
+  - prompt: "Pick a charting library."
+    route_to: "pick-ui-library"
+    why: "Outside the scope of ask-sonner."
+
+capability:
+  - scenario: "A user asks how to use Sonner."
+    must_include:
+      - "toaster"
+      - "toast"

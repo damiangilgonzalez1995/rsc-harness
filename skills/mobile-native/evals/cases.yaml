@@ -1,0 +1,33 @@
+skill: mobile-native
+
+should_trigger:
+  - prompt: "Make this web app feel native on a phone."
+    why: "Direct trigger for mobile-native."
+  - prompt: "Inputs zoom on iOS when focused; fix it."
+    why: "Direct trigger for mobile-native."
+  - prompt: "The 100vh layout jumps on mobile browsers."
+    why: "Direct trigger for mobile-native."
+  - prompt: "Handle safe areas and notches in this layout."
+    why: "Direct trigger for mobile-native."
+  - prompt: "Remove sticky hover on touch devices."
+    why: "Direct trigger for mobile-native."
+
+should_not_trigger:
+  - prompt: "Build a native Swift app."
+    route_to: "write-swift"
+    why: "Outside the scope of mobile-native."
+  - prompt: "Animate this sheet in React Native."
+    route_to: "animate-expo"
+    why: "Outside the scope of mobile-native."
+  - prompt: "Polish desktop spacing."
+    route_to: "mejor-layout"
+    why: "Outside the scope of mobile-native."
+  - prompt: "Set up a Next.js route."
+    route_to: "nextjs"
+    why: "Outside the scope of mobile-native."
+
+capability:
+  - scenario: "A user complains the web app feels like a website on a phone."
+    must_include:
+      - "viewport"
+      - "safe"

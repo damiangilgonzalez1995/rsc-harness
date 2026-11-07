@@ -15,6 +15,20 @@ npx @damiangilgonzalez/harness@latest onboard
 
 ---
 
+## Qué hay aquí
+
+| Quiero… | Ve a |
+|---|---|
+| Instalarlo | [1. Instalar](#1-instalar) |
+| Actualizarlo, compartirlo con el equipo o arreglarlo | [2. Actualizar y mantener](#2-actualizar-y-mantener) |
+| Entender cómo se trabaja (spec primero, test primero) | [3. La metodología](#3-la-metodología) |
+| Diseñar pantallas | [4. Interfaz (UX/UI)](#4-interfaz-uxui) |
+| Saber qué recuerda el agente | [5. La memoria](#5-la-memoria) |
+| Las skills que más se usan | [6. Skills útiles](#6-skills-útiles) |
+| Ver qué deja en mi proyecto | [7. Qué se instala](#7-qué-se-instala) |
+
+---
+
 ## Qué es
 
 ![El modelo es el cerebro; el harness es todo lo demás: memoria, conocimiento, método, reglas y herramientas](docs/img/readme/readme-01-que-es.png)
@@ -27,62 +41,9 @@ vienen a cuento y hooks antes de tiempo.
 
 Mismo modelo. Distinto resultado.
 
-![Tira cómica: petición, preguntas, test primero y PR](docs/img/readme/readme-03-tira-comica.png)
-
-Pides algo, te pregunta lo que falta, escribe el test primero y te entrega una PR con evidencia.
-
 ---
 
-## Cómo trabajamos
-
-![Mapa de implementación: la cadena depende del tamaño de la tarea](docs/img/readme/readme-04-metodo.png)
-
-La cadena depende del **tamaño**. El agente la encadena solo; no hace falta escribir cada comando.
-
-| Tamaño | Cadena |
-|---|---|
-| Una línea (errata, config) | Hazlo sin más |
-| Pequeño (una sesión, un ticket) | `superpowers:brainstorming` o `grill-with-docs` → `implement` |
-| Grande (varias sesiones, muchas piezas) | `grill-with-docs` o `wayfinder` → `to-spec` → `to-tickets` → `implement-spec` |
-| Siempre, al final | `code-review` → `pr` |
-
-![El trabajo grande paso a paso, con lo que deja cada paso](docs/img/readme/readme-05-cadena-grande.png)
-
-Cada paso deja un documento: glosario, spec, ADR, tickets, rama y PR.
-La fuente de verdad es lo escrito, no el chat.
-
-![implement-spec: un grafo de tickets resuelto por varios subagentes a la vez](docs/img/readme/readme-06-tickets-en-paralelo.png)
-
-`implement-spec` coge los tickets libres y los reparte entre subagentes, cada uno en su worktree.
-Todo confluye en una rama de integración.
-
-![Revisar antes de fusionar: estándares del repo y lo que pedía la spec](docs/img/readme/readme-17-revision.png)
-
-`code-review` revisa contra los estándares del repo y contra la spec. `pr` abre la PR con
-resumen, evidencia y peligro de fusión.
-
-### Seguridad y front dentro de la cadena
-
-La cadena no cambia: ni pasos nuevos ni comandos nuevos. Lo que cambia es que dos pasos que ya
-existían ahora piden seguridad y front **cuando el cambio los toca** (auth, un endpoint, una tabla,
-un secreto o una pantalla):
-
-| Cuándo | Qué pasa |
-|---|---|
-| Al iniciar sesión | Un aviso corto según el proyecto. Con backend, API o `.env`: los 10 puntos de seguridad. Con react, next, vue, svelte o astro: el modelo mental del front. Sin ninguno de los dos, no sale nada. |
-| `to-spec` | La spec lleva una sección «Decisiones de seguridad y de front»: qué puntos aplican y cuáles quedan fuera a propósito. |
-| `code-review` | El eje de Estándares suma un baseline: una ruta sin rate limit o sin validación en el servidor es `should-fix`; un secreto en el repo es `blocker`. |
-| Antes de publicar | `secure-coding` trae la lista con una prueba por punto. Es un punto de partida; la auditoría es `hardening`. |
-
-Los 10 puntos: rate limiting, claves fuera del código, secretos de producción en la plataforma,
-límites por IP, entradas validadas, validación en el servidor, RLS, contraseñas con hash y datos
-cifrados, sesiones que vencen y CORS solo con tu dominio. Se apaga con `.rsc/.no-stack-hints`.
-
-La guía completa del método, fase a fase: [`docs/skills/`](docs/skills/).
-
----
-
-## Instalar
+## 1. Instalar
 
 ![Instalar: un comando, cuatro preguntas y un plan que apruebas](docs/img/readme/readme-08-instalacion.png)
 
@@ -118,6 +79,8 @@ npx @damiangilgonzalez/harness@latest onboard --technical-level mixed --accompan
 
 </details>
 
+### Qué perfil elegir
+
 ![Cuatro perfiles concéntricos: minimal, core, ui y full](docs/img/readme/readme-10-perfiles.png)
 
 Empiezas pequeño. El resto se carga bajo demanda: el harness te propone una skill cuando la tarea
@@ -126,34 +89,13 @@ la pide, con la evidencia que lo justifica.
 ```bash
 rsc install --profile minimal   # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes
 rsc install --profile core      # la base + el método completo
+rsc install --profile ui        # core + todo lo de interfaz
 rsc install --profile full      # todo el catálogo
 ```
 
 ---
 
-## Qué se instala
-
-![Qué deja en tu proyecto: qué se sube a git y qué se queda en local](docs/img/readme/readme-09-que-se-instala.png)
-
-Las skills se escriben una vez en `.rsc/skills/` y cada asistente las enlaza.
-Lo que se comparte va a git; el estado de la máquina, no.
-
-![Los reflejos: gate, danger-guard, ship-guard, gitmoji-guard, memoria y limpieza de worktrees](docs/img/readme/readme-07-guardias.png)
-
-Hooks que vigilan por ti: recuerdan la cadena, piden confirmación antes de un `rm -rf` o un
-`git push --force` y paran antes de volver a `main` sin abrir la PR.
-
-![Plugins de serie: superpowers, skins, savvy-progress y cache-tax](docs/img/readme/readme-16-plugins.png)
-
-En Claude Code quedan activados `skins`, `savvy-progress`, `context-bar`, `prompt-enhancer`, `modelo-justo`,
-`where-am-i` y `cache-tax` (este mantiene caliente la caché, y eso gasta tokens). `superpowers` llega cuando el proyecto usa el método.
-
-En cifras: 297 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
-(Claude Code, Codex, Cursor, Copilot, Gemini…). Detalle en la [referencia técnica](docs/referencia-tecnica.md).
-
----
-
-## El día a día
+## 2. Actualizar y mantener
 
 ![Un update y todos tus proyectos al día](docs/img/readme/readme-11-actualizar.png)
 
@@ -163,6 +105,20 @@ Respeta lo que quitaste a mano y hace una copia antes de tocar nada.
 ```bash
 npx @damiangilgonzalez/harness@latest
 ```
+
+### ¿Algo raro?
+
+![¿Algo raro? doctor y repair](docs/img/readme/readme-14-doctor.png)
+
+`doctor` diagnostica; `repair` devuelve el harness a lo declarado. Enseña lo que va a tocar,
+guarda una copia y nunca toca las skills que escribiste a mano.
+
+```bash
+npx @damiangilgonzalez/harness doctor
+npx @damiangilgonzalez/harness@latest repair --dry-run
+```
+
+### Compartirlo con el equipo
 
 ![Compartir con el equipo: commit, clone y sync a la versión fijada](docs/img/readme/readme-12-equipo.png)
 
@@ -186,6 +142,8 @@ Un `git pull` no escribe nada en tu máquina; `rsc doctor` te dice qué ya no cu
 **Skills propias.** Las que escribe tu equipo viven en el repo y funcionan al clonar.
 rsc nunca las instala, actualiza ni sobrescribe: su versión es el commit.
 
+### Una rama, una copia de trabajo
+
 ![Una rama, una copia de trabajo](docs/img/readme/readme-18-worktrees.png)
 
 Cada rama en su worktree, cortada siempre desde `origin`.
@@ -195,19 +153,103 @@ rsc worktrees new avisos
 rsc worktrees reap --merged --confirm   # borra los ya fusionados, nunca los que tienen cambios
 ```
 
-![¿Algo raro? doctor y repair](docs/img/readme/readme-14-doctor.png)
+---
 
-`doctor` diagnostica; `repair` devuelve el harness a lo declarado. Enseña lo que va a tocar,
-guarda una copia y nunca toca las skills que escribiste a mano.
+## 3. La metodología
 
-```bash
-npx @damiangilgonzalez/harness doctor
-npx @damiangilgonzalez/harness@latest repair --dry-run
-```
+![Tira cómica: petición, preguntas, test primero y PR](docs/img/readme/readme-03-tira-comica.png)
+
+Pides algo, te pregunta lo que falta, escribe el test primero y te entrega una PR con evidencia.
+Son dos ideas encadenadas:
+
+- **Spec primero (SDD, *spec-driven development*).** Antes de tocar código, lo que se quiere queda
+  escrito: glosario, spec, decisiones y tickets. La fuente de verdad es lo escrito, no el chat.
+- **Test primero (TDD).** Al implementar, el test que falla va antes que el código que lo arregla.
+  `implement` lo pide con `superpowers:test-driven-development` donde sea posible, en las costuras
+  (seams) que se acuerdan de antemano.
+
+### La cadena depende del tamaño
+
+![Mapa de implementación: la cadena depende del tamaño de la tarea](docs/img/readme/readme-04-metodo.png)
+
+El agente la encadena solo; no hace falta escribir cada comando.
+
+| Tamaño | Cadena |
+|---|---|
+| Una línea (errata, config) | Hazlo sin más |
+| Pequeño (una sesión, un ticket) | `superpowers:brainstorming` o `grill-with-docs` → `implement` |
+| Grande (varias sesiones, muchas piezas) | `grill-with-docs` o `wayfinder` → `to-spec` → `to-tickets` → `implement-spec` |
+| Siempre, al final | `code-review` → `pr` |
+
+![El trabajo grande paso a paso, con lo que deja cada paso](docs/img/readme/readme-05-cadena-grande.png)
+
+Cada paso deja un documento: glosario, spec, ADR, tickets, rama y PR.
+
+![implement-spec: un grafo de tickets resuelto por varios subagentes a la vez](docs/img/readme/readme-06-tickets-en-paralelo.png)
+
+`implement-spec` coge los tickets libres y los reparte entre subagentes, cada uno en su worktree
+y cada uno con su test primero. Todo confluye en una rama de integración.
+
+![Revisar antes de fusionar: estándares del repo y lo que pedía la spec](docs/img/readme/readme-17-revision.png)
+
+`code-review` revisa contra los estándares del repo y contra la spec. `pr` abre la PR con
+resumen, evidencia y peligro de fusión.
+
+La guía fase a fase: [`docs/skills/`](docs/skills/).
+
+### Seguridad dentro de la cadena
+
+La cadena no cambia: ni pasos nuevos ni comandos nuevos. Lo que cambia es que dos pasos que ya
+existían ahora piden seguridad y front **cuando el cambio los toca** (auth, un endpoint, una tabla,
+un secreto o una pantalla):
+
+| Cuándo | Qué pasa |
+|---|---|
+| Al iniciar sesión | Un aviso corto según el proyecto. Con backend, API o `.env`: los 10 puntos de seguridad. Con react, next, vue, svelte o astro: el modelo mental del front. Sin ninguno de los dos, no sale nada. |
+| `to-spec` | La spec lleva una sección «Decisiones de seguridad y de front»: qué puntos aplican y cuáles quedan fuera a propósito. |
+| `code-review` | El eje de Estándares suma un baseline: una ruta sin rate limit o sin validación en el servidor es `should-fix`; un secreto en el repo es `blocker`. |
+| Antes de publicar | `secure-coding` trae la lista con una prueba por punto. Es un punto de partida; la auditoría es `hardening`. |
+
+Los 10 puntos: rate limiting, claves fuera del código, secretos de producción en la plataforma,
+límites por IP, entradas validadas, validación en el servidor, RLS, contraseñas con hash y datos
+cifrados, sesiones que vencen y CORS solo con tu dominio. Se apaga con `.rsc/.no-stack-hints`.
 
 ---
 
-## La memoria
+## 4. Interfaz (UX/UI)
+
+Hay muchas skills de diseño y se solapan. `flujo-interfaz` decide cuál lidera y en qué orden
+siguen las demás cuando una tarea toca pantalla: **contexto → dirección → movimiento → pulido →
+originalidad → psicología → casos extremos**.
+
+![Diseñar una pantalla: qué skill manda en cada paso](docs/img/07-interfaz-que-skill-manda.png)
+
+¿No sabes cuál usar? Parte de lo que notas:
+
+![Tengo este problema, uso esta skill](docs/img/08-interfaz-cuando-uso-que.png)
+
+### Cuándo se ejecuta `/impeccable init`
+
+Una vez por proyecto, antes de diseñar la primera pantalla: guarda `PRODUCT.md` (para quién es,
+qué hace) y el resto de comandos lo leen. Si ya hay interfaz y no hay `DESIGN.md`,
+`/impeccable document`. El harness te lo recuerda solo: al iniciar sesión en un proyecto de front
+sin `PRODUCT.md`, el agente te lo ofrece una vez y, si dices que no, no insiste
+(`.rsc/.no-stack-hints` lo apaga).
+
+![Cuándo se ejecuta impeccable init](docs/img/09-interfaz-impeccable-init.png)
+
+### De dónde vienen las skills
+
+| Qué | Cómo entra |
+|---|---|
+| **Skills de Emil Kowalski** (13, MIT): `emil-design-eng`, `review-animations`, `improve-animations`, `find-animation-opportunities`, `remove-animations`, `choreograph`, `animation-performance`, `animate-expo`, `break-ui`, `mobile-native`, `ask-sonner`, `pick-ui-library`, `write-swift` | Dentro del catálogo (perfiles `ui` y `full`). Sus equivalentes en español (`animar`, `diseno-apple`, `vocabulario-animacion`) se quedan. |
+| **`impeccable`** (pbakaus, Apache-2.0): `critique`, `audit`, `polish`… | **No** viene en el catálogo: trae su propio motor y hooks. Se instala con `npx impeccable install`. |
+
+Detalle: [`docs/skills/3-interfaz.md`](docs/skills/3-interfaz.md).
+
+---
+
+## 5. La memoria
 
 ![Los cuatro niveles de memoria y qué pasa en cada mensaje](docs/img/readme/readme-19-memoria-niveles.png)
 
@@ -264,11 +306,81 @@ npx @damiangilgonzalez/harness knowledge-sync off       # apaga la sincronizaci�
 
 Guía completa: [la memoria del harness](docs/como-funciona/memoria.md).
 
+---
+
+## 6. Skills útiles
+
+La base (`minimal`) trae unas cuantas que se notan desde el primer día. Casi todas se activan solas;
+también puedes pedirlas por su nombre.
+
+### `no-me-rayes` — respuestas cortas, no muros de texto
+
+A la IA le gusta hablar: cuenta lo que hizo, lo que pensó, lo que podría haber hecho y lo que hará
+después, y la respuesta importante queda enterrada. Esta skill se aplica **en cada respuesta que
+cuenta trabajo** y fija la forma: viñetas cortas, una idea por línea, cada bloque con su emoji.
+
+```text
+✅ Hecho        — qué se terminó
+🔄 Ahora        — qué está haciendo
+⛔ Bloqueos     — qué le impide seguir
+📌 Resumen      — la conclusión, en una línea
+```
+
+### `pr` — la PR que se entiende sin leer el diff
+
+Cuenta en lenguaje llano qué faltaba o estaba roto y por qué cambia, con un resumen visual, evidencia
+de antes y después, el **peligro de fusión** (puerta de un sentido o de dos, radio de impacto) y un
+título comprobado contra la regla de CI del repo antes de `gh pr create`. Es el último paso de la
+cadena, tras `code-review`.
+
+### `retro` — qué cambiar para que la próxima sesión salga mejor
+
+Al cerrar una sesión larga, hace una retrospectiva: busca qué del entorno del agente (navegación,
+comprobaciones, estándares, ficheros de instrucciones, herramientas) hay que cambiar para que la
+siguiente vaya mejor. El resultado son cambios concretos, no una charla.
+
+### Otras de la base
+
+| Skill | Para qué |
+|---|---|
+| `orient` | Cierra cada turno situándote: dónde estás, qué pasó y el siguiente paso, como pregunta. |
+| `suggest` | Detecta que una skill que no tienes te ayudaría y, con un «sí», la instala. |
+| `bro` | Reescribe un texto para que suene humano y natural. |
+| `unslop` | Audita un texto contra la lista de tics de IA (relleno, «no solo X sino Y»…) y los corrige. |
+| `show-me` | Explica con el visual más pequeño que sirva: árbol de llamadas, diagrama Mermaid, un diff. |
+| `eli5` | Explica un tema desde cero, con analogías y sin jerga. |
+| `teach` | Te enseña un concepto a lo largo de varias sesiones. |
+| `hardening` | Auditoría de seguridad antes de publicar. |
+
+---
+
+## 7. Qué se instala
+
+![Qué deja en tu proyecto: qué se sube a git y qué se queda en local](docs/img/readme/readme-09-que-se-instala.png)
+
+Las skills se escriben una vez en `.rsc/skills/` y cada asistente las enlaza.
+Lo que se comparte va a git; el estado de la máquina, no.
+
+![Los reflejos: gate, danger-guard, ship-guard, gitmoji-guard, memoria y limpieza de worktrees](docs/img/readme/readme-07-guardias.png)
+
+Hooks que vigilan por ti: recuerdan la cadena, piden confirmación antes de un `rm -rf` o un
+`git push --force` y paran antes de volver a `main` sin abrir la PR.
+
+![Plugins de serie: superpowers, skins, savvy-progress y cache-tax](docs/img/readme/readme-16-plugins.png)
+
+En Claude Code quedan activados `skins`, `savvy-progress`, `context-bar`, `prompt-enhancer`, `modelo-justo`,
+`where-am-i` y `cache-tax` (este mantiene caliente la caché, y eso gasta tokens). `superpowers` llega cuando el proyecto usa el método.
+
+En cifras: 310 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
+(Claude Code, Codex, Cursor, Copilot, Gemini…). Detalle en la [referencia técnica](docs/referencia-tecnica.md).
+
+---
+
 ## Catálogo
 
-![297 skills por dominio](docs/img/readme/readme-15-catalogo.png)
+![310 skills por dominio](docs/img/readme/readme-15-catalogo.png)
 
-297 skills en 25 dominios: software, negocio, contenido, datos e IA.
+310 skills en 25 dominios: software, negocio, contenido, datos e IA.
 Cada una se activa sola cuando la tarea encaja.
 
 **[Ver el catálogo completo →](docs/catalogo.md)** · [Referencia técnica](docs/referencia-tecnica.md) ·

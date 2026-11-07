@@ -1,0 +1,33 @@
+skill: write-swift
+
+should_trigger:
+  - prompt: "Write a Swift view model with async/await."
+    why: "Direct trigger for write-swift."
+  - prompt: "Make this Swift code data-race safe under Swift 6."
+    why: "Direct trigger for write-swift."
+  - prompt: "Model this domain with value types in Swift."
+    why: "Direct trigger for write-swift."
+  - prompt: "Write Swift Testing tests for this type."
+    why: "Direct trigger for write-swift."
+  - prompt: "Refactor this class to a struct in Swift."
+    why: "Direct trigger for write-swift."
+
+should_not_trigger:
+  - prompt: "Write a React component."
+    route_to: "react"
+    why: "Outside the scope of write-swift."
+  - prompt: "Animate in React Native."
+    route_to: "animate-expo"
+    why: "Outside the scope of write-swift."
+  - prompt: "Write Python code."
+    route_to: "python"
+    why: "Outside the scope of write-swift."
+  - prompt: "Design an iOS-style web sheet."
+    route_to: "diseno-apple"
+    why: "Outside the scope of write-swift."
+
+capability:
+  - scenario: "A user asks for modern Swift."
+    must_include:
+      - "swift"
+      - "sendable"

@@ -52,6 +52,24 @@ test('Next.js project: gets both', () => {
   assert.match(out, /rsc front-end model/);
 });
 
+test('front-end project without PRODUCT.md: is told to offer `/impeccable init` once', () => {
+  const out = run(project({ 'package.json': '{"dependencies":{"react":"19.0.0"}}' }));
+  assert.match(out, /no PRODUCT\.md/);
+  assert.match(out, /\/impeccable init/);
+  assert.match(out, /\/impeccable document/);
+});
+
+test('front-end project that already has PRODUCT.md: no design-context nudge', () => {
+  const out = run(project({ 'package.json': '{"dependencies":{"react":"19.0.0"}}', 'PRODUCT.md': '# Product\n' }));
+  assert.match(out, /rsc front-end model/);
+  assert.doesNotMatch(out, /impeccable init/);
+});
+
+test('backend-only project: no design-context nudge', () => {
+  const out = run(project({ 'package.json': '{"dependencies":{"express":"5.0.0"}}', '.env': 'K=1\n' }));
+  assert.doesNotMatch(out, /impeccable/);
+});
+
 test('project with neither a front end nor a backend: gets neither', () => {
   const out = run(project({ 'README.md': '# notes\n' }));
   assert.doesNotMatch(out, /rsc security floor|rsc front-end model/);

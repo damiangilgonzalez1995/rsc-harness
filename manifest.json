@@ -1,7 +1,7 @@
 {
   "version": "1.3.6",
   "counts": {
-    "skills": 297,
+    "skills": 310,
     "agents": 34,
     "commands": 43,
     "fixedCommands": 10
@@ -171,11 +171,39 @@
     },
     {
       "id": "animar",
-      "description": "Use when asked to animate something, add motion, make a component feel alive, or build a transition. Builds the animation from scratch, making the decisions in the order that determines whether it feels right — whether it should animate at all, for what purpose, with which tool, which properties, which curve and duration, how it is interrupted, and how it exits. Writes the implementation. For critiquing existing motion use revisar-animaciones.",
+      "description": "Use when asked to animate something, add motion, make a component feel alive, or build a transition. Builds the animation from scratch, making the decisions in the order that determines whether it feels right — whether it should animate at all, for what purpose, with which tool, which properties, which curve and duration, how it is interrupted, and how it exits. Writes the implementation. For critiquing existing motion use `review-animations`.",
       "tags": [
         "animation",
         "motion",
         "transitions"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "animate-expo",
+      "description": "Build animations in React Native and Expo, making the decisions in the order that determines whether they feel right — should it animate, which thread it runs on, which properties, spring or timing, how the gesture hands off, how it degrades. Writes the implementation with Reanimated, Gesture Handler, Expo Router and expo-haptics. Use when animating anything in an Expo app, adding gestures, sheets, screen transitions, press feedback or haptics, or fixing motion that stutters on device. For web animation use `animate`.",
+      "tags": [
+        "animation",
+        "react-native",
+        "expo"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "animation-performance",
+      "description": "Keep web animations inside the frame budget — animate composite-only properties, keep motion off the main thread when the page is busy, and find the cause when an animation drops frames. Covers the layout/paint/composite pipeline, cheaper property swaps, CSS vs WAAPI vs requestAnimationFrame, Motion's hardware-accelerated path, React re-rendering per frame, inherited CSS variable recalculation, blur cost, and when `will-change` actually helps. Use when an animation is janky, choppy, stutters, or drops frames; when choosing which property to animate; when deciding between CSS and JS animation on performance grounds; or when reaching for `will-change` or GPU layers. For choosing easing, duration, or whether to animate at all use animate; for reviewing motion as a whole use review-animations.",
+      "tags": [
+        "animation",
+        "performance",
+        "motion"
       ],
       "recommends": [],
       "profiles": [
@@ -256,6 +284,20 @@
         "case-studies"
       ],
       "profiles": []
+    },
+    {
+      "id": "ask-sonner",
+      "description": "Guide to Sonner, the React toast library — install and wire up the Toaster, pick the right toast() call, promise and loading toasts, updating, dismissing and persisting toasts, styling, theming and icons, positioning and multiple toasters. Use when working with Sonner or troubleshooting it — toasts that don't appear, appear twice, lose their styles, ignore Tailwind classes, sit behind a modal, or don't follow dark mode.",
+      "tags": [
+        "toast",
+        "react",
+        "sonner"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "astro",
@@ -461,6 +503,20 @@
       "profiles": []
     },
     {
+      "id": "break-ui",
+      "description": "Try to break a piece of UI by feeding it worst-case data — long names, unbreakable emails, one-letter names, missing fields, huge counts, zero items, long labels, non-Latin text, emoji, extreme numbers — then render it behind a \\\"Demo data / Worst case\\\" toggle and report everything that broke, with the fix for each. Use when the user asks to stress-test, break, or find edge cases in a component or screen, or to \\\"try the worst case\\\". For visual design critique use emil-design-eng; for motion use review-animations.",
+      "tags": [
+        "ui",
+        "edge-cases",
+        "testing"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
       "id": "bro",
       "description": "Use whenever the user asks to make an answer or draft sound human, natural, plain-spoken or less AI-written — including a terse bro after the last response. Rewrites or drafts in the same language while preserving meaning, facts and channel. NOT a reusable brand voice (that is `brand-voice`), NOT translation (that is `translation-l10n`).",
       "tags": [
@@ -590,6 +646,20 @@
         "brand-voice"
       ],
       "profiles": []
+    },
+    {
+      "id": "choreograph",
+      "description": "Coordinate several elements that animate together — decide what moves, in what order, how much they overlap, and what stays still — so a group reads as one intentional motion instead of a pile of separate animations. Use when building or fixing a staggered list, a hero entrance, a view swap inside a container, a multi-step flow, an element leaving while its siblings close the gap, a morph between rich states, or any interaction with several moving parts (icon + background + lines, panel + content, items flying into a target). Triggers on — stagger, staggerChildren, delayChildren, animation-delay, sequence, sequencing, orchestration, choreography, cascade, wave, timeline, \\\"one after another\\\", \\\"at the same time\\\", crossfade, popLayout, mode=\\\"wait\\\", AnimatePresence mode, hero entrance, list entrance, multi-step, step transition, morph, useAnimate, Promise.all animations, \\\"feels mechanical\\\", \\\"feels robotic\\\", \\\"too much going on\\\", \\\"feels slow to open\\\".",
+      "tags": [
+        "animation",
+        "motion",
+        "choreography"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "chrome-extension",
@@ -1675,6 +1745,20 @@
       "profiles": []
     },
     {
+      "id": "emil-design-eng",
+      "description": "This skill encodes Emil Kowalski's philosophy on UI polish, component design, animation decisions, and the invisible details that make software feel great.",
+      "tags": [
+        "ui-polish",
+        "design-engineering",
+        "animation"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
       "id": "error-handling",
       "description": "Use when designing the reaction to a class of failures — typed error taxonomies, retry/backoff/timeout policy, circuit breakers, React/Next error boundaries, and the user-message vs operator-log split. NOT diagnosing one specific crash (that is debug), NOT logs/metrics/traces (that is observability), NOT the wire error envelope (that is api-design).",
       "tags": [
@@ -1821,6 +1905,20 @@
       "profiles": []
     },
     {
+      "id": "find-animation-opportunities",
+      "description": "Search a codebase or UI for places that don't animate but should, and reject everything that shouldn't. Read-only; it proposes motion with exact values, it does not implement it. Use when the user asks \\\"what could be animated here?\\\" or wants to \\\"make this feel more alive\\\". For fixing existing animations, use improve-animations or review-animations instead.",
+      "tags": [
+        "animation",
+        "audit",
+        "motion"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
       "id": "finetuning",
       "description": "Use when adapting an open-weight model to a target form or behavior — tone, output format, reasoning pattern — via LoRA/QLoRA or full fine-tuning with TRL SFTTrainer, then preference optimization (DPO/ORPO/KTO/GRPO), and for fine-tune vs prompt vs RAG. NOT adding facts to a model (that is rag); NOT the single-GPU Unsloth backend or GGUF export (that is unsloth).",
       "tags": [
@@ -1863,7 +1961,7 @@
     },
     {
       "id": "flujo-interfaz",
-      "description": "Use when work touches a screen — building or reshaping a landing, dashboard, app screen, component or prototype — to pick WHICH design skill leads and in what order the rest follow. Routes: direction first (diseno-landing or ingeniero-diseno-web), then motion, polish, originality and perception. NOT the review itself (that is `revision-interfaz`), NOT how the interface is wired (that is `ui-engineering`).",
+      "description": "Use when work touches a screen — building or reshaping a landing, dashboard, app screen, component or prototype — to pick WHICH design skill leads and in what order the rest follow. Routes: project context first (impeccable init), then direction (diseno-landing or ingeniero-diseno-web), motion, polish, originality and perception. NOT the review itself (that is `revision-interfaz`), NOT how the interface is wired (that is `ui-engineering`).",
       "tags": [
         "ui-design",
         "routing",
@@ -1872,7 +1970,8 @@
       "recommends": [
         "ingeniero-diseno-web",
         "diseno-landing",
-        "revision-interfaz"
+        "revision-interfaz",
+        "emil-design-eng"
       ],
       "profiles": [
         "ui",
@@ -2505,6 +2604,20 @@
       "recommends": [],
       "profiles": [
         "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "improve-animations",
+      "description": "Survey a codebase's animation and motion code as a senior motion advisor, then produce a prioritized audit and self-contained implementation plans for other agents (or cheaper models) to execute. Read-only on source code — it plans improvements, it does not apply them. Use when the user asks to \\\"improve the animations\\\", \\\"audit the motion\\\", \\\"make this app feel better\\\", or wants a roadmap of animation fixes rather than a review of a single diff.",
+      "tags": [
+        "animation",
+        "audit",
+        "motion"
+      ],
+      "recommends": [],
+      "profiles": [
         "ui",
         "full"
       ]
@@ -3255,6 +3368,20 @@
       ]
     },
     {
+      "id": "mobile-native",
+      "description": "Make a web app feel native on a phone — the small CSS and meta-tag fixes that separate \\\"a website in a browser\\\" from something that feels installed. Covers sticky hover states, tap highlight flashes, the 100vh bug, inputs that zoom the page, laggy taps, pull-to-refresh hijacking scroll, content under the notch, long-press selecting button text, carousels that scroll the wrong way, mismatched status bars, and the rule that you test on real hardware. Use when a web app is being built for or reviewed on mobile, when something \\\"works in Chrome but feels wrong on my phone\\\", when building a PWA, a bottom sheet, a carousel, a full-screen layout, or any touch interaction. For motion itself use animate; for React Native use animate-expo.",
+      "tags": [
+        "mobile",
+        "css",
+        "ui"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
       "id": "modal",
       "description": "Use when running Python or GPU workloads serverlessly on Modal — modal.App, inline container Images, gpu= on @app.function, Volumes for weight caching, Cron schedules, ASGI endpoints, modal run vs serve vs deploy. NOT managed prediction APIs with no container of your own (that is replicate); NOT SSH-able GPU boxes rented by the hour (that is runpod).",
       "tags": [
@@ -3757,6 +3884,20 @@
       "profiles": []
     },
     {
+      "id": "pick-ui-library",
+      "description": "Pick the right library for a given frontend task from a curated, opinionated list — numbers, OTP inputs, charts, command menus, virtualization, drag and drop, toasts, state, styling, and more. Only runs when explicitly invoked; it does not trigger on its own.",
+      "tags": [
+        "ui",
+        "libraries",
+        "frontend"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
       "id": "pitch-deck",
       "description": "Use when building or fixing an investor fundraising deck — the narrative arc, the slide-by-slide story, and the few numbers that actually move an investment decision, for a pre-seed, seed or Series A raise (or an accelerator application deck). Decides what goes on each slide, in what order, with which metric, sequenced the way an investor evaluates risk. NOT rendering, theming or exporting the slides into a designed PDF or PPTX (that is `presentations`), NOT the projection spreadsheet behind the numbers (that is `financial-model`).",
       "tags": [
@@ -4217,6 +4358,20 @@
       "profiles": []
     },
     {
+      "id": "remove-animations",
+      "description": "Find the animations an interface doesn't need and remove them — motion on keyboard actions, high-frequency surfaces, functional data, and decoration with no purpose — then clean up what they leave behind. Edits code, but only to subtract; it never adds or retunes motion. Use when the user says the app \\\"feels slow\\\", \\\"has too much animation\\\", \\\"feels over-animated\\\", wants to \\\"tone down the motion\\\", or asks what animations to remove. For finding places that should animate, use find-animation-opportunities; for fixing animations that should stay, use improve-animations or review-animations.",
+      "tags": [
+        "animation",
+        "motion",
+        "restraint"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
+    },
+    {
       "id": "render",
       "description": "Use when deploying or fixing an app on Render — web services, background workers, cron jobs, private services, managed Postgres and Key-Value, and especially the render.yaml Blueprint. Covers deploys that fail with no open ports detected, 502s on first deploy, free-tier cold starts, and a free Postgres about to expire with its data. NOT the generic ship and release flow (that is `deployment`), NOT another PaaS such as `railway` or `fly-io`.",
       "tags": [
@@ -4381,6 +4536,20 @@
       "recommends": [],
       "profiles": [
         "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "review-animations",
+      "description": "Reviews animation and motion code against a high craft bar derived from Emil Kowalski's design engineering philosophy. Default to flagging; approval is earned.",
+      "tags": [
+        "animation",
+        "review",
+        "motion"
+      ],
+      "recommends": [],
+      "profiles": [
         "ui",
         "full"
       ]
@@ -5866,6 +6035,20 @@
       "recommends": [],
       "profiles": [
         "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "write-swift",
+      "description": "How to write modern Swift well — modeling with value types, Swift 6 data-race safety and approachable concurrency (@concurrent, main-actor-by-default, actors, task groups), protocols and generics (some vs any), API design, performance and ARC, Swift Testing, macros, and the modern language features agents don't know about yet. Use when writing, reviewing, or migrating Swift, or when a concurrency error, a hang, a data race, a retain cycle, or a performance problem needs fixing.",
+      "tags": [
+        "swift",
+        "ios",
+        "language"
+      ],
+      "recommends": [],
+      "profiles": [
         "ui",
         "full"
       ]
