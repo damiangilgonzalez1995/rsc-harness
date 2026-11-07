@@ -27,6 +27,7 @@
 //     id, label, reviewSkills: [id], cadenceDays: n|null, checks: [...],   // checks tal cual del config
 //     files: n, covered: n, coverage: 0..1, uncovered: [path],
 //     uncoveredEndpoints: [{ method, route, file, line, stack: 'fastapi'|'express'|'next' }],
+//     uncoveredWeighty: [{ kind: 'table'|'auth', file }],   // de peso sin cubrir (también en --fast)
 //     lastReviewAt: ISO|null, ageDays: n|null, reviews: n,
 //     reviewHistory: [{ skill, at, branch, scope, pr: n|null, file, coveredNow: n }],  // más reciente primero
 //     recommendedSkill: id|null,           // la reviewSkill nunca lanzada o la de revisión más antigua
@@ -53,11 +54,12 @@ const STATE_REL = ['.rsc', 'overview', 'state.json'];
 const HISTORY_REL = ['.rsc', 'overview', 'history.json'];
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-// Umbrales de color. Por debajo de RED_BELOW la zona tiene demasiado código nuevo o cambiado sin
-// cubrir; entre RED_BELOW y GREEN_FROM pide revisión pero no es urgente. La edad sola, con todo
-// cubierto, nunca pasa de ámbar: no se pide revisar código intacto.
+// Umbrales de color. Por debajo de RED_BELOW falta más de la mitad: rojo aunque nada pese. Entre
+// RED_BELOW y GREEN_FROM pide revisión pero no es urgente. El rojo es sobre todo para lo que pesa
+// (endpoints, tablas, auth sin cubrir; ver WEIGHTY_DETECTORS). La edad sola, con todo cubierto,
+// nunca pasa de ámbar: no se pide revisar código intacto.
 export const GREEN_FROM = 0.9;
-export const RED_BELOW = 0.8;
+export const RED_BELOW = 0.5;
 
 // git siempre sin shell y con argumentos en array: el nombre de skill y el prompt son datos.
 function git(root, args) {
@@ -292,6 +294,33 @@ function detectEndpoints(path, src) {
 const endpointKey = (e) => `${e.method} ${e.route}`;
 const mayHaveEndpoints = (path) => ENDPOINT_DETECTORS.some((d) => d.files.test(path));
 
+// Archivos de peso además de los endpoints: tablas y migraciones, y auth. Sin cubrir ponen la zona
+// en rojo. Igual que los endpoints, se amplía con un detector más: `kind` y `test(path, src)`, donde
+// `src()` lee el fuente solo si hace falta. El primero que acierta da el tipo.
+const TABLE_PATH = /(?:^|\/)(?:migrations|alembic\/versions)\/|(?:^|\/)prisma\/schema\.prisma$/;
+// Auth por nombre de archivo o carpeta. La palabra tiene que empezar en un borde (inicio, signo o
+// camelCase) para que `urls.py` no cuente como `rls`; estilos, docs e imágenes nunca son auth.
+const AUTH_WORD = /(?:^|[^a-z])(?:o?auth|login|session|jwt|token|permission|rls|polic(?:y|ies))/;
+const NOT_CODE = /\.(?:css|scss|sass|less|md|mdx|txt|rst|svg|png|jpe?g|gif|webp|ico)$/i;
+export const WEIGHTY_DETECTORS = [
+  {
+    kind: 'table', // CREATE/ALTER TABLE en .sql, carpetas de migraciones, prisma y op.create_table de alembic
+    test: (path, src) => TABLE_PATH.test(path)
+      || (/\.sql$/i.test(path) && /\b(?:create|alter)\s+table\b/i.test(src()))
+      || (/\.py$/.test(path) && /\bop\.create_table\s*\(/.test(src())),
+  },
+  {
+    kind: 'auth',
+    test: (path) => !NOT_CODE.test(path) && AUTH_WORD.test(path.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()),
+  },
+];
+/** Tipo de peso de un archivo ('table' | 'auth') o null. `src` es una función que devuelve el fuente. */
+export function weightyKind(path, src = () => '') {
+  let cached;
+  const read = () => (cached ??= String(src() ?? ''));
+  return WEIGHTY_DETECTORS.find((d) => d.test(path, read))?.kind ?? null;
+}
+
 // Semana ISO 8601 en UTC: la semana es del año al que pertenece su jueves.
 export function isoWeek(date) {
   const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
@@ -302,13 +331,13 @@ export function isoWeek(date) {
   return { label: `${d.getUTCFullYear()}-W${String(week).padStart(2, '0')}`, monday: new Date(d.getTime() - 3 * DAY_MS) };
 }
 
-// Salud de una zona: la cobertura, con techo de 80 si la revisión ha caducado y de 40 si entran
-// endpoints sin cubrir. Una zona nunca revisada vale 0.
-function zoneHealth({ reviewed, coverage, stale, newEndpoints }) {
+// Salud de una zona: la cobertura, con techo de 80 si la revisión ha caducado y de 40 si hay algo de
+// peso sin cubrir (endpoint nuevo, tabla o auth). Una zona nunca revisada vale 0.
+function zoneHealth({ reviewed, coverage, stale, weighty }) {
   if (!reviewed) return 0;
   let h = Math.round(coverage * 100);
   if (stale) h = Math.min(h, 80);
-  if (newEndpoints) h = Math.min(h, 40);
+  if (weighty) h = Math.min(h, 40);
   return h;
 }
 
@@ -349,9 +378,11 @@ function writeHistory(root, now, health) {
   writeFileSync(file, JSON.stringify(weeks, null, 2) + '\n');
 }
 
-function colorOf({ reviewed, total, coverage, ageDays, cadenceDays, newEndpoints }) {
+// Rojo = lo que pesa: algo de peso sin cubrir o menos de la mitad cubierta. Ámbar = cobertura
+// incompleta o fuera de cadencia. Un CSS cambiado nunca pasa de ámbar por sí solo.
+function colorOf({ reviewed, total, coverage, ageDays, cadenceDays, weighty }) {
   if (!reviewed) return 'never';
-  if (newEndpoints) return 'red';
+  if (weighty) return 'red';
   if (total === 0) return 'green';
   if (coverage < RED_BELOW) return 'red';
   if (coverage < GREEN_FROM) return 'amber';
@@ -416,12 +447,20 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
       }
     }
 
+    // Tablas, migraciones y auth sin cubrir: por la ruta y, para .sql y alembic, por el contenido de
+    // hoy. Barato (solo archivos sin cubrir), así que también corre en --fast.
+    const uncoveredWeighty = [];
+    for (const p of uncovered) {
+      const kind = weightyKind(p, () => { try { return readFileSync(join(root, p), 'utf8'); } catch { return ''; } });
+      if (kind) uncoveredWeighty.push({ kind, file: p });
+    }
+
     const total = paths.length;
     const coverage = total ? covered / total : 1;
     const ageDays = last ? Math.floor((now.getTime() - Date.parse(last)) / DAY_MS) : null;
     const cadenceDays = Number(z.cadenceDays) || null;
     const reviewed = mine.length > 0;
-    const newEndpoints = uncoveredEndpoints.length > 0;
+    const weighty = uncoveredEndpoints.length > 0 || uncoveredWeighty.length > 0;
     const stale = ageDays === null || Boolean(cadenceDays && ageDays > cadenceDays);
 
     const lastBySkill = new Map(skills.map((s) => [s, null]));
@@ -454,13 +493,14 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
       coverage,
       uncovered,
       uncoveredEndpoints,
+      uncoveredWeighty,
       lastReviewAt: last,
       ageDays,
       reviews: mine.length,
       reviewHistory,
       recommendedSkill,
-      health: zoneHealth({ reviewed, coverage, stale: reviewed && stale, newEndpoints }),
-      color: colorOf({ reviewed, total, coverage, ageDays, cadenceDays, newEndpoints }),
+      health: zoneHealth({ reviewed, coverage, stale: reviewed && stale, weighty }),
+      color: colorOf({ reviewed, total, coverage, ageDays, cadenceDays, weighty }),
     };
   });
 
@@ -538,6 +578,7 @@ function squareText(z, big) {
   const files = z.files || 0;
   const unc = (z.uncovered || []).length;
   const eps = (z.uncoveredEndpoints || []).length;
+  const heavy = (z.uncoveredWeighty || []).length;
   const pct = Math.round((z.coverage ?? 0) * 100);
   const lastSkill = z.reviewHistory?.[0]?.skill || null;
   const skAge = `${z.recommendedSkill || lastSkill} · ${agoLong(z.ageDays)}`;
@@ -548,6 +589,12 @@ function squareText(z, big) {
     return big
       ? { when: `${eps} sin revisar`, meta: `${eps === 1 ? 'endpoint nuevo' : 'endpoints nuevos'} · ${plural(files, 'archivo', 'archivos')} en la zona`, sk: skAge }
       : { when: plural(eps, 'ruta', 'rutas'), meta: eps === 1 ? 'nueva sin revisar' : 'nuevas sin revisar', sk: z.recommendedSkill };
+  }
+  if (heavy) {
+    const kinds = [...new Set(z.uncoveredWeighty.map((w) => WEIGHTY_LABEL[w.kind] || w.kind))].join(', ');
+    return big
+      ? { when: `${heavy} sin revisar`, meta: `de peso (${kinds}) · ${plural(files, 'archivo', 'archivos')} en la zona`, sk: skAge }
+      : { when: plural(heavy, 'archivo', 'archivos'), meta: `de peso sin revisar`, sk: z.recommendedSkill };
   }
   if (unc && z.color !== 'green') {
     return big
@@ -690,12 +737,14 @@ const CHECK_STATUS = {
   warn: ['mid', 'a medias'], partial: ['mid', 'a medias'], na: ['never', 'no aplica'],
 };
 const LIST_CAP = 40;
+const WEIGHTY_LABEL = { table: 'tabla o migración', auth: 'auth' };
 
 function detailHtml(z) {
   const t = tone(z);
   const files = z.files || 0;
   const unc = z.uncovered || [];
   const eps = z.uncoveredEndpoints || [];
+  const heavy = z.uncoveredWeighty || [];
   const checks = z.checks || [];
   const hist = z.reviewHistory || [];
   const others = (z.reviewSkills || []).filter((s) => s !== z.recommendedSkill);
@@ -714,6 +763,7 @@ function detailHtml(z) {
     + `<div><dt>Última revisión</dt><dd>${esc(age)}</dd></div><div><dt>Salud</dt><dd>${esc(z.health ?? '—')}</dd></div></dl>`
     + rec
     + (eps.length ? section('Endpoints nuevos sin cubrir', eps.length, `<ul class="list">${capped(eps, (e) => `<li><b class="m">${esc(e.method)}</b> <code>${esc(e.route)}</code><span class="p">${esc(`${e.file}:${e.line}`)}</span></li>`)}</ul>`) : '')
+    + (heavy.length ? section('De peso sin cubrir', heavy.length, `<ul class="list">${capped(heavy, (w) => `<li><b class="m">${esc(WEIGHTY_LABEL[w.kind] || w.kind)}</b> <span class="p">${esc(w.file)}</span></li>`)}</ul>`) : '')
     + section('Archivos sin cubrir', unc.length, unc.length
       ? `<ul class="list">${capped(unc, (p) => `<li><span class="p">${esc(p)}</span></li>`)}</ul>`
       : `<p class="empty">${files ? 'Todos revisados con el contenido que tienen hoy.' : 'La zona no tiene archivos todavía.'}</p>`)

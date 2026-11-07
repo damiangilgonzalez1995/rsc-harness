@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { render, scan } from '../skills/overview/scripts/overview.mjs';
-import { ENGINE, repo, dashboardRepo } from './fixtures/overview-fixture.js';
+import { ENGINE, repo, put, commit, dashboardRepo } from './fixtures/overview-fixture.js';
 
 // Dashboard (ticket 05): `render` escribe .rsc/overview/overview.html, un HTML único con el estado
 // incrustado en <script type="application/json">. Se prueba por fuera: el HTML y el estado que lleva.
@@ -57,6 +57,18 @@ test('con el fixture, el HTML lleva las zonas con su color y los KPIs correctos'
   // Las dos gráficas van en SVG en línea.
   assert.equal((html.match(/<svg/g) || []).length >= 2, true);
   assert.doesNotMatch(html, /<script[^>]+src=|<link[^>]+stylesheet/);
+});
+
+test('el panel de detalle lista las tablas y los archivos de auth sin cubrir', () => {
+  const root = dashboardRepo();
+  put(root, 'db/002_orders.sql', 'CREATE TABLE orders (id int);\n');
+  commit(root, 'migración');
+  scan({ root, gh: false });
+  const html = readFileSync(render({ root }).path, 'utf8');
+  const detail = /<aside[^>]*id="zone=database"[\s\S]*?<\/aside>/.exec(html)?.[0];
+  assert.match(detail, /De peso sin cubrir/);
+  assert.match(detail, /tabla o migración[\s\S]*?db\/002_orders\.sql/);
+  assert.ok(squareClass(html, 'database').includes('bad'));
 });
 
 test('un path con <script> sale escapado en el HTML y en el JSON incrustado', () => {

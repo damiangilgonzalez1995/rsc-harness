@@ -57,11 +57,14 @@ node scripts/overview.mjs scan [--fast] [--no-gh] [--root .]
 - Un archivo está cubierto si alguna revisión de una skill de su zona lo registra con su blob sha actual. Si cambió después, deja de estar cubierto, sea cual sea la fecha.
 - Por zona: `coverage` (cubiertos ÷ total), `uncovered`, `ageDays` desde la revisión más reciente que aún cubre algo, y `color`:
   - `never`: la zona nunca se revisó;
-  - `red`: cobertura por debajo de 0,8 (código nuevo o cambiado sin cubrir), o algún endpoint nuevo sin cubrir;
-  - `amber`: cobertura entre 0,8 y 0,9, o todo cubierto pero fuera de la cadencia (la edad sola no pasa de ámbar);
+  - `red`: lo que pesa. Un endpoint nuevo, una tabla o migración, o un archivo de auth sin cubrir; o cobertura por debajo de 0,5;
+  - `amber`: cobertura por debajo de 0,9 (un CSS cambiado se queda aquí), o todo cubierto pero fuera de la cadencia (la edad sola no pasa de ámbar);
   - `green`: cobertura de 0,9 o más dentro de la cadencia.
 - Endpoints nuevos sin cubrir (`uncoveredEndpoints`): rutas FastAPI (`@router.get`, `@app.post`…), Express (`app|router.get(...)`) y Next (`app/**/route.ts` con `export GET/POST…`) de archivos sin cubrir que no estaban en la versión revisada del archivo.
-- KPIs: `health` (0–100, cobertura ponderada por archivos, con techo de 80 si caduca y 40 con endpoints nuevos; nunca revisada vale 0), `zonesNeedingReview`, `uncoveredFiles`, `uncoveredEndpoints`, `openQuestions` y `lastCoveredPr` (del campo `pr` de las revisiones, de los merge commits de ramas revisadas y de `gh` si está; `--no-gh` lo salta).
+- De peso sin cubrir (`uncoveredWeighty`, `{kind, file}`), también en `--fast`:
+  - `table`: `CREATE TABLE` o `ALTER TABLE` en `.sql`, archivos bajo `migrations/`, `alembic/versions/` o `supabase/migrations/`, `prisma/schema.prisma` y `op.create_table`;
+  - `auth`: rutas con `auth`, `login`, `session`, `jwt`, `token`, `permission`, `rls` o `policy` en el nombre o el directorio (estilos, docs e imágenes no cuentan).
+- KPIs: `health` (0–100, cobertura ponderada por archivos, con techo de 80 si caduca y 40 con algo de peso sin cubrir; nunca revisada vale 0), `zonesNeedingReview`, `uncoveredFiles`, `uncoveredEndpoints`, `openQuestions` y `lastCoveredPr` (del campo `pr` de las revisiones, de los merge commits de ramas revisadas y de `gh` si está; `--no-gh` lo salta).
 - `--fast` es el modo del aviso de sesión: mismos colores por cobertura y edad, sin endpoints, sin merges ni `gh`, y sin escribir `state.json` ni la historia: solo devuelve el estado. `render` nunca reutiliza un estado rápido ni uno ilegible; si es el caso, hace antes el scan completo.
 - Cuenta el resultado en una línea por zona que pida revisión, con su `recommendedSkill` (la primera de `reviewSkills` que nunca se lanzó en la zona, o la de revisión más antigua).
 
