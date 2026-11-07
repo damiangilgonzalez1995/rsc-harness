@@ -173,6 +173,36 @@ test('estado para el dashboard: KPIs, historial por zona y skill recomendada', (
   assert.deepEqual(disk.kpis, state.kpis);
 });
 
+// ── verificaciones del subagente de docs y comprobaciones (ticket 07) ──────────────────────
+// El motor no lanza agentes: lee lo que el agente de `scan` dejó en overview.json.
+test('el estado lleva las verificaciones por zona y la última de cada una', () => {
+  const now = new Date('2026-11-07T12:00:00Z');
+  const config = {
+    ...API,
+    zones: [API.zones[0], { ...API.zones[1], checks: [{ id: 'readme', label: 'README al día', status: 'unknown', date: '2026-11-06' }] }],
+    verifications: [
+      { what: 'Supabase local', result: 'verified', evidence: 'psql', at: '2026-11-01' }, // de `start`: no es de zona
+      { zone: 'docs', date: '2026-10-01', agent: 'overview-verifier', ok: true, notes: [] },
+      { zone: 'docs', date: '2026-11-05', agent: 'overview-verifier', ok: false, notes: ['El README cita `npm run dev`, que no existe'] },
+      { zone: 'api-endpoints', date: '2026-11-04', agent: 'overview-verifier', ok: true, notes: ['ok'] },
+    ],
+  };
+  const root = repo({ config, files: BASE });
+  const state = scan({ root, ...OPTS, now });
+  assert.equal(state.verifications.length, 3);
+  assert.deepEqual(zone(state, 'docs').lastVerification, {
+    date: '2026-11-05', agent: 'overview-verifier', ok: false, notes: ['El README cita `npm run dev`, que no existe'], ageDays: 2,
+  });
+  assert.equal(zone(state, 'api-endpoints').lastVerification.ok, true);
+  assert.deepEqual(zone(state, 'docs').checks[0], { id: 'readme', label: 'README al día', status: 'unknown', date: '2026-11-06' });
+});
+
+test('sin verificaciones, lastVerification es null', () => {
+  const state = scan({ root: reviewedRepo(), ...OPTS });
+  assert.deepEqual(state.verifications, []);
+  assert.equal(zone(state, 'docs').lastVerification, null);
+});
+
 // ── el rojo se reserva para lo que pesa (ticket 07) ──────────────────────────────────────────
 // Rojo: endpoint nuevo, tabla o migración, o archivo de auth sin cubrir, o cobertura por debajo de
 // 0,5. Ámbar: cobertura por debajo de 0,9 o fuera de cadencia.

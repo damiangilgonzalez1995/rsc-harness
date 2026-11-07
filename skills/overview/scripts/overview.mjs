@@ -31,10 +31,14 @@
 //     lastReviewAt: ISO|null, ageDays: n|null, reviews: n,
 //     reviewHistory: [{ skill, at, branch, scope, pr: n|null, file, coveredNow: n }],  // más reciente primero
 //     recommendedSkill: id|null,           // la reviewSkill nunca lanzada o la de revisión más antigua
+//     lastVerification: { date, agent, ok, notes: [], ageDays } | null,   // del subagente de `scan`
 //     health: 0-100,
 //     color: 'green'|'amber'|'red'|'never',
 //   }],
+//   verifications: [{ zone, date, agent, ok, notes: [] }],   // las de zona de overview.json
 // }
+//
+// checks[] viaja tal cual; el subagente de `scan` le pone status 'pass'|'fail'|'unknown' y date.
 //
 // history.json = [{ week: 'YYYY-Www' (semana ISO, UTC), health: 0-100, commits: n }]  // por semana,
 //   ordenado; un scan completo sustituye la entrada de su semana. --fast no la toca.
@@ -380,6 +384,27 @@ function writeHistory(root, now, health) {
 
 // Rojo = lo que pesa: algo de peso sin cubrir o menos de la mitad cubierta. Ámbar = cobertura
 // incompleta o fuera de cadencia. Un CSS cambiado nunca pasa de ámbar por sí solo.
+// Verificaciones de zona que deja el subagente de `overview scan` en overview.json:
+// { zone, date, agent, ok, notes[] }. Las de `start` (acceso a sistemas: { what, result, ... })
+// comparten el array pero no son de zona, y se ignoran aquí.
+function zoneVerifications(cfg) {
+  const list = Array.isArray(cfg.verifications) ? cfg.verifications : [];
+  return list
+    .filter((v) => v && typeof v.zone === 'string' && typeof v.ok === 'boolean' && typeof v.date === 'string')
+    .map((v) => ({
+      zone: v.zone, date: v.date, agent: typeof v.agent === 'string' ? v.agent : null, ok: v.ok,
+      notes: Array.isArray(v.notes) ? v.notes.filter((n) => typeof n === 'string') : [],
+    }));
+}
+
+function lastVerificationOf(verifications, zoneId, now) {
+  const latest = verifications.filter((v) => v.zone === zoneId).sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))[0];
+  if (!latest) return null;
+  const at = Date.parse(latest.date);
+  const { zone: _zone, ...rest } = latest;
+  return { ...rest, ageDays: Number.isNaN(at) ? null : Math.max(0, Math.floor((now.getTime() - at) / DAY_MS)) };
+}
+
 function colorOf({ reviewed, total, coverage, ageDays, cadenceDays, weighty }) {
   if (!reviewed) return 'never';
   if (weighty) return 'red';
@@ -399,6 +424,7 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
   const cfg = readConfig(root);
   if (!cfg) return null;
   const reviews = readReviews(root);
+  const verifications = zoneVerifications(cfg);
   const blobs = currentFiles(root);
   const full = !fast;
 
@@ -499,6 +525,7 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
       reviews: mine.length,
       reviewHistory,
       recommendedSkill,
+      lastVerification: lastVerificationOf(verifications, z.id, now),
       health: zoneHealth({ reviewed, coverage, stale: reviewed && stale, weighty }),
       color: colorOf({ reviewed, total, coverage, ageDays, cadenceDays, weighty }),
     };
@@ -526,6 +553,7 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
     reviews: reviews.length,
     kpis,
     zones,
+    verifications,
   };
   // El rápido no escribe nada: corre en el Worker del arranque, que puede cortarlo a medias, y su
   // estado (sin endpoints) no debe acabar en el dashboard.
@@ -622,12 +650,24 @@ function layoutZones(zones) {
   return [...ranked.slice(0, nBig).map((r) => ({ z: r.z, big: true })), ...rest.map((r) => ({ z: r.z, big: false }))];
 }
 
+// El cuadrado de docs dice además si los docs cuadran y cuándo pasó el agente (historia 38).
+function docsLine(z) {
+  if (z.id !== 'docs') return null;
+  const v = z.lastVerification;
+  if (!v) return { text: 'docs sin verificar', tone: 'never' };
+  const d = new Date(v.date);
+  const day = Number.isNaN(d.getTime()) ? v.date : `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}`;
+  return { text: `${v.ok ? 'cuadran' : 'no cuadran'} · ${day}`, tone: v.ok ? 'ok' : 'bad' };
+}
+
 function squareHtml({ z, big }) {
   const t = squareText(z, big);
-  const label = `${z.label}: ${TONE_LABEL[z.color] || ''}. ${t.when}, ${t.meta}. Abrir detalle`;
+  const docs = docsLine(z);
+  const label = `${z.label}: ${TONE_LABEL[z.color] || ''}. ${t.when}, ${t.meta}.${docs ? ` Docs: ${docs.text}.` : ''} Abrir detalle`;
   return `<a class="sq${big ? ' x2' : ''} ${tone(z)}" href="#zone=${esc(z.id)}" data-zone="${esc(z.id)}" aria-label="${esc(label)}">`
     + `<span class="n">${esc(z.label)}</span><span class="b"><span class="when">${esc(t.when)}</span>`
-    + `<span class="meta">${esc(t.meta)}</span>${big && t.sk ? `<span class="sk">${esc(t.sk)}</span>` : ''}</span></a>`;
+    + `<span class="meta">${esc(t.meta)}</span>${big && t.sk ? `<span class="sk">${esc(t.sk)}</span>` : ''}`
+    + `${docs ? `<span class="vf"><i class="dot ${docs.tone}"></i>${esc(docs.text)}</span>` : ''}</span></a>`;
 }
 
 function kpisHtml(state, history) {
@@ -734,8 +774,18 @@ function reviewsChart(state) {
 
 const CHECK_STATUS = {
   pass: ['ok', 'bien'], ok: ['ok', 'bien'], done: ['ok', 'bien'], fail: ['bad', 'falla'],
-  warn: ['mid', 'a medias'], partial: ['mid', 'a medias'], na: ['never', 'no aplica'],
+  warn: ['mid', 'a medias'], partial: ['mid', 'a medias'], na: ['never', 'no aplica'], unknown: ['never', 'sin saber'],
 };
+const verdict = (v) => (v.ok ? 'los docs cuadran' : 'los docs no cuadran');
+
+// La última pasada del subagente de docs y comprobaciones sobre la zona.
+function verificationHtml(v) {
+  if (!v) return '<p class="empty">Sin verificar: la rellena el subagente de <code>overview scan</code>.</p>';
+  const tone = v.ok ? 'ok' : 'bad';
+  const when = [fmtDate(v.date), agoLong(v.ageDays), v.agent].filter((s) => s && s !== '—').join(' · ');
+  return `<p class="vf"><i class="dot ${tone}"></i><em class="${tone}">${esc(verdict(v))}</em><small>${esc(when)}</small></p>`
+    + (v.notes.length ? `<ul class="list">${v.notes.slice(0, LIST_CAP).map((n) => `<li>${esc(n)}</li>`).join('')}</ul>` : '');
+}
 const LIST_CAP = 40;
 const WEIGHTY_LABEL = { table: 'tabla o migración', auth: 'auth' };
 
@@ -767,10 +817,11 @@ function detailHtml(z) {
     + section('Archivos sin cubrir', unc.length, unc.length
       ? `<ul class="list">${capped(unc, (p) => `<li><span class="p">${esc(p)}</span></li>`)}</ul>`
       : `<p class="empty">${files ? 'Todos revisados con el contenido que tienen hoy.' : 'La zona no tiene archivos todavía.'}</p>`)
+    + section('Última verificación', 0, verificationHtml(z.lastVerification))
     + section('Comprobaciones', checks.length, checks.length
       ? `<ul class="checks">${checks.map((c) => {
         const [ct, cl] = CHECK_STATUS[c.status] || ['never', c.status ? String(c.status) : 'sin comprobar'];
-        const sub = [c.skill, c.note].filter(Boolean).join(' · ');
+        const sub = [c.skill, c.note, c.date && fmtDate(c.date)].filter(Boolean).join(' · ');
         return `<li><i class="dot ${ct}"></i><span>${esc(c.label || c.id)}${sub ? `<small>${esc(sub)}</small>` : ''}</span><em class="${ct}">${esc(cl)}</em></li>`;
       }).join('')}</ul>`
       : '<p class="empty">Sin comprobaciones registradas: las rellena <code>overview scan</code>.</p>')
@@ -878,6 +929,10 @@ background:var(--card);padding:18px 20px 28px;box-shadow:0 0 0 1px #0000000f,0 1
 em.ok{color:var(--ok-ink)}em.mid{color:var(--mid-ink)}em.bad{color:var(--bad-ink)}em.never{color:var(--ink3)}
 .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
 .dot.ok{background:var(--ok-ink)}.dot.mid{background:var(--mid-ink)}.dot.bad{background:var(--bad-ink)}.dot.never{background:var(--never-line)}
+.sq .vf{display:flex;align-items:center;gap:5px;margin-top:3px;font-size:10.5px;line-height:1.2;color:#00000099}
+.detail .vf{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin:0}
+.vf em{font-style:normal;font-weight:600;background:none}
+.vf small{color:var(--ink2);font-size:11.5px}
 .hist li{display:grid;grid-template-columns:auto 1fr;gap:0 10px;padding:6px 0;border-top:1px solid #f0eee9}
 .hist span{color:var(--ink2);font-size:12px}
 .hist small{grid-column:2;color:var(--ink3);font-size:11.5px}

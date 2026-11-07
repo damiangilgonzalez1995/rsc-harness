@@ -50,12 +50,15 @@ La primera skill de `reviewSkills` es la que recomienda `scan` cuando la zona pi
       "paths": ["**/routers/**", "app/**/route.ts"],
       "reviewSkills": ["security-scan", "secure-coding", "api-design"],
       "cadenceDays": 30,
-      "checks": [{ "id": "authz-per-object", "label": "…", "skill": "secure-coding", "status": "unknown", "note": "" }]
+      "checks": [{ "id": "authz-per-object", "label": "…", "skill": "secure-coding", "status": "unknown", "date": "2026-11-07", "note": "" }]
     }
   ],
   "hiddenZones": [{ "id": "ai", "reason": "No hay SDK de modelos en package.json ni en pyproject.toml" }],
   "sources": [{ "doc": "docs/spec.md", "version": "v2, 2026-10-30", "author": "…", "notes": "borrador; leído entero" }],
-  "verifications": [{ "what": "Supabase local", "result": "verified", "evidence": "psql: 12 tablas", "at": "2026-11-07" }],
+  "verifications": [
+    { "what": "Supabase local", "result": "verified", "evidence": "psql: 12 tablas", "at": "2026-11-07" },
+    { "zone": "docs", "date": "2026-11-07", "agent": "overview-verifier", "ok": false, "notes": ["README cita `npm run dev`, que no está en package.json"] }
+  ],
   "questions": [
     { "id": "multitenant", "zone": "users", "text": "…", "state": "decided", "answer": "…", "source": "usuario, 2026-11-07", "who": "user" },
     { "id": "mobile-https", "zone": "mobile", "text": "…", "state": "decided", "notApplicable": true, "answer": "No hay móvil: es un panel de escritorio", "source": "docs/spec.md §2", "who": "user" }
@@ -64,7 +67,10 @@ La primera skill de `reviewSkills` es la que recomienda `scan` cuando la zona pi
 }
 ```
 
-- `zones[]` es lo único que lee el motor; el resto lo escribe y lee el agente.
+- El motor lee `zones[]`, `questions[]` (para el KPI de preguntas abiertas) y las verificaciones de zona de `verifications[]`; el resto lo escribe y lee el agente.
 - `questions[].state`: `verified`, `documented`, `contradiction`, `proposal`, `external`, `open` o `decided` (los siete estados de [`start.md`](start.md)). `notApplicable: true` marca la que no aplica, con el motivo en `answer`.
 - `questions[].zone` es el grupo de [`questions.md`](questions.md) (`problem`, `users`, `frontend`…).
-- `verifications[].result`: `verified`, `failed` o `untested`.
+- `verifications[]` guarda dos tipos de entrada:
+  - las de `start`, de acceso a sistemas: `{what, result, evidence, at}`, con `result` `verified`, `failed` o `untested`;
+  - las de zona, que deja `scan` tras su subagente: `{zone, date, agent, ok, notes[]}`. `ok` dice si los docs cuadran con el código de la zona. El dashboard enseña la última de cada zona.
+- `checks[].status`: `unknown`, `pass`, `fail` o `na` (ver [`checks.md`](checks.md)), y `date`, la fecha en que se evaluó.

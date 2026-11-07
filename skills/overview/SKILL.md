@@ -68,6 +68,19 @@ node scripts/overview.mjs scan [--fast] [--no-gh] [--root .]
 - `--fast` es el modo del aviso de sesión: mismos colores por cobertura y edad, sin endpoints, sin merges ni `gh`, y sin escribir `state.json` ni la historia: solo devuelve el estado. `render` nunca reutiliza un estado rápido ni uno ilegible; si es el caso, hace antes el scan completo.
 - Cuenta el resultado en una línea por zona que pida revisión, con su `recommendedSkill` (la primera de `reviewSkills` que nunca se lanzó en la zona, o la de revisión más antigua).
 
+### Después del motor: docs y comprobaciones
+
+El motor no ve lo que no sale por patrones: docs desfasados y el estado de cada comprobación senior. Tras el scan completo (no con `--fast`):
+
+1. Lanza un subagente de solo lectura: no edita nada, ni código ni `overview.json`. Pásale `docs/overview/overview.json` y este encargo, por cada zona de `zones[]`:
+   - Lee los docs que hablan de la zona (README, `docs/`, `CLAUDE.md`, comentarios de cabecera) y compáralos con el código de sus `paths`: comandos, rutas, variables de entorno, nombres. Cada desfase va a `notes` con el archivo y lo que no cuadra.
+   - Evalúa cada `checks[]` contra el código: `pass` con evidencia de que se cumple, `fail` con evidencia de que no (dónde, en `note`), `unknown` si leyendo no se puede saber.
+   - Devuelve solo JSON: `{ "verifications": [{ "zone", "ok", "notes": [] }], "checks": [{ "zone", "id", "status", "note" }] }`.
+2. Escribe tú el resultado en `overview.json`, con la fecha de hoy (`YYYY-MM-DD`):
+   - añade a `verifications[]` una entrada `{zone, date, agent: "overview-verifier", ok, notes}` por zona. No borres las entradas de `start` (`what`/`result`) ni las verificaciones anteriores;
+   - en cada comprobación de `zones[].checks[]`, pon `status` y `date`, y `note` si el subagente la trae.
+3. Si el usuario va a mirar el dashboard, vuelve a generarlo con `render`: el cuadrado de `docs` y el panel de cada zona enseñan la última verificación.
+
 ## Modo `show`
 
 ```bash
@@ -79,5 +92,6 @@ node scripts/overview.mjs render [--no-gh] [--root .]
 - `render` solo genera el HTML a partir del `state.json` que haya; si no hay, hace antes el scan.
 - Es un único HTML estático: se abre con doble clic (`file://`), sin servidor ni librerías, y lleva el estado incrustado en `<script type="application/json" id="overview-state">`.
 - Arriba van los KPIs (salud global, zonas que piden revisión, archivos sin cubrir, preguntas abiertas y última PR cubierta). Debajo, un cuadrado de color por zona: las de más peso (urgencia × archivos) ocupan 2×2, como mucho 3. Al final, dos gráficas: salud y commits por semana, y revisiones de este mes por skill.
-- Al pulsar un cuadrado se abre su detalle: endpoints y archivos sin cubrir, comprobaciones, historial de revisiones y skill recomendada. Se enlaza directo con `overview.html#zone=<id>`.
+- El cuadrado de `docs` dice si los docs cuadran y cuándo pasó el agente de docs.
+- Al pulsar un cuadrado se abre su detalle: endpoints, archivos de peso y archivos sin cubrir, última verificación, comprobaciones, historial de revisiones y skill recomendada. Se enlaza directo con `overview.html#zone=<id>`.
 - Después de abrirlo, di en una línea qué zonas piden revisión y con qué skill: puede que el usuario no mire el HTML.

@@ -59,6 +59,27 @@ test('con el fixture, el HTML lleva las zonas con su color y los KPIs correctos'
   assert.doesNotMatch(html, /<script[^>]+src=|<link[^>]+stylesheet/);
 });
 
+test('el cuadrado y el panel de docs dicen cuándo pasó el agente y si los docs cuadran', () => {
+  const root = dashboardRepo();
+  scan({ root, gh: false });
+  const html = readFileSync(render({ root }).path, 'utf8');
+  const square = /<a class="sq[^"]*"[^>]*data-zone="docs"[\s\S]*?<\/a>/.exec(html)?.[0];
+  assert.match(square, /no cuadran/);
+  assert.match(square, /5 nov/);
+  const docs = /<aside[^>]*id="zone=docs"[\s\S]*?<\/aside>/.exec(html)?.[0];
+  assert.match(docs, /Última verificación/);
+  assert.match(docs, /no cuadran/);
+  assert.match(docs, /overview-verifier/);
+  assert.match(docs, /npm run dev/);
+  // Comprobación sin respuesta: «sin saber», con su fecha.
+  assert.match(docs, /Los comandos del README existen[\s\S]*?5 nov 2026[\s\S]*?sin saber/);
+  // Cada zona enseña su última verificación; la que no tiene, lo dice.
+  const api = /<aside[^>]*id="zone=api-endpoints"[\s\S]*?<\/aside>/.exec(html)?.[0];
+  assert.match(api, /Última verificación[\s\S]*?cuadra/);
+  const front = /<aside[^>]*id="zone=frontend"[\s\S]*?<\/aside>/.exec(html)?.[0];
+  assert.match(front, /Última verificación[\s\S]*?Sin verificar/);
+});
+
 test('el panel de detalle lista las tablas y los archivos de auth sin cubrir', () => {
   const root = dashboardRepo();
   put(root, 'db/002_orders.sql', 'CREATE TABLE orders (id int);\n');
@@ -84,6 +105,8 @@ test('un path con <script> sale escapado en el HTML y en el JSON incrustado', ()
       lastReviewAt: null, ageDays: null, reviews: 1,
       reviewHistory: [{ skill: 'security-scan', at: new Date().toISOString(), branch: '<b>rama</b>', scope: 'pr', pr: null, file: 'r.json', coveredNow: 0 }],
       recommendedSkill: 'security-scan', health: 0, color: 'red',
+      uncoveredWeighty: [{ kind: '<b>x</b>', file: evil }],
+      lastVerification: { date: '2026-11-05', agent: '<i>n</i>', ok: false, notes: ['<b>x</b>'], ageDays: 1 },
     }],
   };
   const root = repo();
