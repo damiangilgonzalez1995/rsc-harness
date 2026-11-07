@@ -17,6 +17,8 @@ should_trigger:
     why: "Lo que hacía bajar-a-tierra ahora es start."
   - prompt: "Start a project overview for this repo: seed the review zones and ask me the senior questions."
     why: "Sembrar zonas y recorrer el banco por rondas es start."
+  - prompt: "Ábreme el overview del proyecto en el navegador, con los cuadrados de cada zona."
+    why: "Ver el estado de revisión en el HTML es el modo show."
 
 should_not_trigger:
   - prompt: "Haz una auditoría de seguridad completa alineada con SOC 2."

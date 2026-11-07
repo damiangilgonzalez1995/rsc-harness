@@ -11,7 +11,7 @@ origin: damiangil
 
 El estado del proyecto de un vistazo: qué zonas piden revisión, con qué skill, y qué parte de sus archivos está revisada **con el contenido que tienen hoy**. `start` crea `docs/overview/overview.json`; los demás modos solo actúan si existe, y sin él no hacen nada.
 
-El motor es `scripts/overview.mjs`: Node sin dependencias, por CLI o como módulo (`record`, `scan`). Solo lee git, sin shell.
+El motor es `scripts/overview.mjs`: Node sin dependencias, por CLI o como módulo (`record`, `scan`, `render`). Solo lee git, sin shell.
 
 ## Datos
 
@@ -19,6 +19,7 @@ El motor es `scripts/overview.mjs`: Node sin dependencias, por CLI o como módul
 - `docs/overview/reviews/<fecha>-<skill>-<commit>.json`, en git: una revisión por archivo, con `skill`, `at`, `branch`, `commit`, `scope`, `pr` opcional, `zones` y `files` (`{path: blob sha}`). Un archivo por revisión evita conflictos al mergear ramas.
 - `.rsc/overview/state.json`, fuera de git: el estado calculado (`kpis` y `zones[]`; la forma exacta está en la cabecera de `overview.mjs`).
 - `.rsc/overview/history.json`, fuera de git: una foto `{week, health, commits}` por semana ISO.
+- `.rsc/overview/overview.html`, fuera de git: el dashboard que genera `show`.
 
 ## Modos
 
@@ -27,6 +28,7 @@ El motor es `scripts/overview.mjs`: Node sin dependencias, por CLI o como módul
 | `start` | Arranque: un proyecto nuevo, una spec que bajar a tierra, o un proyecto sin `overview.json` | [`start.md`](start.md) |
 | `record` | Registrar una revisión que se acaba de pasar | abajo |
 | `scan` | Qué zonas piden revisión ahora | abajo |
+| `show` | Ver el estado en el dashboard HTML | abajo |
 
 Si el usuario pide el estado y no hay `overview.json`, ofrece `start`.
 
@@ -62,3 +64,17 @@ node scripts/overview.mjs scan [--fast] [--no-gh] [--root .]
 - KPIs: `health` (0–100, cobertura ponderada por archivos, con techo de 80 si caduca y 40 con endpoints nuevos; nunca revisada vale 0), `zonesNeedingReview`, `uncoveredFiles`, `uncoveredEndpoints`, `openQuestions` y `lastCoveredPr` (del campo `pr` de las revisiones, de los merge commits de ramas revisadas y de `gh` si está; `--no-gh` lo salta).
 - `--fast` es el modo del aviso de sesión: mismos colores por cobertura y edad, sin endpoints, sin merges ni `gh` y sin tocar la historia.
 - Cuenta el resultado en una línea por zona que pida revisión, con su `recommendedSkill` (la primera de `reviewSkills` que nunca se lanzó en la zona, o la de revisión más antigua).
+
+## Modo `show`
+
+```bash
+node scripts/overview.mjs show [--no-gh] [--no-open] [--root .]
+node scripts/overview.mjs render [--no-gh] [--root .]
+```
+
+- `show` hace un scan completo, genera `.rsc/overview/overview.html` y lo abre con el navegador por defecto. Con `--no-open` (o la variable `OVERVIEW_NO_OPEN`) solo lo genera. En los dos casos imprime la ruta.
+- `render` solo genera el HTML a partir del `state.json` que haya; si no hay, hace antes el scan.
+- Es un único HTML estático: se abre con doble clic (`file://`), sin servidor ni librerías, y lleva el estado incrustado en `<script type="application/json" id="overview-state">`.
+- Arriba van los KPIs (salud global, zonas que piden revisión, archivos sin cubrir, preguntas abiertas y última PR cubierta). Debajo, un cuadrado de color por zona: las de más peso (urgencia × archivos) ocupan 2×2, como mucho 3. Al final, dos gráficas: salud y commits por semana, y revisiones de este mes por skill.
+- Al pulsar un cuadrado se abre su detalle: endpoints y archivos sin cubrir, comprobaciones, historial de revisiones y skill recomendada. Se enlaza directo con `overview.html#zone=<id>`.
+- Después de abrirlo, di en una línea qué zonas piden revisión y con qué skill: puede que el usuario no mire el HTML.
