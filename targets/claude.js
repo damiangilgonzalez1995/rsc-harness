@@ -260,6 +260,34 @@ export function wireHook(paths, sourceMd, policy = {}) {
     if (settings.enabledPlugins[id] !== false) settings.enabledPlugins[id] = true;
   }
 
+  // Overview: registra sola cada skill de revisión que se lanza, por la herramienta Skill
+  // (PostToolUse) o escribiendo `/<skill>` (UserPromptSubmit). Fuera del bloque de hooks de código
+  // porque `overview` es de suelo: va en todos los proyectos, y sin docs/overview/overview.json los
+  // hooks no hacen nada. El motor viaja como hermano en `.rsc/overview.mjs` (nombre estable: el aviso
+  // de session-start también lo importa) desde la carpeta de la skill, la única copia de su código.
+  const ovEngine = join(paths.projectRoot, '.rsc', 'overview.mjs');
+  copyFileSync(join(HERE, '..', 'skills', 'overview', 'scripts', 'overview.mjs'), ovEngine);
+  const ovSkill = join(paths.projectRoot, '.rsc', 'overview-skill-hook.mjs');
+  const ovPrompt = join(paths.projectRoot, '.rsc', 'overview-prompt-hook.mjs');
+  copyFileSync(join(HERE, 'overview-skill-hook.mjs'), ovSkill);
+  copyFileSync(join(HERE, 'overview-prompt-hook.mjs'), ovPrompt);
+  settings.hooks.PostToolUse ||= [];
+  settings.hooks.PostToolUse = settings.hooks.PostToolUse.filter(
+    (e) => !hookWiringOf(e).includes('.rsc/overview-skill-hook.'),
+  );
+  settings.hooks.PostToolUse.push({
+    matcher: 'Skill',
+    hooks: [{ type: 'command', command: viaBootstrap('quiet', at('.rsc', 'overview-skill-hook.mjs'), `"${P}"`), timeout: 10 }],
+  });
+  settings.hooks.UserPromptSubmit ||= [];
+  settings.hooks.UserPromptSubmit = settings.hooks.UserPromptSubmit.filter(
+    (e) => !hookWiringOf(e).includes('.rsc/overview-prompt-hook.'),
+  );
+  settings.hooks.UserPromptSubmit.push({
+    hooks: [{ type: 'command', command: viaBootstrap('quiet', at('.rsc', 'overview-prompt-hook.mjs'), `"${P}"`), timeout: 10 }],
+  });
+  written.push(ovEngine, ovSkill, ovPrompt);
+
   // Danger guard: its own decision, not part of the code-hook block above (#273). `init` promises it
   // to non-technical and mixed users whatever the project is, and a plan that predates the field is
   // read as "yes": a non-technical operations install gets the guard it was missing on its next sync,
