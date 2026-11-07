@@ -1,7 +1,7 @@
 {
   "version": "1.3.6",
   "counts": {
-    "skills": 310,
+    "skills": 311,
     "agents": 34,
     "commands": 43,
     "fixedCommands": 10
@@ -3789,6 +3789,29 @@
         "always-on"
       ],
       "recommends": [],
+      "profiles": [
+        "minimal",
+        "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "overview",
+      "description": "Use when starting a project ('empezar proyecto', 'bajar a tierra'): settle the senior questions and checks by rounds and seed the review zones. Or for the 'project overview', 'estado del proyecto', 'qué falta por revisar': which zones need review, judged by current file content (blob sha). NOT a security audit (that is `hardening`), NOT a diff scan (that is `security-scan`), NOT a data dashboard (that is `dashboard`).",
+      "tags": [
+        "overview",
+        "project-status",
+        "review-coverage",
+        "start-project",
+        "zones",
+        "cadence"
+      ],
+      "recommends": [
+        "hardening",
+        "security-scan",
+        "code-review"
+      ],
       "profiles": [
         "minimal",
         "core",

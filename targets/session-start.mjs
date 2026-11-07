@@ -9,6 +9,7 @@ import { readFileSync, existsSync, readdirSync, mkdirSync, writeFileSync } from 
 import { join, resolve } from 'node:path';
 import { homedir } from 'node:os';
 import { spawnSync } from 'node:child_process';
+import { Worker } from 'node:worker_threads';
 import { claimOnce, readHookInput } from './hook-once.mjs';
 
 const STALE_AUDIT_DAYS = 14; // periodic skill-audit cadence (kept in sync with scripts/audit.js)
@@ -27,6 +28,34 @@ const emitBody = hook.session_id
   : true;
 
 const has = (...p) => existsSync(join(root, ...p));
+
+// overview: el scan rápido arranca ya, en un hilo aparte, y corre mientras se hacen las comprobaciones
+// locales. Solo el aviso (una vez por sesión) lo necesita. El motor viaja como hermano en
+// .rsc/overview.mjs; si falta, falla o se pasa del tope (~800 ms), el aviso se calla. El scan es
+// síncrono (git), así que el tope solo es real en un Worker que se puede terminar.
+// Una vez por sesión de verdad: solo con source=startup. compact, resume y clear reutilizan el
+// session_id y reinyectan el cuerpo de suggest, pero el aviso ya se dio.
+const OVERVIEW_BUDGET_MS = Number(process.env.RSC_OVERVIEW_BUDGET_MS) || 800;
+// La misma ruta que CONFIG_REL en overview.mjs. No se importa del motor: cargarlo aquí costaría
+// arranque, y si falta el import rompería el hook entero en vez de callar solo el aviso.
+const OVERVIEW_CONFIG = ['docs', 'overview', 'overview.json'];
+const overviewNotice = emitBody && (hook.source || 'startup') === 'startup';
+const overviewRed = overviewNotice && has(...OVERVIEW_CONFIG) ? new Promise((done) => {
+  let worker;
+  const timer = setTimeout(() => { done(null); worker?.terminate().catch(() => {}); }, OVERVIEW_BUDGET_MS);
+  try {
+    worker = new Worker(`
+      const { parentPort, workerData } = require('node:worker_threads');
+      import(workerData.engine)
+        .then((m) => { const s = m.scan({ root: workerData.root, fast: true, gh: false });
+          parentPort.postMessage(s ? s.zones.filter((z) => z.color === 'red').map((z) => z.id) : null); })
+        .catch(() => parentPort.postMessage(null));`,
+    { eval: true, workerData: { engine: new URL('./overview.mjs', import.meta.url).href, root }, stdout: true, stderr: true });
+    worker.unref();
+    worker.once('message', (red) => { clearTimeout(timer); done(red); worker.terminate().catch(() => {}); });
+    worker.once('error', () => { clearTimeout(timer); done(null); });
+  } catch { clearTimeout(timer); done(null); }
+}) : Promise.resolve(null);
 
 // The npm lookup (up to 1.5 s) starts now and runs while the local checks below do their work;
 // the update block at the end only awaits it.
@@ -216,6 +245,18 @@ Opt out with .rsc/.no-stack-hints.
 `);
   }
 }
+
+// overview: una línea si alguna zona está en rojo. Ya va deduplicada entre scopes (emitBody). Dice
+// «en rojo» y no «piden revisión»: el KPI del dashboard con ese nombre cuenta también el ámbar.
+try {
+  const red = await overviewRed;
+  if (Array.isArray(red) && red.length) {
+    const n = red.length;
+    process.stdout.write(`
+overview: ${n} ${n === 1 ? 'zona' : 'zonas'} en rojo (${red.join(', ')}) — \`/overview scan\`
+`);
+  }
+} catch { /* el aviso nunca frena el arranque */ }
 
 // Git required: version control is the substrate the SDD chain + ship guard assume.
 // If the project is not under git, push for it once per session. Persist the user's

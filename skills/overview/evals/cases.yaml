@@ -1,0 +1,52 @@
+skill: overview
+
+should_trigger:
+  - prompt: "¿Qué zonas del proyecto piden revisión ahora mismo?"
+    why: "Pregunta directa por el estado de revisión por zonas."
+  - prompt: "Dame el overview del proyecto: qué está cubierto y qué falta por revisar."
+    why: "Disparador directo de overview."
+  - prompt: "Hemos mergeado dos ramas, ¿lo nuevo tiene revisión de seguridad o no?"
+    why: "Cobertura por contenido tras un merge: es el cálculo de scan."
+  - prompt: "Registra que acabo de pasar security-scan sobre esta PR."
+    why: "Registrar una revisión es el modo record."
+  - prompt: "Project overview: which areas are stale against their review cadence?"
+    why: "Antigüedad frente a la cadencia, por zona."
+  - prompt: "Vamos a empezar proyecto: aquí tienes la spec y dos documentos del cliente, ¿qué falta antes de construir?"
+    why: "Arranque con fuentes que aterrizar: es el modo start."
+  - prompt: "Bájame a tierra este proyecto: qué accesos tenemos, qué stack y qué hay que decidir."
+    why: "Lo que hacía bajar-a-tierra ahora es start."
+  - prompt: "Start a project overview for this repo: seed the review zones and ask me the senior questions."
+    why: "Sembrar zonas y recorrer el banco por rondas es start."
+  - prompt: "Ábreme el overview del proyecto en el navegador, con los cuadrados de cada zona."
+    why: "Ver el estado de revisión en el HTML es el modo show."
+
+should_not_trigger:
+  - prompt: "Haz una auditoría de seguridad completa alineada con SOC 2."
+    route_to: "hardening"
+    why: "La auditoría por zonas con hallazgos es de hardening, no de overview."
+  - prompt: "Pasa un escaneo rápido de seguridad sobre este diff."
+    route_to: "security-scan"
+    why: "Escanear un diff es de security-scan; overview solo registra que se pasó."
+  - prompt: "Hazme un dashboard de ventas con las métricas del trimestre."
+    route_to: "dashboard"
+    why: "Un dashboard de datos de negocio no es el estado de revisión del proyecto."
+  - prompt: "Revisa el código de esta rama frente a main."
+    route_to: "code-review"
+    why: "Revisar el código es de code-review; overview no revisa, coordina."
+
+  - prompt: "Interrógame sin piedad sobre este plan de migración antes de que lo ejecute."
+    route_to: "grilling"
+    why: "Poner a prueba un plan concreto es grilling; start solo usa su método de rondas."
+
+capability:
+  - scenario: "Una rama añade un endpoint después de la última revisión de seguridad y el usuario pide el estado."
+    must_include:
+      - "blob sha"
+      - "red"
+      - "security-scan"
+  - scenario: "El usuario arranca un proyecto con una spec que dice que hay acceso a la base del cliente, sin credenciales en el equipo y sin frontend."
+    must_include:
+      - "overview.json"
+      - "hiddenZones"
+      - "untested"
+      - "frontend"
