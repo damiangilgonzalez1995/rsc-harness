@@ -14,7 +14,11 @@ try {
   const m = typeof hook.prompt === 'string' ? hook.prompt.match(/^\s*\/([^\s]+)(?:\s+([\s\S]*))?$/) : null;
   // El id se valida en el motor contra ^[a-z0-9:_-]+$ antes de tocar un nombre de fichero.
   if (m) {
-    const once = !hook.session_id || !hook.prompt_id || claimOnce(`ovp:${hook.session_id}:${hook.prompt_id}`);
+    // rsc cableado en dos scopes dispara esto dos veces por prompt. prompt_id es único por turno e
+    // igual en los dos; Claude Code antiguo no lo manda, y entonces la clave sale del texto (como en
+    // userprompt-gate.mjs).
+    const turnKey = hook.prompt_id || `p${hook.prompt.length}:${hook.prompt.slice(0, 64)}`;
+    const once = !hook.session_id || claimOnce(`overview-prompt:${hook.session_id}:${turnKey}`);
     if (once) {
       const { hookRecord } = await import('./overview.mjs');
       hookRecord({ root, skill: m[1], text: m[2] || '' });
