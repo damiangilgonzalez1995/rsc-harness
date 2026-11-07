@@ -183,6 +183,19 @@ test('la misma llamada vista desde dos scopes registra una sola revisión', () =
   assert.equal(reviewsOf(root).length, 1);
 });
 
+test('el mismo prompt sin prompt_id, visto desde dos scopes, registra una sola revisión', () => {
+  // Claude Code antiguo no manda prompt_id: la clave sale del texto del prompt y de la sesión.
+  const root = project();
+  const input = { session_id: 's-sin-id', prompt: '/security-scan global' };
+  const markers = env();
+  for (let i = 0; i < 2; i += 1) {
+    spawnSync('node', [join(root, '.rsc', 'overview-prompt-hook.mjs'), root], {
+      cwd: root, encoding: 'utf8', windowsHide: true, env: markers, input: JSON.stringify(input),
+    });
+  }
+  assert.equal(reviewsOf(root).length, 1);
+});
+
 // ── el cableado ───────────────────────────────────────────────────────────────────────────
 
 test('wireHook deja el motor y los dos hooks como hermanos en .rsc/', () => {

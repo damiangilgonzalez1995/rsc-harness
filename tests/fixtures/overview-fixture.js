@@ -73,7 +73,13 @@ export const DASHBOARD_CONFIG = {
       checks: [{ id: 'server-validation', label: 'Validación en el servidor', skill: 'secure-coding', status: 'fail', note: '1 ruta' }] },
     { id: 'frontend', label: 'Frontend', paths: ['web/**'], reviewSkills: ['code-review'], cadenceDays: 30, checks: [] },
     { id: 'database', label: 'Base de datos', paths: ['db/**'], reviewSkills: ['rls-review'], cadenceDays: 30, checks: [] },
-    { id: 'docs', label: 'Documentación', paths: ['guide/**'], reviewSkills: ['docs-review'], cadenceDays: 30, checks: [] },
+    { id: 'docs', label: 'Documentación', paths: ['guide/**'], reviewSkills: ['docs-review'], cadenceDays: 30,
+      checks: [{ id: 'readme-commands', label: 'Los comandos del README existen', status: 'unknown', date: '2026-11-05' }] },
+  ],
+  // Lo que deja el subagente de `overview scan`: una verificación por zona y fecha.
+  verifications: [
+    { zone: 'docs', date: '2026-11-05', agent: 'overview-verifier', ok: false, notes: ['guide/intro.md cita `npm run dev`, que no está en package.json'] },
+    { zone: 'api-endpoints', date: '2026-11-05', agent: 'overview-verifier', ok: true, notes: [] },
   ],
   questions: [
     { id: 'multitenant', zone: 'database', text: '¿Multitenant?', state: 'open' },

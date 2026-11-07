@@ -13,7 +13,7 @@
 //
 // Estado calculado (contrato estable para el dashboard; todo va en .rsc/overview/, fuera de git):
 //
-// state.json = {
+// state.json (solo el scan completo lo escribe) = {
 //   version: 1, generatedAt: ISO, fast: bool, branch, commit, reviews: <nº de revisiones>,
 //   kpis: {
 //     health: 0-100,                       // media de zones[].health ponderada por nº de archivos
@@ -27,19 +27,25 @@
 //     id, label, reviewSkills: [id], cadenceDays: n|null, checks: [...],   // checks tal cual del config
 //     files: n, covered: n, coverage: 0..1, uncovered: [path],
 //     uncoveredEndpoints: [{ method, route, file, line, stack: 'fastapi'|'express'|'next' }],
+//     uncoveredWeighty: [{ kind: 'table'|'auth', file }],   // de peso sin cubrir (también en --fast)
 //     lastReviewAt: ISO|null, ageDays: n|null, reviews: n,
 //     reviewHistory: [{ skill, at, branch, scope, pr: n|null, file, coveredNow: n }],  // más reciente primero
 //     recommendedSkill: id|null,           // la reviewSkill nunca lanzada o la de revisión más antigua
+//     lastVerification: { date, agent, ok, notes: [], ageDays } | null,   // del subagente de `scan`
 //     health: 0-100,
 //     color: 'green'|'amber'|'red'|'never',
 //   }],
+//   verifications: [{ zone, date, agent, ok, notes: [] }],   // las de zona de overview.json
 // }
+//
+// checks[] viaja tal cual; el subagente de `scan` le pone status 'pass'|'fail'|'unknown' y date.
 //
 // history.json = [{ week: 'YYYY-Www' (semana ISO, UTC), health: 0-100, commits: n }]  // por semana,
 //   ordenado; un scan completo sustituye la entrada de su semana. --fast no la toca.
 //
 // --fast (aviso de sesión): mismos colores por cobertura y edad, pero sin detectar endpoints, sin
-// merges ni `gh` para la PR (solo el campo `pr` de las revisiones) y sin escribir history.json.
+// merges ni `gh` para la PR (solo el campo `pr` de las revisiones) y sin escribir nada: ni
+// state.json ni history.json. Solo devuelve el estado.
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, realpathSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -52,11 +58,12 @@ const STATE_REL = ['.rsc', 'overview', 'state.json'];
 const HISTORY_REL = ['.rsc', 'overview', 'history.json'];
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-// Umbrales de color. Por debajo de RED_BELOW la zona tiene demasiado código nuevo o cambiado sin
-// cubrir; entre RED_BELOW y GREEN_FROM pide revisión pero no es urgente. La edad sola, con todo
-// cubierto, nunca pasa de ámbar: no se pide revisar código intacto.
+// Umbrales de color. Por debajo de RED_BELOW falta más de la mitad: rojo aunque nada pese. Entre
+// RED_BELOW y GREEN_FROM pide revisión pero no es urgente. El rojo es sobre todo para lo que pesa
+// (endpoints, tablas, auth sin cubrir; ver WEIGHTY_DETECTORS). La edad sola, con todo cubierto,
+// nunca pasa de ámbar: no se pide revisar código intacto.
 export const GREEN_FROM = 0.9;
-export const RED_BELOW = 0.8;
+export const RED_BELOW = 0.5;
 
 // git siempre sin shell y con argumentos en array: el nombre de skill y el prompt son datos.
 function git(root, args) {
@@ -115,16 +122,28 @@ function currentFiles(root) {
     if (!hasHead || dirty.has(path)) toHash.push(path); else blobs.set(path, sha);
   }
   for (const path of untracked) if (!excluded(path)) toHash.push(path);
-  if (toHash.length) {
-    const r = spawnSync('git', ['hash-object', '--stdin-paths'], {
-      cwd: root, input: toHash.join('\n') + '\n', encoding: 'utf8', windowsHide: true, maxBuffer: 64 * 1024 * 1024,
-    });
-    if (r.status === 0) {
-      const shas = r.stdout.split('\n').filter(Boolean);
-      toHash.forEach((p, i) => { if (shas[i]) blobs.set(p, shas[i]); });
-    }
-  }
+  hashWorkingFiles(root, toHash, blobs);
   return blobs;
+}
+
+// Hashea del árbol de trabajo en una sola llamada. `--stdin-paths` separa por líneas, así que una
+// ruta con salto de línea se ignora. Si git falla (un repo anidado sale como `dir/` y lo tumba
+// entero) o el número de shas no cuadra, se hashea archivo por archivo y se salta lo que falle.
+function hashWorkingFiles(root, paths, blobs) {
+  const toHash = paths.filter((p) => !/[\r\n]/.test(p));
+  if (!toHash.length) return;
+  const r = spawnSync('git', ['hash-object', '--stdin-paths'], {
+    cwd: root, input: toHash.join('\n') + '\n', encoding: 'utf8', windowsHide: true, maxBuffer: 64 * 1024 * 1024,
+  });
+  const shas = r.status === 0 ? r.stdout.split('\n').filter(Boolean) : [];
+  if (shas.length === toHash.length) {
+    toHash.forEach((p, i) => blobs.set(p, shas[i]));
+    return;
+  }
+  for (const p of toHash) {
+    const sha = (git(root, ['hash-object', '--', p]) || '').trim();
+    if (sha) blobs.set(p, sha);
+  }
 }
 
 // Rama principal: origin/HEAD, y si no, main o master.
@@ -279,6 +298,33 @@ function detectEndpoints(path, src) {
 const endpointKey = (e) => `${e.method} ${e.route}`;
 const mayHaveEndpoints = (path) => ENDPOINT_DETECTORS.some((d) => d.files.test(path));
 
+// Archivos de peso además de los endpoints: tablas y migraciones, y auth. Sin cubrir ponen la zona
+// en rojo. Igual que los endpoints, se amplía con un detector más: `kind` y `test(path, src)`, donde
+// `src()` lee el fuente solo si hace falta. El primero que acierta da el tipo.
+const TABLE_PATH = /(?:^|\/)(?:migrations|alembic\/versions)\/|(?:^|\/)prisma\/schema\.prisma$/;
+// Auth por nombre de archivo o carpeta. La palabra tiene que empezar en un borde (inicio, signo o
+// camelCase) para que `urls.py` no cuente como `rls`; estilos, docs e imágenes nunca son auth.
+const AUTH_WORD = /(?:^|[^a-z])(?:o?auth|login|session|jwt|token|permission|rls|polic(?:y|ies))/;
+const NOT_CODE = /\.(?:css|scss|sass|less|md|mdx|txt|rst|svg|png|jpe?g|gif|webp|ico)$/i;
+export const WEIGHTY_DETECTORS = [
+  {
+    kind: 'table', // CREATE/ALTER TABLE en .sql, carpetas de migraciones, prisma y op.create_table de alembic
+    test: (path, src) => TABLE_PATH.test(path)
+      || (/\.sql$/i.test(path) && /\b(?:create|alter)\s+table\b/i.test(src()))
+      || (/\.py$/.test(path) && /\bop\.create_table\s*\(/.test(src())),
+  },
+  {
+    kind: 'auth',
+    test: (path) => !NOT_CODE.test(path) && AUTH_WORD.test(path.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()),
+  },
+];
+/** Tipo de peso de un archivo ('table' | 'auth') o null. `src` es una función que devuelve el fuente. */
+export function weightyKind(path, src = () => '') {
+  let cached;
+  const read = () => (cached ??= String(src() ?? ''));
+  return WEIGHTY_DETECTORS.find((d) => d.test(path, read))?.kind ?? null;
+}
+
 // Semana ISO 8601 en UTC: la semana es del año al que pertenece su jueves.
 export function isoWeek(date) {
   const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
@@ -289,13 +335,13 @@ export function isoWeek(date) {
   return { label: `${d.getUTCFullYear()}-W${String(week).padStart(2, '0')}`, monday: new Date(d.getTime() - 3 * DAY_MS) };
 }
 
-// Salud de una zona: la cobertura, con techo de 80 si la revisión ha caducado y de 40 si entran
-// endpoints sin cubrir. Una zona nunca revisada vale 0.
-function zoneHealth({ reviewed, coverage, stale, newEndpoints }) {
+// Salud de una zona: la cobertura, con techo de 80 si la revisión ha caducado y de 40 si hay algo de
+// peso sin cubrir (endpoint nuevo, tabla o auth). Una zona nunca revisada vale 0.
+function zoneHealth({ reviewed, coverage, stale, weighty }) {
   if (!reviewed) return 0;
   let h = Math.round(coverage * 100);
   if (stale) h = Math.min(h, 80);
-  if (newEndpoints) h = Math.min(h, 40);
+  if (weighty) h = Math.min(h, 40);
   return h;
 }
 
@@ -336,9 +382,32 @@ function writeHistory(root, now, health) {
   writeFileSync(file, JSON.stringify(weeks, null, 2) + '\n');
 }
 
-function colorOf({ reviewed, total, coverage, ageDays, cadenceDays, newEndpoints }) {
+// Rojo = lo que pesa: algo de peso sin cubrir o menos de la mitad cubierta. Ámbar = cobertura
+// incompleta o fuera de cadencia. Un CSS cambiado nunca pasa de ámbar por sí solo.
+// Verificaciones de zona que deja el subagente de `overview scan` en overview.json:
+// { zone, date, agent, ok, notes[] }. Las de `start` (acceso a sistemas: { what, result, ... })
+// comparten el array pero no son de zona, y se ignoran aquí.
+function zoneVerifications(cfg) {
+  const list = Array.isArray(cfg.verifications) ? cfg.verifications : [];
+  return list
+    .filter((v) => v && typeof v.zone === 'string' && typeof v.ok === 'boolean' && typeof v.date === 'string')
+    .map((v) => ({
+      zone: v.zone, date: v.date, agent: typeof v.agent === 'string' ? v.agent : null, ok: v.ok,
+      notes: Array.isArray(v.notes) ? v.notes.filter((n) => typeof n === 'string') : [],
+    }));
+}
+
+function lastVerificationOf(verifications, zoneId, now) {
+  const latest = verifications.filter((v) => v.zone === zoneId).sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))[0];
+  if (!latest) return null;
+  const at = Date.parse(latest.date);
+  const { zone: _zone, ...rest } = latest;
+  return { ...rest, ageDays: Number.isNaN(at) ? null : Math.max(0, Math.floor((now.getTime() - at) / DAY_MS)) };
+}
+
+function colorOf({ reviewed, total, coverage, ageDays, cadenceDays, weighty }) {
   if (!reviewed) return 'never';
-  if (newEndpoints) return 'red';
+  if (weighty) return 'red';
   if (total === 0) return 'green';
   if (coverage < RED_BELOW) return 'red';
   if (coverage < GREEN_FROM) return 'amber';
@@ -355,6 +424,7 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
   const cfg = readConfig(root);
   if (!cfg) return null;
   const reviews = readReviews(root);
+  const verifications = zoneVerifications(cfg);
   const blobs = currentFiles(root);
   const full = !fast;
 
@@ -371,21 +441,21 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
     return nowCache.get(p);
   };
   const keysInBlob = (p, sha) => {
-    const k = `${p}\0${sha}`;
-    if (!blobCache.has(k)) blobCache.set(k, new Set(detectEndpoints(p, git(root, ['cat-file', 'blob', sha]) || '').map(endpointKey)));
-    return blobCache.get(k);
+    const cacheKey = `${p}\0${sha}`;
+    if (!blobCache.has(cacheKey)) blobCache.set(cacheKey, new Set(detectEndpoints(p, git(root, ['cat-file', 'blob', sha]) || '').map(endpointKey)));
+    return blobCache.get(cacheKey);
   };
 
   const zones = cfg.zones.map((z) => {
     const skills = Array.isArray(z.reviewSkills) ? z.reviewSkills : [];
     const match = zoneMatcher(z);
-    const mine = reviews.filter((r) => skills.includes(r.skill) && (!Array.isArray(r.zones) || r.zones.includes(z.id)));
+    const zoneReviews = reviews.filter((r) => skills.includes(r.skill) && (!Array.isArray(r.zones) || r.zones.includes(z.id)));
     const paths = [...blobs.keys()].filter(match).sort();
     const uncovered = [];
     let covered = 0;
     let last = null;
     for (const p of paths) {
-      const hits = mine.filter((r) => r.files[p] === blobs.get(p));
+      const hits = zoneReviews.filter((r) => r.files[p] === blobs.get(p));
       if (!hits.length) { uncovered.push(p); continue; }
       covered += 1;
       for (const r of hits) if (!last || r.at > last) last = r.at;
@@ -394,25 +464,33 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
     // Endpoint nuevo sin cubrir: está en un archivo sin cubrir y no estaba en ninguna versión de ese
     // archivo que se revisara. Cambiar el cuerpo de una ruta ya revisada no la hace "nueva".
     const uncoveredEndpoints = [];
-    if (full && mine.length) {
+    if (full && zoneReviews.length) {
       for (const p of uncovered) {
         if (!mayHaveEndpoints(p)) continue;
         const seen = new Set();
-        for (const r of mine) if (typeof r.files[p] === 'string') for (const k of keysInBlob(p, r.files[p])) seen.add(k);
+        for (const r of zoneReviews) if (typeof r.files[p] === 'string') for (const key of keysInBlob(p, r.files[p])) seen.add(key);
         for (const e of endpointsNow(p)) if (!seen.has(endpointKey(e))) uncoveredEndpoints.push(e);
       }
+    }
+
+    // Tablas, migraciones y auth sin cubrir: por la ruta y, para .sql y alembic, por el contenido de
+    // hoy. Barato (solo archivos sin cubrir), así que también corre en --fast.
+    const uncoveredWeighty = [];
+    for (const p of uncovered) {
+      const kind = weightyKind(p, () => { try { return readFileSync(join(root, p), 'utf8'); } catch { return ''; } });
+      if (kind) uncoveredWeighty.push({ kind, file: p });
     }
 
     const total = paths.length;
     const coverage = total ? covered / total : 1;
     const ageDays = last ? Math.floor((now.getTime() - Date.parse(last)) / DAY_MS) : null;
     const cadenceDays = Number(z.cadenceDays) || null;
-    const reviewed = mine.length > 0;
-    const newEndpoints = uncoveredEndpoints.length > 0;
+    const reviewed = zoneReviews.length > 0;
+    const weighty = uncoveredEndpoints.length > 0 || uncoveredWeighty.length > 0;
     const stale = ageDays === null || Boolean(cadenceDays && ageDays > cadenceDays);
 
     const lastBySkill = new Map(skills.map((s) => [s, null]));
-    for (const r of mine) if (!lastBySkill.get(r.skill) || r.at > lastBySkill.get(r.skill)) lastBySkill.set(r.skill, r.at);
+    for (const r of zoneReviews) if (!lastBySkill.get(r.skill) || r.at > lastBySkill.get(r.skill)) lastBySkill.set(r.skill, r.at);
     // Skill recomendada: la primera que nunca se lanzó en esta zona y, si todas se lanzaron, la de
     // revisión más antigua.
     const order = [...lastBySkill];
@@ -420,7 +498,7 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
     const oldest = order.reduce((best, cur) => (!best || cur[1] < best[1] ? cur : best), null);
     const recommendedSkill = (neverRun || oldest || [null])[0];
 
-    const reviewHistory = [...mine].sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0)).map((r) => ({
+    const reviewHistory = [...zoneReviews].sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0)).map((r) => ({
       skill: r.skill,
       at: r.at,
       branch: r.branch ?? null,
@@ -441,13 +519,15 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
       coverage,
       uncovered,
       uncoveredEndpoints,
+      uncoveredWeighty,
       lastReviewAt: last,
       ageDays,
-      reviews: mine.length,
+      reviews: zoneReviews.length,
       reviewHistory,
       recommendedSkill,
-      health: zoneHealth({ reviewed, coverage, stale: reviewed && stale, newEndpoints }),
-      color: colorOf({ reviewed, total, coverage, ageDays, cadenceDays, newEndpoints }),
+      lastVerification: lastVerificationOf(verifications, z.id, now),
+      health: zoneHealth({ reviewed, coverage, stale: reviewed && stale, weighty }),
+      color: colorOf({ reviewed, total, coverage, ageDays, cadenceDays, weighty }),
     };
   });
 
@@ -473,11 +553,16 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
     reviews: reviews.length,
     kpis,
     zones,
+    verifications,
   };
-  const out = join(root, ...STATE_REL);
-  mkdirSync(join(out, '..'), { recursive: true });
-  writeFileSync(out, JSON.stringify(state, null, 2) + '\n');
-  if (full) writeHistory(root, now, health);
+  // El rápido no escribe nada: corre en el Worker del arranque, que puede cortarlo a medias, y su
+  // estado (sin endpoints) no debe acabar en el dashboard.
+  if (full) {
+    const out = join(root, ...STATE_REL);
+    mkdirSync(join(out, '..'), { recursive: true });
+    writeFileSync(out, JSON.stringify(state, null, 2) + '\n');
+    writeHistory(root, now, health);
+  }
   return state;
 }
 
@@ -500,14 +585,17 @@ const scriptJson = (v) => JSON.stringify(v)
   .replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
 const readJson = (p) => { try { return JSON.parse(readFileSync(p, 'utf8')); } catch { return null; } };
 
-const TONE = { red: 'bad', amber: 'mid', green: 'ok', never: 'never' };
-const TONE_LABEL = { red: 'pide revisión', amber: 'se va alejando', green: 'al día', never: 'nunca revisado' };
-const URGENCY = { red: 4, never: 3, amber: 2, green: 1 };
-const BAR_FILL = { ok: '#8fd1a8', mid: '#efc27c', bad: '#f0a49b', never: '#d8d5ce' };
-const TONE_COLOR = { ok: 'green', mid: 'amber', bad: 'red', never: 'never' };
+// Una fila por color: la clase CSS (tone), el texto, la urgencia para ordenar y el relleno de las
+// barras. El orden de las claves es el de la leyenda.
+const COLORS = {
+  green: { tone: 'ok', label: 'al día', urgency: 1, fill: '#8fd1a8' },
+  amber: { tone: 'mid', label: 'se va alejando', urgency: 2, fill: '#efc27c' },
+  red: { tone: 'bad', label: 'pide revisión', urgency: 4, fill: '#f0a49b' },
+  never: { tone: 'never', label: 'nunca revisado', urgency: 3, fill: '#d8d5ce' },
+};
+const colorOfZone = (z) => COLORS[z.color] || COLORS.never;
 const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 
-const tone = (z) => TONE[z.color] || 'never';
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 const agoLong = (d) => (d === null || d === undefined ? '—' : d <= 0 ? 'hoy' : d === 1 ? 'ayer' : `hace ${d} días`);
 const agoShort = (d) => (d === null || d === undefined ? '—' : d <= 0 ? 'hoy' : d === 1 ? 'ayer' : `${d} d`);
@@ -521,69 +609,89 @@ function squareText(z, big) {
   const files = z.files || 0;
   const unc = (z.uncovered || []).length;
   const eps = (z.uncoveredEndpoints || []).length;
+  const heavy = (z.uncoveredWeighty || []).length;
   const pct = Math.round((z.coverage ?? 0) * 100);
   const lastSkill = z.reviewHistory?.[0]?.skill || null;
-  const skAge = `${z.recommendedSkill || lastSkill} · ${agoLong(z.ageDays)}`;
+  const skillAge = `${z.recommendedSkill || lastSkill} · ${agoLong(z.ageDays)}`;
   if (z.color === 'never') {
-    return { when: 'nunca', meta: files ? `${plural(files, 'archivo', 'archivos')} sin revisar` : 'sin archivos todavía', sk: z.recommendedSkill };
+    return { when: 'nunca', meta: files ? `${plural(files, 'archivo', 'archivos')} sin revisar` : 'sin archivos todavía', skill: z.recommendedSkill };
   }
   if (eps) {
     return big
-      ? { when: `${eps} sin revisar`, meta: `${eps === 1 ? 'endpoint nuevo' : 'endpoints nuevos'} · ${plural(files, 'archivo', 'archivos')} en la zona`, sk: skAge }
-      : { when: plural(eps, 'ruta', 'rutas'), meta: eps === 1 ? 'nueva sin revisar' : 'nuevas sin revisar', sk: z.recommendedSkill };
+      ? { when: `${eps} sin revisar`, meta: `${eps === 1 ? 'endpoint nuevo' : 'endpoints nuevos'} · ${plural(files, 'archivo', 'archivos')} en la zona`, skill: skillAge }
+      : { when: plural(eps, 'ruta', 'rutas'), meta: eps === 1 ? 'nueva sin revisar' : 'nuevas sin revisar', skill: z.recommendedSkill };
+  }
+  if (heavy) {
+    const kinds = [...new Set(z.uncoveredWeighty.map((w) => WEIGHTY_LABEL[w.kind] || w.kind))].join(', ');
+    return big
+      ? { when: `${heavy} sin revisar`, meta: `de peso (${kinds}) · ${plural(files, 'archivo', 'archivos')} en la zona`, skill: skillAge }
+      : { when: plural(heavy, 'archivo', 'archivos'), meta: `de peso sin revisar`, skill: z.recommendedSkill };
   }
   if (unc && z.color !== 'green') {
     return big
-      ? { when: `${unc} sin cubrir`, meta: `de ${plural(files, 'archivo', 'archivos')} · ${pct} % cubierto`, sk: skAge }
-      : { when: `${z.covered}/${files}`, meta: 'archivos cubiertos', sk: z.recommendedSkill };
+      ? { when: `${unc} sin cubrir`, meta: `de ${plural(files, 'archivo', 'archivos')} · ${pct} % cubierto`, skill: skillAge }
+      : { when: `${z.covered}/${files}`, meta: 'archivos cubiertos', skill: z.recommendedSkill };
   }
   if (z.color === 'amber') {
-    return { when: big ? agoLong(z.ageDays) : agoShort(z.ageDays), meta: z.cadenceDays ? `toca cada ${z.cadenceDays} d` : 'sin revisión vigente', sk: z.recommendedSkill };
+    return { when: big ? agoLong(z.ageDays) : agoShort(z.ageDays), meta: z.cadenceDays ? `toca cada ${z.cadenceDays} d` : 'sin revisión vigente', skill: z.recommendedSkill };
   }
   return {
     when: big ? agoLong(z.ageDays) : agoShort(z.ageDays),
     meta: files ? `${plural(files, 'archivo', 'archivos')} al día` : 'sin archivos',
-    sk: lastSkill,
+    skill: lastSkill,
   };
 }
 
 // 2×2 por peso (urgencia × archivos): uno por cada 5 zonas, entre 1 y 3. El resto, por urgencia.
 function layoutZones(zones) {
-  const weight = (z) => (URGENCY[z.color] || 1) * Math.max(z.files || 0, 1);
+  const weight = (z) => colorOfZone(z).urgency * Math.max(z.files || 0, 1);
   const nBig = zones.length ? Math.min(3, Math.max(1, Math.floor(zones.length / 5))) : 0;
   const ranked = zones.map((z, i) => ({ z, i })).sort((a, b) => weight(b.z) - weight(a.z) || a.i - b.i);
   const big = new Set(ranked.slice(0, nBig).map((r) => r.z.id));
   const rest = zones.map((z, i) => ({ z, i })).filter((r) => !big.has(r.z.id))
-    .sort((a, b) => (URGENCY[b.z.color] || 0) - (URGENCY[a.z.color] || 0) || a.i - b.i);
+    .sort((a, b) => colorOfZone(b.z).urgency - colorOfZone(a.z).urgency || a.i - b.i);
   return [...ranked.slice(0, nBig).map((r) => ({ z: r.z, big: true })), ...rest.map((r) => ({ z: r.z, big: false }))];
 }
 
+// El cuadrado de docs dice además si los docs cuadran y cuándo pasó el agente (historia 38).
+function docsLine(z) {
+  if (z.id !== 'docs') return null;
+  const v = z.lastVerification;
+  if (!v) return { text: 'docs sin verificar', day: '', tone: 'never' };
+  const d = new Date(v.date);
+  const day = Number.isNaN(d.getTime()) ? v.date : `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}`;
+  return { text: v.ok ? 'cuadran' : 'no cuadran', day, tone: v.ok ? 'ok' : 'bad' };
+}
+
 function squareHtml({ z, big }) {
-  const t = squareText(z, big);
-  const label = `${z.label}: ${TONE_LABEL[z.color] || ''}. ${t.when}, ${t.meta}. Abrir detalle`;
-  return `<a class="sq${big ? ' x2' : ''} ${tone(z)}" href="#zone=${esc(z.id)}" data-zone="${esc(z.id)}" aria-label="${esc(label)}">`
-    + `<span class="n">${esc(z.label)}</span><span class="b"><span class="when">${esc(t.when)}</span>`
-    + `<span class="meta">${esc(t.meta)}</span>${big && t.sk ? `<span class="sk">${esc(t.sk)}</span>` : ''}</span></a>`;
+  const text = squareText(z, big);
+  const docs = docsLine(z);
+  const label = `${z.label}: ${colorOfZone(z).label}. ${text.when}, ${text.meta}.${docs ? ` Docs: ${docs.text}${docs.day ? `, ${docs.day}` : ''}.` : ''} Abrir detalle`;
+  return `<a class="sq${big ? ' x2' : ''} ${colorOfZone(z).tone}" href="#zone=${esc(z.id)}" data-zone="${esc(z.id)}" aria-label="${esc(label)}">`
+    + `<span class="n">${esc(z.label)}</span><span class="b"><span class="when">${esc(text.when)}</span>`
+    // En 1×1 no caben las dos líneas: la de docs sustituye a `meta`, que sigue en el aria-label.
+    + `${docs && !big ? '' : `<span class="meta">${esc(text.meta)}</span>`}${big && text.skill ? `<span class="sk">${esc(text.skill)}</span>` : ''}`
+    + `${docs ? `<span class="vf"><i class="dot ${docs.tone}"></i><span>${esc(docs.text)}${docs.day ? ` · <span class="d">${esc(docs.day)}</span>` : ''}</span></span>` : ''}</span></a>`;
 }
 
 function kpisHtml(state, history) {
-  const k = state.kpis || {};
+  const kpis = state.kpis || {};
   const weeks = Array.isArray(history) ? history : [];
   const prev = weeks.length > 1 ? weeks[weeks.length - 2] : null;
   let trend = '';
-  if (prev && Number.isFinite(prev.health) && prev.health !== k.health) {
-    const up = k.health > prev.health;
+  if (prev && Number.isFinite(prev.health) && prev.health !== kpis.health) {
+    const up = kpis.health > prev.health;
     trend = ` <span class="tr ${up ? 'up' : 'down'}" title="${esc(`semana anterior: ${prev.health}`)}">${up ? '↑' : '↓'}</span>`;
   }
-  const need = (k.zonesNeedingReview || []).length;
-  const eps = k.uncoveredEndpoints || 0;
-  const pr = k.lastCoveredPr && Number.isInteger(k.lastCoveredPr.number) ? `PR #${k.lastCoveredPr.number}` : '—';
+  const need = (kpis.zonesNeedingReview || []).length;
+  const eps = kpis.uncoveredEndpoints || 0;
+  const pr = kpis.lastCoveredPr && Number.isInteger(kpis.lastCoveredPr.number) ? `PR #${kpis.lastCoveredPr.number}` : '—';
   const card = (id, title, value, extra = '', cls = '') => `<div class="kpi" data-kpi="${id}"><small>${title}</small><b${cls ? ` class="${cls}"` : ''}>${esc(value)}${extra}</b></div>`;
   return '<section class="top" aria-label="Indicadores">'
-    + card('health', 'Salud global', k.health ?? '—', `${trend}<span class="of">/100</span>`)
+    + card('health', 'Salud global', kpis.health ?? '—', `${trend}<span class="of">/100</span>`)
     + card('zones', 'Zonas que piden revisión', need, '', need ? 'warn' : '')
-    + card('uncovered', 'Archivos sin cubrir', k.uncoveredFiles ?? 0, eps ? `<span class="of">· ${esc(plural(eps, 'endpoint', 'endpoints'))}</span>` : '')
-    + card('questions', 'Preguntas abiertas', k.openQuestions ?? 0)
+    + card('uncovered', 'Archivos sin cubrir', kpis.uncoveredFiles ?? 0, eps ? `<span class="of">· ${esc(plural(eps, 'endpoint', 'endpoints'))}</span>` : '')
+    + card('questions', 'Preguntas abiertas', kpis.openQuestions ?? 0)
     + card('pr', 'Revisado hasta', pr, '', 'mono')
     + '</section>';
 }
@@ -606,7 +714,7 @@ function healthChart(history) {
     return `<path d="M${x0} ${base}V${yr}Q${x0} ${y} ${x0 + r} ${y}H${-x0 - r}Q${-x0} ${y} ${-x0} ${yr}V${base}Z" fill="#dedad1"/>`;
   };
   const last = weeks.length - 1;
-  const wk = (w) => String(w.week).replace(/^\d{4}-/, '');
+  const weekLabel = (w) => String(w.week).replace(/^\d{4}-/, '');
   const col = (w, i) => {
     const y = hy(w.health);
     const next = weeks[i + 1];
@@ -616,7 +724,7 @@ function healthChart(history) {
       + `<svg x="50%" width="1" height="${H}" overflow="visible">${bar(c)}`
       + `<circle cx="0" cy="${y.toFixed(1)}" r="${i === last ? 4 : 2.5}" fill="#1f7a45" stroke="#fff" stroke-width="${i === last ? 2 : 1}"/>`
       + (i === last ? `<text class="val" x="-9" y="${(y - 8).toFixed(1)}" text-anchor="end">${esc(w.health)}</text>` : '')
-      + `<text class="wk" x="0" y="${H - 3}" text-anchor="middle">${esc(wk(w))}</text></svg>`
+      + `<text class="wk" x="0" y="${H - 3}" text-anchor="middle">${esc(weekLabel(w))}</text></svg>`
       + `<rect class="hit" width="100%" height="${H}"><title>${esc(`${w.week} · salud ${w.health} · ${plural(c, 'commit', 'commits')}`)}</title></rect></svg>`;
   };
   return `<svg class="chart" width="100%" height="${H}" role="img" aria-label="${esc(`Salud global y commits de las últimas ${plural(weeks.length, 'semana', 'semanas')}`)}">`
@@ -644,8 +752,8 @@ function reviewsChart(state) {
   for (const z of zones) if (z.color !== 'green' && z.recommendedSkill && !count.has(z.recommendedSkill)) count.set(z.recommendedSkill, 0);
   const worst = (skill) => {
     const zs = zones.filter((z) => (z.reviewSkills || []).includes(skill));
-    const z = zs.sort((a, b) => (URGENCY[b.color] || 0) - (URGENCY[a.color] || 0))[0];
-    return z ? tone(z) : 'never';
+    const z = zs.sort((a, b) => colorOfZone(b).urgency - colorOfZone(a).urgency)[0];
+    return z ? colorOfZone(z) : COLORS.never;
   };
   const rows = [...count].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1));
   if (!rows.length) return '<p class="empty">Ninguna revisión este mes.</p>';
@@ -657,12 +765,12 @@ function reviewsChart(state) {
   // Sin viewBox: etiquetas en px fijos y la barra en % del ancho (como mucho la mitad del total).
   return `<svg class="chart" width="100%" height="${H}" role="img" aria-label="Revisiones lanzadas este mes por skill">`
     + shown.map(([skill, n], i) => {
-      const y = i * rh; const pct = ((n / max) * 50).toFixed(1); const t = worst(skill);
+      const y = i * rh; const pct = ((n / max) * 50).toFixed(1); const worstColor = worst(skill);
       return `<g><text x="0" y="${y + 16}">${esc(label(skill))}</text>`
         + `<svg x="${x0}" y="${y}" width="100%" height="${rh}" overflow="visible">`
-        + (n ? `<rect y="6" width="${pct}%" height="12" rx="3" fill="${BAR_FILL[t]}"/>` : '')
+        + (n ? `<rect y="6" width="${pct}%" height="12" rx="3" fill="${worstColor.fill}"/>` : '')
         + `<text class="num" x="${pct}%" y="16" transform="translate(${n ? 6 : 0} 0)">${n}</text></svg>`
-        + `<rect class="hit" y="${y}" width="100%" height="${rh}"><title>${esc(`${skill}: ${plural(n, 'revisión', 'revisiones')} este mes · zonas: ${TONE_LABEL[TONE_COLOR[t]]}`)}</title></rect></g>`;
+        + `<rect class="hit" y="${y}" width="100%" height="${rh}"><title>${esc(`${skill}: ${plural(n, 'revisión', 'revisiones')} este mes · zonas: ${worstColor.label}`)}</title></rect></g>`;
     }).join('')
     + `</svg>${more > 0 ? `<p class="key">y ${plural(more, 'skill más', 'skills más')}</p>` : ''}`
     + '<p class="key">color: el peor estado de las zonas que revisa</p>';
@@ -670,15 +778,27 @@ function reviewsChart(state) {
 
 const CHECK_STATUS = {
   pass: ['ok', 'bien'], ok: ['ok', 'bien'], done: ['ok', 'bien'], fail: ['bad', 'falla'],
-  warn: ['mid', 'a medias'], partial: ['mid', 'a medias'], na: ['never', 'no aplica'],
+  warn: ['mid', 'a medias'], partial: ['mid', 'a medias'], na: ['never', 'no aplica'], unknown: ['never', 'sin saber'],
 };
+const verdict = (v) => (v.ok ? 'los docs cuadran' : 'los docs no cuadran');
+
+// La última pasada del subagente de docs y comprobaciones sobre la zona.
+function verificationHtml(v) {
+  if (!v) return '<p class="empty">Sin verificar: la rellena el subagente de <code>overview scan</code>.</p>';
+  const tone = v.ok ? 'ok' : 'bad';
+  const when = [fmtDate(v.date), agoLong(v.ageDays), v.agent].filter((s) => s && s !== '—').join(' · ');
+  return `<p class="vf"><i class="dot ${tone}"></i><em class="${tone}">${esc(verdict(v))}</em><small>${esc(when)}</small></p>`
+    + (v.notes.length ? `<ul class="list">${v.notes.slice(0, LIST_CAP).map((n) => `<li>${esc(n)}</li>`).join('')}</ul>` : '');
+}
 const LIST_CAP = 40;
+const WEIGHTY_LABEL = { table: 'tabla o migración', auth: 'auth' };
 
 function detailHtml(z) {
-  const t = tone(z);
+  const { tone, label: colorLabel } = colorOfZone(z);
   const files = z.files || 0;
   const unc = z.uncovered || [];
   const eps = z.uncoveredEndpoints || [];
+  const heavy = z.uncoveredWeighty || [];
   const checks = z.checks || [];
   const hist = z.reviewHistory || [];
   const others = (z.reviewSkills || []).filter((s) => s !== z.recommendedSkill);
@@ -691,19 +811,21 @@ function detailHtml(z) {
   const age = z.lastReviewAt ? `${agoLong(z.ageDays)}${z.cadenceDays ? ` · cada ${z.cadenceDays} d` : ''}` : 'nunca';
   const zid = esc(z.id);
   return `<aside class="detail" id="zone=${zid}" data-zone="${zid}" role="dialog" aria-labelledby="t-${zid}" tabindex="-1">`
-    + `<header><div><span class="pill ${t}">${esc(TONE_LABEL[z.color] || z.color)}</span><h2 id="t-${zid}">${esc(z.label)}</h2></div>`
+    + `<header><div><span class="pill ${tone}">${esc(colorLabel)}</span><h2 id="t-${zid}">${esc(z.label)}</h2></div>`
     + '<a class="close" href="#" aria-label="Cerrar detalle">×</a></header>'
     + `<dl class="facts"><div><dt>Cubiertos hoy</dt><dd>${esc(`${z.covered ?? 0} de ${files}`)}</dd></div>`
     + `<div><dt>Última revisión</dt><dd>${esc(age)}</dd></div><div><dt>Salud</dt><dd>${esc(z.health ?? '—')}</dd></div></dl>`
     + rec
     + (eps.length ? section('Endpoints nuevos sin cubrir', eps.length, `<ul class="list">${capped(eps, (e) => `<li><b class="m">${esc(e.method)}</b> <code>${esc(e.route)}</code><span class="p">${esc(`${e.file}:${e.line}`)}</span></li>`)}</ul>`) : '')
+    + (heavy.length ? section('De peso sin cubrir', heavy.length, `<ul class="list">${capped(heavy, (w) => `<li><b class="m">${esc(WEIGHTY_LABEL[w.kind] || w.kind)}</b> <span class="p">${esc(w.file)}</span></li>`)}</ul>`) : '')
     + section('Archivos sin cubrir', unc.length, unc.length
       ? `<ul class="list">${capped(unc, (p) => `<li><span class="p">${esc(p)}</span></li>`)}</ul>`
       : `<p class="empty">${files ? 'Todos revisados con el contenido que tienen hoy.' : 'La zona no tiene archivos todavía.'}</p>`)
+    + section('Última verificación', 0, verificationHtml(z.lastVerification))
     + section('Comprobaciones', checks.length, checks.length
       ? `<ul class="checks">${checks.map((c) => {
         const [ct, cl] = CHECK_STATUS[c.status] || ['never', c.status ? String(c.status) : 'sin comprobar'];
-        const sub = [c.skill, c.note].filter(Boolean).join(' · ');
+        const sub = [c.skill, c.note, c.date && fmtDate(c.date)].filter(Boolean).join(' · ');
         return `<li><i class="dot ${ct}"></i><span>${esc(c.label || c.id)}${sub ? `<small>${esc(sub)}</small>` : ''}</span><em class="${ct}">${esc(cl)}</em></li>`;
       }).join('')}</ul>`
       : '<p class="empty">Sin comprobaciones registradas: las rellena <code>overview scan</code>.</p>')
@@ -744,7 +866,7 @@ transition-property:box-shadow,scale;transition-duration:150ms;transition-timing
 .sq:active{scale:.96}
 .sq:focus-visible,.sq[aria-current]{outline:2px solid var(--ink);outline-offset:2px}
 .sq.x2{grid-column:span 2;grid-row:span 2;padding:14px}
-.sq .n{font-weight:650;font-size:12px;line-height:1.2;hyphens:auto;overflow-wrap:break-word;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.sq .n{font-weight:650;font-size:12px;line-height:1.2;hyphens:auto;overflow-wrap:break-word;flex:none;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .sq.x2 .n{font-size:17px}
 .sq .b{display:flex;flex-direction:column;gap:2px;min-width:0}
 .sq .when{font-size:18px;font-weight:700;line-height:1.15;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
@@ -811,6 +933,11 @@ background:var(--card);padding:18px 20px 28px;box-shadow:0 0 0 1px #0000000f,0 1
 em.ok{color:var(--ok-ink)}em.mid{color:var(--mid-ink)}em.bad{color:var(--bad-ink)}em.never{color:var(--ink3)}
 .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
 .dot.ok{background:var(--ok-ink)}.dot.mid{background:var(--mid-ink)}.dot.bad{background:var(--bad-ink)}.dot.never{background:var(--never-line)}
+.sq .vf{display:flex;align-items:baseline;gap:5px;margin-top:3px;font-size:10.5px;line-height:1.25;color:#00000099}
+.sq .vf .dot{flex:none;width:7px;height:7px}.sq .vf .d{white-space:nowrap}
+.detail .vf{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin:0}
+.vf em{font-style:normal;font-weight:600;background:none}
+.vf small{color:var(--ink2);font-size:11.5px}
 .hist li{display:grid;grid-template-columns:auto 1fr;gap:0 10px;padding:6px 0;border-top:1px solid #f0eee9}
 .hist span{color:var(--ink2);font-size:12px}
 .hist small{grid-column:2;color:var(--ink3);font-size:11.5px}
@@ -818,6 +945,8 @@ em.ok{color:var(--ok-ink)}em.mid{color:var(--mid-ink)}em.bad{color:var(--bad-ink
 @media (max-width:560px){
 .page{padding:16px 16px 32px}
 .kpi{flex-basis:calc(50% - 5px)}
+.sq{padding:8px}
+.sq .n{font-size:11.5px}
 .detail{top:auto;width:100%;max-height:86vh;border-radius:16px 16px 0 0;padding:16px 16px 28px}
 @keyframes slide-in{from{opacity:0;transform:translateY(24px)}}
 }
@@ -852,8 +981,8 @@ function dashboardHtml({ project, state, history }) {
   const meta = [state.branch && `rama ${state.branch}`, state.commit && String(state.commit).slice(0, 7),
     state.generatedAt && `generado ${fmtDate(state.generatedAt)}`, Number.isInteger(state.reviews) && plural(state.reviews, 'revisión', 'revisiones'),
     state.fast && 'cálculo rápido, sin endpoints'].filter(Boolean).join(' · ');
-  const legend = [['ok', 'al día', 'green'], ['mid', 'se va alejando', 'amber'], ['bad', 'pide revisión', 'red'], ['never', 'nunca revisado', 'never']]
-    .map(([cls, txt, c]) => `<span><i class="${cls}"></i>${txt} · ${counts[c]}</span>`).join('');
+  const legend = Object.entries(COLORS)
+    .map(([c, { tone, label }]) => `<span><i class="${tone}"></i>${label} · ${counts[c]}</span>`).join('');
   return `<!doctype html>
 <html lang="es">
 <head>
@@ -895,7 +1024,11 @@ export function render({ root = process.cwd(), state, history, gh = true } = {})
   root = resolve(root);
   const cfg = readConfig(root);
   if (!cfg) return null;
-  if (!state) state = readJson(join(root, ...STATE_REL)) || scan({ root, gh });
+  if (!state) {
+    // Un estado rápido (de una versión anterior) o ilegible no vale: se rehace el scan completo.
+    const saved = readJson(join(root, ...STATE_REL));
+    state = saved && !saved.fast && Array.isArray(saved.zones) ? saved : scan({ root, gh });
+  }
   if (!state) return null;
   if (!Array.isArray(history)) history = readJson(join(root, ...HISTORY_REL));
   if (!Array.isArray(history)) history = [];

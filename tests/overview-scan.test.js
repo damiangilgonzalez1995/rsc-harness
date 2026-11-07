@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { record, scan } from '../skills/overview/scripts/overview.mjs';
+import { record, scan, weightyKind } from '../skills/overview/scripts/overview.mjs';
 import { DAY, git, put, commit, repo, zone, dashboardRepo } from './fixtures/overview-fixture.js';
 
 // Scan completo (ticket 04): endpoints nuevos sin cubrir, última PR cubierta, foto semanal y salud
@@ -171,4 +171,89 @@ test('estado para el dashboard: KPIs, historial por zona y skill recomendada', (
   assert.equal(zone(state, 'docs').recommendedSkill, 'docs-review');
   const disk = JSON.parse(readFileSync(join(root, '.rsc', 'overview', 'state.json'), 'utf8'));
   assert.deepEqual(disk.kpis, state.kpis);
+});
+
+// ── verificaciones del subagente de docs y comprobaciones (ticket 07) ──────────────────────
+// El motor no lanza agentes: lee lo que el agente de `scan` dejó en overview.json.
+test('el estado lleva las verificaciones por zona y la última de cada una', () => {
+  const now = new Date('2026-11-07T12:00:00Z');
+  const config = {
+    ...API,
+    zones: [API.zones[0], { ...API.zones[1], checks: [{ id: 'readme', label: 'README al día', status: 'unknown', date: '2026-11-06' }] }],
+    verifications: [
+      { what: 'Supabase local', result: 'verified', evidence: 'psql', at: '2026-11-01' }, // de `start`: no es de zona
+      { zone: 'docs', date: '2026-10-01', agent: 'overview-verifier', ok: true, notes: [] },
+      { zone: 'docs', date: '2026-11-05', agent: 'overview-verifier', ok: false, notes: ['El README cita `npm run dev`, que no existe'] },
+      { zone: 'api-endpoints', date: '2026-11-04', agent: 'overview-verifier', ok: true, notes: ['ok'] },
+    ],
+  };
+  const root = repo({ config, files: BASE });
+  const state = scan({ root, ...OPTS, now });
+  assert.equal(state.verifications.length, 3);
+  assert.deepEqual(zone(state, 'docs').lastVerification, {
+    date: '2026-11-05', agent: 'overview-verifier', ok: false, notes: ['El README cita `npm run dev`, que no existe'], ageDays: 2,
+  });
+  assert.equal(zone(state, 'api-endpoints').lastVerification.ok, true);
+  assert.deepEqual(zone(state, 'docs').checks[0], { id: 'readme', label: 'README al día', status: 'unknown', date: '2026-11-06' });
+});
+
+test('sin verificaciones, lastVerification es null', () => {
+  const state = scan({ root: reviewedRepo(), ...OPTS });
+  assert.deepEqual(state.verifications, []);
+  assert.equal(zone(state, 'docs').lastVerification, null);
+});
+
+// ── el rojo se reserva para lo que pesa (ticket 07) ──────────────────────────────────────────
+// Rojo: endpoint nuevo, tabla o migración, o archivo de auth sin cubrir, o cobertura por debajo de
+// 0,5. Ámbar: cobertura por debajo de 0,9 o fuera de cadencia.
+
+test('detectores de peso: tablas y migraciones, y auth por la ruta', () => {
+  const kind = (path, src = '') => weightyKind(path, () => src);
+  for (const p of ['migrations/0001_init.py', 'alembic/versions/ab12_users.py', 'supabase/migrations/20260101_x.sql', 'prisma/schema.prisma']) {
+    assert.equal(kind(p), 'table', p);
+  }
+  assert.equal(kind('db/002.sql', 'ALTER TABLE users ADD COLUMN x int;'), 'table');
+  assert.equal(kind('db/003.sql', 'create table orders (id int);'), 'table');
+  assert.equal(kind('app/models.py', 'op.create_table("orders")'), 'table');
+  assert.equal(kind('db/seed.sql', 'insert into users values (1);'), null);
+  for (const p of ['src/auth/guard.ts', 'api/login.py', 'lib/jwt.js', 'app/userSession.ts', 'supabase/rls_policies.sql', 'core/permissions.py', 'api/oauth.py']) {
+    assert.equal(kind(p), 'auth', p);
+  }
+  for (const p of ['web/App.tsx', 'web/tokens.css', 'app/urls.py', 'docs/auth.md']) assert.equal(kind(p), null, p);
+});
+
+test('un CSS cambiado deja frontend en ámbar, no en rojo', () => {
+  const now = new Date();
+  const root = dashboardRepo({ now });
+  put(root, 'web/styles.css', 'body { margin: 0; }\n');
+  commit(root, 'estilos');
+  const z = zone(scan({ root, ...OPTS, now }), 'frontend');
+  assert.equal(z.coverage, 0.5);
+  assert.deepEqual(z.uncoveredWeighty, []);
+  assert.equal(z.color, 'amber');
+});
+
+test('una migración nueva pone database en rojo y sale en uncoveredWeighty', () => {
+  const now = new Date();
+  const root = dashboardRepo({ now });
+  put(root, 'db/002_orders.sql', 'CREATE TABLE orders (id int);\n');
+  commit(root, 'migración');
+  const z = zone(scan({ root, ...OPTS, now }), 'database');
+  assert.equal(z.coverage, 0.5);
+  assert.deepEqual(z.uncoveredWeighty, [{ kind: 'table', file: 'db/002_orders.sql' }]);
+  assert.equal(z.color, 'red');
+  assert.ok(z.health <= 40, `salud ${z.health} con una tabla sin cubrir`);
+});
+
+test('cobertura por debajo de 0,5 es rojo aunque no haya nada de peso', () => {
+  const root = reviewedRepo();
+  put(root, 'guide/a.md', 'a\n');
+  put(root, 'guide/b.md', 'b\n');
+  record({ root, skill: 'docs-review', scope: 'global' });
+  put(root, 'guide/intro.md', 'cambiada\n');
+  put(root, 'guide/a.md', 'cambiada\n');
+  const z = zone(scan({ root, ...OPTS }), 'docs');
+  assert.ok(z.coverage < 0.5);
+  assert.deepEqual(z.uncoveredWeighty, []);
+  assert.equal(z.color, 'red');
 });

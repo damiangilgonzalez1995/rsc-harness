@@ -15,7 +15,7 @@ try {
   const input = hook.tool_input && typeof hook.tool_input === 'object' ? hook.tool_input : {};
   // rsc cableado en el scope de usuario y en el de proyecto dispara esto dos veces por llamada.
   // tool_use_id es único por llamada e igual en los dos scopes.
-  const once = !hook.session_id || !hook.tool_use_id || claimOnce(`ov:${hook.session_id}:${hook.tool_use_id}`);
+  const once = !hook.session_id || !hook.tool_use_id || claimOnce(`overview-skill:${hook.session_id}:${hook.tool_use_id}`);
   if (once && typeof input.skill === 'string') {
     const { hookRecord } = await import('./overview.mjs');
     hookRecord({ root, skill: input.skill, text: typeof input.args === 'string' ? input.args : '' });

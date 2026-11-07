@@ -1,9 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { record, scan } from '../skills/overview/scripts/overview.mjs';
+import { record, render, scan } from '../skills/overview/scripts/overview.mjs';
 import { ENGINE, DAY, CONFIG, git, put, repo, reviewsOf, zone } from './fixtures/overview-fixture.js';
 
 // El motor de `overview` decide si un archivo está revisado por el CONTENIDO (blob sha), no por la
@@ -144,6 +144,59 @@ test('scan --fast calcula los mismos colores', () => {
   const state = scan({ root, fast: true });
   assert.equal(state.fast, true);
   assert.equal(zone(state, 'api-endpoints').color, 'green');
+});
+
+// `git ls-files -o` lista un repo anidado como `dir/`, y `hash-object --stdin-paths` falla entero con
+// él: sin respaldo, ningún archivo cambiado o nuevo tendría blob y la zona parecería al día.
+test('scan: si hash-object --stdin-paths falla, se hashea archivo por archivo', () => {
+  const root = repo();
+  record({ root, skill: 'security-scan', scope: 'global' });
+  put(root, 'api/new.js', 'nuevo\n');
+  put(root, 'api/users.js', 'export const users = 2;\n');
+  const nested = join(root, 'api', 'vendor');
+  mkdirSync(nested, { recursive: true });
+  git(nested, 'init', '-q');
+  put(root, 'api/vendor/x.js', 'x\n');
+  const z = zone(scan({ root }), 'api-endpoints');
+  assert.deepEqual(z.uncovered, ['api/new.js', 'api/users.js']);
+  assert.notEqual(z.color, 'green');
+});
+
+test('scan: una ruta con salto de línea se ignora y no descuadra los demás hashes', { skip: process.platform === 'win32' && 'Windows no admite saltos de línea en nombres de archivo' }, () => {
+  const root = repo();
+  record({ root, skill: 'security-scan', scope: 'global' });
+  put(root, 'api/a\nb.js', 'raro\n');
+  put(root, 'api/new.js', 'nuevo\n');
+  const z = zone(scan({ root }), 'api-endpoints');
+  assert.deepEqual(z.uncovered, ['api/new.js']);
+  assert.equal(z.covered, 1);
+});
+
+// El scan rápido corre en el Worker del arranque y puede morir a medias por el tope de tiempo: si
+// escribiera state.json, lo dejaría truncado o empobrecido (sin endpoints) para el dashboard.
+test('scan --fast no escribe state.json', () => {
+  const root = repo();
+  record({ root, skill: 'security-scan', scope: 'global' });
+  scan({ root, fast: true });
+  assert.equal(existsSync(join(root, '.rsc', 'overview', 'state.json')), false);
+});
+
+test('render no reutiliza un estado rápido ni uno truncado: vuelve a hacer el scan completo', () => {
+  const root = repo();
+  record({ root, skill: 'security-scan', scope: 'global' });
+  const dir = join(root, '.rsc', 'overview');
+  mkdirSync(dir, { recursive: true });
+  const renderedState = () => {
+    const html = readFileSync(render({ root, gh: false }).path, 'utf8');
+    return JSON.parse(/id="overview-state">([\s\S]*?)<\/script>/.exec(html)[1]).state;
+  };
+  writeFileSync(join(dir, 'state.json'), JSON.stringify({ version: 1, fast: true, kpis: {}, zones: [] }));
+  let state = renderedState();
+  assert.equal(state.fast, false);
+  assert.equal(state.zones.length, 2);
+  writeFileSync(join(dir, 'state.json'), '{"version":1,"fast":false,"zon');
+  state = renderedState();
+  assert.equal(state.zones.length, 2);
 });
 
 // Dos ramas en paralelo: A pasa seguridad y B no. Tras mergear, lo de A cuenta y lo de B queda
