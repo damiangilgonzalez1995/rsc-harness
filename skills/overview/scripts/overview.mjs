@@ -160,6 +160,8 @@ export function record({ root = process.cwd(), skill, scope, pr, now = new Date(
   if (!cfg) return null;
   const zones = cfg.zones.filter((z) => Array.isArray(z.reviewSkills) && z.reviewSkills.includes(skill));
   if (!zones.length) return null;
+  // Sin git no hay blob sha: una revisión vacía solo sería ruido.
+  if (git(root, ['rev-parse', '--is-inside-work-tree']) === null) return null;
 
   const branch = (git(root, ['rev-parse', '--abbrev-ref', 'HEAD']) || '').trim();
   const commit = (git(root, ['rev-parse', 'HEAD']) || '').trim();
@@ -191,6 +193,30 @@ export function record({ root = process.cwd(), skill, scope, pr, now = new Date(
   const path = join(dir, file);
   writeFileSync(path, JSON.stringify(review, null, 2) + '\n');
   return { path, file, review };
+}
+
+// El texto que acompaña a la skill (los args de la herramienta Skill o el resto del prompt) puede
+// pedir el scope. "global" explícito manda; si menciona una PR, es `pr` y se apunta su número.
+export function scopeFromText(text) {
+  if (typeof text !== 'string' || !text) return {};
+  const num = text.match(/\b(?:PR|pull request)\s*#?\s*(\d+)\b/i);
+  const pr = num ? Number(num[1]) : undefined;
+  if (/\bglobal\b/i.test(text)) return { scope: 'global', pr };
+  if (num || /\b(?:PR|pull request)\b/i.test(text)) return { scope: 'pr', pr };
+  return {};
+}
+
+/**
+ * Lo que llaman los hooks: registra si la skill revisa alguna zona y nunca lanza. El scope sale del
+ * texto que la acompaña y, si no dice nada, de la rama.
+ */
+export function hookRecord({ root, skill, text } = {}) {
+  try {
+    if (typeof skill !== 'string' || !SKILL_ID_RE.test(skill)) return null;
+    return record({ root, skill, ...scopeFromText(text) });
+  } catch {
+    return null;
+  }
 }
 
 function readReviews(root) {
