@@ -193,6 +193,17 @@ sube código, un commit que no sea suyo ni el perfil personal. Es un hook aparte
 «Recuerda esto» guarda el hecho en su página de `docs/wiki/` y dice la ruta. Guía completa:
 [la memoria del harness](como-funciona/memoria.md).
 
+## Estado del proyecto: `overview`
+
+`overview` es parte del suelo. `overview start` recorre por rondas de 7 como mucho un banco de
+preguntas y comprobaciones senior por zona (multitenant, sesiones que caducan, refresh a mitad de
+flujo, los 10 puntos de seguridad…), comprueba accesos antes de preguntar y deja el resultado en
+`docs/overview/overview.json`: zonas con sus globs, skills de revisión y cadencia, y cada pregunta
+con uno de siete estados. Cada revisión es un archivo propio en `docs/overview/reviews/` con el
+blob sha de los archivos cubiertos, así que un cambio posterior deja el archivo sin cubrir y las
+ramas en paralelo se suman sin conflictos. `scan` calcula la cobertura del contenido actual y
+el color por zona en `.rsc/overview/state.json`, fuera de git. Sin `overview.json` no hace nada.
+
 ## Cómo recomienda
 
 Dos caras, un catálogo (`manifest.json`):

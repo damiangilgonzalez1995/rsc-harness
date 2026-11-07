@@ -351,6 +351,7 @@ siguiente vaya mejor. El resultado son cambios concretos, no una charla.
 | `eli5` | Explica un tema desde cero, con analogías y sin jerga. |
 | `teach` | Te enseña un concepto a lo largo de varias sesiones. |
 | `hardening` | Auditoría de seguridad antes de publicar. |
+| `overview` | Al empezar, te pregunta por rondas lo que hay que decidir (multitenant, sesiones, accesos…). Después, qué zonas piden revisión y con qué skill. |
 
 ---
 

@@ -3798,7 +3798,7 @@
     },
     {
       "id": "overview",
-      "description": "Use when the user wants the project overview: which zones need review, what is covered by the current content, or start a project with senior checks. Records each review run with the blob sha of every covered file. NOT a security audit (that is `hardening`), NOT a quick diff scan (that is `security-scan`), NOT a data dashboard (that is `dashboard`).",
+      "description": "Use when starting a project ('empezar proyecto', 'bajar a tierra'): settle the senior questions and checks by rounds and seed the review zones. Or for the 'project overview', 'estado del proyecto', 'qué falta por revisar': which zones need review, judged by current file content (blob sha). NOT a security audit (that is `hardening`), NOT a diff scan (that is `security-scan`), NOT a data dashboard (that is `dashboard`).",
       "tags": [
         "overview",
         "project-status",
