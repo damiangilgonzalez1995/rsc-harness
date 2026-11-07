@@ -654,20 +654,21 @@ function layoutZones(zones) {
 function docsLine(z) {
   if (z.id !== 'docs') return null;
   const v = z.lastVerification;
-  if (!v) return { text: 'docs sin verificar', tone: 'never' };
+  if (!v) return { text: 'docs sin verificar', day: '', tone: 'never' };
   const d = new Date(v.date);
   const day = Number.isNaN(d.getTime()) ? v.date : `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}`;
-  return { text: `${v.ok ? 'cuadran' : 'no cuadran'} · ${day}`, tone: v.ok ? 'ok' : 'bad' };
+  return { text: v.ok ? 'cuadran' : 'no cuadran', day, tone: v.ok ? 'ok' : 'bad' };
 }
 
 function squareHtml({ z, big }) {
   const t = squareText(z, big);
   const docs = docsLine(z);
-  const label = `${z.label}: ${TONE_LABEL[z.color] || ''}. ${t.when}, ${t.meta}.${docs ? ` Docs: ${docs.text}.` : ''} Abrir detalle`;
+  const label = `${z.label}: ${TONE_LABEL[z.color] || ''}. ${t.when}, ${t.meta}.${docs ? ` Docs: ${docs.text}${docs.day ? `, ${docs.day}` : ''}.` : ''} Abrir detalle`;
   return `<a class="sq${big ? ' x2' : ''} ${tone(z)}" href="#zone=${esc(z.id)}" data-zone="${esc(z.id)}" aria-label="${esc(label)}">`
     + `<span class="n">${esc(z.label)}</span><span class="b"><span class="when">${esc(t.when)}</span>`
-    + `<span class="meta">${esc(t.meta)}</span>${big && t.sk ? `<span class="sk">${esc(t.sk)}</span>` : ''}`
-    + `${docs ? `<span class="vf"><i class="dot ${docs.tone}"></i>${esc(docs.text)}</span>` : ''}</span></a>`;
+    // En 1×1 no caben las dos líneas: la de docs sustituye a `meta`, que sigue en el aria-label.
+    + `${docs && !big ? '' : `<span class="meta">${esc(t.meta)}</span>`}${big && t.sk ? `<span class="sk">${esc(t.sk)}</span>` : ''}`
+    + `${docs ? `<span class="vf"><i class="dot ${docs.tone}"></i><span>${esc(docs.text)}${docs.day ? ` · <span class="d">${esc(docs.day)}</span>` : ''}</span></span>` : ''}</span></a>`;
 }
 
 function kpisHtml(state, history) {
@@ -862,7 +863,7 @@ transition-property:box-shadow,scale;transition-duration:150ms;transition-timing
 .sq:active{scale:.96}
 .sq:focus-visible,.sq[aria-current]{outline:2px solid var(--ink);outline-offset:2px}
 .sq.x2{grid-column:span 2;grid-row:span 2;padding:14px}
-.sq .n{font-weight:650;font-size:12px;line-height:1.2;hyphens:auto;overflow-wrap:break-word;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.sq .n{font-weight:650;font-size:12px;line-height:1.2;hyphens:auto;overflow-wrap:break-word;flex:none;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .sq.x2 .n{font-size:17px}
 .sq .b{display:flex;flex-direction:column;gap:2px;min-width:0}
 .sq .when{font-size:18px;font-weight:700;line-height:1.15;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
@@ -929,7 +930,8 @@ background:var(--card);padding:18px 20px 28px;box-shadow:0 0 0 1px #0000000f,0 1
 em.ok{color:var(--ok-ink)}em.mid{color:var(--mid-ink)}em.bad{color:var(--bad-ink)}em.never{color:var(--ink3)}
 .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
 .dot.ok{background:var(--ok-ink)}.dot.mid{background:var(--mid-ink)}.dot.bad{background:var(--bad-ink)}.dot.never{background:var(--never-line)}
-.sq .vf{display:flex;align-items:center;gap:5px;margin-top:3px;font-size:10.5px;line-height:1.2;color:#00000099}
+.sq .vf{display:flex;align-items:baseline;gap:5px;margin-top:3px;font-size:10.5px;line-height:1.25;color:#00000099}
+.sq .vf .dot{flex:none;width:7px;height:7px}.sq .vf .d{white-space:nowrap}
 .detail .vf{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin:0}
 .vf em{font-style:normal;font-weight:600;background:none}
 .vf small{color:var(--ink2);font-size:11.5px}
@@ -940,6 +942,8 @@ em.ok{color:var(--ok-ink)}em.mid{color:var(--mid-ink)}em.bad{color:var(--bad-ink
 @media (max-width:560px){
 .page{padding:16px 16px 32px}
 .kpi{flex-basis:calc(50% - 5px)}
+.sq{padding:8px}
+.sq .n{font-size:11.5px}
 .detail{top:auto;width:100%;max-height:86vh;border-radius:16px 16px 0 0;padding:16px 16px 28px}
 @keyframes slide-in{from{opacity:0;transform:translateY(24px)}}
 }
