@@ -163,7 +163,7 @@ Tiene un **modo rápido** sin detección de endpoints, para el aviso de sesión,
 
 ### 5. Aviso al iniciar sesión
 
-En `targets/session-start.mjs`, siguiendo el patrón de `auditDue()`: si existe `docs/overview/overview.json`, ejecuta `scan.mjs` en modo rápido. Si alguna zona está en rojo, saca una línea como esta, una vez por sesión: "overview: 3 zonas piden revisión (api-endpoints, database, security) — `/overview scan`". Si se pasa del tope de tiempo, se calla.
+En `targets/session-start.mjs`, siguiendo el patrón de `auditDue()`: si existe `docs/overview/overview.json`, ejecuta `scan.mjs` en modo rápido. Si alguna zona está en rojo, saca una línea como esta, una vez por sesión: "overview: 3 zonas en rojo (api-endpoints, database, security) — `/overview scan`". Solo con `source=startup`: tras `compact`, `resume` o `clear` no se repite. Si se pasa del tope de tiempo, se calla.
 
 ### 6. Dashboard: `scripts/render.mjs` → `.rsc/overview/overview.html`
 

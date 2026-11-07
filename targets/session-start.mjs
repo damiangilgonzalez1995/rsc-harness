@@ -33,8 +33,11 @@ const has = (...p) => existsSync(join(root, ...p));
 // locales. Solo el aviso (una vez por sesión) lo necesita. El motor viaja como hermano en
 // .rsc/overview.mjs; si falta, falla o se pasa del tope (~800 ms), el aviso se calla. El scan es
 // síncrono (git), así que el tope solo es real en un Worker que se puede terminar.
+// Una vez por sesión de verdad: solo con source=startup. compact, resume y clear reutilizan el
+// session_id y reinyectan el cuerpo de suggest, pero el aviso ya se dio.
 const OVERVIEW_BUDGET_MS = Number(process.env.RSC_OVERVIEW_BUDGET_MS) || 800;
-const overviewRed = emitBody && has('docs', 'overview', 'overview.json') ? new Promise((done) => {
+const overviewNotice = emitBody && (hook.source || 'startup') === 'startup';
+const overviewRed = overviewNotice && has('docs', 'overview', 'overview.json') ? new Promise((done) => {
   let worker;
   const timer = setTimeout(() => { done(null); worker?.terminate().catch(() => {}); }, OVERVIEW_BUDGET_MS);
   try {
@@ -240,13 +243,14 @@ Opt out with .rsc/.no-stack-hints.
   }
 }
 
-// overview: una línea si alguna zona está en rojo. Ya va deduplicada entre scopes (emitBody).
+// overview: una línea si alguna zona está en rojo. Ya va deduplicada entre scopes (emitBody). Dice
+// «en rojo» y no «piden revisión»: el KPI del dashboard con ese nombre cuenta también el ámbar.
 try {
   const red = await overviewRed;
   if (Array.isArray(red) && red.length) {
     const n = red.length;
     process.stdout.write(`
-overview: ${n} ${n === 1 ? 'zona pide' : 'zonas piden'} revisión (${red.join(', ')}) — \`/overview scan\`
+overview: ${n} ${n === 1 ? 'zona' : 'zonas'} en rojo (${red.join(', ')}) — \`/overview scan\`
 `);
   }
 } catch { /* el aviso nunca frena el arranque */ }

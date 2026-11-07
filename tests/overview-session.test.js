@@ -57,28 +57,28 @@ function project({ config = CONFIG, stale = [] } = {}) {
 // los tests que esperan la línea le dan margen; el tope tiene su propio test.
 const ROOMY = { RSC_OVERVIEW_BUDGET_MS: '20000' };
 
-function sessionStart(root, { markers = mkdtempSync(join(tmpdir(), 'rsc-ovss-mark-')), session = `s-${Math.random()}`, extra = ROOMY } = {}) {
+function sessionStart(root, { markers = mkdtempSync(join(tmpdir(), 'rsc-ovss-mark-')), session = `s-${Math.random()}`, source = 'startup', extra = ROOMY } = {}) {
   const home = mkdtempSync(join(tmpdir(), 'rsc-ovss-home-'));
   const r = spawnSync('node', [join(root, '.rsc', 'session-start.mjs'), SUGGEST, root], {
     cwd: root, encoding: 'utf8', windowsHide: true,
-    input: JSON.stringify({ session_id: session, source: 'startup' }),
+    input: JSON.stringify({ session_id: session, source }),
     env: { ...process.env, RSC_NO_UPDATE_CHECK: '1', RSC_HOOK_MARKER_DIR: markers, HOME: home, USERPROFILE: home, ...extra },
   });
   assert.equal(r.status, 0, r.stderr);
   return r.stdout;
 }
 
-const LINE = /overview: \d+ zonas? piden? revisión/g;
+const LINE = /overview: \d+ zonas? en rojo/g;
 
 test('con zonas en rojo sale una línea que las nombra y da el comando', () => {
   const out = sessionStart(project({ stale: ['api/users.js', 'db/schema.sql'] }));
-  assert.match(out, /overview: 2 zonas piden revisión \(api-endpoints, database\) — `\/overview scan`/);
+  assert.match(out, /overview: 2 zonas en rojo \(api-endpoints, database\) — `\/overview scan`/);
   assert.equal(out.match(LINE).length, 1);
 });
 
 test('una sola zona en rojo usa el singular', () => {
   const out = sessionStart(project({ stale: ['db/schema.sql'] }));
-  assert.match(out, /overview: 1 zona pide revisión \(database\) — `\/overview scan`/);
+  assert.match(out, /overview: 1 zona en rojo \(database\) — `\/overview scan`/);
 });
 
 test('sin overview.json no sale nada', () => {
@@ -99,4 +99,15 @@ test('con dos scopes cableados la línea sale una sola vez por sesión', () => {
   const markers = mkdtempSync(join(tmpdir(), 'rsc-ovss-mark-'));
   const outs = [sessionStart(root, { markers, session: 's-dos' }), sessionStart(root, { markers, session: 's-dos' })];
   assert.equal(outs.join('').match(LINE).length, 1);
+});
+
+test('tras compact, resume o clear en la misma sesión la línea no vuelve a salir', () => {
+  // El cuerpo de suggest sí se reinyecta tras compactar (su clave lleva `source`); el aviso, no.
+  const root = project({ stale: ['api/users.js'] });
+  const markers = mkdtempSync(join(tmpdir(), 'rsc-ovss-mark-'));
+  const session = 's-compact';
+  assert.equal(sessionStart(root, { markers, session }).match(LINE).length, 1);
+  for (const source of ['compact', 'resume', 'clear']) {
+    assert.doesNotMatch(sessionStart(root, { markers, session, source }), LINE, `source=${source}`);
+  }
 });
