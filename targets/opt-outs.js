@@ -24,6 +24,7 @@ export const PROJECT_OPT_OUTS = [
   'gitmoji',          // the commit-message convention
   'knowledge-sync',   // 01-TOOLS/ + docs/ sync: one person off and the team stops seeing their work
   'ship-guard',       // branch/trunk discipline
+  'stack-hints',      // the session-start reminder that matches the stack (security floor, front-end model)
   'trunk-guard',      // «desbloquea main»: the default branch open for the agent, for the whole team
   'trunk-open',       // «ramas y PR»: the default branch closed even with nothing that looks complex
   'worktree-cleanup', // the reaper's notice (it only ever names, never acts)

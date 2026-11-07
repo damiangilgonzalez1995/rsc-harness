@@ -61,6 +61,23 @@ Todo confluye en una rama de integración.
 `code-review` revisa contra los estándares del repo y contra la spec. `pr` abre la PR con
 resumen, evidencia y peligro de fusión.
 
+### Seguridad y front dentro de la cadena
+
+La cadena no cambia: ni pasos nuevos ni comandos nuevos. Lo que cambia es que dos pasos que ya
+existían ahora piden seguridad y front **cuando el cambio los toca** (auth, un endpoint, una tabla,
+un secreto o una pantalla):
+
+| Cuándo | Qué pasa |
+|---|---|
+| Al iniciar sesión | Un aviso corto según el proyecto. Con backend, API o `.env`: los 10 puntos de seguridad. Con react, next, vue, svelte o astro: el modelo mental del front. Sin ninguno de los dos, no sale nada. |
+| `to-spec` | La spec lleva una sección «Decisiones de seguridad y de front»: qué puntos aplican y cuáles quedan fuera a propósito. |
+| `code-review` | El eje de Estándares suma un baseline: una ruta sin rate limit o sin validación en el servidor es `should-fix`; un secreto en el repo es `blocker`. |
+| Antes de publicar | `secure-coding` trae la lista con una prueba por punto. Es un punto de partida; la auditoría es `hardening`. |
+
+Los 10 puntos: rate limiting, claves fuera del código, secretos de producción en la plataforma,
+límites por IP, entradas validadas, validación en el servidor, RLS, contraseñas con hash y datos
+cifrados, sesiones que vencen y CORS solo con tu dominio. Se apaga con `.rsc/.no-stack-hints`.
+
 La guía completa del método, fase a fase: [`docs/skills/`](docs/skills/).
 
 ---
