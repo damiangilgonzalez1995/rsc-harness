@@ -146,6 +146,32 @@ test('scan --fast calcula los mismos colores', () => {
   assert.equal(zone(state, 'api-endpoints').color, 'green');
 });
 
+// `git ls-files -o` lista un repo anidado como `dir/`, y `hash-object --stdin-paths` falla entero con
+// él: sin respaldo, ningún archivo cambiado o nuevo tendría blob y la zona parecería al día.
+test('scan: si hash-object --stdin-paths falla, se hashea archivo por archivo', () => {
+  const root = repo();
+  record({ root, skill: 'security-scan', scope: 'global' });
+  put(root, 'api/new.js', 'nuevo\n');
+  put(root, 'api/users.js', 'export const users = 2;\n');
+  const nested = join(root, 'api', 'vendor');
+  mkdirSync(nested, { recursive: true });
+  git(nested, 'init', '-q');
+  put(root, 'api/vendor/x.js', 'x\n');
+  const z = zone(scan({ root }), 'api-endpoints');
+  assert.deepEqual(z.uncovered, ['api/new.js', 'api/users.js']);
+  assert.notEqual(z.color, 'green');
+});
+
+test('scan: una ruta con salto de línea se ignora y no descuadra los demás hashes', { skip: process.platform === 'win32' && 'Windows no admite saltos de línea en nombres de archivo' }, () => {
+  const root = repo();
+  record({ root, skill: 'security-scan', scope: 'global' });
+  put(root, 'api/a\nb.js', 'raro\n');
+  put(root, 'api/new.js', 'nuevo\n');
+  const z = zone(scan({ root }), 'api-endpoints');
+  assert.deepEqual(z.uncovered, ['api/new.js']);
+  assert.equal(z.covered, 1);
+});
+
 // El scan rápido corre en el Worker del arranque y puede morir a medias por el tope de tiempo: si
 // escribiera state.json, lo dejaría truncado o empobrecido (sin endpoints) para el dashboard.
 test('scan --fast no escribe state.json', () => {

@@ -116,16 +116,28 @@ function currentFiles(root) {
     if (!hasHead || dirty.has(path)) toHash.push(path); else blobs.set(path, sha);
   }
   for (const path of untracked) if (!excluded(path)) toHash.push(path);
-  if (toHash.length) {
-    const r = spawnSync('git', ['hash-object', '--stdin-paths'], {
-      cwd: root, input: toHash.join('\n') + '\n', encoding: 'utf8', windowsHide: true, maxBuffer: 64 * 1024 * 1024,
-    });
-    if (r.status === 0) {
-      const shas = r.stdout.split('\n').filter(Boolean);
-      toHash.forEach((p, i) => { if (shas[i]) blobs.set(p, shas[i]); });
-    }
-  }
+  hashWorkingFiles(root, toHash, blobs);
   return blobs;
+}
+
+// Hashea del árbol de trabajo en una sola llamada. `--stdin-paths` separa por líneas, así que una
+// ruta con salto de línea se ignora. Si git falla (un repo anidado sale como `dir/` y lo tumba
+// entero) o el número de shas no cuadra, se hashea archivo por archivo y se salta lo que falle.
+function hashWorkingFiles(root, paths, blobs) {
+  const toHash = paths.filter((p) => !/[\r\n]/.test(p));
+  if (!toHash.length) return;
+  const r = spawnSync('git', ['hash-object', '--stdin-paths'], {
+    cwd: root, input: toHash.join('\n') + '\n', encoding: 'utf8', windowsHide: true, maxBuffer: 64 * 1024 * 1024,
+  });
+  const shas = r.status === 0 ? r.stdout.split('\n').filter(Boolean) : [];
+  if (shas.length === toHash.length) {
+    toHash.forEach((p, i) => blobs.set(p, shas[i]));
+    return;
+  }
+  for (const p of toHash) {
+    const sha = (git(root, ['hash-object', '--', p]) || '').trim();
+    if (sha) blobs.set(p, sha);
+  }
 }
 
 // Rama principal: origin/HEAD, y si no, main o master.
