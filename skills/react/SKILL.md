@@ -36,6 +36,8 @@ Adjacent jobs route out: the type system itself (generics, discriminated unions,
 
 ## Component & state architecture
 
+The five words behind most front-end bugs (component, state, hooks, rendering, hydration) and a symptom → cause table: `references/mental-model.md`.
+
 - **Colocate state** next to where it's used; only **lift** when two siblings must share it. Lifting earlier than needed is the #1 cause of re-render spread.
 - **Derive, don't duplicate.** If a value is computable from props/state, compute it in render — never mirror it into another `useState` synced by an effect.
 - **Context for low-frequency, wide values** (theme, current user, locale). It re-renders every consumer on every change.

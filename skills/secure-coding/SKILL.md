@@ -1,6 +1,6 @@
 ---
 name: secure-coding
-description: "Use when securing application code: threat-modeling a feature, security-reviewing a diff, hardening auth/authz, secrets, CORS/CSP, or fixing OWASP-class bugs (access control, injection, SSRF, supply chain) in FastAPI, Next.js, Go or Flutter. NOT running the scanners (that is security-scan), NOT agent prompt-injection guardrails (that is agent-safety)."
+description: "Use when securing application code: threat-modeling a feature, security-reviewing a diff, hardening auth/authz, secrets, CORS/CSP, running the pre-publish checklist (rate limiting, RLS, server-side validation) before shipping an AI-built project, or fixing OWASP-class bugs (access control, injection, SSRF, supply chain) in FastAPI, Next.js, Go or Flutter. NOT running the scanners (that is security-scan), NOT agent prompt-injection guardrails (that is agent-safety)."
 tags: [security, owasp, stride, auth, review]
 recommends: [deployment]
 origin: risco
@@ -290,6 +290,15 @@ export default { async headers() { return [{ source: "/:path*", headers }]; } };
   confirm). SBOM via `syft`; provenance via `cosign`/SLSA.
 
 Full runbook: `references/secrets-and-supply-chain.md`.
+
+## Before publishing — the 10 holes
+
+Anything built fast with AI, before it goes public and again before each important launch: rate
+limiting, keys out of the code, production secrets in the platform, per-IP limits, validated and
+parameterized inputs, **validation on the server (the browser's is UX)**, RLS so each user sees only
+their data, hashed passwords and encrypted data, sessions that expire, CORS with only your domain.
+Each point has a concrete proof that it is closed, never "looks fine": `references/pre-publish.md`.
+It is a starting point, not an audit; the audit is [`hardening`](../hardening/SKILL.md).
 
 ## Anti-patterns
 

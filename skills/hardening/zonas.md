@@ -66,7 +66,15 @@ Encargo de cada subagente del paso 2 de [`SKILL.md`](SKILL.md). Copia el **marco
   - longitud de los textos;
   - inyección de prompt con efecto en las herramientas;
   - fórmulas en el Excel.
-- Límite de peticiones y de gasto.
+- Límite de peticiones y de gasto:
+  - por IP y por identidad, con la IP real tras el proxy;
+  - más estricto en login, OTP, registro y endpoints que cuestan dinero;
+  - un contador en memoria no vale con más de una réplica.
+- Validación en el servidor, no solo en el navegador: rehacer a mano la petición con el campo que el formulario bloquearía.
+- Sesiones que vencen, rotación del refresh y cookie `HttpOnly`/`Secure`/`SameSite`.
+- Contraseñas con hash fuerte (Argon2id o bcrypt) y datos sensibles cifrados.
+- CORS con lista de orígenes, nunca `*` con credenciales.
+- Secretos de producción en la plataforma (Vercel, Supabase, GitHub), nunca solo en `.env` ni en el repo.
 - Errores que filtran detalles internos, cabeceras, CSP y CORS.
 - Front: `innerHTML` y dónde se guarda la sesión.
 - Dependencias: si están fijadas y si algo las escanea. `npm audit` se puede lanzar porque solo lee.

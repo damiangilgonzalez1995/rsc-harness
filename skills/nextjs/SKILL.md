@@ -334,6 +334,8 @@ const r = schema.safeParse(Object.fromEntries(formData));
 if (!r.success) return { status: "error", message: "Invalid" };
 ```
 
+Server vs Client placement, what breaks hydration and the stable-first-render fix: `references/rendering-hydration.md`.
+
 ## Auth & security (deep dive → references/security.md)
 
 Defense in depth with **three layers — middleware is NOT one of them**. Full wiring (Auth.js v5

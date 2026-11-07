@@ -60,6 +60,15 @@ Cada smell se lee *qué es* → *cómo arreglarlo*; contrástalo con el diff:
 - **Intermediario (Middle Man)** — una clase o función que casi solo delega hacia adelante. → córtala, llama al objetivo real directamente.
 - **Herencia rechazada (Refused Bequest)** — una subclase o implementador que ignora o sobrescribe casi todo lo que hereda. → suelta la herencia, usa composición.
 
+### Baseline de seguridad y de front
+
+Cuando el diff toca una ruta, un endpoint, una tabla, un secreto, una sesión o un componente, el eje de Estándares lleva además este baseline. Es un juicio, no una violación dura, y un estándar documentado del repo lo supera. Pégalo completo en el prompt del sub-agente, que no tiene otro acceso a él:
+
+- **Seguridad** (los 10 puntos de `secure-coding`, `references/pre-publish.md`). Una ruta nueva sin rate limit o sin validación en el servidor es un hallazgo `should-fix`, no un nit. Un secreto en el repo o con el prefijo público del framework es `blocker`. Mira también: tabla nueva sin RLS, CORS con `*` y credenciales, hash débil, sesión que no vence, consulta SQL construida a mano.
+- **Front** (`react` y `nextjs`). Estado copiado desde props o derivado guardado en `useState`, `useEffect` que calcula en vez de sincronizar, dependencias que faltan, valores no deterministas en el primer render (`Date.now()`, `Math.random()`, `window`) que rompen la hidratación, `"use client"` demasiado arriba y secretos importados desde un componente de cliente.
+
+Si el diff no toca nada de esto, no lo añadas.
+
 ### 4. Lanzar ambos sub-agentes en paralelo
 
 Envía un único mensaje con dos llamadas a la herramienta `Agent`. Usa el subagente `general-purpose` para ambos.
@@ -67,7 +76,7 @@ Envía un único mensaje con dos llamadas a la herramienta `Agent`. Usa el subag
 **Prompt del sub-agente de Estándares** — incluye:
 
 - El comando de diff completo y la lista de commits.
-- La lista de archivos-fuente de estándares que encontraste en el paso 3, **más el smell baseline del paso 3 pegado completo** — el sub-agente no tiene otro acceso a él.
+- La lista de archivos-fuente de estándares que encontraste en el paso 3, **más el smell baseline del paso 3 pegado completo, y el baseline de seguridad y de front cuando aplique** — el sub-agente no tiene otro acceso a él.
 - El encargo: "Reporta — por archivo/hunk donde proceda — (a) cada lugar donde el diff viola un estándar documentado: cita el estándar (archivo + la regla); y (b) cualquier smell del baseline que detectes: nómbralo y cita el hunk. Distingue violaciones duras de juicios — las infracciones de estándar documentado pueden ser duras, pero los smells del baseline son siempre juicios, y un estándar documentado del repo prevalece sobre el baseline. Sáltate lo que el tooling imponga. Menos de 400 palabras."
 
 **Prompt del sub-agente de Spec** — incluye:

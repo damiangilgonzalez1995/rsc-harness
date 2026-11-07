@@ -61,6 +61,13 @@ NO incluyas rutas de archivo concretas ni snippets de código. Pueden quedar obs
 
 Excepción: si un prototipo produjo un snippet que codifica una decisión con más precisión que la prosa (máquina de estados, reducer, schema, forma de un tipo), inclúyelo dentro de la decisión correspondiente y anota brevemente que salió de un prototipo. Recórtalo a las partes ricas en decisión — no una demo funcional, solo lo importante.
 
+## Decisiones de seguridad y de front
+
+Solo si la feature toca autenticación, un endpoint, una tabla, un secreto o una pantalla. Si no toca nada de eso, escribe «No aplica» y por qué.
+
+- **Seguridad.** De los 10 puntos de `secure-coding` (`references/pre-publish.md`: rate limiting, claves fuera del código, secretos de producción, límites por IP, entradas validadas, validación en el servidor, RLS, hash y cifrado, sesiones que vencen, CORS), anota los que aplican a esta feature y los que quedan fuera a propósito. Cada uno que aplique se convierte en una historia de usuario o en un criterio de aceptación comprobable.
+- **Front.** Dónde vive el estado de cada pieza nueva (URL, servidor, padre compartido o componente), qué es componente de servidor y qué de cliente, y qué primer render debe ser idéntico en servidor y navegador (hidratación). Detalle en `react` y `nextjs` (`references/mental-model.md` y `references/rendering-hydration.md`).
+
 ## Decisiones de testing
 
 Una lista de las decisiones de testing tomadas. Incluye:

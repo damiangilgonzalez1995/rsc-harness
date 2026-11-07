@@ -166,6 +166,53 @@ Originals are copied, never moved; deleting an emptied folder needs explicit con
   }
 }
 
+// Stack hints: a short reminder that matches what THIS project is made of, so it costs nothing
+// where it does not apply. The detail lives in the skills (`secure-coding`, `react`, `nextjs`);
+// these lines are only the part that must be present before anyone asks. Emitted once per session
+// (emitBody de-dups across scopes). Opt out with .rsc/.no-stack-hints.
+function readText(...p) { try { return readFileSync(join(root, ...p), 'utf8'); } catch { return ''; } }
+function stackOf() {
+  const pkg = readText('package.json');
+  const py = readText('pyproject.toml') + readText('requirements.txt');
+  const dep = (re) => re.test(pkg);
+  const front = dep(/"(react|preact|next|vue|nuxt|svelte|@sveltejs\/kit|solid-js|astro)"/);
+  const back = dep(/"(express|fastify|hono|koa|@nestjs\/core|next|@supabase\/supabase-js|prisma|@prisma\/client|drizzle-orm|firebase)"/)
+    || /fastapi|django|flask/i.test(py) || has('go.mod') || has('supabase')
+    || has('.env') || has('.env.local') || has('.env.example') || has('app', 'api') || has('pages', 'api');
+  return { front, back };
+}
+const skillIn = (id) => [root, homedir()].some((r) => existsSync(join(r, '.claude', 'skills', id, 'SKILL.md')));
+if (emitBody && !has('.rsc', '.no-stack-hints')) {
+  const { front, back } = stackOf();
+  if (back) {
+    process.stdout.write(`
+===== rsc security floor =====
+This project has a backend, an API or secrets. Before shipping, and in any change that touches auth,
+an endpoint, a table or a key, close these ten and PROVE each one (a request, a query, a command):
+rate limiting · keys out of the code (.env) · production secrets in the platform (Vercel, Supabase,
+GitHub) · limits per IP and per identity · validated inputs + parameterized queries · validation on
+the SERVER (the browser's is UX) · RLS: each user sees only their data · hashed passwords, encrypted
+data · sessions that expire · CORS only with your own domain.
+Browser validates -> server validates too -> database refuses what the server forgot.
+It is a starting point, not an audit.${skillIn('secure-coding') ? ' Detail and proofs: skill `secure-coding`, references/pre-publish.md. Audit: `hardening`.' : ''}
+Opt out with .rsc/.no-stack-hints.
+==============================
+`);
+  }
+  if (front) {
+    process.stdout.write(`
+===== rsc front-end model =====
+When building the front: component (a boundary, not a file) · state (outermost place that still
+needs it: URL, server, shared parent, component; derive, never mirror) · hooks (an effect syncs
+with the outside world, it does not compute) · rendering (pure, runs on every change) · hydration
+(server HTML and first client render must match: no Date.now/Math.random/window in render).
+Secrets and server-only data never go into a client component.${skillIn('react') || skillIn('nextjs') ? ' Detail: skills `react`, `nextjs` (references/mental-model.md, rendering-hydration.md).' : ''}
+Opt out with .rsc/.no-stack-hints.
+===============================
+`);
+  }
+}
+
 // Git required: version control is the substrate the SDD chain + ship guard assume.
 // If the project is not under git, push for it once per session. Persist the user's
 // "no" as .rsc/.no-git so the decision lives in a file and we stop re-asking.
