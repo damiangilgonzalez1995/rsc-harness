@@ -13,7 +13,7 @@
 //
 // Estado calculado (contrato estable para el dashboard; todo va en .rsc/overview/, fuera de git):
 //
-// state.json = {
+// state.json (solo el scan completo lo escribe) = {
 //   version: 1, generatedAt: ISO, fast: bool, branch, commit, reviews: <nº de revisiones>,
 //   kpis: {
 //     health: 0-100,                       // media de zones[].health ponderada por nº de archivos
@@ -39,7 +39,8 @@
 //   ordenado; un scan completo sustituye la entrada de su semana. --fast no la toca.
 //
 // --fast (aviso de sesión): mismos colores por cobertura y edad, pero sin detectar endpoints, sin
-// merges ni `gh` para la PR (solo el campo `pr` de las revisiones) y sin escribir history.json.
+// merges ni `gh` para la PR (solo el campo `pr` de las revisiones) y sin escribir nada: ni
+// state.json ni history.json. Solo devuelve el estado.
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, realpathSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -474,10 +475,14 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
     kpis,
     zones,
   };
-  const out = join(root, ...STATE_REL);
-  mkdirSync(join(out, '..'), { recursive: true });
-  writeFileSync(out, JSON.stringify(state, null, 2) + '\n');
-  if (full) writeHistory(root, now, health);
+  // El rápido no escribe nada: corre en el Worker del arranque, que puede cortarlo a medias, y su
+  // estado (sin endpoints) no debe acabar en el dashboard.
+  if (full) {
+    const out = join(root, ...STATE_REL);
+    mkdirSync(join(out, '..'), { recursive: true });
+    writeFileSync(out, JSON.stringify(state, null, 2) + '\n');
+    writeHistory(root, now, health);
+  }
   return state;
 }
 
@@ -895,7 +900,11 @@ export function render({ root = process.cwd(), state, history, gh = true } = {})
   root = resolve(root);
   const cfg = readConfig(root);
   if (!cfg) return null;
-  if (!state) state = readJson(join(root, ...STATE_REL)) || scan({ root, gh });
+  if (!state) {
+    // Un estado rápido (de una versión anterior) o ilegible no vale: se rehace el scan completo.
+    const saved = readJson(join(root, ...STATE_REL));
+    state = saved && !saved.fast && Array.isArray(saved.zones) ? saved : scan({ root, gh });
+  }
   if (!state) return null;
   if (!Array.isArray(history)) history = readJson(join(root, ...HISTORY_REL));
   if (!Array.isArray(history)) history = [];
