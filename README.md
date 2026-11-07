@@ -339,6 +339,28 @@ Al cerrar una sesión larga, hace una retrospectiva: busca qué del entorno del 
 comprobaciones, estándares, ficheros de instrucciones, herramientas) hay que cambiar para que la
 siguiente vaya mejor. El resultado son cambios concretos, no una charla.
 
+### `overview` — qué está revisado y qué no
+
+Tiene tres modos:
+
+- **`/overview start`**: al empezar un proyecto, te pregunta por rondas lo que conviene decidir pronto (multitenant, sesiones, accesos, secretos, backups…). Antes de preguntar, mira lo que ya se ve en el código.
+- **Registro automático**: cada vez que lanzas una skill de revisión (`code-review`, `security-scan`, `docs-review`…), apunta qué archivos se revisaron y con qué contenido. Si un archivo cambia después, ya no cuenta como revisado. El registro va en git, en `docs/overview/`, así que funciona con ramas en paralelo y merges.
+- **`/overview show`**: abre un dashboard que te dice qué zona toca revisar y con qué skill. Es un HTML local que no necesita servidor.
+
+![Dashboard de overview: salud global, zonas por color y revisiones del mes](docs/img/readme/readme-21-overview.png)
+
+Cada cuadrado es una zona del proyecto:
+
+- **Verde**: al día.
+- **Ámbar**: se va quedando atrás.
+- **Rojo**: hay un endpoint, una tabla o un archivo de autenticación sin revisar.
+
+Al pulsar un cuadrado se abre el detalle de la zona: los archivos sin cubrir, la skill recomendada y la última verificación de un agente que comprueba si los docs cuadran con el código.
+
+![Panel de detalle de una zona: archivos sin cubrir, skill recomendada y verificación de los docs](docs/img/readme/readme-22-overview-panel.png)
+
+Al abrir sesión, si alguna zona está en rojo, sale una sola línea: `overview: 2 zonas en rojo (api-endpoints, database) — /overview scan`.
+
 ### Otras de la base
 
 | Skill | Para qué |
@@ -351,7 +373,6 @@ siguiente vaya mejor. El resultado son cambios concretos, no una charla.
 | `eli5` | Explica un tema desde cero, con analogías y sin jerga. |
 | `teach` | Te enseña un concepto a lo largo de varias sesiones. |
 | `hardening` | Auditoría de seguridad antes de publicar. |
-| `overview` | Al empezar, te pregunta por rondas lo que hay que decidir (multitenant, sesiones, accesos…). Después, qué zonas piden revisión y con qué skill. |
 
 ---
 
