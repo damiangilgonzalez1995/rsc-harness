@@ -1,0 +1,33 @@
+skill: break-ui
+
+should_trigger:
+  - prompt: "Try to break this component with worst-case data."
+    why: "Direct trigger for break-ui."
+  - prompt: "What happens with a 200-character name here?"
+    why: "Direct trigger for break-ui."
+  - prompt: "Stress-test this table with empty and huge lists."
+    why: "Direct trigger for break-ui."
+  - prompt: "Find edge cases that break this screen."
+    why: "Direct trigger for break-ui."
+  - prompt: "Test this card with emoji, RTL and missing fields."
+    why: "Direct trigger for break-ui."
+
+should_not_trigger:
+  - prompt: "Review the visual design of this page."
+    route_to: "revision-interfaz"
+    why: "Outside the scope of break-ui."
+  - prompt: "Write unit tests for this function."
+    route_to: "none"
+    why: "Outside the scope of break-ui."
+  - prompt: "Polish the spacing and radii."
+    route_to: "mejor-ui"
+    why: "Outside the scope of break-ui."
+  - prompt: "Check keyboard accessibility."
+    route_to: "mejor-accesibilidad"
+    why: "Outside the scope of break-ui."
+
+capability:
+  - scenario: "A user wants to find what breaks with extreme data."
+    must_include:
+      - "worst"
+      - "long"

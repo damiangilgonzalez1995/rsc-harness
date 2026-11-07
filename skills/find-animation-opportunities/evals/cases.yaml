@@ -1,0 +1,33 @@
+skill: find-animation-opportunities
+
+should_trigger:
+  - prompt: "Where in this UI would motion help?"
+    why: "Direct trigger for find-animation-opportunities."
+  - prompt: "Find places that should animate but do not."
+    why: "Direct trigger for find-animation-opportunities."
+  - prompt: "Which interactions here feel abrupt?"
+    why: "Direct trigger for find-animation-opportunities."
+  - prompt: "Scan this screen for missing transitions."
+    why: "Direct trigger for find-animation-opportunities."
+  - prompt: "Suggest where animation would add clarity, and where it would not."
+    why: "Direct trigger for find-animation-opportunities."
+
+should_not_trigger:
+  - prompt: "Build the animation for this dialog."
+    route_to: "animar"
+    why: "Outside the scope of find-animation-opportunities."
+  - prompt: "Strip the animations that do not earn their place."
+    route_to: "remove-animations"
+    why: "Outside the scope of find-animation-opportunities."
+  - prompt: "Review this animation diff."
+    route_to: "review-animations"
+    why: "Outside the scope of find-animation-opportunities."
+  - prompt: "Audit all animation code."
+    route_to: "improve-animations"
+    why: "Outside the scope of find-animation-opportunities."
+
+capability:
+  - scenario: "A user asks where animation would help."
+    must_include:
+      - "opportunit"
+      - "not"

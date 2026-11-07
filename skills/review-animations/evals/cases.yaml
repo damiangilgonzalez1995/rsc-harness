@@ -1,0 +1,33 @@
+skill: review-animations
+
+should_trigger:
+  - prompt: "Review the animation code in this diff."
+    why: "Direct trigger for review-animations."
+  - prompt: "Is this transition good enough to merge? Be strict."
+    why: "Direct trigger for review-animations."
+  - prompt: "Check the motion in my PR against a high craft bar."
+    why: "Direct trigger for review-animations."
+  - prompt: "Give me a block or approve verdict on these keyframes."
+    why: "Direct trigger for review-animations."
+  - prompt: "Critique the easing and duration of this modal animation."
+    why: "Direct trigger for review-animations."
+
+should_not_trigger:
+  - prompt: "Build a new animation for this list."
+    route_to: "animar"
+    why: "Outside the scope of review-animations."
+  - prompt: "Audit every animation in the whole codebase."
+    route_to: "improve-animations"
+    why: "Outside the scope of review-animations."
+  - prompt: "Remove the animations we do not need."
+    route_to: "remove-animations"
+    why: "Outside the scope of review-animations."
+  - prompt: "Review the colors on this page."
+    route_to: "mejor-colores"
+    why: "Outside the scope of review-animations."
+
+capability:
+  - scenario: "A user asks for a strict review of motion code in a diff."
+    must_include:
+      - "before"
+      - "after"

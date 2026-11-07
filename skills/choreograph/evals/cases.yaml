@@ -1,0 +1,33 @@
+skill: choreograph
+
+should_trigger:
+  - prompt: "Coordinate the animation of these five elements."
+    why: "Direct trigger for choreograph."
+  - prompt: "What should lead and what should follow when this panel opens?"
+    why: "Direct trigger for choreograph."
+  - prompt: "Stagger these list items properly."
+    why: "Direct trigger for choreograph."
+  - prompt: "Sequence the header, content and footer entrance."
+    why: "Direct trigger for choreograph."
+  - prompt: "Several things move at once and it looks chaotic; fix the timing."
+    why: "Direct trigger for choreograph."
+
+should_not_trigger:
+  - prompt: "Animate one button press."
+    route_to: "animar"
+    why: "Outside the scope of choreograph."
+  - prompt: "Fix dropped frames."
+    route_to: "animation-performance"
+    why: "Outside the scope of choreograph."
+  - prompt: "Review this animation diff."
+    route_to: "review-animations"
+    why: "Outside the scope of choreograph."
+  - prompt: "Name this motion effect."
+    route_to: "vocabulario-animacion"
+    why: "Outside the scope of choreograph."
+
+capability:
+  - scenario: "A user has several elements that animate together."
+    must_include:
+      - "lead"
+      - "order"

@@ -1,6 +1,6 @@
 # Catálogo de skills
 
-297 skills, agrupadas por lo que quieres hacer. Cada enlace abre la carpeta de la skill y su
+310 skills, agrupadas por lo que quieres hacer. Cada enlace abre la carpeta de la skill y su
 `SKILL.md`. Ninguna hace falta llamarla a mano: se activa sola cuando la tarea encaja.
 
 Para instalar una: `rsc add <id>`. Para que te recomiende: `rsc consult "lo que quieres hacer"`.
@@ -223,6 +223,19 @@ encargo.
 | [leyes-de-retencion](../skills/leyes-de-retencion/) | Por qué la gente abandona un flujo: Hick, Fitts, Miller, Jakob, Doherty, pico-final. |
 | [vocabulario-animacion](../skills/vocabulario-animacion/) | Glosario inverso: convierte "eso que rebota" en el término exacto. |
 | [video-a-superprompt](../skills/video-a-superprompt/) | Convierte un vídeo de referencia en un prompt de recreación detallado. |
+| [emil-design-eng](../skills/emil-design-eng/) | La filosofía de pulido de Emil Kowalski: detalles invisibles, cuándo animar y cuándo no. |
+| [review-animations](../skills/review-animations/) | Revisa el movimiento de un diff con criterio estricto: tabla antes/después y veredicto Block/Approve. |
+| [improve-animations](../skills/improve-animations/) | Audita todo el movimiento del código y entrega un plan priorizado. |
+| [find-animation-opportunities](../skills/find-animation-opportunities/) | Busca dónde faltaría movimiento y rechaza lo que no debe animarse. |
+| [remove-animations](../skills/remove-animations/) | Quita el movimiento que sobra: acciones de teclado, usos de alta frecuencia. |
+| [choreograph](../skills/choreograph/) | Coordina varios elementos animados: quién lidera, quién sigue, qué no se mueve. |
+| [animation-performance](../skills/animation-performance/) | Arregla animaciones que pierden frames: propiedades de composición, fuera del hilo principal. |
+| [animate-expo](../skills/animate-expo/) | Animaciones en React Native y Expo: gestos, hojas, háptica, movimiento fuera del hilo JS. |
+| [break-ui](../skills/break-ui/) | Alimenta la interfaz con el peor dato posible y lista todo lo que se rompe, con su arreglo. |
+| [mobile-native](../skills/mobile-native/) | Los arreglos pequeños que hacen que una web se sienta nativa en el móvil. |
+| [ask-sonner](../skills/ask-sonner/) | Guía de Sonner, la librería de toasts de React. |
+| [pick-ui-library](../skills/pick-ui-library/) | Elige la librería de UI adecuada de una lista recomendada. |
+| [write-swift](../skills/write-swift/) | Swift moderno: tipos de valor, concurrencia de Swift 6, pruebas. |
 
 ### 4 · Revisar y cerrar
 

@@ -1,0 +1,33 @@
+skill: emil-design-eng
+
+should_trigger:
+  - prompt: "Make this card feel more polished; the details feel off."
+    why: "Direct trigger for emil-design-eng."
+  - prompt: "Why does this UI feel cheap even though it works?"
+    why: "Direct trigger for emil-design-eng."
+  - prompt: "Review my component for invisible details like radii, shadows and press feedback."
+    why: "Direct trigger for emil-design-eng."
+  - prompt: "Give me design-engineering feedback on this button and its transitions."
+    why: "Direct trigger for emil-design-eng."
+  - prompt: "Help me decide how this popover should feel when it opens."
+    why: "Direct trigger for emil-design-eng."
+
+should_not_trigger:
+  - prompt: "Review this animation diff and approve or block it."
+    route_to: "review-animations"
+    why: "Outside the scope of emil-design-eng."
+  - prompt: "Build the enter animation for this toast."
+    route_to: "animar"
+    why: "Outside the scope of emil-design-eng."
+  - prompt: "Set up my color tokens and dark mode."
+    route_to: "mejor-colores"
+    why: "Outside the scope of emil-design-eng."
+  - prompt: "Wire up form state and loading states."
+    route_to: "ui-engineering"
+    why: "Outside the scope of emil-design-eng."
+
+capability:
+  - scenario: "A user asks why a UI feels unpolished."
+    must_include:
+      - "detail"
+      - "ease"
