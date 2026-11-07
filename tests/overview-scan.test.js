@@ -1,0 +1,174 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { record, scan } from '../skills/overview/scripts/overview.mjs';
+import { DAY, git, put, commit, repo, zone, dashboardRepo } from './fixtures/overview-fixture.js';
+
+// Scan completo (ticket 04): endpoints nuevos sin cubrir, última PR cubierta, foto semanal y salud
+// global. El modo rápido (aviso de sesión) no hace nada de lo caro.
+const API = {
+  version: 1,
+  project: 'scan-fixture',
+  zones: [
+    { id: 'api-endpoints', label: 'Endpoints API', paths: ['app/**', 'server/**'], reviewSkills: ['security-scan'], cadenceDays: 30, checks: [] },
+    { id: 'docs', label: 'Docs', paths: ['guide/**'], reviewSkills: ['docs-review'], cadenceDays: 30, checks: [] },
+  ],
+  questions: [{ id: 'q1', zone: 'docs', text: '¿?', state: 'open' }],
+};
+const BASE = {
+  'app/routers/users.py': 'from fastapi import APIRouter\nrouter = APIRouter()\n\n@router.get("/users")\ndef list_users():\n    return []\n',
+  'server/index.js': "const app = require('express')();\napp.set('x', 1);\napp.get('/health', (req, res) => res.send('ok'));\n",
+  'guide/intro.md': '# intro\n',
+};
+const OPTS = { gh: false };
+const keys = (z) => z.uncoveredEndpoints.map((e) => `${e.method} ${e.route} ${e.file}`).sort();
+
+function reviewedRepo() {
+  const root = repo({ config: API, files: BASE });
+  record({ root, skill: 'security-scan', scope: 'global' });
+  commit(root, 'review');
+  return root;
+}
+
+test('rutas FastAPI y Express añadidas tras la revisión salen sin cubrir y la zona en rojo', () => {
+  const root = reviewedRepo();
+  put(root, 'app/routers/orders.py', 'from fastapi import APIRouter\nrouter = APIRouter()\n\n@router.post("/orders")\nasync def create():\n    return {}\n');
+  put(root, 'server/billing.js', "const router = require('express').Router();\nrouter.delete(\"/invoices/:id\", handler);\n");
+  commit(root, 'nuevas rutas');
+  const z = zone(scan({ root, ...OPTS }), 'api-endpoints');
+  assert.deepEqual(keys(z), ['DELETE /invoices/:id server/billing.js', 'POST /orders app/routers/orders.py']);
+  assert.equal(z.color, 'red');
+  const fastapi = z.uncoveredEndpoints.find((e) => e.file === 'app/routers/orders.py');
+  assert.equal(fastapi.stack, 'fastapi');
+  assert.equal(fastapi.line, 4);
+});
+
+test('un endpoint ya revisado con el mismo contenido no aparece', () => {
+  const root = reviewedRepo();
+  const z = zone(scan({ root, ...OPTS }), 'api-endpoints');
+  assert.deepEqual(z.uncoveredEndpoints, []);
+  assert.equal(z.color, 'green');
+});
+
+test('un archivo cambiado pero con los mismos endpoints no los da por nuevos', () => {
+  const root = reviewedRepo();
+  put(root, 'server/index.js', `${BASE['server/index.js']}// comentario\n`);
+  commit(root, 'comentario');
+  const z = zone(scan({ root, ...OPTS }), 'api-endpoints');
+  assert.deepEqual(z.uncovered, ['server/index.js']);
+  assert.deepEqual(z.uncoveredEndpoints, []);
+  // Sigue sin cubrir un archivo de dos: eso ya es rojo por cobertura, pero no por endpoints.
+  assert.equal(z.coverage, 0.5);
+});
+
+test('Next: app/**/route.ts con exports GET/POST cuenta como endpoints', () => {
+  const root = reviewedRepo();
+  put(root, 'app/(shop)/orders/[id]/route.ts', 'export async function GET(req: Request) {}\nexport const POST = async () => {};\nexport function helper() {}\n');
+  commit(root, 'next');
+  const z = zone(scan({ root, ...OPTS }), 'api-endpoints');
+  assert.deepEqual(keys(z), ['GET /orders/[id] app/(shop)/orders/[id]/route.ts', 'POST /orders/[id] app/(shop)/orders/[id]/route.ts']);
+  assert.equal(z.color, 'red');
+});
+
+test('el modo rápido sigue sin detectar endpoints ni escribir historia', () => {
+  const root = reviewedRepo();
+  put(root, 'app/routers/orders.py', '@router.post("/orders")\ndef create():\n    pass\n');
+  commit(root, 'orders');
+  const state = scan({ root, fast: true });
+  assert.deepEqual(zone(state, 'api-endpoints').uncoveredEndpoints, []);
+  assert.equal(state.kpis.uncoveredEndpoints, 0);
+  assert.throws(() => readFileSync(join(root, '.rsc', 'overview', 'history.json')));
+});
+
+test('la historia guarda una entrada por semana ISO y no la duplica al volver a ejecutar', () => {
+  const root = reviewedRepo();
+  const now = new Date();
+  scan({ root, ...OPTS, now });
+  scan({ root, ...OPTS, now });
+  const file = join(root, '.rsc', 'overview', 'history.json');
+  let h = JSON.parse(readFileSync(file, 'utf8'));
+  assert.equal(h.length, 1);
+  assert.match(h[0].week, /^\d{4}-W\d{2}$/);
+  assert.equal(typeof h[0].health, 'number');
+  assert.equal(h[0].commits, 2); // init + review, los dos de esta semana
+  scan({ root, ...OPTS, now: new Date(now.getTime() + 7 * DAY) });
+  h = JSON.parse(readFileSync(file, 'utf8'));
+  assert.equal(h.length, 2);
+  assert.ok(h[0].week < h[1].week);
+});
+
+test('semana ISO: el 1 de enero de 2027 cae en 2026-W53', () => {
+  const root = reviewedRepo();
+  scan({ root, ...OPTS, now: new Date('2027-01-01T12:00:00Z') });
+  const h = JSON.parse(readFileSync(join(root, '.rsc', 'overview', 'history.json'), 'utf8'));
+  assert.equal(h[0].week, '2026-W53');
+});
+
+test('última PR cubierta: el campo pr de las revisiones y los merge commits de ramas revisadas', () => {
+  const root = repo({ config: API, files: BASE });
+  record({ root, skill: 'security-scan', scope: 'global', pr: 3 });
+  commit(root, 'review');
+  assert.deepEqual(scan({ root, ...OPTS }).kpis.lastCoveredPr, { number: 3, source: 'review' });
+
+  git(root, 'checkout', '-q', '-b', 'feat/orders');
+  put(root, 'app/routers/orders.py', 'x = 1\n');
+  commit(root, 'orders');
+  record({ root, skill: 'security-scan' }); // scope pr sin número
+  commit(root, 'review orders');
+  git(root, 'checkout', '-q', 'main');
+  git(root, 'merge', '-q', '--no-ff', '-m', 'Merge pull request #12 from someone/feat/orders', 'feat/orders');
+  // Una PR mergeada sin revisión no cuenta como cubierta.
+  git(root, 'checkout', '-q', '-b', 'feat/raw');
+  put(root, 'README.md', 'raw\n');
+  commit(root, 'raw');
+  git(root, 'checkout', '-q', 'main');
+  git(root, 'merge', '-q', '--no-ff', '-m', 'Merge pull request #20 from someone/feat/raw', 'feat/raw');
+  assert.deepEqual(scan({ root, ...OPTS }).kpis.lastCoveredPr, { number: 12, source: 'merge' });
+});
+
+test('sin PRs, la última PR cubierta es null', () => {
+  const root = reviewedRepo();
+  assert.equal(scan({ root, ...OPTS }).kpis.lastCoveredPr, null);
+});
+
+test('salud global de 0 a 100: todo cubierto es 100 y nada revisado es 0', () => {
+  const allOk = repo({ config: { ...API, zones: [API.zones[0]] }, files: BASE });
+  record({ root: allOk, skill: 'security-scan', scope: 'global' });
+  assert.equal(scan({ root: allOk, ...OPTS }).kpis.health, 100);
+  const none = repo({ config: API, files: BASE });
+  assert.equal(scan({ root: none, ...OPTS }).kpis.health, 0);
+});
+
+test('la salud baja cuando entra un endpoint sin cubrir', () => {
+  const root = reviewedRepo();
+  const before = scan({ root, ...OPTS }).kpis.health;
+  put(root, 'app/routers/orders.py', '@router.post("/orders")\ndef create():\n    pass\n');
+  commit(root, 'orders');
+  const after = scan({ root, ...OPTS });
+  assert.ok(after.kpis.health < before, `${after.kpis.health} < ${before}`);
+  assert.ok(zone(after, 'api-endpoints').health <= 40);
+});
+
+test('estado para el dashboard: KPIs, historial por zona y skill recomendada', () => {
+  const now = new Date();
+  const root = dashboardRepo({ now });
+  const state = scan({ root, ...OPTS, now });
+  assert.deepEqual(state.zones.map((z) => [z.id, z.color]), [
+    ['api-endpoints', 'red'], ['frontend', 'green'], ['database', 'amber'], ['docs', 'never'],
+  ]);
+  assert.deepEqual(state.kpis.zonesNeedingReview, ['api-endpoints', 'database', 'docs']);
+  assert.equal(state.kpis.uncoveredFiles, 2); // orders.py y guide/intro.md
+  assert.equal(state.kpis.uncoveredEndpoints, 1);
+  assert.equal(state.kpis.openQuestions, 1);
+  assert.deepEqual(state.kpis.lastCoveredPr, { number: 7, source: 'review' });
+  const api = zone(state, 'api-endpoints');
+  assert.equal(api.recommendedSkill, 'secure-coding'); // nunca lanzada: va antes que security-scan
+  assert.equal(api.checks[0].id, 'server-validation');
+  assert.equal(api.reviewHistory.length, 1);
+  assert.deepEqual(Object.keys(api.reviewHistory[0]).sort(), ['at', 'branch', 'coveredNow', 'file', 'pr', 'scope', 'skill']);
+  assert.equal(api.reviewHistory[0].coveredNow, 1);
+  assert.equal(zone(state, 'docs').recommendedSkill, 'docs-review');
+  const disk = JSON.parse(readFileSync(join(root, '.rsc', 'overview', 'state.json'), 'utf8'));
+  assert.deepEqual(disk.kpis, state.kpis);
+});

@@ -17,7 +17,8 @@ El motor es `scripts/overview.mjs`: Node sin dependencias, por CLI o como módul
 
 - `docs/overview/overview.json`, en git: `zones[]` (`id`, `label`, `paths` con globs, `reviewSkills`, `cadenceDays`, `checks`), que es lo que lee el motor, y lo que escribe `start` (`questions[]`, `sources[]`, `verifications[]`, `hiddenZones[]`, `pendingMessage`). Esquema completo en [`zones.md`](zones.md).
 - `docs/overview/reviews/<fecha>-<skill>-<commit>.json`, en git: una revisión por archivo, con `skill`, `at`, `branch`, `commit`, `scope`, `pr` opcional, `zones` y `files` (`{path: blob sha}`). Un archivo por revisión evita conflictos al mergear ramas.
-- `.rsc/overview/state.json`, fuera de git: el estado calculado.
+- `.rsc/overview/state.json`, fuera de git: el estado calculado (`kpis` y `zones[]`; la forma exacta está en la cabecera de `overview.mjs`).
+- `.rsc/overview/history.json`, fuera de git: una foto `{week, health, commits}` por semana ISO.
 
 ## Modos
 
@@ -48,14 +49,16 @@ node scripts/overview.mjs record --skill security-scan [--scope pr|global] [--pr
 ## Modo `scan`
 
 ```bash
-node scripts/overview.mjs scan [--fast] [--root .]
+node scripts/overview.mjs scan [--fast] [--no-gh] [--root .]
 ```
 
 - Un archivo está cubierto si alguna revisión de una skill de su zona lo registra con su blob sha actual. Si cambió después, deja de estar cubierto, sea cual sea la fecha.
 - Por zona: `coverage` (cubiertos ÷ total), `uncovered`, `ageDays` desde la revisión más reciente que aún cubre algo, y `color`:
   - `never`: la zona nunca se revisó;
-  - `red`: cobertura por debajo de 0,8 (código nuevo o cambiado sin cubrir);
+  - `red`: cobertura por debajo de 0,8 (código nuevo o cambiado sin cubrir), o algún endpoint nuevo sin cubrir;
   - `amber`: cobertura entre 0,8 y 0,9, o todo cubierto pero fuera de la cadencia (la edad sola no pasa de ámbar);
   - `green`: cobertura de 0,9 o más dentro de la cadencia.
-- `--fast` es el modo del aviso de sesión.
-- Cuenta el resultado en una línea por zona que pida revisión, con la skill recomendada (la primera de `reviewSkills`).
+- Endpoints nuevos sin cubrir (`uncoveredEndpoints`): rutas FastAPI (`@router.get`, `@app.post`…), Express (`app|router.get(...)`) y Next (`app/**/route.ts` con `export GET/POST…`) de archivos sin cubrir que no estaban en la versión revisada del archivo.
+- KPIs: `health` (0–100, cobertura ponderada por archivos, con techo de 80 si caduca y 40 con endpoints nuevos; nunca revisada vale 0), `zonesNeedingReview`, `uncoveredFiles`, `uncoveredEndpoints`, `openQuestions` y `lastCoveredPr` (del campo `pr` de las revisiones, de los merge commits de ramas revisadas y de `gh` si está; `--no-gh` lo salta).
+- `--fast` es el modo del aviso de sesión: mismos colores por cobertura y edad, sin endpoints, sin merges ni `gh` y sin tocar la historia.
+- Cuenta el resultado en una línea por zona que pida revisión, con su `recommendedSkill` (la primera de `reviewSkills` que nunca se lanzó en la zona, o la de revisión más antigua).
