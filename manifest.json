@@ -1,7 +1,7 @@
 {
   "version": "1.3.6",
   "counts": {
-    "skills": 310,
+    "skills": 311,
     "agents": 34,
     "commands": 43,
     "fixedCommands": 10
@@ -3789,6 +3789,29 @@
         "always-on"
       ],
       "recommends": [],
+      "profiles": [
+        "minimal",
+        "core",
+        "ui",
+        "full"
+      ]
+    },
+    {
+      "id": "overview",
+      "description": "Use when the user wants the project overview: which zones need review, what is covered by the current content, or start a project with senior checks. Records each review run with the blob sha of every covered file. NOT a security audit (that is `hardening`), NOT a quick diff scan (that is `security-scan`), NOT a data dashboard (that is `dashboard`).",
+      "tags": [
+        "overview",
+        "project-status",
+        "review-coverage",
+        "start-project",
+        "zones",
+        "cadence"
+      ],
+      "recommends": [
+        "hardening",
+        "security-scan",
+        "code-review"
+      ],
       "profiles": [
         "minimal",
         "core",

@@ -5,8 +5,9 @@
 // but remains conditionally loaded: its description routes human-language asks
 // without paying for its body on unrelated turns. `tunel-ngrok` y `hardening` son
 // obligatorias por decisión del usuario: van al suelo para que también lleguen con
-// el update a los proyectos que ya existían, no solo a las instalaciones nuevas.
-export const DEFAULT_SKILL_FLOOR = Object.freeze(['orient', 'suggest', 'bro', 'tunel-ngrok', 'hardening', 'no-me-rayes']);
+// el update a los proyectos que ya existían, no solo a las instalaciones nuevas. `overview`
+// también: su hook de registro está siempre cableado y calla sin docs/overview/overview.json.
+export const DEFAULT_SKILL_FLOOR = Object.freeze(['orient', 'suggest', 'bro', 'tunel-ngrok', 'hardening', 'no-me-rayes', 'overview']);
 
 export function withDefaultSkillFloor(skillIds = []) {
   return [...new Set([...DEFAULT_SKILL_FLOOR, ...skillIds])];

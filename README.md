@@ -87,7 +87,7 @@ Empiezas pequeño. El resto se carga bajo demanda: el harness te propone una ski
 la pide, con la evidencia que lo justifica.
 
 ```bash
-rsc install --profile minimal   # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes
+rsc install --profile minimal   # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes + overview
 rsc install --profile core      # la base + el método completo
 rsc install --profile ui        # core + todo lo de interfaz
 rsc install --profile full      # todo el catálogo
@@ -371,16 +371,16 @@ Hooks que vigilan por ti: recuerdan la cadena, piden confirmación antes de un `
 En Claude Code quedan activados `skins`, `savvy-progress`, `context-bar`, `prompt-enhancer`, `modelo-justo`,
 `where-am-i` y `cache-tax` (este mantiene caliente la caché, y eso gasta tokens). `superpowers` llega cuando el proyecto usa el método.
 
-En cifras: 310 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
+En cifras: 311 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
 (Claude Code, Codex, Cursor, Copilot, Gemini…). Detalle en la [referencia técnica](docs/referencia-tecnica.md).
 
 ---
 
 ## Catálogo
 
-![310 skills por dominio](docs/img/readme/readme-15-catalogo.png)
+![311 skills por dominio](docs/img/readme/readme-15-catalogo.png)
 
-310 skills en 25 dominios: software, negocio, contenido, datos e IA.
+311 skills en 25 dominios: software, negocio, contenido, datos e IA.
 Cada una se activa sola cuando la tarea encaja.
 
 **[Ver el catálogo completo →](docs/catalogo.md)** · [Referencia técnica](docs/referencia-tecnica.md) ·
