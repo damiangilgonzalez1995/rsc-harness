@@ -42,7 +42,8 @@ function wiredScope({ style = 'posix', copies = 1, guard = true, extra = {} } = 
     PreCompact: many('worklog-checkpoint.mjs'),
     SessionEnd: many('worklog-checkpoint.mjs'),
     PreToolUse: [...many('ship-guard.mjs'), ...many('danger-guard.mjs'), ...many('gitmoji-guard.mjs')],
-    UserPromptSubmit: many('userprompt-gate.mjs'),
+    UserPromptSubmit: [...many('userprompt-gate.mjs'), ...many('overview-prompt-hook.mjs')],
+    PostToolUse: many('overview-skill-hook.mjs'),
     ...extra,
   };
   writeFileSync(join(root, '.claude', 'settings.json'), JSON.stringify({ hooks }, null, 2) + '\n');
