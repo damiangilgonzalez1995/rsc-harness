@@ -1,60 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, writeFileSync, mkdirSync, readdirSync, readFileSync, existsSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { readFileSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { record, scan } from '../skills/overview/scripts/overview.mjs';
+import { ENGINE, DAY, CONFIG, git, put, repo, reviewsOf, zone } from './fixtures/overview-fixture.js';
 
 // El motor de `overview` decide si un archivo está revisado por el CONTENIDO (blob sha), no por la
 // fecha: el anti-objetivo es la falsa cobertura. Estos tests montan un repo git de verdad, con ramas,
 // merge y squash, porque es justo ahí donde una cobertura por fecha o por commit se rompería.
-const ENGINE = join(dirname(fileURLToPath(import.meta.url)), '..', 'skills', 'overview', 'scripts', 'overview.mjs');
-const DAY = 24 * 60 * 60 * 1000;
-
-function git(root, ...args) {
-  const r = spawnSync('git', args, { cwd: root, encoding: 'utf8', windowsHide: true });
-  assert.equal(r.status, 0, `git ${args.join(' ')}: ${r.stderr}`);
-  return r.stdout.trim();
-}
-
-function put(root, rel, body) {
-  mkdirSync(dirname(join(root, rel)), { recursive: true });
-  writeFileSync(join(root, rel), body);
-}
-
-const CONFIG = {
-  version: 1,
-  project: 'fixture',
-  zones: [
-    { id: 'api-endpoints', label: 'Endpoints API', paths: ['api/**'], reviewSkills: ['security-scan'], cadenceDays: 30, checks: [] },
-    { id: 'docs', label: 'Docs', paths: ['guide/**/*.md'], reviewSkills: ['docs-review'], cadenceDays: 30, checks: [] },
-  ],
-  questions: [],
-};
-
-function repo({ config = CONFIG } = {}) {
-  const root = mkdtempSync(join(tmpdir(), 'rsc-overview-'));
-  git(root, 'init', '-q', '-b', 'main');
-  git(root, 'config', 'user.email', 'test@example.com');
-  git(root, 'config', 'user.name', 'Test');
-  git(root, 'config', 'commit.gpgsign', 'false');
-  git(root, 'config', 'core.autocrlf', 'false');
-  put(root, 'api/users.js', 'export const users = 1;\n');
-  put(root, 'guide/intro.md', '# intro\n');
-  put(root, 'README.md', 'hola\n');
-  if (config) put(root, 'docs/overview/overview.json', JSON.stringify(config, null, 2));
-  git(root, 'add', '.');
-  git(root, 'commit', '-q', '-m', 'init');
-  return root;
-}
-
-const reviewsOf = (root) => {
-  const dir = join(root, 'docs', 'overview', 'reviews');
-  return existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith('.json')) : [];
-};
-const zone = (state, id) => state.zones.find((z) => z.id === id);
 
 test('sin overview.json, record y scan no hacen nada', () => {
   const root = repo({ config: null });

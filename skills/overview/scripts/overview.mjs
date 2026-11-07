@@ -5,11 +5,41 @@
 // import() desde `.rsc/`, así que no puede depender de nada que no esté a su lado.
 //
 //   node overview.mjs record --skill <id> [--scope pr|global] [--pr N] [--root <dir>]
-//   node overview.mjs scan [--fast] [--root <dir>]
+//   node overview.mjs scan [--fast] [--no-gh] [--root <dir>]
 //
 // Regla central: un archivo está revisado por la skill S si alguna revisión de S lo registra con el
 // MISMO blob sha que tiene hoy (el de HEAD, o el del árbol de trabajo si tiene cambios). La fecha no
 // cubre nada; solo el contenido. Por eso sobrevive al squash merge y no da falsa cobertura.
+//
+// Estado calculado (contrato estable para el dashboard; todo va en .rsc/overview/, fuera de git):
+//
+// state.json = {
+//   version: 1, generatedAt: ISO, fast: bool, branch, commit, reviews: <nº de revisiones>,
+//   kpis: {
+//     health: 0-100,                       // media de zones[].health ponderada por nº de archivos
+//     zonesNeedingReview: [zoneId],        // zonas cuyo color no es green
+//     uncoveredFiles: n,                   // archivos distintos sin cubrir en alguna zona
+//     uncoveredEndpoints: n,               // endpoints nuevos sin cubrir (0 en --fast)
+//     openQuestions: n,                    // questions[] con state 'open' en overview.json
+//     lastCoveredPr: { number, source: 'review'|'merge'|'gh' } | null,
+//   },
+//   zones: [{
+//     id, label, reviewSkills: [id], cadenceDays: n|null, checks: [...],   // checks tal cual del config
+//     files: n, covered: n, coverage: 0..1, uncovered: [path],
+//     uncoveredEndpoints: [{ method, route, file, line, stack: 'fastapi'|'express'|'next' }],
+//     lastReviewAt: ISO|null, ageDays: n|null, reviews: n,
+//     reviewHistory: [{ skill, at, branch, scope, pr: n|null, file, coveredNow: n }],  // más reciente primero
+//     recommendedSkill: id|null,           // la reviewSkill nunca lanzada o la de revisión más antigua
+//     health: 0-100,
+//     color: 'green'|'amber'|'red'|'never',
+//   }],
+// }
+//
+// history.json = [{ week: 'YYYY-Www' (semana ISO, UTC), health: 0-100, commits: n }]  // por semana,
+//   ordenado; un scan completo sustituye la entrada de su semana. --fast no la toca.
+//
+// --fast (aviso de sesión): mismos colores por cobertura y edad, pero sin detectar endpoints, sin
+// merges ni `gh` para la PR (solo el campo `pr` de las revisiones) y sin escribir history.json.
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, realpathSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -19,6 +49,7 @@ export const SKILL_ID_RE = /^[a-z0-9:_-]+$/;
 const CONFIG_REL = ['docs', 'overview', 'overview.json'];
 const REVIEWS_REL = ['docs', 'overview', 'reviews'];
 const STATE_REL = ['.rsc', 'overview', 'state.json'];
+const HISTORY_REL = ['.rsc', 'overview', 'history.json'];
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 // Umbrales de color. Por debajo de RED_BELOW la zona tiene demasiado código nuevo o cambiado sin
@@ -176,8 +207,112 @@ function readReviews(root) {
   return out;
 }
 
-function colorOf({ reviewed, total, coverage, ageDays, cadenceDays }) {
+// Detección de endpoints por patrones sencillos. Para otro stack basta con añadir un detector:
+// `files` dice a qué rutas se aplica y `detect` devuelve [{ method, route, line }] de un fuente.
+const lineAt = (src, index) => src.slice(0, index).split('\n').length;
+function matchAll(re, src, fn) {
+  const out = [];
+  for (const m of src.matchAll(re)) { const e = fn(m); if (e) out.push({ ...e, line: lineAt(src, m.index) }); }
+  return out;
+}
+function nextRoute(path) {
+  const m = /(?:^|\/)app\//.exec(path);
+  const start = m.index + m[0].length;
+  const dir = path.lastIndexOf('/') >= start ? path.slice(start, path.lastIndexOf('/')) : '';
+  const segs = dir.split('/').filter((s) => s && !/^\(.*\)$/.test(s) && !s.startsWith('@'));
+  return `/${segs.join('/')}`;
+}
+export const ENDPOINT_DETECTORS = [
+  {
+    stack: 'fastapi', // @router.get("/x"), @app.post("/x"), @users_router.delete(...)
+    files: /\.py$/,
+    detect: (src) => matchAll(/^[ \t]*@(\w+)\.(get|post|put|patch|delete|options|head|websocket)\(\s*[rbuf]?(['"])(.*?)\3/gm, src,
+      (m) => (/^(app|\w*router)$/i.test(m[1]) ? { method: m[2].toUpperCase(), route: m[4] } : null)),
+  },
+  {
+    stack: 'express', // app.get('/x', ...), router.post("/x", ...); el `app.get('env')` de un argumento no cuenta
+    files: /\.[cm]?[jt]sx?$/,
+    detect: (src) => matchAll(/\b(app|\w*[rR]outer)\.(get|post|put|patch|delete|all|options|head)\(\s*(['"`])([^'"`]+)\3\s*,/g, src,
+      (m) => ({ method: m[2].toUpperCase(), route: m[4] })),
+  },
+  {
+    stack: 'next', // app/**/route.ts con export function GET / export const POST
+    files: /(?:^|\/)app\/(?:.*\/)?route\.[cm]?[jt]sx?$/,
+    detect: (src, path) => matchAll(/^[ \t]*export\s+(?:async\s+)?(?:function\s+|(?:const|let|var)\s+)(GET|POST|PUT|PATCH|DELETE|OPTIONS|HEAD)\b/gm, src,
+      (m) => ({ method: m[1], route: nextRoute(path) })),
+  },
+];
+function detectEndpoints(path, src) {
+  const out = [];
+  for (const d of ENDPOINT_DETECTORS) {
+    if (!d.files.test(path)) continue;
+    for (const e of d.detect(src, path)) out.push({ method: e.method, route: e.route, file: path, line: e.line, stack: d.stack });
+  }
+  return out;
+}
+const endpointKey = (e) => `${e.method} ${e.route}`;
+const mayHaveEndpoints = (path) => ENDPOINT_DETECTORS.some((d) => d.files.test(path));
+
+// Semana ISO 8601 en UTC: la semana es del año al que pertenece su jueves.
+export function isoWeek(date) {
+  const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+  const dow = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dow);
+  const jan1 = Date.UTC(d.getUTCFullYear(), 0, 1);
+  const week = Math.ceil(((d.getTime() - jan1) / DAY_MS + 1) / 7);
+  return { label: `${d.getUTCFullYear()}-W${String(week).padStart(2, '0')}`, monday: new Date(d.getTime() - 3 * DAY_MS) };
+}
+
+// Salud de una zona: la cobertura, con techo de 80 si la revisión ha caducado y de 40 si entran
+// endpoints sin cubrir. Una zona nunca revisada vale 0.
+function zoneHealth({ reviewed, coverage, stale, newEndpoints }) {
+  if (!reviewed) return 0;
+  let h = Math.round(coverage * 100);
+  if (stale) h = Math.min(h, 80);
+  if (newEndpoints) h = Math.min(h, 40);
+  return h;
+}
+
+// Última PR cubierta: el campo `pr` de las revisiones, los merge commits "Merge pull request #N from
+// owner/rama" de una rama con revisiones y, si `gh` está disponible, las PR mergeadas desde esas ramas
+// (cubre el squash merge, cuyo commit no dice la rama). Gana el número más alto.
+function lastCoveredPr(root, reviews, { full, gh }) {
+  const best = { number: 0, source: null };
+  const offer = (n, source) => { if (Number.isInteger(n) && n > best.number) { best.number = n; best.source = source; } };
+  for (const r of reviews) offer(r.pr, 'review');
+  if (full) {
+    const branches = new Set(reviews.map((r) => r.branch).filter(Boolean));
+    for (const s of (git(root, ['log', '--merges', '-z', '--format=%s', 'HEAD']) || '').split('\0')) {
+      const m = /^Merge pull request #(\d+) from [^/\s]+\/(\S+)/.exec(s);
+      if (m && branches.has(m[2])) offer(Number(m[1]), 'merge');
+    }
+    if (gh && branches.size) {
+      const r = spawnSync('gh', ['pr', 'list', '--state', 'merged', '--limit', '200', '--json', 'number,headRefName'], {
+        cwd: root, encoding: 'utf8', windowsHide: true, timeout: 5000,
+      });
+      if (r.status === 0) {
+        try { for (const p of JSON.parse(r.stdout)) if (branches.has(p.headRefName)) offer(p.number, 'gh'); } catch { /* gh raro: se ignora */ }
+      }
+    }
+  }
+  return best.source ? { number: best.number, source: best.source } : null;
+}
+
+function writeHistory(root, now, health) {
+  const file = join(root, ...HISTORY_REL);
+  let weeks = [];
+  try { const old = JSON.parse(readFileSync(file, 'utf8')); if (Array.isArray(old)) weeks = old; } catch { /* sin historia aún */ }
+  const { label, monday } = isoWeek(now);
+  const until = new Date(monday.getTime() + 7 * DAY_MS);
+  const count = git(root, ['rev-list', '--count', `--since=${monday.toISOString()}`, `--until=${until.toISOString()}`, 'HEAD']);
+  const entry = { week: label, health, commits: Number(count) || 0 };
+  weeks = weeks.filter((w) => w && w.week !== label).concat(entry).sort((a, b) => (a.week < b.week ? -1 : 1));
+  writeFileSync(file, JSON.stringify(weeks, null, 2) + '\n');
+}
+
+function colorOf({ reviewed, total, coverage, ageDays, cadenceDays, newEndpoints }) {
   if (!reviewed) return 'never';
+  if (newEndpoints) return 'red';
   if (total === 0) return 'green';
   if (coverage < RED_BELOW) return 'red';
   if (coverage < GREEN_FROM) return 'amber';
@@ -189,12 +324,31 @@ function colorOf({ reviewed, total, coverage, ageDays, cadenceDays }) {
  * Calcula el estado de cada zona y lo escribe en .rsc/overview/state.json. Devuelve el estado o
  * null si el proyecto no tiene overview.json. `fast` es el modo para el aviso de sesión.
  */
-export function scan({ root = process.cwd(), fast = false, now = new Date() } = {}) {
+export function scan({ root = process.cwd(), fast = false, gh = true, now = new Date() } = {}) {
   root = resolve(root);
   const cfg = readConfig(root);
   if (!cfg) return null;
   const reviews = readReviews(root);
   const blobs = currentFiles(root);
+  const full = !fast;
+
+  // Endpoints de un archivo hoy (árbol de trabajo) y en una versión revisada (por blob sha). Caché
+  // porque un archivo puede caer en varias zonas.
+  const nowCache = new Map();
+  const blobCache = new Map();
+  const endpointsNow = (p) => {
+    if (!nowCache.has(p)) {
+      let src = '';
+      try { src = readFileSync(join(root, p), 'utf8'); } catch { /* ilegible: sin endpoints */ }
+      nowCache.set(p, detectEndpoints(p, src));
+    }
+    return nowCache.get(p);
+  };
+  const keysInBlob = (p, sha) => {
+    const k = `${p}\0${sha}`;
+    if (!blobCache.has(k)) blobCache.set(k, new Set(detectEndpoints(p, git(root, ['cat-file', 'blob', sha]) || '').map(endpointKey)));
+    return blobCache.get(k);
+  };
 
   const zones = cfg.zones.map((z) => {
     const skills = Array.isArray(z.reviewSkills) ? z.reviewSkills : [];
@@ -210,25 +364,79 @@ export function scan({ root = process.cwd(), fast = false, now = new Date() } = 
       covered += 1;
       for (const r of hits) if (!last || r.at > last) last = r.at;
     }
+
+    // Endpoint nuevo sin cubrir: está en un archivo sin cubrir y no estaba en ninguna versión de ese
+    // archivo que se revisara. Cambiar el cuerpo de una ruta ya revisada no la hace "nueva".
+    const uncoveredEndpoints = [];
+    if (full && mine.length) {
+      for (const p of uncovered) {
+        if (!mayHaveEndpoints(p)) continue;
+        const seen = new Set();
+        for (const r of mine) if (typeof r.files[p] === 'string') for (const k of keysInBlob(p, r.files[p])) seen.add(k);
+        for (const e of endpointsNow(p)) if (!seen.has(endpointKey(e))) uncoveredEndpoints.push(e);
+      }
+    }
+
     const total = paths.length;
     const coverage = total ? covered / total : 1;
     const ageDays = last ? Math.floor((now.getTime() - Date.parse(last)) / DAY_MS) : null;
     const cadenceDays = Number(z.cadenceDays) || null;
+    const reviewed = mine.length > 0;
+    const newEndpoints = uncoveredEndpoints.length > 0;
+    const stale = ageDays === null || Boolean(cadenceDays && ageDays > cadenceDays);
+
+    const lastBySkill = new Map(skills.map((s) => [s, null]));
+    for (const r of mine) if (!lastBySkill.get(r.skill) || r.at > lastBySkill.get(r.skill)) lastBySkill.set(r.skill, r.at);
+    // Skill recomendada: la primera que nunca se lanzó en esta zona y, si todas se lanzaron, la de
+    // revisión más antigua.
+    const order = [...lastBySkill];
+    const neverRun = order.find(([, at]) => at === null);
+    const oldest = order.reduce((best, cur) => (!best || cur[1] < best[1] ? cur : best), null);
+    const recommendedSkill = (neverRun || oldest || [null])[0];
+
+    const reviewHistory = [...mine].sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0)).map((r) => ({
+      skill: r.skill,
+      at: r.at,
+      branch: r.branch ?? null,
+      scope: r.scope ?? null,
+      pr: Number.isInteger(r.pr) ? r.pr : null,
+      file: r.file,
+      coveredNow: paths.filter((p) => r.files[p] === blobs.get(p)).length,
+    }));
+
     return {
       id: z.id,
       label: z.label ?? z.id,
       reviewSkills: skills,
       cadenceDays,
+      checks: Array.isArray(z.checks) ? z.checks : [],
       files: total,
       covered,
       coverage,
       uncovered,
+      uncoveredEndpoints,
       lastReviewAt: last,
       ageDays,
       reviews: mine.length,
-      color: colorOf({ reviewed: mine.length > 0, total, coverage, ageDays, cadenceDays }),
+      reviewHistory,
+      recommendedSkill,
+      health: zoneHealth({ reviewed, coverage, stale: reviewed && stale, newEndpoints }),
+      color: colorOf({ reviewed, total, coverage, ageDays, cadenceDays, newEndpoints }),
     };
   });
+
+  const weight = (z) => Math.max(z.files, 1);
+  const weightSum = zones.reduce((n, z) => n + weight(z), 0);
+  const health = weightSum ? Math.round(zones.reduce((n, z) => n + z.health * weight(z), 0) / weightSum) : 100;
+  const questions = Array.isArray(cfg.questions) ? cfg.questions : [];
+  const kpis = {
+    health,
+    zonesNeedingReview: zones.filter((z) => z.color !== 'green').map((z) => z.id),
+    uncoveredFiles: new Set(zones.flatMap((z) => z.uncovered)).size,
+    uncoveredEndpoints: new Set(zones.flatMap((z) => z.uncoveredEndpoints.map((e) => `${e.file}\0${endpointKey(e)}`))).size,
+    openQuestions: questions.filter((q) => q && q.state === 'open').length,
+    lastCoveredPr: lastCoveredPr(root, reviews, { full, gh }),
+  };
 
   const state = {
     version: 1,
@@ -237,11 +445,13 @@ export function scan({ root = process.cwd(), fast = false, now = new Date() } = 
     branch: (git(root, ['rev-parse', '--abbrev-ref', 'HEAD']) || '').trim() || null,
     commit: (git(root, ['rev-parse', 'HEAD']) || '').trim() || null,
     reviews: reviews.length,
+    kpis,
     zones,
   };
   const out = join(root, ...STATE_REL);
   mkdirSync(join(out, '..'), { recursive: true });
   writeFileSync(out, JSON.stringify(state, null, 2) + '\n');
+  if (full) writeHistory(root, now, health);
   return state;
 }
 
@@ -250,6 +460,7 @@ function parseArgs(argv) {
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
     if (a === '--fast') opts.fast = true;
+    else if (a === '--no-gh') opts.noGh = true;
     else if (a.startsWith('--')) { opts[a.slice(2)] = argv[i + 1]; i += 1; }
   }
   return opts;
@@ -265,12 +476,12 @@ export function main(argv = process.argv.slice(2)) {
     return 0;
   }
   if (cmd === 'scan') {
-    const s = scan({ root, fast: o.fast });
+    const s = scan({ root, fast: o.fast, gh: !o.noGh });
     if (s) process.stdout.write(JSON.stringify(s, null, 2) + '\n');
     return 0;
   }
   process.stderr.write('uso: overview.mjs record --skill <id> [--scope pr|global] [--pr N] [--root <dir>]\n'
-    + '     overview.mjs scan [--fast] [--root <dir>]\n');
+    + '     overview.mjs scan [--fast] [--no-gh] [--root <dir>]\n');
   return 2;
 }
 
