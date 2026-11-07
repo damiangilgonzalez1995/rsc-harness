@@ -441,21 +441,21 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
     return nowCache.get(p);
   };
   const keysInBlob = (p, sha) => {
-    const k = `${p}\0${sha}`;
-    if (!blobCache.has(k)) blobCache.set(k, new Set(detectEndpoints(p, git(root, ['cat-file', 'blob', sha]) || '').map(endpointKey)));
-    return blobCache.get(k);
+    const cacheKey = `${p}\0${sha}`;
+    if (!blobCache.has(cacheKey)) blobCache.set(cacheKey, new Set(detectEndpoints(p, git(root, ['cat-file', 'blob', sha]) || '').map(endpointKey)));
+    return blobCache.get(cacheKey);
   };
 
   const zones = cfg.zones.map((z) => {
     const skills = Array.isArray(z.reviewSkills) ? z.reviewSkills : [];
     const match = zoneMatcher(z);
-    const mine = reviews.filter((r) => skills.includes(r.skill) && (!Array.isArray(r.zones) || r.zones.includes(z.id)));
+    const zoneReviews = reviews.filter((r) => skills.includes(r.skill) && (!Array.isArray(r.zones) || r.zones.includes(z.id)));
     const paths = [...blobs.keys()].filter(match).sort();
     const uncovered = [];
     let covered = 0;
     let last = null;
     for (const p of paths) {
-      const hits = mine.filter((r) => r.files[p] === blobs.get(p));
+      const hits = zoneReviews.filter((r) => r.files[p] === blobs.get(p));
       if (!hits.length) { uncovered.push(p); continue; }
       covered += 1;
       for (const r of hits) if (!last || r.at > last) last = r.at;
@@ -464,11 +464,11 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
     // Endpoint nuevo sin cubrir: está en un archivo sin cubrir y no estaba en ninguna versión de ese
     // archivo que se revisara. Cambiar el cuerpo de una ruta ya revisada no la hace "nueva".
     const uncoveredEndpoints = [];
-    if (full && mine.length) {
+    if (full && zoneReviews.length) {
       for (const p of uncovered) {
         if (!mayHaveEndpoints(p)) continue;
         const seen = new Set();
-        for (const r of mine) if (typeof r.files[p] === 'string') for (const k of keysInBlob(p, r.files[p])) seen.add(k);
+        for (const r of zoneReviews) if (typeof r.files[p] === 'string') for (const key of keysInBlob(p, r.files[p])) seen.add(key);
         for (const e of endpointsNow(p)) if (!seen.has(endpointKey(e))) uncoveredEndpoints.push(e);
       }
     }
@@ -485,12 +485,12 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
     const coverage = total ? covered / total : 1;
     const ageDays = last ? Math.floor((now.getTime() - Date.parse(last)) / DAY_MS) : null;
     const cadenceDays = Number(z.cadenceDays) || null;
-    const reviewed = mine.length > 0;
+    const reviewed = zoneReviews.length > 0;
     const weighty = uncoveredEndpoints.length > 0 || uncoveredWeighty.length > 0;
     const stale = ageDays === null || Boolean(cadenceDays && ageDays > cadenceDays);
 
     const lastBySkill = new Map(skills.map((s) => [s, null]));
-    for (const r of mine) if (!lastBySkill.get(r.skill) || r.at > lastBySkill.get(r.skill)) lastBySkill.set(r.skill, r.at);
+    for (const r of zoneReviews) if (!lastBySkill.get(r.skill) || r.at > lastBySkill.get(r.skill)) lastBySkill.set(r.skill, r.at);
     // Skill recomendada: la primera que nunca se lanzó en esta zona y, si todas se lanzaron, la de
     // revisión más antigua.
     const order = [...lastBySkill];
@@ -498,7 +498,7 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
     const oldest = order.reduce((best, cur) => (!best || cur[1] < best[1] ? cur : best), null);
     const recommendedSkill = (neverRun || oldest || [null])[0];
 
-    const reviewHistory = [...mine].sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0)).map((r) => ({
+    const reviewHistory = [...zoneReviews].sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0)).map((r) => ({
       skill: r.skill,
       at: r.at,
       branch: r.branch ?? null,
@@ -522,7 +522,7 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
       uncoveredWeighty,
       lastReviewAt: last,
       ageDays,
-      reviews: mine.length,
+      reviews: zoneReviews.length,
       reviewHistory,
       recommendedSkill,
       lastVerification: lastVerificationOf(verifications, z.id, now),
@@ -585,14 +585,17 @@ const scriptJson = (v) => JSON.stringify(v)
   .replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
 const readJson = (p) => { try { return JSON.parse(readFileSync(p, 'utf8')); } catch { return null; } };
 
-const TONE = { red: 'bad', amber: 'mid', green: 'ok', never: 'never' };
-const TONE_LABEL = { red: 'pide revisión', amber: 'se va alejando', green: 'al día', never: 'nunca revisado' };
-const URGENCY = { red: 4, never: 3, amber: 2, green: 1 };
-const BAR_FILL = { ok: '#8fd1a8', mid: '#efc27c', bad: '#f0a49b', never: '#d8d5ce' };
-const TONE_COLOR = { ok: 'green', mid: 'amber', bad: 'red', never: 'never' };
+// Una fila por color: la clase CSS (tone), el texto, la urgencia para ordenar y el relleno de las
+// barras. El orden de las claves es el de la leyenda.
+const COLORS = {
+  green: { tone: 'ok', label: 'al día', urgency: 1, fill: '#8fd1a8' },
+  amber: { tone: 'mid', label: 'se va alejando', urgency: 2, fill: '#efc27c' },
+  red: { tone: 'bad', label: 'pide revisión', urgency: 4, fill: '#f0a49b' },
+  never: { tone: 'never', label: 'nunca revisado', urgency: 3, fill: '#d8d5ce' },
+};
+const colorOfZone = (z) => COLORS[z.color] || COLORS.never;
 const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 
-const tone = (z) => TONE[z.color] || 'never';
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 const agoLong = (d) => (d === null || d === undefined ? '—' : d <= 0 ? 'hoy' : d === 1 ? 'ayer' : `hace ${d} días`);
 const agoShort = (d) => (d === null || d === undefined ? '—' : d <= 0 ? 'hoy' : d === 1 ? 'ayer' : `${d} d`);
@@ -609,44 +612,44 @@ function squareText(z, big) {
   const heavy = (z.uncoveredWeighty || []).length;
   const pct = Math.round((z.coverage ?? 0) * 100);
   const lastSkill = z.reviewHistory?.[0]?.skill || null;
-  const skAge = `${z.recommendedSkill || lastSkill} · ${agoLong(z.ageDays)}`;
+  const skillAge = `${z.recommendedSkill || lastSkill} · ${agoLong(z.ageDays)}`;
   if (z.color === 'never') {
-    return { when: 'nunca', meta: files ? `${plural(files, 'archivo', 'archivos')} sin revisar` : 'sin archivos todavía', sk: z.recommendedSkill };
+    return { when: 'nunca', meta: files ? `${plural(files, 'archivo', 'archivos')} sin revisar` : 'sin archivos todavía', skill: z.recommendedSkill };
   }
   if (eps) {
     return big
-      ? { when: `${eps} sin revisar`, meta: `${eps === 1 ? 'endpoint nuevo' : 'endpoints nuevos'} · ${plural(files, 'archivo', 'archivos')} en la zona`, sk: skAge }
-      : { when: plural(eps, 'ruta', 'rutas'), meta: eps === 1 ? 'nueva sin revisar' : 'nuevas sin revisar', sk: z.recommendedSkill };
+      ? { when: `${eps} sin revisar`, meta: `${eps === 1 ? 'endpoint nuevo' : 'endpoints nuevos'} · ${plural(files, 'archivo', 'archivos')} en la zona`, skill: skillAge }
+      : { when: plural(eps, 'ruta', 'rutas'), meta: eps === 1 ? 'nueva sin revisar' : 'nuevas sin revisar', skill: z.recommendedSkill };
   }
   if (heavy) {
     const kinds = [...new Set(z.uncoveredWeighty.map((w) => WEIGHTY_LABEL[w.kind] || w.kind))].join(', ');
     return big
-      ? { when: `${heavy} sin revisar`, meta: `de peso (${kinds}) · ${plural(files, 'archivo', 'archivos')} en la zona`, sk: skAge }
-      : { when: plural(heavy, 'archivo', 'archivos'), meta: `de peso sin revisar`, sk: z.recommendedSkill };
+      ? { when: `${heavy} sin revisar`, meta: `de peso (${kinds}) · ${plural(files, 'archivo', 'archivos')} en la zona`, skill: skillAge }
+      : { when: plural(heavy, 'archivo', 'archivos'), meta: `de peso sin revisar`, skill: z.recommendedSkill };
   }
   if (unc && z.color !== 'green') {
     return big
-      ? { when: `${unc} sin cubrir`, meta: `de ${plural(files, 'archivo', 'archivos')} · ${pct} % cubierto`, sk: skAge }
-      : { when: `${z.covered}/${files}`, meta: 'archivos cubiertos', sk: z.recommendedSkill };
+      ? { when: `${unc} sin cubrir`, meta: `de ${plural(files, 'archivo', 'archivos')} · ${pct} % cubierto`, skill: skillAge }
+      : { when: `${z.covered}/${files}`, meta: 'archivos cubiertos', skill: z.recommendedSkill };
   }
   if (z.color === 'amber') {
-    return { when: big ? agoLong(z.ageDays) : agoShort(z.ageDays), meta: z.cadenceDays ? `toca cada ${z.cadenceDays} d` : 'sin revisión vigente', sk: z.recommendedSkill };
+    return { when: big ? agoLong(z.ageDays) : agoShort(z.ageDays), meta: z.cadenceDays ? `toca cada ${z.cadenceDays} d` : 'sin revisión vigente', skill: z.recommendedSkill };
   }
   return {
     when: big ? agoLong(z.ageDays) : agoShort(z.ageDays),
     meta: files ? `${plural(files, 'archivo', 'archivos')} al día` : 'sin archivos',
-    sk: lastSkill,
+    skill: lastSkill,
   };
 }
 
 // 2×2 por peso (urgencia × archivos): uno por cada 5 zonas, entre 1 y 3. El resto, por urgencia.
 function layoutZones(zones) {
-  const weight = (z) => (URGENCY[z.color] || 1) * Math.max(z.files || 0, 1);
+  const weight = (z) => colorOfZone(z).urgency * Math.max(z.files || 0, 1);
   const nBig = zones.length ? Math.min(3, Math.max(1, Math.floor(zones.length / 5))) : 0;
   const ranked = zones.map((z, i) => ({ z, i })).sort((a, b) => weight(b.z) - weight(a.z) || a.i - b.i);
   const big = new Set(ranked.slice(0, nBig).map((r) => r.z.id));
   const rest = zones.map((z, i) => ({ z, i })).filter((r) => !big.has(r.z.id))
-    .sort((a, b) => (URGENCY[b.z.color] || 0) - (URGENCY[a.z.color] || 0) || a.i - b.i);
+    .sort((a, b) => colorOfZone(b.z).urgency - colorOfZone(a.z).urgency || a.i - b.i);
   return [...ranked.slice(0, nBig).map((r) => ({ z: r.z, big: true })), ...rest.map((r) => ({ z: r.z, big: false }))];
 }
 
@@ -661,34 +664,34 @@ function docsLine(z) {
 }
 
 function squareHtml({ z, big }) {
-  const t = squareText(z, big);
+  const text = squareText(z, big);
   const docs = docsLine(z);
-  const label = `${z.label}: ${TONE_LABEL[z.color] || ''}. ${t.when}, ${t.meta}.${docs ? ` Docs: ${docs.text}${docs.day ? `, ${docs.day}` : ''}.` : ''} Abrir detalle`;
-  return `<a class="sq${big ? ' x2' : ''} ${tone(z)}" href="#zone=${esc(z.id)}" data-zone="${esc(z.id)}" aria-label="${esc(label)}">`
-    + `<span class="n">${esc(z.label)}</span><span class="b"><span class="when">${esc(t.when)}</span>`
+  const label = `${z.label}: ${colorOfZone(z).label}. ${text.when}, ${text.meta}.${docs ? ` Docs: ${docs.text}${docs.day ? `, ${docs.day}` : ''}.` : ''} Abrir detalle`;
+  return `<a class="sq${big ? ' x2' : ''} ${colorOfZone(z).tone}" href="#zone=${esc(z.id)}" data-zone="${esc(z.id)}" aria-label="${esc(label)}">`
+    + `<span class="n">${esc(z.label)}</span><span class="b"><span class="when">${esc(text.when)}</span>`
     // En 1×1 no caben las dos líneas: la de docs sustituye a `meta`, que sigue en el aria-label.
-    + `${docs && !big ? '' : `<span class="meta">${esc(t.meta)}</span>`}${big && t.sk ? `<span class="sk">${esc(t.sk)}</span>` : ''}`
+    + `${docs && !big ? '' : `<span class="meta">${esc(text.meta)}</span>`}${big && text.skill ? `<span class="sk">${esc(text.skill)}</span>` : ''}`
     + `${docs ? `<span class="vf"><i class="dot ${docs.tone}"></i><span>${esc(docs.text)}${docs.day ? ` · <span class="d">${esc(docs.day)}</span>` : ''}</span></span>` : ''}</span></a>`;
 }
 
 function kpisHtml(state, history) {
-  const k = state.kpis || {};
+  const kpis = state.kpis || {};
   const weeks = Array.isArray(history) ? history : [];
   const prev = weeks.length > 1 ? weeks[weeks.length - 2] : null;
   let trend = '';
-  if (prev && Number.isFinite(prev.health) && prev.health !== k.health) {
-    const up = k.health > prev.health;
+  if (prev && Number.isFinite(prev.health) && prev.health !== kpis.health) {
+    const up = kpis.health > prev.health;
     trend = ` <span class="tr ${up ? 'up' : 'down'}" title="${esc(`semana anterior: ${prev.health}`)}">${up ? '↑' : '↓'}</span>`;
   }
-  const need = (k.zonesNeedingReview || []).length;
-  const eps = k.uncoveredEndpoints || 0;
-  const pr = k.lastCoveredPr && Number.isInteger(k.lastCoveredPr.number) ? `PR #${k.lastCoveredPr.number}` : '—';
+  const need = (kpis.zonesNeedingReview || []).length;
+  const eps = kpis.uncoveredEndpoints || 0;
+  const pr = kpis.lastCoveredPr && Number.isInteger(kpis.lastCoveredPr.number) ? `PR #${kpis.lastCoveredPr.number}` : '—';
   const card = (id, title, value, extra = '', cls = '') => `<div class="kpi" data-kpi="${id}"><small>${title}</small><b${cls ? ` class="${cls}"` : ''}>${esc(value)}${extra}</b></div>`;
   return '<section class="top" aria-label="Indicadores">'
-    + card('health', 'Salud global', k.health ?? '—', `${trend}<span class="of">/100</span>`)
+    + card('health', 'Salud global', kpis.health ?? '—', `${trend}<span class="of">/100</span>`)
     + card('zones', 'Zonas que piden revisión', need, '', need ? 'warn' : '')
-    + card('uncovered', 'Archivos sin cubrir', k.uncoveredFiles ?? 0, eps ? `<span class="of">· ${esc(plural(eps, 'endpoint', 'endpoints'))}</span>` : '')
-    + card('questions', 'Preguntas abiertas', k.openQuestions ?? 0)
+    + card('uncovered', 'Archivos sin cubrir', kpis.uncoveredFiles ?? 0, eps ? `<span class="of">· ${esc(plural(eps, 'endpoint', 'endpoints'))}</span>` : '')
+    + card('questions', 'Preguntas abiertas', kpis.openQuestions ?? 0)
     + card('pr', 'Revisado hasta', pr, '', 'mono')
     + '</section>';
 }
@@ -711,7 +714,7 @@ function healthChart(history) {
     return `<path d="M${x0} ${base}V${yr}Q${x0} ${y} ${x0 + r} ${y}H${-x0 - r}Q${-x0} ${y} ${-x0} ${yr}V${base}Z" fill="#dedad1"/>`;
   };
   const last = weeks.length - 1;
-  const wk = (w) => String(w.week).replace(/^\d{4}-/, '');
+  const weekLabel = (w) => String(w.week).replace(/^\d{4}-/, '');
   const col = (w, i) => {
     const y = hy(w.health);
     const next = weeks[i + 1];
@@ -721,7 +724,7 @@ function healthChart(history) {
       + `<svg x="50%" width="1" height="${H}" overflow="visible">${bar(c)}`
       + `<circle cx="0" cy="${y.toFixed(1)}" r="${i === last ? 4 : 2.5}" fill="#1f7a45" stroke="#fff" stroke-width="${i === last ? 2 : 1}"/>`
       + (i === last ? `<text class="val" x="-9" y="${(y - 8).toFixed(1)}" text-anchor="end">${esc(w.health)}</text>` : '')
-      + `<text class="wk" x="0" y="${H - 3}" text-anchor="middle">${esc(wk(w))}</text></svg>`
+      + `<text class="wk" x="0" y="${H - 3}" text-anchor="middle">${esc(weekLabel(w))}</text></svg>`
       + `<rect class="hit" width="100%" height="${H}"><title>${esc(`${w.week} · salud ${w.health} · ${plural(c, 'commit', 'commits')}`)}</title></rect></svg>`;
   };
   return `<svg class="chart" width="100%" height="${H}" role="img" aria-label="${esc(`Salud global y commits de las últimas ${plural(weeks.length, 'semana', 'semanas')}`)}">`
@@ -749,8 +752,8 @@ function reviewsChart(state) {
   for (const z of zones) if (z.color !== 'green' && z.recommendedSkill && !count.has(z.recommendedSkill)) count.set(z.recommendedSkill, 0);
   const worst = (skill) => {
     const zs = zones.filter((z) => (z.reviewSkills || []).includes(skill));
-    const z = zs.sort((a, b) => (URGENCY[b.color] || 0) - (URGENCY[a.color] || 0))[0];
-    return z ? tone(z) : 'never';
+    const z = zs.sort((a, b) => colorOfZone(b).urgency - colorOfZone(a).urgency)[0];
+    return z ? colorOfZone(z) : COLORS.never;
   };
   const rows = [...count].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1));
   if (!rows.length) return '<p class="empty">Ninguna revisión este mes.</p>';
@@ -762,12 +765,12 @@ function reviewsChart(state) {
   // Sin viewBox: etiquetas en px fijos y la barra en % del ancho (como mucho la mitad del total).
   return `<svg class="chart" width="100%" height="${H}" role="img" aria-label="Revisiones lanzadas este mes por skill">`
     + shown.map(([skill, n], i) => {
-      const y = i * rh; const pct = ((n / max) * 50).toFixed(1); const t = worst(skill);
+      const y = i * rh; const pct = ((n / max) * 50).toFixed(1); const worstColor = worst(skill);
       return `<g><text x="0" y="${y + 16}">${esc(label(skill))}</text>`
         + `<svg x="${x0}" y="${y}" width="100%" height="${rh}" overflow="visible">`
-        + (n ? `<rect y="6" width="${pct}%" height="12" rx="3" fill="${BAR_FILL[t]}"/>` : '')
+        + (n ? `<rect y="6" width="${pct}%" height="12" rx="3" fill="${worstColor.fill}"/>` : '')
         + `<text class="num" x="${pct}%" y="16" transform="translate(${n ? 6 : 0} 0)">${n}</text></svg>`
-        + `<rect class="hit" y="${y}" width="100%" height="${rh}"><title>${esc(`${skill}: ${plural(n, 'revisión', 'revisiones')} este mes · zonas: ${TONE_LABEL[TONE_COLOR[t]]}`)}</title></rect></g>`;
+        + `<rect class="hit" y="${y}" width="100%" height="${rh}"><title>${esc(`${skill}: ${plural(n, 'revisión', 'revisiones')} este mes · zonas: ${worstColor.label}`)}</title></rect></g>`;
     }).join('')
     + `</svg>${more > 0 ? `<p class="key">y ${plural(more, 'skill más', 'skills más')}</p>` : ''}`
     + '<p class="key">color: el peor estado de las zonas que revisa</p>';
@@ -791,7 +794,7 @@ const LIST_CAP = 40;
 const WEIGHTY_LABEL = { table: 'tabla o migración', auth: 'auth' };
 
 function detailHtml(z) {
-  const t = tone(z);
+  const { tone, label: colorLabel } = colorOfZone(z);
   const files = z.files || 0;
   const unc = z.uncovered || [];
   const eps = z.uncoveredEndpoints || [];
@@ -808,7 +811,7 @@ function detailHtml(z) {
   const age = z.lastReviewAt ? `${agoLong(z.ageDays)}${z.cadenceDays ? ` · cada ${z.cadenceDays} d` : ''}` : 'nunca';
   const zid = esc(z.id);
   return `<aside class="detail" id="zone=${zid}" data-zone="${zid}" role="dialog" aria-labelledby="t-${zid}" tabindex="-1">`
-    + `<header><div><span class="pill ${t}">${esc(TONE_LABEL[z.color] || z.color)}</span><h2 id="t-${zid}">${esc(z.label)}</h2></div>`
+    + `<header><div><span class="pill ${tone}">${esc(colorLabel)}</span><h2 id="t-${zid}">${esc(z.label)}</h2></div>`
     + '<a class="close" href="#" aria-label="Cerrar detalle">×</a></header>'
     + `<dl class="facts"><div><dt>Cubiertos hoy</dt><dd>${esc(`${z.covered ?? 0} de ${files}`)}</dd></div>`
     + `<div><dt>Última revisión</dt><dd>${esc(age)}</dd></div><div><dt>Salud</dt><dd>${esc(z.health ?? '—')}</dd></div></dl>`
@@ -978,8 +981,8 @@ function dashboardHtml({ project, state, history }) {
   const meta = [state.branch && `rama ${state.branch}`, state.commit && String(state.commit).slice(0, 7),
     state.generatedAt && `generado ${fmtDate(state.generatedAt)}`, Number.isInteger(state.reviews) && plural(state.reviews, 'revisión', 'revisiones'),
     state.fast && 'cálculo rápido, sin endpoints'].filter(Boolean).join(' · ');
-  const legend = [['ok', 'al día', 'green'], ['mid', 'se va alejando', 'amber'], ['bad', 'pide revisión', 'red'], ['never', 'nunca revisado', 'never']]
-    .map(([cls, txt, c]) => `<span><i class="${cls}"></i>${txt} · ${counts[c]}</span>`).join('');
+  const legend = Object.entries(COLORS)
+    .map(([c, { tone, label }]) => `<span><i class="${tone}"></i>${label} · ${counts[c]}</span>`).join('');
   return `<!doctype html>
 <html lang="es">
 <head>

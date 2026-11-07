@@ -36,8 +36,11 @@ const has = (...p) => existsSync(join(root, ...p));
 // Una vez por sesión de verdad: solo con source=startup. compact, resume y clear reutilizan el
 // session_id y reinyectan el cuerpo de suggest, pero el aviso ya se dio.
 const OVERVIEW_BUDGET_MS = Number(process.env.RSC_OVERVIEW_BUDGET_MS) || 800;
+// La misma ruta que CONFIG_REL en overview.mjs. No se importa del motor: cargarlo aquí costaría
+// arranque, y si falta el import rompería el hook entero en vez de callar solo el aviso.
+const OVERVIEW_CONFIG = ['docs', 'overview', 'overview.json'];
 const overviewNotice = emitBody && (hook.source || 'startup') === 'startup';
-const overviewRed = overviewNotice && has('docs', 'overview', 'overview.json') ? new Promise((done) => {
+const overviewRed = overviewNotice && has(...OVERVIEW_CONFIG) ? new Promise((done) => {
   let worker;
   const timer = setTimeout(() => { done(null); worker?.terminate().catch(() => {}); }, OVERVIEW_BUDGET_MS);
   try {

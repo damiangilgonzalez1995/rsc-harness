@@ -204,6 +204,12 @@ blob sha de los archivos cubiertos, así que un cambio posterior deja el archivo
 ramas en paralelo se suman sin conflictos. `scan` calcula la cobertura del contenido actual y
 el color por zona en `.rsc/overview/state.json`, fuera de git. Sin `overview.json` no hace nada.
 
+Al abrir sesión (solo con `source=startup`), el hook de SessionStart lanza un scan rápido en un
+hilo aparte y, si alguna zona está en rojo, añade una línea: «overview: 2 zonas en rojo (api,
+database) — `/overview scan`». El scan rápido no escribe nada en disco. Si tarda más del tope, el
+aviso se calla. El tope es de 800 ms y se cambia con `RSC_OVERVIEW_BUDGET_MS` (en milisegundos),
+por ejemplo en una máquina lenta o en los tests.
+
 ## Cómo recomienda
 
 Dos caras, un catálogo (`manifest.json`):
