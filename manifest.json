@@ -4783,7 +4783,11 @@
         "secure-coding",
         "github-actions"
       ],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "seo-geo",
