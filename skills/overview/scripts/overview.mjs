@@ -41,7 +41,7 @@
 //   verifications: [{ zone, date, agent, ok, notes: [] }],   // las de zona de overview.json
 // }
 //
-// checks[] viaja tal cual; el subagente de `scan` le pone status 'pass'|'fail'|'unknown' y date.
+// checks[] viaja tal cual; el subagente de `scan` le pone status 'pass'|'fail'|'unknown'|'na' y date.
 //
 // Dos ejes por zona: cobertura (lo revisado con el contenido de hoy) y hallazgos (findings): los
 // checks en 'fail' y la última verificación de la zona si dice ok:false. Verde = revisado Y sin
@@ -878,7 +878,7 @@ function detailHtml(z) {
     + `<dl class="facts"><div><dt>Cubiertos hoy</dt><dd>${esc(`${z.covered ?? 0} de ${files}`)}</dd></div>`
     + `<div><dt>Última revisión</dt><dd>${esc(age)}</dd></div><div><dt>Salud</dt><dd>${esc(z.health ?? '—')}</dd></div></dl>`
     + (found.length ? section('Fallos abiertos', found.length, `<ul class="checks">${found.map(findingHtml).join('')}</ul>`
-      + '<p class="empty">Se cierra cuando la comprobación pasa a «bien» o «no aplica»; volver a revisar los archivos no basta.</p>') : '')
+      + '<p class="empty">Se cierra cuando la comprobación pasa a «bien» o «no aplica», o cuando una verificación posterior dice que los docs cuadran. Volver a revisar los archivos no basta.</p>') : '')
     + rec
     + (eps.length ? section('Endpoints nuevos sin cubrir', eps.length, `<ul class="list">${capped(eps, (e) => `<li><b class="m">${esc(e.method)}</b> <code>${esc(e.route)}</code><span class="p">${esc(`${e.file}:${e.line}`)}</span></li>`)}</ul>`) : '')
     + (heavy.length ? section('De peso sin cubrir', heavy.length, `<ul class="list">${capped(heavy, (w) => `<li><b class="m">${esc(WEIGHTY_LABEL[w.kind] || w.kind)}</b> <span class="p">${esc(w.file)}</span></li>`)}</ul>`) : '')

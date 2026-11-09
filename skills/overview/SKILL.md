@@ -79,7 +79,7 @@ El motor no ve lo que no sale por patrones: docs desfasados y el estado de cada 
 
 1. Lanza un subagente de solo lectura: no edita nada, ni código ni `overview.json`. Pásale `docs/overview/overview.json` y este encargo, por cada zona de `zones[]`:
    - Lee los docs que hablan de la zona (README, `docs/`, `CLAUDE.md`, comentarios de cabecera) y compáralos con el código de sus `paths`: comandos, rutas, variables de entorno, nombres. Cada desfase va a `notes` con el archivo y lo que no cuadra.
-   - Evalúa cada `checks[]` contra el código: `pass` con evidencia de que se cumple, `fail` con evidencia de que no (dónde, en `note`), `unknown` si leyendo no se puede saber.
+   - Evalúa cada `checks[]` contra el código: `pass` con evidencia de que se cumple, `fail` con evidencia de que no (dónde, en `note`), `na` si no aplica a este proyecto (por qué, en `note`), `unknown` si leyendo no se puede saber.
    - Devuelve solo JSON: `{ "verifications": [{ "zone", "ok", "notes": [] }], "checks": [{ "zone", "id", "status", "note" }] }`.
 2. Escribe tú el resultado en `overview.json`, con la fecha de hoy (`YYYY-MM-DD`):
    - añade a `verifications[]` una entrada `{zone, date, agent: "overview-verifier", ok, notes}` por zona. No borres las entradas de `start` (`what`/`result`) ni las verificaciones anteriores;

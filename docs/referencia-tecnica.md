@@ -207,7 +207,7 @@ el color por zona en `.rsc/overview/state.json`, fuera de git. Sin `overview.jso
 El color mira dos ejes: cobertura y fallos (`findings`). Una comprobación de `checks[]` en `fail`
 pone la zona en rojo aunque esté revisada entera, y una verificación con `ok: false` (los docs no
 cuadran), en ámbar como mínimo. El fallo solo se cierra cuando la comprobación pasa a `pass` o
-`na`; volver a revisar los archivos no lo cierra. El KPI `openFindings` los cuenta.
+`na`, o cuando una verificación posterior da `ok: true`; volver a revisar los archivos no lo cierra. El KPI `openFindings` los cuenta.
 
 Al abrir sesión (solo con `source=startup`), el hook de SessionStart lanza un scan rápido en un
 hilo aparte y, si alguna zona está en rojo (también por un fallo), añade una línea: «overview: 2 zonas en rojo (api,

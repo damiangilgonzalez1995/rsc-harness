@@ -346,3 +346,11 @@ test('el modo rápido también ve los fallos (el aviso de sesión los cuenta)', 
   assert.equal(z.color, 'red');
   assert.equal(z.findings.length, 1);
 });
+
+test('una zona nunca revisada con un check en fail sale en rojo, no en gris', () => {
+  const root = repo({ config: withChecks([{ id: 'keys-out-of-code', label: 'Claves fuera del código', skill: 'security-scan', status: 'fail', note: 'settings.py:13' }]), files: BASE });
+  const z = zone(scan({ root, ...OPTS }), 'api-endpoints');
+  assert.equal(z.reviews, 0);
+  assert.equal(z.color, 'red');
+  assert.equal(z.findings.length, 1);
+});
