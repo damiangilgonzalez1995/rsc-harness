@@ -257,3 +257,92 @@ test('cobertura por debajo de 0,5 es rojo aunque no haya nada de peso', () => {
   assert.deepEqual(z.uncoveredWeighty, []);
   assert.equal(z.color, 'red');
 });
+
+// ── los fallos encontrados pesan en el color (ticket 08) ─────────────────────────────────────
+// Verde = revisado y sin fallos abiertos. Un check en `fail` pone la zona en rojo aunque esté
+// cubierta entera; una verificación con ok:false (los docs no cuadran), como mínimo en ámbar.
+// Revisar los archivos de nuevo no cierra un fallo: solo lo cierra el check al pasar a pass o na.
+const withChecks = (checks, extra = {}) => ({
+  ...API,
+  zones: [{ ...API.zones[0], checks }, API.zones[1]],
+  ...extra,
+});
+function coveredRepo(config) {
+  const root = repo({ config, files: BASE });
+  record({ root, skill: 'security-scan', scope: 'global' });
+  record({ root, skill: 'docs-review', scope: 'global' });
+  commit(root, 'reviews');
+  return root;
+}
+
+test('cobertura total y un check en fail: rojo, con el fallo en findings', () => {
+  const root = coveredRepo(withChecks([
+    { id: 'rate-limiting', label: 'Rate limiting', skill: 'secure-coding', status: 'fail', note: 'sin límite en /login', date: '2026-11-08' },
+    { id: 'cors-own-domain', label: 'CORS', status: 'pass' },
+  ]));
+  const state = scan({ root, ...OPTS });
+  const z = zone(state, 'api-endpoints');
+  assert.equal(z.coverage, 1);
+  assert.equal(z.color, 'red');
+  assert.deepEqual(z.findings, [
+    { source: 'check', id: 'rate-limiting', label: 'Rate limiting', skill: 'secure-coding', note: 'sin límite en /login', date: '2026-11-08' },
+  ]);
+  assert.ok(z.health <= 40, `salud ${z.health} con un fallo abierto`);
+  assert.equal(z.recommendedSkill, 'secure-coding', 'la skill del check que falla');
+  assert.equal(state.kpis.openFindings, 1);
+  assert.ok(state.kpis.zonesNeedingReview.includes('api-endpoints'));
+  assert.equal(zone(state, 'docs').color, 'green');
+  assert.deepEqual(zone(state, 'docs').findings, []);
+});
+
+test('al pasar el check a pass (o na), la zona vuelve a verde; revisar de nuevo no basta', () => {
+  const failing = withChecks([{ id: 'rate-limiting', label: 'Rate limiting', status: 'fail', note: 'x' }]);
+  const root = coveredRepo(failing);
+  record({ root, skill: 'security-scan', scope: 'global' });
+  assert.equal(zone(scan({ root, ...OPTS }), 'api-endpoints').color, 'red', 'otra revisión no cierra el fallo');
+
+  for (const status of ['pass', 'na']) {
+    put(root, 'docs/overview/overview.json', JSON.stringify(withChecks([{ id: 'rate-limiting', label: 'Rate limiting', status, note: '' }])));
+    const state = scan({ root, ...OPTS });
+    assert.equal(zone(state, 'api-endpoints').color, 'green', status);
+    assert.deepEqual(zone(state, 'api-endpoints').findings, []);
+    assert.equal(state.kpis.openFindings, 0);
+  }
+});
+
+test('una verificación con ok:false y cobertura total deja la zona en ámbar', () => {
+  const config = withChecks([], {
+    verifications: [
+      { zone: 'docs', date: '2026-11-01', agent: 'overview-verifier', ok: true, notes: [] },
+      { zone: 'docs', date: '2026-11-08', agent: 'overview-verifier', ok: false, notes: ['El README cita `npm run dev`', 'Falta `PORT`'] },
+    ],
+  });
+  const state = scan({ root: coveredRepo(config), ...OPTS });
+  const z = zone(state, 'docs');
+  assert.equal(z.coverage, 1);
+  assert.equal(z.color, 'amber');
+  assert.deepEqual(z.findings, [{
+    source: 'verification', id: 'overview-verifier', label: 'Los docs no cuadran con el código', skill: null,
+    note: 'El README cita `npm run dev` · Falta `PORT`', date: '2026-11-08',
+  }]);
+  assert.equal(state.kpis.openFindings, 1);
+});
+
+test('una verificación posterior con ok:true cierra el fallo de docs', () => {
+  const config = withChecks([], {
+    verifications: [
+      { zone: 'docs', date: '2026-11-01', agent: 'overview-verifier', ok: false, notes: ['x'] },
+      { zone: 'docs', date: '2026-11-08', agent: 'overview-verifier', ok: true, notes: [] },
+    ],
+  });
+  const z = zone(scan({ root: coveredRepo(config), ...OPTS }), 'docs');
+  assert.equal(z.color, 'green');
+  assert.deepEqual(z.findings, []);
+});
+
+test('el modo rápido también ve los fallos (el aviso de sesión los cuenta)', () => {
+  const root = coveredRepo(withChecks([{ id: 'rls', label: 'RLS', status: 'fail', note: 'solo una tabla' }]));
+  const z = zone(scan({ root, ...OPTS, fast: true }), 'api-endpoints');
+  assert.equal(z.color, 'red');
+  assert.equal(z.findings.length, 1);
+});

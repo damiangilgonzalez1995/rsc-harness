@@ -21,6 +21,7 @@
 //     uncoveredFiles: n,                   // archivos distintos sin cubrir en alguna zona
 //     uncoveredEndpoints: n,               // endpoints nuevos sin cubrir (0 en --fast)
 //     openQuestions: n,                    // questions[] con state 'open' en overview.json
+//     openFindings: n,                     // suma de zones[].findings: fallos abiertos
 //     lastCoveredPr: { number, source: 'review'|'merge'|'gh' } | null,
 //   },
 //   zones: [{
@@ -30,8 +31,10 @@
 //     uncoveredWeighty: [{ kind: 'table'|'auth', file }],   // de peso sin cubrir (también en --fast)
 //     lastReviewAt: ISO|null, ageDays: n|null, reviews: n,
 //     reviewHistory: [{ skill, at, branch, scope, pr: n|null, file, coveredNow: n }],  // más reciente primero
-//     recommendedSkill: id|null,           // la reviewSkill nunca lanzada o la de revisión más antigua
+//     recommendedSkill: id|null,           // la skill del primer check en fail; si no, la reviewSkill
+//                                          // nunca lanzada o la de revisión más antigua
 //     lastVerification: { date, agent, ok, notes: [], ageDays } | null,   // del subagente de `scan`
+//     findings: [{ source: 'check'|'verification', id, label, skill: id|null, note, date: ISO|null }],
 //     health: 0-100,
 //     color: 'green'|'amber'|'red'|'never',
 //   }],
@@ -39,6 +42,12 @@
 // }
 //
 // checks[] viaja tal cual; el subagente de `scan` le pone status 'pass'|'fail'|'unknown' y date.
+//
+// Dos ejes por zona: cobertura (lo revisado con el contenido de hoy) y hallazgos (findings): los
+// checks en 'fail' y la última verificación de la zona si dice ok:false. Verde = revisado Y sin
+// fallos abiertos. Un check en fail pone la zona en rojo aunque esté cubierta entera; una
+// verificación con ok:false, como mínimo en ámbar. Revisar los archivos otra vez no cierra un
+// fallo: solo se cierra cuando el check pasa a 'pass' o 'na', o una verificación posterior da ok.
 //
 // history.json = [{ week: 'YYYY-Www' (semana ISO, UTC), health: 0-100, commits: n }]  // por semana,
 //   ordenado; un scan completo sustituye la entrada de su semana. --fast no la toca.
@@ -335,14 +344,31 @@ export function isoWeek(date) {
   return { label: `${d.getUTCFullYear()}-W${String(week).padStart(2, '0')}`, monday: new Date(d.getTime() - 3 * DAY_MS) };
 }
 
-// Salud de una zona: la cobertura, con techo de 80 si la revisión ha caducado y de 40 si hay algo de
-// peso sin cubrir (endpoint nuevo, tabla o auth). Una zona nunca revisada vale 0.
-function zoneHealth({ reviewed, coverage, stale, weighty }) {
+// Salud de una zona: la cobertura, con techo de 80 si la revisión ha caducado o los docs no cuadran,
+// y de 40 si hay algo de peso sin cubrir (endpoint nuevo, tabla o auth) o un check en fail. Una zona
+// nunca revisada vale 0.
+function zoneHealth({ reviewed, coverage, stale, weighty, failing, mismatch }) {
   if (!reviewed) return 0;
   let h = Math.round(coverage * 100);
-  if (stale) h = Math.min(h, 80);
-  if (weighty) h = Math.min(h, 40);
+  if (stale || mismatch) h = Math.min(h, 80);
+  if (weighty || failing) h = Math.min(h, 40);
   return h;
+}
+
+// Fallos abiertos de una zona: sus checks en 'fail' y, si la última verificación dice que los docs
+// no cuadran, esa verificación. Lo demás (pass, na, unknown) no es un fallo.
+function zoneFindings(checks, lastVerification) {
+  const str = (v) => (typeof v === 'string' && v ? v : null);
+  const findings = checks
+    .filter((c) => c && c.status === 'fail')
+    .map((c) => ({ source: 'check', id: str(c.id) || 'check', label: str(c.label) || str(c.id) || 'check', skill: str(c.skill), note: str(c.note) || '', date: str(c.date) }));
+  if (lastVerification && lastVerification.ok === false) {
+    findings.push({
+      source: 'verification', id: lastVerification.agent || 'verification', label: 'Los docs no cuadran con el código', skill: null,
+      note: lastVerification.notes.join(' · '), date: lastVerification.date,
+    });
+  }
+  return findings;
 }
 
 // Última PR cubierta: el campo `pr` de las revisiones, los merge commits "Merge pull request #N from
@@ -405,11 +431,13 @@ function lastVerificationOf(verifications, zoneId, now) {
   return { ...rest, ageDays: Number.isNaN(at) ? null : Math.max(0, Math.floor((now.getTime() - at) / DAY_MS)) };
 }
 
-function colorOf({ reviewed, total, coverage, ageDays, cadenceDays, weighty }) {
+function colorOf({ reviewed, total, coverage, ageDays, cadenceDays, weighty, failing, mismatch }) {
+  if (failing) return 'red'; // un fallo encontrado es rojo, esté o no revisada la zona
   if (!reviewed) return 'never';
   if (weighty) return 'red';
+  if (total !== 0 && coverage < RED_BELOW) return 'red';
+  if (mismatch) return 'amber';
   if (total === 0) return 'green';
-  if (coverage < RED_BELOW) return 'red';
   if (coverage < GREEN_FROM) return 'amber';
   if (ageDays === null || (cadenceDays && ageDays > cadenceDays)) return 'amber';
   return 'green';
@@ -496,7 +524,7 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
     const order = [...lastBySkill];
     const neverRun = order.find(([, at]) => at === null);
     const oldest = order.reduce((best, cur) => (!best || cur[1] < best[1] ? cur : best), null);
-    const recommendedSkill = (neverRun || oldest || [null])[0];
+    const coverageSkill = (neverRun || oldest || [null])[0];
 
     const reviewHistory = [...zoneReviews].sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0)).map((r) => ({
       skill: r.skill,
@@ -508,12 +536,20 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
       coveredNow: paths.filter((p) => r.files[p] === blobs.get(p)).length,
     }));
 
+    const checks = Array.isArray(z.checks) ? z.checks : [];
+    const lastVerification = lastVerificationOf(verifications, z.id, now);
+    const findings = zoneFindings(checks, lastVerification);
+    const failing = findings.some((f) => f.source === 'check');
+    const mismatch = findings.some((f) => f.source === 'verification');
+    // Con un fallo abierto, la skill recomendada es la que lo comprueba: es la que puede cerrarlo.
+    const recommendedSkill = findings.find((f) => f.source === 'check' && f.skill)?.skill || coverageSkill;
+
     return {
       id: z.id,
       label: z.label ?? z.id,
       reviewSkills: skills,
       cadenceDays,
-      checks: Array.isArray(z.checks) ? z.checks : [],
+      checks,
       files: total,
       covered,
       coverage,
@@ -525,9 +561,10 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
       reviews: zoneReviews.length,
       reviewHistory,
       recommendedSkill,
-      lastVerification: lastVerificationOf(verifications, z.id, now),
-      health: zoneHealth({ reviewed, coverage, stale: reviewed && stale, weighty }),
-      color: colorOf({ reviewed, total, coverage, ageDays, cadenceDays, weighty }),
+      lastVerification,
+      findings,
+      health: zoneHealth({ reviewed, coverage, stale: reviewed && stale, weighty, failing, mismatch }),
+      color: colorOf({ reviewed, total, coverage, ageDays, cadenceDays, weighty, failing, mismatch }),
     };
   });
 
@@ -541,6 +578,7 @@ export function scan({ root = process.cwd(), fast = false, gh = true, now = new 
     uncoveredFiles: new Set(zones.flatMap((z) => z.uncovered)).size,
     uncoveredEndpoints: new Set(zones.flatMap((z) => z.uncoveredEndpoints.map((e) => `${e.file}\0${endpointKey(e)}`))).size,
     openQuestions: questions.filter((q) => q && q.state === 'open').length,
+    openFindings: zones.reduce((n, z) => n + z.findings.length, 0),
     lastCoveredPr: lastCoveredPr(root, reviews, { full, gh }),
   };
 
@@ -590,10 +628,16 @@ const readJson = (p) => { try { return JSON.parse(readFileSync(p, 'utf8')); } ca
 const COLORS = {
   green: { tone: 'ok', label: 'al día', urgency: 1, fill: '#8fd1a8' },
   amber: { tone: 'mid', label: 'se va alejando', urgency: 2, fill: '#efc27c' },
-  red: { tone: 'bad', label: 'pide revisión', urgency: 4, fill: '#f0a49b' },
+  red: { tone: 'bad', label: 'pide revisión', legend: 'pide revisión o tiene fallos', urgency: 4, fill: '#f0a49b' },
   never: { tone: 'never', label: 'nunca revisado', urgency: 3, fill: '#d8d5ce' },
 };
 const colorOfZone = (z) => COLORS[z.color] || COLORS.never;
+// Fallos abiertos de una zona (state.zones[].findings); los que vienen de un check son los que la
+// ponen en rojo. Un estado antiguo sin findings no tiene fallos.
+const findingsOf = (z) => (Array.isArray(z.findings) ? z.findings : []);
+const failingChecks = (z) => findingsOf(z).filter((f) => f.source === 'check');
+// La etiqueta de la píldora: si el rojo viene de un fallo, lo dice.
+const pillLabel = (z) => (z.color === 'red' && failingChecks(z).length ? 'tiene fallos' : colorOfZone(z).label);
 const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
@@ -613,6 +657,13 @@ function squareText(z, big) {
   const pct = Math.round((z.coverage ?? 0) * 100);
   const lastSkill = z.reviewHistory?.[0]?.skill || null;
   const skillAge = `${z.recommendedSkill || lastSkill} · ${agoLong(z.ageDays)}`;
+  const found = findingsOf(z);
+  if (found.length) {
+    const first = failingChecks(z)[0] || found[0];
+    return big
+      ? { when: plural(found.length, 'fallo', 'fallos'), meta: `${first.label}${found.length > 1 ? ' y más' : ''} · ${pct} % cubierto`, skill: z.recommendedSkill }
+      : { when: plural(found.length, 'fallo', 'fallos'), meta: found.length === 1 ? 'abierto' : 'abiertos', skill: z.recommendedSkill };
+  }
   if (z.color === 'never') {
     return { when: 'nunca', meta: files ? `${plural(files, 'archivo', 'archivos')} sin revisar` : 'sin archivos todavía', skill: z.recommendedSkill };
   }
@@ -666,7 +717,7 @@ function docsLine(z) {
 function squareHtml({ z, big }) {
   const text = squareText(z, big);
   const docs = docsLine(z);
-  const label = `${z.label}: ${colorOfZone(z).label}. ${text.when}, ${text.meta}.${docs ? ` Docs: ${docs.text}${docs.day ? `, ${docs.day}` : ''}.` : ''} Abrir detalle`;
+  const label = `${z.label}: ${pillLabel(z)}. ${text.when}, ${text.meta}.${docs ? ` Docs: ${docs.text}${docs.day ? `, ${docs.day}` : ''}.` : ''} Abrir detalle`;
   return `<a class="sq${big ? ' x2' : ''} ${colorOfZone(z).tone}" href="#zone=${esc(z.id)}" data-zone="${esc(z.id)}" aria-label="${esc(label)}">`
     + `<span class="n">${esc(z.label)}</span><span class="b"><span class="when">${esc(text.when)}</span>`
     // En 1×1 no caben las dos líneas: la de docs sustituye a `meta`, que sigue en el aria-label.
@@ -684,11 +735,13 @@ function kpisHtml(state, history) {
     trend = ` <span class="tr ${up ? 'up' : 'down'}" title="${esc(`semana anterior: ${prev.health}`)}">${up ? '↑' : '↓'}</span>`;
   }
   const need = (kpis.zonesNeedingReview || []).length;
+  const found = kpis.openFindings ?? (state.zones || []).reduce((n, z) => n + findingsOf(z).length, 0);
   const eps = kpis.uncoveredEndpoints || 0;
   const pr = kpis.lastCoveredPr && Number.isInteger(kpis.lastCoveredPr.number) ? `PR #${kpis.lastCoveredPr.number}` : '—';
   const card = (id, title, value, extra = '', cls = '') => `<div class="kpi" data-kpi="${id}"><small>${title}</small><b${cls ? ` class="${cls}"` : ''}>${esc(value)}${extra}</b></div>`;
   return '<section class="top" aria-label="Indicadores">'
     + card('health', 'Salud global', kpis.health ?? '—', `${trend}<span class="of">/100</span>`)
+    + card('findings', 'Fallos abiertos', found, '', found ? 'warn' : '')
     + card('zones', 'Zonas que piden revisión', need, '', need ? 'warn' : '')
     + card('uncovered', 'Archivos sin cubrir', kpis.uncoveredFiles ?? 0, eps ? `<span class="of">· ${esc(plural(eps, 'endpoint', 'endpoints'))}</span>` : '')
     + card('questions', 'Preguntas abiertas', kpis.openQuestions ?? 0)
@@ -793,8 +846,17 @@ function verificationHtml(v) {
 const LIST_CAP = 40;
 const WEIGHTY_LABEL = { table: 'tabla o migración', auth: 'auth' };
 
+// Un fallo abierto: qué falla, dónde (la nota) y cuándo se vio. La skill que lo revisa, al lado.
+function findingHtml(f) {
+  const sub = [f.note, f.skill, f.date && fmtDate(f.date)].filter(Boolean).join(' · ');
+  const kind = f.source === 'verification' ? 'no cuadra' : 'falla';
+  return `<li><i class="dot bad"></i><span>${esc(f.label || f.id)}${sub ? `<small>${esc(sub)}</small>` : ''}</span><em class="bad">${esc(kind)}</em></li>`;
+}
+
 function detailHtml(z) {
-  const { tone, label: colorLabel } = colorOfZone(z);
+  const { tone } = colorOfZone(z);
+  const colorLabel = pillLabel(z);
+  const found = findingsOf(z);
   const files = z.files || 0;
   const unc = z.uncovered || [];
   const eps = z.uncoveredEndpoints || [];
@@ -815,6 +877,8 @@ function detailHtml(z) {
     + '<a class="close" href="#" aria-label="Cerrar detalle">×</a></header>'
     + `<dl class="facts"><div><dt>Cubiertos hoy</dt><dd>${esc(`${z.covered ?? 0} de ${files}`)}</dd></div>`
     + `<div><dt>Última revisión</dt><dd>${esc(age)}</dd></div><div><dt>Salud</dt><dd>${esc(z.health ?? '—')}</dd></div></dl>`
+    + (found.length ? section('Fallos abiertos', found.length, `<ul class="checks">${found.map(findingHtml).join('')}</ul>`
+      + '<p class="empty">Se cierra cuando la comprobación pasa a «bien» o «no aplica»; volver a revisar los archivos no basta.</p>') : '')
     + rec
     + (eps.length ? section('Endpoints nuevos sin cubrir', eps.length, `<ul class="list">${capped(eps, (e) => `<li><b class="m">${esc(e.method)}</b> <code>${esc(e.route)}</code><span class="p">${esc(`${e.file}:${e.line}`)}</span></li>`)}</ul>`) : '')
     + (heavy.length ? section('De peso sin cubrir', heavy.length, `<ul class="list">${capped(heavy, (w) => `<li><b class="m">${esc(WEIGHTY_LABEL[w.kind] || w.kind)}</b> <span class="p">${esc(w.file)}</span></li>`)}</ul>`) : '')
@@ -982,7 +1046,7 @@ function dashboardHtml({ project, state, history }) {
     state.generatedAt && `generado ${fmtDate(state.generatedAt)}`, Number.isInteger(state.reviews) && plural(state.reviews, 'revisión', 'revisiones'),
     state.fast && 'cálculo rápido, sin endpoints'].filter(Boolean).join(' · ');
   const legend = Object.entries(COLORS)
-    .map(([c, { tone, label }]) => `<span><i class="${tone}"></i>${label} · ${counts[c]}</span>`).join('');
+    .map(([c, { tone, label, legend: text }]) => `<span><i class="${tone}"></i>${text || label} · ${counts[c]}</span>`).join('');
   return `<!doctype html>
 <html lang="es">
 <head>

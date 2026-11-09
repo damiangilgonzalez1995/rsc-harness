@@ -111,3 +111,10 @@ test('tras compact, resume o clear en la misma sesión la línea no vuelve a sal
     assert.doesNotMatch(sessionStart(root, { markers, session, source }), LINE, `source=${source}`);
   }
 });
+
+test('una zona cubierta entera pero con un check en fail también cuenta como en rojo (ticket 08)', () => {
+  const failing = { ...zone('database', 'db'), checks: [{ id: 'rls', label: 'RLS', status: 'fail', note: 'solo una tabla' }] };
+  const config = { ...CONFIG, zones: [zone('api-endpoints', 'api'), failing, zone('docs', 'guide')] };
+  const out = sessionStart(project({ config }));
+  assert.match(out, /overview: 1 zona en rojo \(database\) — `\/overview scan`/);
+});

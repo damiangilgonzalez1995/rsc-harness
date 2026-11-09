@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { render, scan } from '../skills/overview/scripts/overview.mjs';
+import { record, render, scan } from '../skills/overview/scripts/overview.mjs';
 import { ENGINE, repo, put, commit, dashboardRepo } from './fixtures/overview-fixture.js';
 
 // Dashboard (ticket 05): `render` escribe .rsc/overview/overview.html, un HTML único con el estado
@@ -134,4 +134,39 @@ test('por CLI, render calcula el estado si falta y escribe el HTML; show no abre
   const s = spawnSync(process.execPath, [ENGINE, 'show', '--no-gh', '--no-open', '--root', root], { encoding: 'utf8' });
   assert.equal(s.status, 0, s.stderr);
   assert.equal(s.stdout.trim(), file);
+});
+
+// ── fallos abiertos (ticket 08) ──────────────────────────────────────────────────────────────
+test('un fallo abierto: el cuadrado dice «N fallos», el panel abre con «Fallos abiertos» y hay KPI', () => {
+  const config = {
+    version: 1, project: 'fallos',
+    zones: [{ id: 'security', label: 'Seguridad', paths: ['api/**'], reviewSkills: ['security-scan'], cadenceDays: 30,
+      checks: [
+        { id: 'rate-limiting', label: 'Rate limiting', skill: 'secure-coding', status: 'fail', note: 'sin límite <b>en</b> /login', date: '2026-11-08' },
+        { id: 'rls', label: 'RLS', skill: 'supabase', status: 'fail', note: 'solo vera.manager_settings', date: '2026-11-08' },
+      ] }],
+    questions: [],
+  };
+  const root = repo({ config, files: { 'api/users.js': 'export const u = 1;\n' } });
+  record({ root, skill: 'security-scan', scope: 'global' });
+  commit(root, 'review');
+  scan({ root, gh: false });
+  const html = readFileSync(render({ root }).path, 'utf8');
+
+  assert.ok(squareClass(html, 'security').includes('bad'));
+  const square = /<a class="sq[^"]*"[^>]*data-zone="security"[\s\S]*?<\/a>/.exec(html)?.[0];
+  assert.match(square, /2 fallos/);
+  assert.doesNotMatch(square, /al día/);
+
+  const detail = /<aside[^>]*id="zone=security"[\s\S]*?<\/aside>/.exec(html)?.[0];
+  assert.match(detail, /tiene fallos/);
+  const sections = [...detail.matchAll(/<h3>([^<]+)/g)].map((m) => m[1].trim());
+  assert.equal(sections[0], 'Fallos abiertos', `el panel abre con los fallos: ${sections.join(' | ')}`);
+  assert.match(detail, /Rate limiting[\s\S]*?sin límite &lt;b&gt;en&lt;\/b&gt; \/login/);
+  assert.doesNotMatch(detail, /<b>en<\/b>/);
+  assert.match(detail, /solo vera\.manager_settings/);
+
+  const kpi = (name) => new RegExp(`data-kpi="${name}"[^>]*>[\\s\\S]*?<b[^>]*>([^<]*)`).exec(html)?.[1].trim();
+  assert.equal(kpi('findings'), '2');
+  assert.match(html, /class="legend"[\s\S]*?fallo/);
 });
