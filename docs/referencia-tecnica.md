@@ -108,7 +108,7 @@ rsc add fastapi postgresdb           # instala skills concretas, por nombre
 rsc add youtube-api remotion-video   # …crecer un canal, editar con Remotion
 rsc add fastapi --target claude,codex   # en varios asistentes a la vez
 rsc install --profile minimal        # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes + overview
-rsc install --profile core           # la base + el flujo SDD completo
+rsc install --profile core           # la base + el flujo SDD completo + seguridad (security-scan, secure-coding, agent-safety)
 rsc install --profile full           # todo (las 311 skills)
 rsc install --profile full --without go
 rsc consult "I want to launch a SaaS"  # solo recomienda, no instala
@@ -204,8 +204,13 @@ blob sha de los archivos cubiertos, así que un cambio posterior deja el archivo
 ramas en paralelo se suman sin conflictos. `scan` calcula la cobertura del contenido actual y
 el color por zona en `.rsc/overview/state.json`, fuera de git. Sin `overview.json` no hace nada.
 
+El color mira dos ejes: cobertura y fallos (`findings`). Una comprobación de `checks[]` en `fail`
+pone la zona en rojo aunque esté revisada entera, y una verificación con `ok: false` (los docs no
+cuadran), en ámbar como mínimo. El fallo solo se cierra cuando la comprobación pasa a `pass` o
+`na`, o cuando una verificación posterior da `ok: true`; volver a revisar los archivos no lo cierra. El KPI `openFindings` los cuenta.
+
 Al abrir sesión (solo con `source=startup`), el hook de SessionStart lanza un scan rápido en un
-hilo aparte y, si alguna zona está en rojo, añade una línea: «overview: 2 zonas en rojo (api,
+hilo aparte y, si alguna zona está en rojo (también por un fallo), añade una línea: «overview: 2 zonas en rojo (api,
 database) — `/overview scan`». El scan rápido no escribe nada en disco. Si tarda más del tope, el
 aviso se calla. El tope es de 800 ms y se cambia con `RSC_OVERVIEW_BUDGET_MS` (en milisegundos),
 por ejemplo en una máquina lenta o en los tests.

@@ -55,18 +55,23 @@ node scripts/overview.mjs scan [--fast] [--no-gh] [--root .]
 ```
 
 - Un archivo está cubierto si alguna revisión de una skill de su zona lo registra con su blob sha actual. Si cambió después, deja de estar cubierto, sea cual sea la fecha.
-- Por zona: `coverage` (cubiertos ÷ total), `uncovered`, `ageDays` desde la revisión más reciente que aún cubre algo, y `color`:
-  - `never`: la zona nunca se revisó;
-  - `red`: lo que pesa. Un endpoint nuevo, una tabla o migración, o un archivo de auth sin cubrir; o cobertura por debajo de 0,5;
-  - `amber`: cobertura por debajo de 0,9 (un CSS cambiado se queda aquí), o todo cubierto pero fuera de la cadencia (la edad sola no pasa de ámbar);
-  - `green`: cobertura de 0,9 o más dentro de la cadencia.
+- Cada zona se mide en dos ejes: **cobertura** (lo revisado con el contenido de hoy) y **fallos** (`findings`: sus `checks[]` en `fail` y la última verificación si dice `ok: false`). Verde quiere decir revisado **y** sin fallos abiertos.
+- Por zona: `coverage` (cubiertos ÷ total), `uncovered`, `ageDays` desde la revisión más reciente que aún cubre algo, `findings` (`{source: "check"|"verification", id, label, skill, note, date}`) y `color`:
+  - `red`: un `check` en `fail`, aunque la zona esté cubierta entera; o lo que pesa: un endpoint nuevo, una tabla o migración, o un archivo de auth sin cubrir; o cobertura por debajo de 0,5;
+  - `never`: la zona nunca se revisó (y no tiene ningún check en `fail`);
+  - `amber`: los docs no cuadran (última verificación con `ok: false`), cobertura por debajo de 0,9 (un CSS cambiado se queda aquí), o todo cubierto pero fuera de la cadencia (la edad sola no pasa de ámbar);
+  - `green`: cobertura de 0,9 o más dentro de la cadencia, sin fallos.
+- Un fallo se cierra solo cuando su `check` pasa a `pass` o `na`, o cuando una verificación posterior da `ok: true`. Volver a revisar los archivos no lo cierra.
 - Endpoints nuevos sin cubrir (`uncoveredEndpoints`): rutas FastAPI (`@router.get`, `@app.post`…), Express (`app|router.get(...)`) y Next (`app/**/route.ts` con `export GET/POST…`) de archivos sin cubrir que no estaban en la versión revisada del archivo.
 - De peso sin cubrir (`uncoveredWeighty`, `{kind, file}`), también en `--fast`:
   - `table`: `CREATE TABLE` o `ALTER TABLE` en `.sql`, archivos bajo `migrations/`, `alembic/versions/` o `supabase/migrations/`, `prisma/schema.prisma` y `op.create_table`;
   - `auth`: rutas con `auth`, `login`, `session`, `jwt`, `token`, `permission`, `rls` o `policy` en el nombre o el directorio (estilos, docs e imágenes no cuentan).
-- KPIs: `health` (0–100, cobertura ponderada por archivos, con techo de 80 si caduca y 40 con algo de peso sin cubrir; nunca revisada vale 0), `zonesNeedingReview`, `uncoveredFiles`, `uncoveredEndpoints`, `openQuestions` y `lastCoveredPr` (del campo `pr` de las revisiones, de los merge commits de ramas revisadas y de `gh` si está; `--no-gh` lo salta).
-- `--fast` es el modo del aviso de sesión: mismos colores por cobertura y edad, sin endpoints, sin merges ni `gh`, y sin escribir `state.json` ni la historia: solo devuelve el estado. `render` nunca reutiliza un estado rápido ni uno ilegible; si es el caso, hace antes el scan completo.
-- Cuenta el resultado en una línea por zona que pida revisión, con su `recommendedSkill` (la primera de `reviewSkills` que nunca se lanzó en la zona, o la de revisión más antigua).
+- KPIs: `health` (0–100, cobertura ponderada por archivos, con techo de 80 si caduca o los docs no cuadran, y de 40 con algo de peso sin cubrir o un `check` en `fail`; nunca revisada vale 0), `openFindings` (fallos abiertos), `zonesNeedingReview`, `uncoveredFiles`, `uncoveredEndpoints`, `openQuestions` y `lastCoveredPr` (del campo `pr` de las revisiones, de los merge commits de ramas revisadas y de `gh` si está; `--no-gh` lo salta).
+- `--fast` es el modo del aviso de sesión: mismos colores (fallos incluidos), sin endpoints, sin merges ni `gh`, y sin escribir `state.json` ni la historia: solo devuelve el estado. `render` nunca reutiliza un estado rápido ni uno ilegible; si es el caso, hace antes el scan completo.
+- Cuenta el resultado así, sin mezclar los dos ejes:
+  1. **Fallos abiertos primero**, uno por línea: zona, comprobación y `note`. No digas «en verde» ni «al día» de una zona con fallos.
+  2. Después, la cobertura: una línea por zona que pida revisión, con su `recommendedSkill` (con un fallo abierto, la `skill` del check que falla; si no, la primera de `reviewSkills` que nunca se lanzó en la zona, o la de revisión más antigua).
+  - Si la `recommendedSkill` no está instalada en el proyecto, da el comando para añadirla: `npx @damiangilgonzalez/harness@latest add <id>`.
 
 ### Después del motor: docs y comprobaciones
 
@@ -74,12 +79,13 @@ El motor no ve lo que no sale por patrones: docs desfasados y el estado de cada 
 
 1. Lanza un subagente de solo lectura: no edita nada, ni código ni `overview.json`. Pásale `docs/overview/overview.json` y este encargo, por cada zona de `zones[]`:
    - Lee los docs que hablan de la zona (README, `docs/`, `CLAUDE.md`, comentarios de cabecera) y compáralos con el código de sus `paths`: comandos, rutas, variables de entorno, nombres. Cada desfase va a `notes` con el archivo y lo que no cuadra.
-   - Evalúa cada `checks[]` contra el código: `pass` con evidencia de que se cumple, `fail` con evidencia de que no (dónde, en `note`), `unknown` si leyendo no se puede saber.
+   - Evalúa cada `checks[]` contra el código: `pass` con evidencia de que se cumple, `fail` con evidencia de que no (dónde, en `note`), `na` si no aplica a este proyecto (por qué, en `note`), `unknown` si leyendo no se puede saber.
    - Devuelve solo JSON: `{ "verifications": [{ "zone", "ok", "notes": [] }], "checks": [{ "zone", "id", "status", "note" }] }`.
 2. Escribe tú el resultado en `overview.json`, con la fecha de hoy (`YYYY-MM-DD`):
    - añade a `verifications[]` una entrada `{zone, date, agent: "overview-verifier", ok, notes}` por zona. No borres las entradas de `start` (`what`/`result`) ni las verificaciones anteriores;
    - en cada comprobación de `zones[].checks[]`, pon `status` y `date`, y `note` si el subagente la trae.
-3. Si el usuario va a mirar el dashboard, vuelve a generarlo con `render`: el cuadrado de `docs` y el panel de cada zona enseñan la última verificación.
+3. Vuelve a lanzar `scan`: los colores dependen de los `checks` y de las verificaciones que acabas de escribir. Cuenta el resultado con ese segundo scan, fallos primero.
+4. Si el usuario va a mirar el dashboard, vuelve a generarlo con `render`: el cuadrado de `docs` y el panel de cada zona enseñan la última verificación.
 
 ## Modo `show`
 
@@ -91,7 +97,8 @@ node scripts/overview.mjs render [--no-gh] [--root .]
 - `show` hace un scan completo, genera `.rsc/overview/overview.html` y lo abre con el navegador por defecto. Con `--no-open` (o la variable `OVERVIEW_NO_OPEN`) solo lo genera. En los dos casos imprime la ruta.
 - `render` solo genera el HTML a partir del `state.json` que haya; si no hay, hace antes el scan.
 - Es un único HTML estático: se abre con doble clic (`file://`), sin servidor ni librerías, y lleva el estado incrustado en `<script type="application/json" id="overview-state">`.
-- Arriba van los KPIs (salud global, zonas que piden revisión, archivos sin cubrir, preguntas abiertas y última PR cubierta). Debajo, un cuadrado de color por zona: las de más peso (urgencia × archivos) ocupan 2×2, como mucho 3. Al final, dos gráficas: salud y commits por semana, y revisiones de este mes por skill.
+- Arriba van los KPIs (salud global, fallos abiertos, zonas que piden revisión, archivos sin cubrir, preguntas abiertas y última PR cubierta). Debajo, un cuadrado de color por zona: las de más peso (urgencia × archivos) ocupan 2×2, como mucho 3. Al final, dos gráficas: salud y commits por semana, y revisiones de este mes por skill.
 - El cuadrado de `docs` dice si los docs cuadran y cuándo pasó el agente de docs.
-- Al pulsar un cuadrado se abre su detalle: endpoints, archivos de peso y archivos sin cubrir, última verificación, comprobaciones, historial de revisiones y skill recomendada. Se enlaza directo con `overview.html#zone=<id>`.
-- Después de abrirlo, di en una línea qué zonas piden revisión y con qué skill: puede que el usuario no mire el HTML.
+- Una zona con fallos dice «N fallos» en su cuadrado, en rojo (o ámbar si solo son docs que no cuadran).
+- Al pulsar un cuadrado se abre su detalle. Abre con los fallos abiertos; después, endpoints, archivos de peso y archivos sin cubrir, última verificación, comprobaciones, historial de revisiones y skill recomendada. Se enlaza directo con `overview.html#zone=<id>`.
+- Después de abrirlo, di primero los fallos abiertos y luego, en una línea, qué zonas piden revisión y con qué skill: puede que el usuario no mire el HTML.

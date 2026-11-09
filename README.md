@@ -88,7 +88,7 @@ la pide, con la evidencia que lo justifica.
 
 ```bash
 rsc install --profile minimal   # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes + overview
-rsc install --profile core      # la base + el método completo
+rsc install --profile core      # la base + el método completo + seguridad (security-scan, secure-coding, agent-safety)
 rsc install --profile ui        # core + todo lo de interfaz
 rsc install --profile full      # todo el catálogo
 ```
@@ -351,11 +351,13 @@ Tiene tres modos:
 
 Cada cuadrado es una zona del proyecto:
 
-- **Verde**: al día.
-- **Ámbar**: se va quedando atrás.
-- **Rojo**: hay un endpoint, una tabla o un archivo de autenticación sin revisar.
+- **Verde**: revisada con el contenido de hoy y sin fallos abiertos.
+- **Ámbar**: se va quedando atrás, o los docs no cuadran con el código.
+- **Rojo**: una comprobación ha fallado (por ejemplo, no hay rate limiting), o hay un endpoint, una tabla o un archivo de autenticación sin revisar.
 
-Al pulsar un cuadrado se abre el detalle de la zona: los archivos sin cubrir, la skill recomendada y la última verificación de un agente que comprueba si los docs cuadran con el código.
+Que una zona esté revisada no basta para que salga en verde: si la revisión encontró un fallo, el cuadrado dice «N fallos» hasta que la comprobación pase.
+
+Al pulsar un cuadrado se abre el detalle de la zona: primero los fallos abiertos; después, los archivos sin cubrir, la skill recomendada y la última verificación de un agente que comprueba si los docs cuadran con el código.
 
 ![Panel de detalle de una zona: archivos sin cubrir, skill recomendada y verificación de los docs](docs/img/readme/readme-22-overview-panel.png)
 

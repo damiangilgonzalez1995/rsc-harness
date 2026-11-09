@@ -34,7 +34,7 @@ Los globs los interpreta `scripts/overview.mjs`: `**/` es cero o más carpetas, 
 | `ci-deploy` | CI y despliegue | `.github/**`, `.gitlab-ci.yml`, `**/Dockerfile`, `vercel.json`, `netlify.toml`, `fly.toml`, `render.yaml`, `railway.json` | `github-actions`, `deployment` | 60 | Ningún glob casa con nada |
 | `hardening` | Auditoría completa | la unión de los `paths` de `api-endpoints`, `security`, `secrets`, `database` y `network` que no se oculten | `hardening` | 90 | Nunca |
 
-La primera skill de `reviewSkills` es la que recomienda `scan` cuando la zona pide revisión.
+La primera skill de `reviewSkills` es la que recomienda `scan` cuando la zona pide revisión. Si la zona tiene un check en `fail`, recomienda la `skill` de ese check: es la que puede cerrarlo.
 
 ## Esquema de `overview.json`
 

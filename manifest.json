@@ -104,7 +104,11 @@
         "secure-coding",
         "agent-eval"
       ],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "ai-media",
@@ -4766,7 +4770,11 @@
       "recommends": [
         "deployment"
       ],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "security-scan",
@@ -4783,7 +4791,11 @@
         "secure-coding",
         "github-actions"
       ],
-      "profiles": []
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "seo-geo",
