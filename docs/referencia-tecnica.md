@@ -108,7 +108,7 @@ rsc add fastapi postgresdb           # instala skills concretas, por nombre
 rsc add youtube-api remotion-video   # …crecer un canal, editar con Remotion
 rsc add fastapi --target claude,codex   # en varios asistentes a la vez
 rsc install --profile minimal        # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes + overview
-rsc install --profile core           # la base + el flujo SDD completo + security-scan
+rsc install --profile core           # la base + el flujo SDD completo + seguridad (security-scan, secure-coding, agent-safety)
 rsc install --profile full           # todo (las 311 skills)
 rsc install --profile full --without go
 rsc consult "I want to launch a SaaS"  # solo recomienda, no instala

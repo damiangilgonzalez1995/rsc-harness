@@ -88,7 +88,7 @@ la pide, con la evidencia que lo justifica.
 
 ```bash
 rsc install --profile minimal   # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes + overview
-rsc install --profile core      # la base + el método completo + security-scan
+rsc install --profile core      # la base + el método completo + seguridad (security-scan, secure-coding, agent-safety)
 rsc install --profile ui        # core + todo lo de interfaz
 rsc install --profile full      # todo el catálogo
 ```
