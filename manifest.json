@@ -1,7 +1,7 @@
 {
   "version": "1.3.6",
   "counts": {
-    "skills": 311,
+    "skills": 312,
     "agents": 34,
     "commands": 43,
     "fixedCommands": 10
@@ -4337,6 +4337,23 @@
         "performance"
       ],
       "profiles": []
+    },
+    {
+      "id": "redesign",
+      "description": "Rediseño completo de interfaz en cascada: crea PRODUCT.md/DESIGN.md si faltan, lanza 5 subagentes en paralelo (crítica, tipografía, color, movimiento, galería), consolida resultados y programa el rediseño. Una skill que orquesta todo.",
+      "tags": [
+        "ui",
+        "ux",
+        "design",
+        "orchestration",
+        "impeccable",
+        "emil"
+      ],
+      "recommends": [],
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "redis",

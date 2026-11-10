@@ -395,16 +395,16 @@ Hooks que vigilan por ti: recuerdan la cadena, piden confirmación antes de un `
 En Claude Code quedan activados `skins`, `savvy-progress`, `context-bar`, `prompt-enhancer`, `modelo-justo`,
 `where-am-i` y `cache-tax` (este mantiene caliente la caché, y eso gasta tokens). `superpowers` llega cuando el proyecto usa el método.
 
-En cifras: 311 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
+En cifras: 312 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
 (Claude Code, Codex, Cursor, Copilot, Gemini…). Detalle en la [referencia técnica](docs/referencia-tecnica.md).
 
 ---
 
 ## Catálogo
 
-![311 skills por dominio](docs/img/readme/readme-15-catalogo.png)
+![312 skills por dominio](docs/img/readme/readme-15-catalogo.png)
 
-311 skills en 25 dominios: software, negocio, contenido, datos e IA.
+312 skills en 25 dominios: software, negocio, contenido, datos e IA.
 Cada una se activa sola cuando la tarea encaja.
 
 **[Ver el catálogo completo →](docs/catalogo.md)** · [Referencia técnica](docs/referencia-tecnica.md) ·
