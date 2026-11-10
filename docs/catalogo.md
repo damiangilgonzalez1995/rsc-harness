@@ -1,6 +1,6 @@
 # Catálogo de skills
 
-311 skills, agrupadas por lo que quieres hacer. Cada enlace abre la carpeta de la skill y su
+312 skills, agrupadas por lo que quieres hacer. Cada enlace abre la carpeta de la skill y su
 `SKILL.md`. Ninguna hace falta llamarla a mano: se activa sola cuando la tarea encaja.
 
 Para instalar una: `rsc add <id>`. Para que te recomiende: `rsc consult "lo que quieres hacer"`.
@@ -267,3 +267,4 @@ encargo.
 | [tunel-ngrok](../skills/tunel-ngrok/) | Abre el front local en el móvil por un túnel de ngrok, sin desplegar. Va en la base. |
 | [hardening](../skills/hardening/) | Auditoría de seguridad y privacidad por zonas (SOC 2, ISO 27001, ISO 27701); tú decides qué se arregla. Va en la base. |
 | [no-me-rayes](../skills/no-me-rayes/) | Obliga a responder en viñetas con emojis: hecho, ahora, bloqueos y resumen. Va en la base. |
+| [overview](../skills/overview/) | Arranca un proyecto con preguntas y comprobaciones senior por rondas, y luego dice qué zonas piden revisión y qué está revisado con el contenido de hoy. Va en la base. |

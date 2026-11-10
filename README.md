@@ -87,8 +87,8 @@ Empiezas pequeño. El resto se carga bajo demanda: el harness te propone una ski
 la pide, con la evidencia que lo justifica.
 
 ```bash
-rsc install --profile minimal   # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes
-rsc install --profile core      # la base + el método completo
+rsc install --profile minimal   # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes + overview
+rsc install --profile core      # la base + el método completo + seguridad (security-scan, secure-coding, agent-safety)
 rsc install --profile ui        # core + todo lo de interfaz
 rsc install --profile full      # todo el catálogo
 ```
@@ -339,6 +339,30 @@ Al cerrar una sesión larga, hace una retrospectiva: busca qué del entorno del 
 comprobaciones, estándares, ficheros de instrucciones, herramientas) hay que cambiar para que la
 siguiente vaya mejor. El resultado son cambios concretos, no una charla.
 
+### `overview` — qué está revisado y qué no
+
+Tiene tres modos:
+
+- **`/overview start`**: al empezar un proyecto, te pregunta por rondas lo que conviene decidir pronto (multitenant, sesiones, accesos, secretos, backups…). Antes de preguntar, mira lo que ya se ve en el código.
+- **Registro automático**: cada vez que lanzas una skill de revisión (`code-review`, `security-scan`, `docs-review`…), apunta qué archivos se revisaron y con qué contenido. Si un archivo cambia después, ya no cuenta como revisado. El registro va en git, en `docs/overview/`, así que funciona con ramas en paralelo y merges.
+- **`/overview show`**: abre un dashboard que te dice qué zona toca revisar y con qué skill. Es un HTML local que no necesita servidor.
+
+![Dashboard de overview: salud global, zonas por color y revisiones del mes](docs/img/readme/readme-21-overview.png)
+
+Cada cuadrado es una zona del proyecto:
+
+- **Verde**: revisada con el contenido de hoy y sin fallos abiertos.
+- **Ámbar**: se va quedando atrás, o los docs no cuadran con el código.
+- **Rojo**: una comprobación ha fallado (por ejemplo, no hay rate limiting), o hay un endpoint, una tabla o un archivo de autenticación sin revisar.
+
+Que una zona esté revisada no basta para que salga en verde: si la revisión encontró un fallo, el cuadrado dice «N fallos» hasta que la comprobación pase.
+
+Al pulsar un cuadrado se abre el detalle de la zona: primero los fallos abiertos; después, los archivos sin cubrir, la skill recomendada y la última verificación de un agente que comprueba si los docs cuadran con el código.
+
+![Panel de detalle de una zona: archivos sin cubrir, skill recomendada y verificación de los docs](docs/img/readme/readme-22-overview-panel.png)
+
+Al abrir sesión, si alguna zona está en rojo, sale una sola línea: `overview: 2 zonas en rojo (api-endpoints, database) — /overview scan`.
+
 ### Otras de la base
 
 | Skill | Para qué |
@@ -371,16 +395,16 @@ Hooks que vigilan por ti: recuerdan la cadena, piden confirmación antes de un `
 En Claude Code quedan activados `skins`, `savvy-progress`, `context-bar`, `prompt-enhancer`, `modelo-justo`,
 `where-am-i` y `cache-tax` (este mantiene caliente la caché, y eso gasta tokens). `superpowers` llega cuando el proyecto usa el método.
 
-En cifras: 311 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
+En cifras: 312 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
 (Claude Code, Codex, Cursor, Copilot, Gemini…). Detalle en la [referencia técnica](docs/referencia-tecnica.md).
 
 ---
 
 ## Catálogo
 
-![311 skills por dominio](docs/img/readme/readme-15-catalogo.png)
+![312 skills por dominio](docs/img/readme/readme-15-catalogo.png)
 
-311 skills en 25 dominios: software, negocio, contenido, datos e IA.
+312 skills en 25 dominios: software, negocio, contenido, datos e IA.
 Cada una se activa sola cuando la tarea encaja.
 
 **[Ver el catálogo completo →](docs/catalogo.md)** · [Referencia técnica](docs/referencia-tecnica.md) ·

@@ -78,6 +78,10 @@ export function generatedHookFiles({ target, cwd, policy }) {
     join(cwd, '.rsc', 'worklog-checkpoint.mjs'),
     join(cwd, '.rsc', 'hook-once.mjs'),
     join(cwd, '.rsc', 'worktree-reaper.mjs'),
+    // overview es de suelo: su motor y sus dos hooks van con o sin hooks de código.
+    join(cwd, '.rsc', 'overview.mjs'),
+    join(cwd, '.rsc', 'overview-skill-hook.mjs'),
+    join(cwd, '.rsc', 'overview-prompt-hook.mjs'),
   ];
   // The danger guard is declared on its own terms (#273): present unless the plan says otherwise,
   // whether or not the code guards are.
