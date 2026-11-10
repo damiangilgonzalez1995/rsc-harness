@@ -218,27 +218,71 @@ cifrados, sesiones que vencen y CORS solo con tu dominio. Se apaga con `.rsc/.no
 
 ## 4. Interfaz (UX/UI)
 
-Hay muchas skills de diseño y se solapan. `flujo-interfaz` decide cuál lidera y en qué orden
-siguen las demás cuando una tarea toca pantalla: **contexto → dirección → movimiento → pulido →
-originalidad → psicología → casos extremos**.
+Hay más de treinta skills de diseño y se solapan. No hace falta aprenderlas: para rehacer una
+interfaz entera hay **una sola orden**.
 
-![Diseñar una pantalla: qué skill manda en cada paso](docs/img/07-interfaz-que-skill-manda.png)
+![Una orden, todo el rediseño](docs/img/readme/readme-23-redesign-una-orden.png)
 
-¿No sabes cuál usar? Parte de lo que notas:
+### `/redesign`: el rediseño completo, en cascada
 
-![Tengo este problema, uso esta skill](docs/img/08-interfaz-cuando-uso-que.png)
+Escribes `/redesign` en el proyecto y el agente encadena todo lo demás. Tú solo decides dos cosas:
+qué estilo quieres y si el prototipo te convence.
+
+![Siete pasos, dos decisiones tuyas](docs/img/readme/readme-24-redesign-flujo.png)
+
+1. **Contexto.** Si faltan `PRODUCT.md` (para quién es y qué hace) o `DESIGN.md` (el sistema visual
+   actual), los crea leyendo el código. No te pregunta.
+2. **Capturas del antes.** Fotografía las pantallas principales para compararlas al final.
+3. **Cinco análisis a la vez.** Lanza cinco ayudantes en paralelo, cada uno con su especialidad.
+4. **Eliges el estilo** entre tres direcciones. ✋
+5. **Prototipo** navegable con el estilo elegido, sin tocar todavía el código real.
+6. **Antes y después**, lado a lado. Sin tu sí, no sigue. ✋
+7. **Programa** el rediseño con las skills de pulido y de movimiento.
+
+![Los cinco ayudantes y lo que entrega cada uno](docs/img/readme/readme-25-redesign-cinco-agentes.png)
+
+| Ayudante | Entrega |
+|---|---|
+| Crítica | Los problemas de UX, ordenados por importancia |
+| Tipografía | Fuentes y escala de tamaños |
+| Color | Paleta nueva y sus tokens, con modo oscuro |
+| Movimiento | Qué animar, qué quitar y con qué curvas (skills de Emil Kowalski) |
+| Galería | Tres direcciones de estilo con referencias |
+
+Los cinco solo analizan: no tocan el código.
+
+![Tres direcciones de estilo, eliges una](docs/img/readme/readme-26-redesign-elige-estilo.png)
+
+![El antes y el prototipo, lado a lado](docs/img/readme/readme-27-redesign-antes-despues.png)
+
+**Necesita `impeccable`** (`npx impeccable install`): de sus capítulos leen los ayudantes.
+
+### ¿Solo quieres cambiar una cosa?
+
+`/redesign` es para la interfaz entera. Para un problema concreto, ve directo a su skill:
+
+![Toda la interfaz o una sola cosa](docs/img/readme/readme-28-redesign-o-una-skill.png)
+
+| Noto que… | Skill |
+|---|---|
+| Quiero animar algo | `animar` |
+| La animación va a trompicones | `animation-performance` |
+| Hay demasiado movimiento | `remove-animations` |
+| Parece hecho por IA | `tastemaker` |
+| Quiero pulirla antes de publicar | `revision-interfaz` |
+| Los datos raros la rompen | `break-ui` |
+| Parece una web en el móvil | `mobile-native` |
+
+Para una pantalla nueva desde cero, `flujo-interfaz` decide qué skill lidera en cada paso.
 
 ### Cuándo se ejecuta `/impeccable init`
 
-Una vez por proyecto, antes de diseñar la primera pantalla: guarda `PRODUCT.md` (para quién es,
-qué hace) y el resto de comandos lo leen. Si ya hay interfaz y no hay `DESIGN.md`,
-`/impeccable document`. El harness te lo recuerda solo: al iniciar sesión en un proyecto de front
-sin `PRODUCT.md`, el agente te lo ofrece una vez y, si dices que no, no insiste
-(`.rsc/.no-stack-hints` lo apaga).
+`/redesign` ya lo cubre. Si trabajas sin él: una vez por proyecto, antes de diseñar la primera
+pantalla, guarda `PRODUCT.md` y el resto de comandos lo leen. Si ya hay interfaz y no hay
+`DESIGN.md`, `/impeccable document`. Al iniciar sesión en un proyecto de front sin `PRODUCT.md`,
+el agente te lo ofrece una vez (`.rsc/.no-stack-hints` lo apaga).
 
-![Cuándo se ejecuta impeccable init](docs/img/09-interfaz-impeccable-init.png)
-
-### De dónde vienen las skills
+### De dónde vienen
 
 | Qué | Cómo entra |
 |---|---|
