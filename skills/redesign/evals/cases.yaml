@@ -1,0 +1,38 @@
+skill: redesign
+
+should_trigger:
+  - prompt: "Haz un rediseño completo de la interfaz de esta app."
+    why: "Rediseño total de UX/UI, el caso central de redesign."
+  - prompt: "Redesign the whole UI of this project."
+    why: "Direct trigger in English."
+  - prompt: "Quiero una revisión total de la UX y la UI y que la rehagas."
+    why: "Revisión total más rehacer: el pipeline completo."
+  - prompt: "La app se ve anticuada, dale un lavado de cara entero."
+    why: "Rediseño global descrito sin la palabra redesign."
+  - prompt: "Lanza todos los análisis de diseño en paralelo y propón un estilo nuevo."
+    why: "Orquestación de subagentes de crítica, tipografía, color, movimiento y galería."
+
+should_not_trigger:
+  - prompt: "Anima este desplegable."
+    route_to: "animar"
+    why: "Un solo elemento de movimiento, no un rediseño."
+  - prompt: "Pule esta pantalla antes de publicarla."
+    route_to: "revision-interfaz"
+    why: "Pulido de lo existente, sin cambiar de estilo."
+  - prompt: "Prueba este componente con nombres larguísimos y listas vacías."
+    route_to: "break-ui"
+    why: "Casos extremos, no rediseño."
+  - prompt: "Hazme una landing nueva para el lanzamiento."
+    route_to: "diseno-landing"
+    why: "Pantalla nueva desde cero, no rediseño de una app existente."
+  - prompt: "Audita solo las animaciones del código."
+    route_to: "improve-animations"
+    why: "Auditoría de movimiento aislada."
+
+capability:
+  - scenario: "Un proyecto de front sin PRODUCT.md ni DESIGN.md pide un rediseño completo."
+    must_include:
+      - "PRODUCT.md"
+      - "DESIGN.md"
+      - "subagent"
+      - "prototipo"

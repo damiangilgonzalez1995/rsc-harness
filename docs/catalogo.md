@@ -1,6 +1,6 @@
 # Catálogo de skills
 
-310 skills, agrupadas por lo que quieres hacer. Cada enlace abre la carpeta de la skill y su
+311 skills, agrupadas por lo que quieres hacer. Cada enlace abre la carpeta de la skill y su
 `SKILL.md`. Ninguna hace falta llamarla a mano: se activa sola cuando la tarea encaja.
 
 Para instalar una: `rsc add <id>`. Para que te recomiende: `rsc consult "lo que quieres hacer"`.
@@ -207,6 +207,7 @@ encargo.
 | Skill | Qué hace |
 |---|---|
 | [flujo-interfaz](../skills/flujo-interfaz/) | El enrutador: qué skill de diseño lidera y en qué orden siguen las demás. Empieza aquí si toca pantalla. |
+| [redesign](../skills/redesign/) | Rediseño completo en cascada: crea PRODUCT.md y DESIGN.md si faltan, lanza cinco análisis en paralelo (crítica, tipografía, color, movimiento, galería), prototipo y luego programa. Requiere `impeccable`. |
 | [ingeniero-diseno-web](../skills/ingeniero-diseno-web/) | Lleva el encargo entero: dirección de arte, un sistema de diseño declarado, puntos de control y una crítica puntuada. |
 | [diseno-landing](../skills/diseno-landing/) | Una landing de conversión de principio a fin: estructura, textos y un sistema visual estricto. |
 | [sitios-calidad-premio](../skills/sitios-calidad-premio/) | Sitios cinematográficos: GSAP, un único motor de scroll suave, Three.js solo con propósito. |
