@@ -19,6 +19,8 @@ should_trigger:
     why: "Sembrar zonas y recorrer el banco por rondas es start."
   - prompt: "Ábreme el overview del proyecto en el navegador, con los cuadrados de cada zona."
     why: "Ver el estado de revisión en el HTML es el modo show."
+  - prompt: "Hazme el informe del proyecto: qué está mal, contado fácil de leer, fuera de la terminal."
+    why: "El informe de lo que está mal es el modo informe."
 
 should_not_trigger:
   - prompt: "Haz una auditoría de seguridad completa alineada con SOC 2."
@@ -50,3 +52,8 @@ capability:
       - "hiddenZones"
       - "untested"
       - "frontend"
+  - scenario: "El usuario pide el informe de lo que está mal tras un scan con un check de rate limiting en fail y la zona de backups nunca revisada."
+    must_include:
+      - "informe.html"
+      - "Qué pasa si"
+      - "Donde no he mirado"

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{Estado de <proyecto>}}</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Plantilla del modo informe de overview. Layout: una carta de un amigo. Columna de lectura estrecha; cada hallazgo es una escena (lo que vi → qué pasa si → para qué sirve arreglarlo); cierre con plan */
+:root{
+  --bg:#f6f7f9; --surface:#ffffff; --fg:#16191f; --muted:#5d6573; --line:#e3e6eb;
+  --bad:#d23a2f; --bad-bg:#fdecea; --mid:#b97900; --mid-bg:#fdf3dc;
+  --ok:#1f8a4c; --ok-bg:#e5f5ec; --unk:#6b7280; --unk-bg:#eef0f3; --accent:#2f5bd3;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1115; --surface:#171a20; --fg:#e8eaee; --muted:#9aa2b1; --line:#2a2f38;
+  --bad:#ff6b5f; --bad-bg:#3a1a18; --mid:#f0b23e; --mid-bg:#33280f;
+  --ok:#4cc985; --ok-bg:#12301f; --unk:#a3abb8; --unk-bg:#22262e; --accent:#7d9cff; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1115; --surface:#171a20; --fg:#e8eaee; --muted:#9aa2b1; --line:#2a2f38;
+  --bad:#ff6b5f; --bad-bg:#3a1a18; --mid:#f0b23e; --mid-bg:#33280f;
+  --ok:#4cc985; --ok-bg:#12301f; --unk:#a3abb8; --unk-bg:#22262e; --accent:#7d9cff; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 var(--sans)}
+.wrap{max-width:760px;margin:0 auto;padding-block:36px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:36px}
+code{font:13.5px var(--mono);background:var(--unk-bg);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+h1,h2,h3{text-wrap:balance;margin:0}
+p{margin:0}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* apertura */
+.head{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center}
+.gauge{width:104px;height:104px;position:relative}
+.gauge svg{width:100%;height:100%;transform:rotate(-90deg)}
+.gauge b{position:absolute;inset:0;display:grid;place-items:center;font:700 32px var(--sans)}
+.gauge small{position:absolute;bottom:16px;left:0;right:0;text-align:center;font:11px var(--mono);color:var(--muted)}
+.head h1{font-size:30px;line-height:1.15;margin-top:4px}
+.lede{font:400 19px/1.6 var(--serif);display:grid;gap:14px}
+.lede em{font-style:italic}
+.counts{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 13px var(--sans);padding:5px 12px;border-radius:999px;text-decoration:none;display:inline-flex;gap:6px;align-items:center}
+.chip b{font-variant-numeric:tabular-nums}
+.chip.bad{background:var(--bad-bg);color:var(--bad)} .chip.mid{background:var(--mid-bg);color:var(--mid)}
+.chip.ok{background:var(--ok-bg);color:var(--ok)} .chip.unk{background:var(--unk-bg);color:var(--unk)}
+
+/* capítulos */
+.chapter{display:grid;gap:16px}
+.chapter>header{display:grid;gap:4px}
+.chapter h2{font-size:22px;display:flex;align-items:center;gap:10px}
+.dot{width:11px;height:11px;border-radius:50%;flex:none}
+.bad .dot{background:var(--bad)} .mid .dot{background:var(--mid)} .ok .dot{background:var(--ok)} .unk .dot{background:var(--unk)}
+.intro{color:var(--muted);font:italic 400 16.5px/1.6 var(--serif)}
+
+.scene{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;display:grid;gap:12px}
+.bad .scene{border-left:4px solid var(--bad)} .mid .scene{border-left:4px solid var(--mid)}
+.scene h3{font-size:18px;line-height:1.3}
+.scene p{max-width:68ch}
+.beat{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:baseline}
+.beat>span{font:600 12px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.beat.risk>span{color:var(--bad)} .mid .beat.risk>span{color:var(--mid)}
+.beat.fix>span{color:var(--ok)}
+.beat>p{min-width:0}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font:500 12px var(--mono);padding:2px 8px;border-radius:999px;background:var(--unk-bg);color:var(--muted)}
+ul.sub{margin:0;padding-left:18px;display:grid;gap:4px}
+
+.quiet{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.quiet ul{margin:0;padding-left:18px;display:grid;gap:10px}
+.quiet li strong{font-weight:600}
+
+/* plan */
+.plan{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;display:grid;gap:14px}
+.plan ol{margin:0;padding-left:22px;display:grid;gap:12px}
+.plan li::marker{font-weight:700;color:var(--accent)}
+.sign{font:italic 400 17px/1.6 var(--serif)}
+.foot{color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:6px 18px;border-top:1px solid var(--line);padding-top:16px}
+
+@media (max-width:640px){
+  .head{grid-template-columns:1fr}
+  .head h1{font-size:25px}
+  .lede{font-size:17.5px}
+  .beat{grid-template-columns:1fr;gap:2px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="head">
+    <div class="gauge" aria-label="Salud {{health}} de 100">
+      <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--line)" stroke-width="3"/><circle cx="18" cy="18" r="15.9" fill="none" stroke="var({{--bad|--mid|--ok}})" stroke-width="3" stroke-linecap="round" stroke-dasharray="{{health}} 100"/></svg>
+      <b style="color:var({{--bad|--mid|--ok}})">{{health}}</b><small>salud / 100</small>
+    </div>
+    <div>
+      <div class="eyebrow">{{proyecto}} · lo que he encontrado · {{fecha: 10 nov 2026}}</div>
+      <h1>{{titular: el veredicto en una frase, la buena y la mala juntas}}</h1>
+    </div>
+  </section>
+
+  <section class="lede">
+    <p>{{qué has mirado: zonas, comprobaciones, herramientas, PR}}</p>
+    <p>{{la buena noticia y la mala, en lenguaje llano; <em> para lo que importa}}</p>
+    <div class="counts">
+      <a class="chip bad" href="#mal"><b>{{n}}</b> me preocupan</a>
+      <a class="chip mid" href="#regular"><b>{{n}}</b> me escaman</a>
+      <a class="chip ok" href="#bien"><b>{{n}}</b> están bien</a>
+      <a class="chip unk" href="#sin"><b>{{n}}</b> no las he mirado</a>
+    </div>
+  </section>
+
+  <section class="chapter bad" id="mal">
+    <header>
+      <h2><span class="dot"></span>Lo que me preocupa</h2>
+      <p class="intro">Si solo lees una parte, que sea esta. Van en orden de gravedad.</p>
+    </header>
+    <!-- repetir: una escena por hallazgo, el más grave primero -->
+    <article class="scene">
+      <h3>{{el problema dicho como lo diría una persona}}</h3>
+      <div class="beat"><span>Lo que vi</span><p>{{el hecho, con <code>archivo:línea</code> o el dato}}</p></div>
+      <div class="beat risk"><span>Qué pasa si…</span><p>…{{alguien hace algo concreto, y qué pierdes}}</p></div>
+      <div class="beat fix"><span>Para qué sirve arreglarlo</span><p>{{lo que ganas, con una imagen cotidiana}}</p></div>
+      <div class="tags"><span class="tag">{{zona}}</span><span class="tag">lo arregla: {{skill}}</span></div>
+    </article>
+    <!-- /repetir -->
+  </section>
+
+  <section class="chapter mid" id="regular">
+    <header>
+      <h2><span class="dot"></span>Lo que me escama</h2>
+      <p class="intro">No rompe nada hoy. Es lo que te va a morder dentro de unas semanas si lo dejas crecer.</p>
+    </header>
+    <!-- repetir -->
+    <article class="scene">
+      <h3>{{el aviso dicho como lo diría una persona}}</h3>
+      <div class="beat"><span>Lo que vi</span><p>{{el hecho}}</p></div>
+      <div class="beat risk"><span>Qué pasa si…</span><p>…{{la consecuencia}}</p></div>
+      <div class="beat fix"><span>Para qué sirve arreglarlo</span><p>{{lo que ganas}}</p></div>
+      <div class="tags"><span class="tag">{{zona}}</span><span class="tag">lo arregla: {{skill}}</span></div>
+    </article>
+    <!-- /repetir -->
+  </section>
+
+  <section class="chapter ok" id="bien">
+    <header>
+      <h2><span class="dot"></span>Lo que está bien hecho</h2>
+      <p class="intro">Para que no todo sean malas noticias: esto ya lo tienes, y no es poco.</p>
+    </header>
+    <div class="quiet"><ul>
+      <!-- repetir --><li><strong>{{lo comprobado}}</strong> {{para qué te sirve tenerlo}}</li><!-- /repetir -->
+    </ul></div>
+  </section>
+
+  <section class="chapter unk" id="sin">
+    <header>
+      <h2><span class="dot"></span>Donde no he mirado</h2>
+      <p class="intro">Que no haya encontrado nada aquí no significa que esté bien. Significa que no lo sé.</p>
+    </header>
+    <div class="quiet"><ul>
+      <!-- repetir: el punto ciego mayor primero --><li><strong>{{lo que no se sabe}}</strong> {{por qué importa no saberlo}}</li><!-- /repetir -->
+    </ul></div>
+  </section>
+
+  <section class="plan">
+    <h2>Si yo fuera tú, esta semana haría esto</h2>
+    <ol>
+      <!-- repetir: 3–5, el más barato y urgente primero --><li><strong>{{acción}}</strong> {{por qué ahora}}</li><!-- /repetir -->
+    </ol>
+    <p class="sign">{{lo decidido y las preguntas abiertas más importantes, en una frase}}</p>
+  </section>
+
+  <footer class="foot">
+    <span>{{N zonas · N comprobaciones · N preguntas}}</span>
+    <span>{{herramientas que se pasaron}}</span>
+    <span>El verde del dashboard mide archivos revisados, no que todo esté bien</span>
+  </footer>
+</div>
+</body>
+</html>

@@ -1,6 +1,6 @@
 ---
 name: overview
-description: "Use when starting a project ('empezar proyecto', 'bajar a tierra'): settle the senior questions and checks by rounds and seed the review zones. Or for the 'project overview', 'estado del proyecto', 'qué falta por revisar': which zones need review, judged by current file content (blob sha). NOT a security audit (that is `hardening`), NOT a diff scan (that is `security-scan`), NOT a data dashboard (that is `dashboard`)."
+description: "Use when starting a project ('empezar proyecto', 'bajar a tierra'): settle the senior questions and checks by rounds and seed the review zones. Or for the 'project overview', 'estado del proyecto', 'qué falta por revisar': which zones need review, judged by current file content (blob sha). Or the 'informe' of what is wrong, told as a story. NOT a security audit (that is `hardening`), NOT a diff scan (that is `security-scan`), NOT a data dashboard (that is `dashboard`)."
 tags: [overview, project-status, review-coverage, start-project, zones, cadence]
 recommends: [hardening, security-scan, code-review]
 profiles: [minimal, core, ui, full]
@@ -20,6 +20,7 @@ El motor es `scripts/overview.mjs`: Node sin dependencias, por CLI o como módul
 - `.rsc/overview/state.json`, fuera de git: el estado calculado (`kpis` y `zones[]`; la forma exacta está en la cabecera de `overview.mjs`).
 - `.rsc/overview/history.json`, fuera de git: una foto `{week, health, commits}` por semana ISO.
 - `.rsc/overview/overview.html`, fuera de git: el dashboard que genera `show`.
+- `.rsc/overview/informe.html`, fuera de git: el informe que escribe el modo `informe`.
 
 ## Modos
 
@@ -29,6 +30,7 @@ El motor es `scripts/overview.mjs`: Node sin dependencias, por CLI o como módul
 | `record` | Registrar una revisión que se acaba de pasar | abajo |
 | `scan` | Qué zonas piden revisión ahora | abajo |
 | `show` | Ver el estado en el dashboard HTML | abajo |
+| `informe` | Piden el informe: qué está mal en el proyecto, contado de forma que se lea de un vistazo | [`informe.md`](informe.md) |
 
 Si el usuario pide el estado y no hay `overview.json`, ofrece `start`.
 
