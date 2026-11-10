@@ -339,29 +339,47 @@ Al cerrar una sesión larga, hace una retrospectiva: busca qué del entorno del 
 comprobaciones, estándares, ficheros de instrucciones, herramientas) hay que cambiar para que la
 siguiente vaya mejor. El resultado son cambios concretos, no una charla.
 
-### `overview` — qué está revisado y qué no
+### `overview` — qué está revisado, qué está mal y qué hacer primero
 
-Tiene tres modos:
+Te dice el estado del proyecto de un vistazo: qué zonas (seguridad, base de datos, frontend, docs…) están revisadas **con el contenido que tienen hoy**, qué fallos hay abiertos y qué skill lanzar para cada cosa.
 
-- **`/overview start`**: al empezar un proyecto, te pregunta por rondas lo que conviene decidir pronto (multitenant, sesiones, accesos, secretos, backups…). Antes de preguntar, mira lo que ya se ve en el código.
-- **Registro automático**: cada vez que lanzas una skill de revisión (`code-review`, `security-scan`, `docs-review`…), apunta qué archivos se revisaron y con qué contenido. Si un archivo cambia después, ya no cuenta como revisado. El registro va en git, en `docs/overview/`, así que funciona con ramas en paralelo y merges.
-- **`/overview show`**: abre un dashboard que te dice qué zona toca revisar y con qué skill. Es un HTML local que no necesita servidor.
+| Modo | Para qué |
+|---|---|
+| `/overview start` | Al empezar un proyecto: te pregunta por rondas lo que conviene decidir pronto (multitenant, sesiones, accesos, secretos, backups…) y siembra las zonas. Antes de preguntar, mira lo que ya se ve en el código. |
+| `/overview scan` | Qué zonas piden revisión ahora, con los fallos primero y la skill que toca para cada una. |
+| `/overview show` | Abre el dashboard: un HTML local, sin servidor. |
+| `/overview informe` | Te cuenta lo que está mal como te lo contaría un amigo: qué ha visto, qué pasa si no lo arreglas y para qué sirve arreglarlo. |
 
-![Dashboard de overview: salud global, zonas por color y revisiones del mes](docs/img/readme/readme-21-overview.png)
+**El registro es automático.** Cada vez que lanzas una skill de revisión (`code-review`, `security-scan`, `secure-coding`…), apunta qué archivos se revisaron y con qué contenido. Si un archivo cambia después, deja de contar como revisado. El registro va en git, en `docs/overview/`, así que funciona con ramas en paralelo y merges.
 
-Cada cuadrado es una zona del proyecto:
+#### El dashboard
+
+![Dashboard de overview: salud global, fallos abiertos y una zona por cuadrado](docs/img/readme/readme-21-overview.png)
+
+Cada cuadrado es una zona; las más urgentes salen más grandes.
 
 - **Verde**: revisada con el contenido de hoy y sin fallos abiertos.
 - **Ámbar**: se va quedando atrás, o los docs no cuadran con el código.
-- **Rojo**: una comprobación ha fallado (por ejemplo, no hay rate limiting), o hay un endpoint, una tabla o un archivo de autenticación sin revisar.
+- **Rojo**: una comprobación ha fallado (por ejemplo, no hay límite de peticiones), o hay un endpoint, una tabla o un archivo de autenticación sin revisar.
+- **Nunca**: nadie la ha revisado.
 
-Que una zona esté revisada no basta para que salga en verde: si la revisión encontró un fallo, el cuadrado dice «N fallos» hasta que la comprobación pase.
+Revisada no quiere decir que esté bien: si la revisión encontró un fallo, el cuadrado dice «N fallos» hasta que la comprobación pase. Volver a revisar los archivos no lo borra.
 
-Al pulsar un cuadrado se abre el detalle de la zona: primero los fallos abiertos; después, los archivos sin cubrir, la skill recomendada y la última verificación de un agente que comprueba si los docs cuadran con el código.
+Al pulsar un cuadrado se abre el detalle de la zona: primero los fallos abiertos, luego la skill recomendada, los archivos sin cubrir, la última verificación de los docs y el historial de revisiones.
 
-![Panel de detalle de una zona: archivos sin cubrir, skill recomendada y verificación de los docs](docs/img/readme/readme-22-overview-panel.png)
+![Panel de detalle de una zona: fallos abiertos, skill recomendada, comprobaciones e historial](docs/img/readme/readme-22-overview-panel.png)
 
-Al abrir sesión, si alguna zona está en rojo, sale una sola línea: `overview: 2 zonas en rojo (api-endpoints, database) — /overview scan`.
+#### El informe
+
+Cuando quieres saber qué está mal sin leer un dashboard, pide el informe. Es una página que se lee como una carta: el veredicto en una frase, y cada problema contado en tres tiempos (**lo que vi → qué pasa si… → para qué sirve arreglarlo**) con la skill que lo arregla. Termina con «si yo fuera tú, esta semana haría esto». Lo que no se comprobó va aparte, en «donde no he mirado», nunca en «bien».
+
+![Informe de overview: veredicto, recuento y un problema contado con su consecuencia](docs/img/readme/readme-23-overview-informe.png)
+
+Se guarda en `.rsc/overview/informe.html`; si tu asistente puede publicar artifacts, además te da un enlace.
+
+#### Al abrir sesión
+
+Si alguna zona está en rojo, sale una sola línea: `overview: 2 zonas en rojo (security, database) — /overview scan`.
 
 ### Otras de la base
 
