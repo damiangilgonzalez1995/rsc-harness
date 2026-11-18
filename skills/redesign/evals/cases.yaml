@@ -1,0 +1,31 @@
+skill: redesign
+
+should_trigger:
+  - prompt: "Quiero rediseñar entera la interfaz de esta app, que se ve vieja."
+    why: "Rediseño completo de la interfaz: es justo lo que orquesta redesign."
+  - prompt: "/redesign"
+    why: "Invocación directa de la skill."
+  - prompt: "Haz un rediseño completo: crítica, tipografía, color y movimiento, y enséñame direcciones de estilo."
+    why: "Pide los cinco análisis en paralelo que lanza redesign."
+  - prompt: "Redesign the whole UI of this project from scratch."
+    why: "Disparador directo de redesign en inglés."
+
+should_not_trigger:
+  - prompt: "Revisa esta pantalla y dame un informe ordenado por severidad."
+    route_to: "revision-interfaz"
+    why: "Revisar una pantalla sin rediseñarla es el trabajo de revision-interfaz."
+  - prompt: "Genera la paleta de colores de la marca desde cero."
+    route_to: "mejor-colores"
+    why: "Solo el color es el trabajo de mejor-colores, no un rediseño entero."
+  - prompt: "Anima la apertura de este modal."
+    route_to: "animar"
+    why: "Una animación concreta es el trabajo de animar."
+  - prompt: "Implementa el endpoint que devuelve las incidencias del tecnico."
+    route_to: "implement"
+    why: "Un ticket de backend es el trabajo de implement."
+
+capability:
+  - scenario: "El usuario pide rediseñar toda la interfaz de su proyecto."
+    must_include:
+      - "galería"
+      - "estático"

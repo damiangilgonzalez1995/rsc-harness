@@ -46,7 +46,7 @@ $ rsc onboard
  ██████╗ ███████╗ ██████╗     ← logotipo con degradado animado
  ██╔══██╗██╔════╝██╔════╝
  ██████╔╝███████╗██║
-  310 skills · one CLI · zero bloat
+  311 skills · one CLI · zero bloat
 
 How technical should the conversation be?
 How much accompaniment do you want?
@@ -109,7 +109,7 @@ rsc add youtube-api remotion-video   # …crecer un canal, editar con Remotion
 rsc add fastapi --target claude,codex   # en varios asistentes a la vez
 rsc install --profile minimal        # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes
 rsc install --profile core           # la base + el flujo SDD completo
-rsc install --profile full           # todo (las 310 skills)
+rsc install --profile full           # todo (las 311 skills)
 rsc install --profile full --without go
 rsc consult "I want to launch a SaaS"  # solo recomienda, no instala
 rsc registry refresh                 # escribe .rsc/skill-registry.{json,md}
