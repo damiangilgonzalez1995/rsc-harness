@@ -8,6 +8,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 // Shell tools the PreToolUse guards listen on. On Windows the primary shell is the PowerShell tool,
 // so a `Bash`-only matcher let `git push --force` or a commit without gitmoji through unasked.
 const SHELL_TOOLS = 'Bash|PowerShell';
+const ARCHIVE_TOOLS = 'Read|Grep|Glob|Edit|MultiEdit|Write|NotebookEdit|Bash|PowerShell';
 
 // Mods de la terminal de Claude Code que el harness deja activados en cada proyecto.
 // Los cuatro `@harness-mods` viven en este mismo repo (`mods/plugins/`, catálogo de los mods en
@@ -280,6 +281,17 @@ export function wireHook(paths, sourceMd, policy = {}) {
   } else {
     rmSync(join(paths.projectRoot, '.rsc', 'danger-guard.mjs'), { force: true });
   }
+  // Archive guard: docs/archive/ holds what `sweep` proved stale. Any project can have it (it is
+  // docs, not code), so it is wired like the danger guard, outside the code-hook block. Denies the
+  // file tools and the shell from looking inside; moving things INTO it is allowed. Materialized +
+  // node-run, idempotent, fail-open, opt-out via .rsc/.no-archive-guard.
+  settings.hooks.PreToolUse = settings.hooks.PreToolUse.filter((e) => !hookWiringOf(e).includes('.rsc/archive-guard.'));
+  const agDest = join(paths.projectRoot, '.rsc', 'archive-guard.mjs');
+  copyFileSync(join(HERE, 'archive-guard.mjs'), agDest);
+  const agCmd = viaBootstrap('guard', at('.rsc', 'archive-guard.mjs'), `"${P}"`);
+  settings.hooks.PreToolUse.push({ matcher: ARCHIVE_TOOLS, hooks: [{ type: 'command', command: agCmd }] });
+  written.push(agDest);
+
   if (!settings.hooks.PreToolUse.length) delete settings.hooks.PreToolUse;
 
   mkdirSync(dirname(file), { recursive: true });
