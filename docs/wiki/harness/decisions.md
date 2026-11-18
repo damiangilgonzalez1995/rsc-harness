@@ -14,3 +14,8 @@
 - `.no-inspo` es un opt-out de máquina: conectar un MCP es consentimiento individual, como Context7.
 - **Regla nueva:** primero estático, después movimiento.
 - Fuente: `raw/worklog/2026-11-18-inspo-mcp-diseno.md`.
+
+## 2026-11-18 · sweep y el archivo cerrado
+- El contexto obsoleto se archiva (se mueve a `docs/archive/`), nunca se borra, y solo con permiso. Lo que no tiene pruebas no se toca.
+- El agente no puede leer `docs/archive/` (hook `archive-guard`), pero puede mover cosas hacia dentro. Es una decisión de equipo: `.no-archive-guard` es un opt-out de proyecto.
+- Spec contra código: el `status:` del ticket decide. En lo completed manda el código; en lo pendiente, la spec. Un conflicto se pregunta.
