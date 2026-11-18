@@ -238,6 +238,27 @@ sin `PRODUCT.md`, el agente te lo ofrece una vez y, si dices que no, no insiste
 
 ![Cuándo se ejecuta impeccable init](docs/img/09-interfaz-impeccable-init.png)
 
+### Sin ideas de diseño: Inspo
+
+[Inspo](https://inspomcp.dev) es un MCP gratuito: no pide cuenta ni clave. Le da al agente
+832 webs reales para buscar por estilo, por color o por sección. Se conecta una vez por máquina:
+
+```bash
+claude mcp add --transport http --scope user inspo https://inspomcp.dev/api/mcp
+```
+
+Con él conectado:
+
+- el agente te enseña referencias reales antes de dibujar, sobre todo cuando no sabes qué quieres;
+- `design-loop` saca de ahí la pantalla a superar;
+- la galería de `redesign` ancla sus tres direcciones a webs concretas.
+
+Si no está conectado, el harness te lo ofrece una vez al iniciar sesión en un proyecto de front.
+`.rsc/.no-inspo` apaga ese aviso.
+
+Una regla va con él: **primero estático, después movimiento**. No se anima nada hasta que la
+pantalla quieta está aprobada.
+
 ### De dónde vienen las skills
 
 | Qué | Cómo entra |

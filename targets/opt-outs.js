@@ -36,6 +36,7 @@ export const MACHINE_OPT_OUTS = [
   'context7',   // an MCP connection is machine wiring, and its consent is individual
   'git',        // only fires with no .git/, which a clone cannot be
   'harness',    // "not offered again ON THIS MACHINE" — the bootstrap's own words
+  'inspo',      // the Inspo design MCP: same as context7, connecting it is one person's call
   'scope-check',// compares the project and home scopes OF THIS MACHINE
 ];
 

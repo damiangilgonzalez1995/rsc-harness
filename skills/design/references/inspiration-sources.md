@@ -14,6 +14,32 @@ Two rules that make the browsing worth anything:
 - **Extract principles, not pixels.** "Headline is 8× the body, one accent at 3% coverage" travels to
   your project. Cloning a competitor's exact grid is theatre, and `research-method.md` says so.
 
+## From inside the session: Inspo MCP
+
+> Checked **2026-11-18**: free, no account, MIT. 832 sites, 2,320 pages and 68 reference components.
+
+[Inspo](https://inspomcp.dev) ([source](https://github.com/Nutlope/inspo)) lets the agent search real,
+curated sites without leaving the conversation. It is the first stop when nobody has a bar in mind
+or the user says they are out of ideas. Connect it once per machine:
+
+```
+claude mcp add --transport http --scope user inspo https://inspomcp.dev/api/mcp
+```
+
+| Tool | Use it when |
+|---|---|
+| `search_screens` | You have a goal in words ("calm fintech dashboard, dark"). |
+| `find_by_color` | The palette is fixed and you need layouts that already work with it. |
+| `find_examples_for_macrostructure` | You are building one section: a hero, pricing or a footer. |
+| `get_design_system` | One reference won and you want its type scale, colours and spacing. |
+| `find_similar` / `compare` | You need more of the same, or have to choose between two candidates. |
+| `find_reference_components` / `get_reference_jsx` | You need a component idea, not a whole page. |
+
+The two rules above still hold: bring back **one URL** as the bar, and write down the principle
+rather than the pixels. If you need a local alternative with no outside service,
+[awwwards-mcp](https://www.npmjs.com/package/awwwards-mcp) runs on your machine
+(`claude mcp add awwwards -- npx -y awwwards-mcp`, Node 22.13 or later).
+
 ## A whole page to beat
 
 The default bucket. Use it when the goal is a site or landing and you need something to converge on.
