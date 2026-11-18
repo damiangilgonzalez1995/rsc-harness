@@ -72,8 +72,8 @@ test('always-on body: does not re-elaborate what the per-turn gate already emits
 test('always-on body: says who wins when the spec and the code disagree', () => {
   // Without it an agent "fixes" shipped code to match a spec that was never updated, or rewrites a
   // spec to match half-built code. The ticket status decides; anything else is a question.
-  assert.match(body, /code rules what is `completed`/i);
-  assert.match(body, /spec rules what is `in_progress` or\s+`not_started`/i);
+  assert.match(body, /`status:` is completed the code rules/i);
+  assert.match(body, /while in_progress or\s+not_started, the spec does/i);
   assert.match(body, /nobody asked for/i);
-  assert.match(body, /overlap or a\s+contradiction[^.]*stop and ask/i);
+  assert.match(body, /overlap or a\s+contradiction,\s+stop and ask/i);
 });

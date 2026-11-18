@@ -52,9 +52,9 @@ already engaged over this chain covers the whole run: advance without re-asking.
 If a step's skill is not installed, offer to add it (§2) before routing. `implement` always
 pairs with test-driven development and a verification pass before anything is called done.
 
-**Spec vs code.** The code rules what is `completed`; the spec rules what is `in_progress` or
-`not_started` (ticket `status:`). Touch nothing nobody asked for; on an overlap or a
-contradiction, stop and ask.
+**Spec vs code.** Once a ticket's `status:` is completed the code rules; while in_progress or
+not_started, the spec does. Touch nothing nobody asked for; on an overlap or a contradiction,
+stop and ask.
 
 Exact skill names, by size. Small: `superpowers:brainstorming` or `grill-with-docs` ->
 `implement`. Big: `grill-with-docs` or `wayfinder` -> `to-spec` -> `to-tickets` ->

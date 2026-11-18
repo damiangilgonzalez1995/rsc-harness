@@ -1,7 +1,7 @@
 {
   "version": "1.3.6",
   "counts": {
-    "skills": 311,
+    "skills": 312,
     "agents": 34,
     "commands": 43,
     "fixedCommands": 10
@@ -5259,6 +5259,28 @@
         "design"
       ],
       "profiles": []
+    },
+    {
+      "id": "sweep",
+      "description": "Use when the project's written context may have gone stale — on `/sweep`, every few weeks, before a big feature, or when the agent keeps doing work nobody asked for. Scans TODO/FIXME, `.scratch/*/issues`, `docs/wiki`, lessons and CLAUDE.md, checks each claim against git, has a blind verifier confirm it, reports Obsoleto / Conflicto / Sin pruebas and archives to `docs/archive/` only with consent. NOT reviewing a diff (that is `code-review`), NOT a session retrospective (that is `retro`), NOT filing the docs inbox into the wiki (that is `harness`).",
+      "tags": [
+        "context",
+        "cleanup",
+        "stale",
+        "wiki",
+        "tickets",
+        "archive"
+      ],
+      "recommends": [
+        "code-review",
+        "harness",
+        "retro"
+      ],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "swift-ios",

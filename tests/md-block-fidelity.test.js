@@ -54,6 +54,6 @@ test('the short operations body also carries the spec-versus-code rule', () => {
   writeFileSync(src, '---\nname: suggest\n---\nCUERPO\n');
   wireHook({ hookTarget: file }, src, { codeHooks: false });
   const doc = readFileSync(file, 'utf8');
-  assert.match(doc, /code rules what is `completed`/);
+  assert.match(doc, /`status:` is completed the code rules/);
   assert.match(doc, /stop and ask/);
 });
