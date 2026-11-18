@@ -24,7 +24,8 @@ Si no existe `DESIGN.md` → créalo documentando el sistema visual actual.
 
 ### 2. Capturas "antes"
 
-Captura las pantallas principales del estado actual. Se usarán para el contraste final.
+Crea la carpeta de la ejecución, `docs/redesign/<AAAA-MM-DD>/`, y guarda en `capturas/antes/` un PNG
+por cada pantalla principal del estado actual. Se usan en el informe y en el contraste final.
 
 ### 3. Lanzar subagentes (en paralelo)
 
@@ -42,22 +43,30 @@ Cada subagente recibe:
 - Ruta exacta a los capítulos que debe leer
 - El PRODUCT.md y DESIGN.md del proyecto
 - Instrucción de entregar solo hallazgos, no implementar
+- La sección «Formato de los hallazgos» de [`informe.md`](informe.md): deja su resultado en `hallazgos/<agente>.json` con esa forma
 
 **Galería con Inspo.** Si el MCP Inspo está conectado (herramientas `mcp__inspo__*`), la galería saca sus referencias de ahí antes de proponer nada. Busca webs reales por el estilo del PRODUCT.md (`search_screens`), por los colores actuales (`find_by_color`) y por cada sección que se rediseña (`find_examples_for_macrostructure`). Cada una de las 3 direcciones va anclada a 2 o 3 webs con su URL y una frase de qué se toma de cada una: el principio, no los píxeles. Si Inspo no está conectado, la galería sigue como siempre. En el informe final se ofrece una vez instalarlo, si en la sesión no se ha ofrecido ya (el comando está en `skills/design/references/inspiration-sources.md`).
 
-### 4. Consolidar y elegir
+### 4. Informe y elección
 
-Presenta los 5 informes en una tabla resumen. El usuario elige qué dirección de estilo seguir (de las 3 de galería) y qué hallazgos priorizar.
+Cuando los 5 JSON estén en `hallazgos/`, lanza un subagente nuevo, **consolidar-informe**, con el
+contenido de [`informe.md`](informe.md) y la ruta de la carpeta de la ejecución. Él monta
+`informe.html`; tú no lees los cinco informes, así tu contexto queda libre para lo que sigue.
+
+Abre el informe en el navegador y pregunta en la terminal solo lo que trae **Tu decisión**: qué
+dirección de estilo sigue el usuario (de las 3 de galería) y qué hallazgos aplica.
 
 ### 5. Prototipo navegable
 
-Con la dirección elegida, genera un prototipo HTML navegable de las pantallas principales. No toca el código real todavía.
+Con la dirección elegida, genera un prototipo HTML navegable de las pantallas principales en
+`prototipo/` y guarda sus capturas en `capturas/despues/`. No toca el código real todavía.
 
 **Primero estático.** El prototipo va sin animaciones: maquetación, tipografía y color quietos. Una animación tapa un layout flojo, así que el movimiento no entra hasta que la versión quieta convence.
 
 ### 6. Contrastar
 
-Muestra lado a lado: antes vs prototipo. Confirma con el usuario antes de tocar código.
+Vuelve a lanzar **consolidar-informe** sobre la misma carpeta: añade la sección **Antes / después**
+al mismo `informe.html`. Ábrelo y confirma con el usuario antes de tocar código.
 
 ### 7. Programar
 

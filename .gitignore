@@ -29,3 +29,7 @@ coverage/
 
 # Worktrees created for isolated feature work — the directory is scratch, never content.
 .worktrees/
+
+# Notas de diseño y trabajo local de agentes: nunca es contenido del repo.
+.superpowers/
+.scratch/

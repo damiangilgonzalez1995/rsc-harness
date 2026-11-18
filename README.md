@@ -23,8 +23,10 @@ npx @damiangilgonzalez/harness@latest onboard
 | Actualizarlo, compartirlo con el equipo o arreglarlo | [2. Actualizar y mantener](#2-actualizar-y-mantener) |
 | Entender cómo se trabaja (spec primero, test primero) | [3. La metodología](#3-la-metodología) |
 | Diseñar pantallas | [4. Interfaz (UX/UI)](#4-interfaz-uxui) |
+| Tener ideas de diseño de webs reales | [Inspo](#antes-de-diseñar-de-dónde-salen-las-ideas-inspo) |
 | Saber qué recuerda el agente | [5. La memoria](#5-la-memoria) |
 | Las skills que más se usan | [6. Skills útiles](#6-skills-útiles) |
+| Limpiar el contexto que ya no es verdad | [`sweep`](#sweep--barrer-el-contexto-que-ya-no-es-verdad) |
 | Ver qué deja en mi proyecto | [7. Qué se instala](#7-qué-se-instala) |
 
 ---
@@ -87,8 +89,8 @@ Empiezas pequeño. El resto se carga bajo demanda: el harness te propone una ski
 la pide, con la evidencia que lo justifica.
 
 ```bash
-rsc install --profile minimal   # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes
-rsc install --profile core      # la base + el método completo
+rsc install --profile minimal   # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes + overview
+rsc install --profile core      # la base + el método completo + seguridad (security-scan, secure-coding, agent-safety)
 rsc install --profile ui        # core + todo lo de interfaz
 rsc install --profile full      # todo el catálogo
 ```
@@ -218,50 +220,121 @@ cifrados, sesiones que vencen y CORS solo con tu dominio. Se apaga con `.rsc/.no
 
 ## 4. Interfaz (UX/UI)
 
-Hay muchas skills de diseño y se solapan. `flujo-interfaz` decide cuál lidera y en qué orden
-siguen las demás cuando una tarea toca pantalla: **contexto → dirección → movimiento → pulido →
-originalidad → psicología → casos extremos**.
+Hay más de treinta skills de diseño y se solapan. No hace falta aprenderlas: para rehacer una
+interfaz entera hay **una sola orden**.
 
-![Diseñar una pantalla: qué skill manda en cada paso](docs/img/07-interfaz-que-skill-manda.png)
+![Una orden, todo el rediseño](docs/img/readme/readme-23-redesign-una-orden.png)
 
-¿No sabes cuál usar? Parte de lo que notas:
+### Antes de diseñar: de dónde salen las ideas (Inspo)
 
-![Tengo este problema, uso esta skill](docs/img/08-interfaz-cuando-uso-que.png)
+> [!IMPORTANT]
+> **Sin referencias, el agente diseña de memoria, y su memoria es la plantilla media de IA.**
+> [Inspo](https://inspomcp.dev) le da **832 webs reales** (2.320 pantallas) para buscar por estilo,
+> por color o por sección antes de dibujar nada. Es gratis, no pide cuenta ni clave, y se conecta
+> **una vez por máquina**.
+
+![De dónde salen las ideas: Inspo, 800+ webs reales](docs/img/readme/readme-28-inspo-de-donde.png)
+
+Las referencias salen de aquí: [inspomcp.dev](https://inspomcp.dev), un archivo curado de webs en
+producción que tu agente consulta por MCP.
+
+![La portada de inspomcp.dev: webs reales como inspiración para tu agente](docs/img/readme/readme-inspo-captura-portada.png)
+
+![El archivo: cada tarjeta es una web real que el agente puede citar y abrir](docs/img/readme/readme-inspo-captura-archivo.png)
+
+**Cómo se activa, en tres pasos:**
+
+1. En Claude Code, escribe esto. El `!` lo ejecuta en la propia sesión:
+
+   ```bash
+   ! claude mcp add --transport http --scope user inspo https://inspomcp.dev/api/mcp
+   ```
+
+2. Cierra Claude Code y vuelve a abrirlo, porque los MCP se cargan al arrancar.
+3. Escribe `/mcp`: tiene que salir `inspo` como conectado.
+
+![Activar Inspo en tres pasos](docs/img/readme/readme-30-inspo-activar.png)
+
+Si no lo tienes, el harness te lo ofrece al iniciar sesión en un proyecto de front. Si dices que no,
+crea `.rsc/.no-inspo` y no vuelve a preguntar.
+
+**Cómo se usa:** hablando normal, sin comandos.
+
+| Dices | El agente busca |
+|---|---|
+| «No se me ocurre cómo hacer esta pantalla» | 3–5 webs reales; eliges una antes de que dibuje |
+| «Algo tipo fintech oscuro y tranquilo» | por estilo (`search_screens`) |
+| «Ya tengo estos colores» | webs que funcionan con tu paleta (`find_by_color`) |
+| «Enséñame heros, pricings o footers buenos» | por sección (`find_examples_for_macrostructure`) |
+| `/redesign` | la galería basa sus tres direcciones de estilo en webs de Inspo |
+
+![Tres formas de buscar referencias](docs/img/readme/readme-29-inspo-buscar.png)
+
+![La página del MCP: pantallas, componentes de referencia y un DESIGN.md por web](docs/img/readme/readme-inspo-captura-mcp.png)
+
+Va con una regla: **primero estático, después movimiento.** No se anima nada hasta que la pantalla
+quieta está aprobada.
+
+### `/redesign`: el rediseño completo, en cascada
+
+Escribes `/redesign` en el proyecto y el agente encadena todo lo demás. Tú solo decides dos cosas:
+qué estilo quieres y si el prototipo te convence.
+
+![Siete pasos, dos decisiones tuyas](docs/img/readme/readme-24-redesign-flujo.png)
+
+1. **Contexto.** Si faltan `PRODUCT.md` (para quién es y qué hace) o `DESIGN.md` (el sistema visual
+   actual), los crea leyendo el código. No te pregunta.
+2. **Capturas del antes.** Fotografía las pantallas principales para compararlas al final.
+3. **Cinco análisis a la vez.** Lanza cinco ayudantes en paralelo, cada uno con su especialidad.
+4. **Eliges el estilo** entre tres direcciones. ✋
+5. **Prototipo** navegable con el estilo elegido, sin tocar todavía el código real.
+6. **Antes y después**, lado a lado. Sin tu sí, no sigue. ✋
+7. **Programa** el rediseño con las skills de pulido y de movimiento.
+
+![Los cinco ayudantes y lo que entrega cada uno](docs/img/readme/readme-25-redesign-cinco-agentes.png)
+
+| Ayudante | Entrega |
+|---|---|
+| Crítica | Los problemas de UX, ordenados por importancia |
+| Tipografía | Fuentes y escala de tamaños |
+| Color | Paleta nueva y sus tokens, con modo oscuro |
+| Movimiento | Qué animar, qué quitar y con qué curvas (skills de Emil Kowalski) |
+| Galería | Tres direcciones de estilo con referencias |
+
+Los cinco solo analizan: no tocan el código.
+
+![Tres direcciones de estilo, eliges una](docs/img/readme/readme-26-redesign-elige-estilo.png)
+
+![El antes y el prototipo, lado a lado](docs/img/readme/readme-27-redesign-antes-despues.png)
+
+**Necesita `impeccable`** (`npx impeccable install`): de sus capítulos leen los ayudantes.
+
+### ¿Solo quieres cambiar una cosa?
+
+`/redesign` es para la interfaz entera. Para un problema concreto, ve directo a su skill:
+
+![Toda la interfaz o una sola cosa](docs/img/readme/readme-28-redesign-o-una-skill.png)
+
+| Noto que… | Skill |
+|---|---|
+| Quiero animar algo | `animar` |
+| La animación va a trompicones | `animation-performance` |
+| Hay demasiado movimiento | `remove-animations` |
+| Parece hecho por IA | `tastemaker` |
+| Quiero pulirla antes de publicar | `revision-interfaz` |
+| Los datos raros la rompen | `break-ui` |
+| Parece una web en el móvil | `mobile-native` |
+
+Para una pantalla nueva desde cero, `flujo-interfaz` decide qué skill lidera en cada paso.
 
 ### Cuándo se ejecuta `/impeccable init`
 
-Una vez por proyecto, antes de diseñar la primera pantalla: guarda `PRODUCT.md` (para quién es,
-qué hace) y el resto de comandos lo leen. Si ya hay interfaz y no hay `DESIGN.md`,
-`/impeccable document`. El harness te lo recuerda solo: al iniciar sesión en un proyecto de front
-sin `PRODUCT.md`, el agente te lo ofrece una vez y, si dices que no, no insiste
-(`.rsc/.no-stack-hints` lo apaga).
+`/redesign` ya lo cubre. Si trabajas sin él: una vez por proyecto, antes de diseñar la primera
+pantalla, guarda `PRODUCT.md` y el resto de comandos lo leen. Si ya hay interfaz y no hay
+`DESIGN.md`, `/impeccable document`. Al iniciar sesión en un proyecto de front sin `PRODUCT.md`,
+el agente te lo ofrece una vez (`.rsc/.no-stack-hints` lo apaga).
 
-![Cuándo se ejecuta impeccable init](docs/img/09-interfaz-impeccable-init.png)
-
-### Sin ideas de diseño: Inspo
-
-[Inspo](https://inspomcp.dev) es un MCP gratuito: no pide cuenta ni clave. Le da al agente
-más de 800 webs reales para buscar por estilo, por color o por sección. Se conecta una vez por máquina:
-
-```bash
-claude mcp add --transport http --scope user inspo https://inspomcp.dev/api/mcp
-```
-
-Con él conectado:
-
-- el agente te enseña referencias reales antes de dibujar, sobre todo cuando no sabes qué quieres;
-- `design-loop` saca de ahí la pantalla a superar;
-- la galería de `redesign` ancla sus tres direcciones a webs concretas.
-
-Si no está conectado, el harness te lo ofrece al iniciar sesión en un proyecto de front. Si dices
-que no, el agente crea `.rsc/.no-inspo` y no vuelve a preguntar en ese proyecto.
-`.rsc/.no-stack-hints` apaga todos los avisos de stack, este incluido. También cuenta como conectado
-si está en el `.mcp.json` del proyecto.
-
-Una regla va con él: **primero estático, después movimiento**. No se anima nada hasta que la
-pantalla quieta está aprobada.
-
-### De dónde vienen las skills
+### De dónde vienen
 
 | Qué | Cómo entra |
 |---|---|
@@ -364,11 +437,87 @@ siguiente vaya mejor. El resultado son cambios concretos, no una charla.
 
 ### `sweep` — barrer el contexto que ya no es verdad
 
-Un TODO ya hecho o un ticket ya fusionado siguen pareciendo órdenes, y el agente se pone a hacer
-trabajo que nadie pidió. `/sweep` los encuentra, los prueba contra git con un verificador a ciegas y
-los reparte en tres cajas: **Obsoleto**, **Conflicto** y **Sin pruebas** (esta no se toca). Lo
-obsoleto lo archiva en `docs/archive/` solo si dices que sí, y el hook `archive-guard` impide que el
-agente vuelva a leerlo.
+> [!IMPORTANT]
+> **El contexto viejo sigue pareciendo una orden.** Un TODO ya hecho, un ticket ya fusionado o una
+> página de la wiki que el código contradice mandan al agente a hacer trabajo que nadie pidió.
+> `/sweep` los encuentra, los prueba contra git y los archiva **solo si dices que sí**.
+
+![El contexto viejo sigue pareciendo una orden](docs/img/readme/readme-31-sweep-problema.png)
+
+**Cómo se usa:** escribe `/sweep` cada pocas semanas, antes de una feature grande o cuando notes que
+el agente hace cosas que no le has pedido. También salta sola si lo dices con tus palabras («limpia
+los TODOs viejos»).
+
+**El proceso, en cinco fases:**
+
+1. **Escanear:** TODO/FIXME del código, tickets de `.scratch/*/issues`, `docs/wiki`, lecciones y
+   `CLAUDE.md`. Saca una afirmación comprobable de cada uno.
+2. **Pruebas en git:** `git log -S`, `git blame` y el `status:` del ticket.
+3. **Verificador a ciegas:** un agente con contexto limpio (`finding-verifier`) recibe solo la
+   afirmación, nunca tu conclusión, e intenta demostrar que sigue vigente. Ante la duda, no se toca.
+4. **Tres cajas** (abajo).
+5. **Archivar con permiso:** «¿archivo estas 9?». Se mueve a `docs/archive/` con `git mv`. Nunca se
+   borra.
+
+![Las cinco fases de /sweep](docs/img/readme/readme-32-sweep-proceso.png)
+
+| Caja | Qué es | Ejemplo | Qué hace `/sweep` |
+|---|---|---|---|
+| **Obsoleto** | Git demuestra que ya no es verdad | TODO «validar email», y ya existe `validateEmail` | Propone archivarlo |
+| **Conflicto** | Dos fuentes se contradicen | La spec dice JWT, el código usa sesiones | Te enseña las dos y decides tú |
+| **Sin pruebas** | Parece viejo, pero git no lo demuestra | TODO «añadir caché» que nadie ha hecho | No toca nada: viejo no es falso |
+
+![Las tres cajas, el archivo cerrado y quién manda](docs/img/readme/readme-33-sweep-cajas.png)
+
+**El archivo queda cerrado al agente.** El hook `archive-guard` le impide leer o buscar en
+`docs/archive/`, para que no vuelva a obedecer lo archivado. Tú puedes abrirlo cuando quieras, y
+`.rsc/.no-archive-guard` lo apaga en un proyecto.
+
+**Quién manda, la spec o el código.** Los tickets de `to-tickets` llevan `status:`. Mientras están
+`not_started` o `in_progress`, manda la spec; cuando pasan a `completed`, manda el código. Ante un
+conflicto, el agente para y pregunta.
+
+### `overview` — qué está revisado, qué está mal y qué hacer primero
+
+Te dice el estado del proyecto de un vistazo: qué zonas (seguridad, base de datos, frontend, docs…) están revisadas **con el contenido que tienen hoy**, qué fallos hay abiertos y qué skill lanzar para cada cosa.
+
+| Modo | Para qué |
+|---|---|
+| `/overview start` | Al empezar un proyecto: te pregunta por rondas lo que conviene decidir pronto (multitenant, sesiones, accesos, secretos, backups…) y siembra las zonas. Antes de preguntar, mira lo que ya se ve en el código. |
+| `/overview scan` | Qué zonas piden revisión ahora, con los fallos primero y la skill que toca para cada una. |
+| `/overview show` | Abre el dashboard: un HTML local, sin servidor. |
+| `/overview informe` | Te cuenta lo que está mal como te lo contaría un amigo: qué ha visto, qué pasa si no lo arreglas y para qué sirve arreglarlo. |
+
+**El registro es automático.** Cada vez que lanzas una skill de revisión (`code-review`, `security-scan`, `secure-coding`…), apunta qué archivos se revisaron y con qué contenido. Si un archivo cambia después, deja de contar como revisado. El registro va en git, en `docs/overview/`, así que funciona con ramas en paralelo y merges.
+
+#### El dashboard
+
+![Dashboard de overview: salud global, fallos abiertos y una zona por cuadrado](docs/img/readme/readme-21-overview.png)
+
+Cada cuadrado es una zona; las más urgentes salen más grandes.
+
+- **Verde**: revisada con el contenido de hoy y sin fallos abiertos.
+- **Ámbar**: se va quedando atrás, o los docs no cuadran con el código.
+- **Rojo**: una comprobación ha fallado (por ejemplo, no hay límite de peticiones), o hay un endpoint, una tabla o un archivo de autenticación sin revisar.
+- **Nunca**: nadie la ha revisado.
+
+Revisada no quiere decir que esté bien: si la revisión encontró un fallo, el cuadrado dice «N fallos» hasta que la comprobación pase. Volver a revisar los archivos no lo borra.
+
+Al pulsar un cuadrado se abre el detalle de la zona: primero los fallos abiertos, luego la skill recomendada, los archivos sin cubrir, la última verificación de los docs y el historial de revisiones.
+
+![Panel de detalle de una zona: fallos abiertos, skill recomendada, comprobaciones e historial](docs/img/readme/readme-22-overview-panel.png)
+
+#### El informe
+
+Cuando quieres saber qué está mal sin leer un dashboard, pide el informe. Es una página que se lee como una carta: el veredicto en una frase, y cada problema contado en tres tiempos (**lo que vi → qué pasa si… → para qué sirve arreglarlo**) con la skill que lo arregla. Termina con «si yo fuera tú, esta semana haría esto». Lo que no se comprobó va aparte, en «donde no he mirado», nunca en «bien».
+
+![Informe de overview: veredicto, recuento y un problema contado con su consecuencia](docs/img/readme/readme-23-overview-informe.png)
+
+Se guarda en `.rsc/overview/informe.html`; si tu asistente puede publicar artifacts, además te da un enlace.
+
+#### Al abrir sesión
+
+Si alguna zona está en rojo, sale una sola línea: `overview: 2 zonas en rojo (security, database) — /overview scan`.
 
 ### Otras de la base
 
@@ -403,16 +552,16 @@ que `sweep` archivó en `docs/archive/`.
 En Claude Code quedan activados `skins`, `savvy-progress`, `context-bar`, `prompt-enhancer`, `modelo-justo`,
 `where-am-i` y `cache-tax` (este mantiene caliente la caché, y eso gasta tokens). `superpowers` llega cuando el proyecto usa el método.
 
-En cifras: 312 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
+En cifras: 313 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
 (Claude Code, Codex, Cursor, Copilot, Gemini…). Detalle en la [referencia técnica](docs/referencia-tecnica.md).
 
 ---
 
 ## Catálogo
 
-![312 skills por dominio](docs/img/readme/readme-15-catalogo.png)
+![313 skills por dominio](docs/img/readme/readme-15-catalogo.png)
 
-312 skills en 25 dominios: software, negocio, contenido, datos e IA.
+313 skills en 25 dominios: software, negocio, contenido, datos e IA.
 Cada una se activa sola cuando la tarea encaja.
 
 **[Ver el catálogo completo →](docs/catalogo.md)** · [Referencia técnica](docs/referencia-tecnica.md) ·

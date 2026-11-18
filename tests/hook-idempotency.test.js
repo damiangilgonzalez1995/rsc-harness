@@ -98,6 +98,8 @@ const MANAGED = [
   ['PreToolUse', 'danger-guard.mjs'],
   ['PreToolUse', 'gitmoji-guard.mjs'],
   ['UserPromptSubmit', 'userprompt-gate.mjs'],
+  ['PostToolUse', 'overview-skill-hook.mjs'],
+  ['UserPromptSubmit', 'overview-prompt-hook.mjs'],
 ];
 
 for (const [event, script] of MANAGED) {
