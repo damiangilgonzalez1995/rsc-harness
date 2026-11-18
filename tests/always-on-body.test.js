@@ -68,3 +68,12 @@ test('always-on body: does not re-elaborate what the per-turn gate already emits
   const echoed = gateLines.filter((l) => body.includes(l));
   assert.deepEqual(echoed, [], `body reproduces gate lines verbatim: ${echoed.join(' | ')}`);
 });
+
+test('always-on body: says who wins when the spec and the code disagree', () => {
+  // Without it an agent "fixes" shipped code to match a spec that was never updated, or rewrites a
+  // spec to match half-built code. The ticket status decides; anything else is a question.
+  assert.match(body, /code rules what is `completed`/i);
+  assert.match(body, /spec rules what is `in_progress` or\s+`not_started`/i);
+  assert.match(body, /nobody asked for/i);
+  assert.match(body, /overlap or a\s+contradiction[^.]*stop and ask/i);
+});

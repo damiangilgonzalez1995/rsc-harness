@@ -46,3 +46,14 @@ test('removing a block that is not there touches nothing', () => {
   unwireHook({ hookTarget: file });
   assert.equal(readFileSync(file, 'utf8'), before);
 });
+
+test('the short operations body also carries the spec-versus-code rule', () => {
+  const d = tmp();
+  const file = join(d, 'AGENTS.md');
+  const src = join(d, 'src.md');
+  writeFileSync(src, '---\nname: suggest\n---\nCUERPO\n');
+  wireHook({ hookTarget: file }, src, { codeHooks: false });
+  const doc = readFileSync(file, 'utf8');
+  assert.match(doc, /code rules what is `completed`/);
+  assert.match(doc, /stop and ask/);
+});

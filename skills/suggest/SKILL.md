@@ -44,21 +44,22 @@ Two exceptions, and say out loud when you take one:
 - fixing a regression to restore behaviour that already existed — hand that to
   `superpowers:systematic-debugging` instead, then resume.
 
-When you cannot tell, take the clarifying step. A skipped one is where drift hides.
+When unsure, take the clarifying step. A skipped one is where drift hides.
 
-Judge the **meaning**, not the wording: the trigger is semantic, so it holds in any language.
-A URL plus a description of desired behaviour is a feature
-request. If the user already engaged an autopilot over this chain, that one consent covers the
-whole run — advance through the phases without re-asking.
+A URL plus a description of desired behaviour is a feature request. An autopilot the user
+already engaged over this chain covers the whole run: advance without re-asking.
 
 If a step's skill is not installed, offer to add it (§2) before routing. `implement` always
 pairs with test-driven development and a verification pass before anything is called done.
 
+**Spec vs code.** The code rules what is `completed`; the spec rules what is `in_progress` or
+`not_started` (ticket `status:`). Touch nothing nobody asked for; on an overlap or a
+contradiction, stop and ask.
+
 Exact skill names, by size. Small: `superpowers:brainstorming` or `grill-with-docs` ->
 `implement`. Big: `grill-with-docs` or `wayfinder` -> `to-spec` -> `to-tickets` ->
 `implement-spec`. Both: `write-adr` for decisions, then `code-review` -> `pr`.
-On Claude Code this rule also arrives as a per-turn hook; the brevity here is deduplication,
-not relaxation.
+On Claude Code a per-turn hook repeats this rule: brevity here is deduplication.
 
 ---
 
