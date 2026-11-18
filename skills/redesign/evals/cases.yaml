@@ -9,6 +9,8 @@ should_trigger:
     why: "Pide los cinco análisis en paralelo que lanza redesign."
   - prompt: "Redesign the whole UI of this project from scratch."
     why: "Disparador directo de redesign en inglés."
+  - prompt: "Esta web parece hecha con una plantilla de IA, quiero darle otra cara de arriba abajo."
+    why: "Rehacer la cara de toda la web es un rediseño completo, no un pulido de una pantalla."
 
 should_not_trigger:
   - prompt: "Revisa esta pantalla y dame un informe ordenado por severidad."
