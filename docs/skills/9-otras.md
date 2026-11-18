@@ -70,4 +70,33 @@ No aplica nada: tú decides qué se cambia. Así no entra en bucles de corregirs
 /retro
 ```
 
+---
+
+## `sweep`
+
+**Cuándo.** Cada pocas semanas, antes de una feature grande, o cuando el agente se pone a hacer
+cosas que nadie le ha pedido. Suele ser porque está leyendo notas que ya no son verdad.
+
+**Qué hace.** Lee los TODO y FIXME, los tickets de `.scratch/*/issues`, la wiki, las lecciones y
+`CLAUDE.md`. Comprueba cada afirmación contra git (`git log`, `git blame`) y se la pasa a un
+verificador con contexto limpio, que solo ve la afirmación y sus pruebas. Te entrega tres cajas:
+
+| Caja | Qué pasa con ella |
+|---|---|
+| **Obsoleto** | Git demuestra que ya no es verdad. Se archiva si dices que sí. |
+| **Conflicto** | Dos fuentes se contradicen. Tú decides cuál gana. |
+| **Sin pruebas** | No hay nada concluyente, así que no se toca. |
+
+Archivar es mover a `docs/archive/`, nunca borrar. Desde ese momento el hook `archive-guard`
+impide que el agente lea esa carpeta, para que no vuelva a obedecer lo archivado. Tú puedes abrirla
+cuando quieras. Si un proyecto no lo quiere, `.rsc/.no-archive-guard` lo apaga.
+
+```
+/sweep
+```
+
+**Quién manda, la spec o el código.** Los tickets de `to-tickets` llevan `status:`. Mientras están
+`not_started` o `in_progress`, manda la spec; cuando pasan a `completed`, manda el código. Ante un
+solapamiento o un conflicto, el agente para y pregunta.
+
 **Volver al índice:** [README](README.md)

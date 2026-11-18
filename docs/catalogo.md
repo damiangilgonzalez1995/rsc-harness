@@ -1,6 +1,6 @@
 # Catálogo de skills
 
-311 skills, agrupadas por lo que quieres hacer. Cada enlace abre la carpeta de la skill y su
+312 skills, agrupadas por lo que quieres hacer. Cada enlace abre la carpeta de la skill y su
 `SKILL.md`. Ninguna hace falta llamarla a mano: se activa sola cuando la tarea encaja.
 
 Para instalar una: `rsc add <id>`. Para que te recomiende: `rsc consult "lo que quieres hacer"`.
@@ -263,6 +263,7 @@ encargo.
 | [muscle-memory](../skills/muscle-memory/) | Un gimnasio de katas de Python. |
 | [wait-what](../skills/wait-what/) | Freno de mano: para y reformula. |
 | [retro](../skills/retro/) | Retrospectiva de una sesión: qué cambiar en el entorno del agente. Tú apruebas cada cambio. |
+| [sweep](../skills/sweep/) | Barre el contexto que ya no es verdad (TODOs, tickets, wiki, lecciones, CLAUDE.md): lo prueba con git y un verificador a ciegas, y archiva en `docs/archive/` solo con tu permiso. |
 | [writing-for-agents](../skills/writing-for-agents/) | Cómo escribir documentos que consume un agente. |
 | [tunel-ngrok](../skills/tunel-ngrok/) | Abre el front local en el móvil por un túnel de ngrok, sin desplegar. Va en la base. |
 | [hardening](../skills/hardening/) | Auditoría de seguridad y privacidad por zonas (SOC 2, ISO 27001, ISO 27701); tú decides qué se arregla. Va en la base. |

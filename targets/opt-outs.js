@@ -17,6 +17,7 @@
 
 /** Decisions of the project: they belong in `.rsc.json` and are rebuilt in a clone. */
 export const PROJECT_OPT_OUTS = [
+  'archive-guard',    // docs/archive/ closed to the agent: what sweep archived stays archived for everyone
   'audit',            // cadence of this project's skill audit
   'claudemd-check',   // the root CLAUDE.md context budget
   'danger-guard',     // foot-gun denial, keyed to the committed user profile

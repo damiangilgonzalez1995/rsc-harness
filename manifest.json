@@ -1,7 +1,7 @@
 {
   "version": "1.3.6",
   "counts": {
-    "skills": 311,
+    "skills": 312,
     "agents": 34,
     "commands": 43,
     "fixedCommands": 10
@@ -5259,6 +5259,28 @@
         "design"
       ],
       "profiles": []
+    },
+    {
+      "id": "sweep",
+      "description": "Use on `/sweep` or when the agent keeps doing work nobody asked for: finds TODOs, tickets, wiki pages, lessons and CLAUDE.md lines that are no longer true, proves it with git and a blind verifier, and archives to `docs/archive/` only with consent. NOT reviewing a diff (`code-review`), NOT a session retrospective (`retro`), NOT filing the docs inbox (`harness`).",
+      "tags": [
+        "context",
+        "cleanup",
+        "stale",
+        "wiki",
+        "tickets",
+        "archive"
+      ],
+      "recommends": [
+        "code-review",
+        "harness",
+        "retro"
+      ],
+      "profiles": [
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "swift-ios",

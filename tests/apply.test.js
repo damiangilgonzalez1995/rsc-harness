@@ -466,6 +466,7 @@ test('every wired hook script is a managed path, so a backup can restore it', as
     'worklog-checkpoint.mjs',
     'ship-guard.mjs',
     'danger-guard.mjs',
+    'archive-guard.mjs',
     'gitmoji-guard.mjs',
     'userprompt-gate.mjs',
     'hook-once.mjs',
@@ -817,6 +818,21 @@ test('claude: wires gitmoji-guard on PreToolUse(Bash) as a third distinct guard,
       `${g} still wired`,
     );
   }
+});
+
+test('claude: wires archive-guard once on PreToolUse for the file tools and the shell, materialized + idempotent', async () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rsc-cwd-'));
+  await applyInstall({ skillIds: ['suggest'], target: 'claude', cwd });
+  await applyInstall({ skillIds: ['suggest'], target: 'claude', cwd }); // re-install → no dupes
+
+  const settings = JSON.parse(readFileSync(join(cwd, '.claude/settings.json'), 'utf8'));
+  const archive = settings.hooks.PreToolUse.filter((e) => JSON.stringify(e).includes('archive-guard'));
+  assert.equal(archive.length, 1, 'exactly one archive-guard entry');
+  for (const tool of ['Read', 'Grep', 'Glob', 'Edit', 'Write', 'NotebookEdit', 'Bash', 'PowerShell']) {
+    assert.ok(archive[0].matcher.split('|').includes(tool), `matcher covers ${tool}`);
+  }
+  assert.ok(archive[0].hooks[0].command.startsWith('node '));
+  assert.ok(existsSync(join(cwd, '.rsc/archive-guard.mjs')), 'archive-guard.mjs materialized');
 });
 
 test('danger-guard: blocks foot-gun commands for a non-technical user', () => {

@@ -362,6 +362,14 @@ Al cerrar una sesión larga, hace una retrospectiva: busca qué del entorno del 
 comprobaciones, estándares, ficheros de instrucciones, herramientas) hay que cambiar para que la
 siguiente vaya mejor. El resultado son cambios concretos, no una charla.
 
+### `sweep` — barrer el contexto que ya no es verdad
+
+Un TODO ya hecho o un ticket ya fusionado siguen pareciendo órdenes, y el agente se pone a hacer
+trabajo que nadie pidió. `/sweep` los encuentra, los prueba contra git con un verificador a ciegas y
+los reparte en tres cajas: **Obsoleto**, **Conflicto** y **Sin pruebas** (esta no se toca). Lo
+obsoleto lo archiva en `docs/archive/` solo si dices que sí, y el hook `archive-guard` impide que el
+agente vuelva a leerlo.
+
 ### Otras de la base
 
 | Skill | Para qué |
@@ -387,23 +395,24 @@ Lo que se comparte va a git; el estado de la máquina, no.
 ![Los reflejos: gate, danger-guard, ship-guard, gitmoji-guard, memoria y limpieza de worktrees](docs/img/readme/readme-07-guardias.png)
 
 Hooks que vigilan por ti: recuerdan la cadena, piden confirmación antes de un `rm -rf` o un
-`git push --force` y paran antes de volver a `main` sin abrir la PR.
+`git push --force`, paran antes de volver a `main` sin abrir la PR e impiden que el agente lea lo
+que `sweep` archivó en `docs/archive/`.
 
 ![Plugins de serie: superpowers, skins, savvy-progress y cache-tax](docs/img/readme/readme-16-plugins.png)
 
 En Claude Code quedan activados `skins`, `savvy-progress`, `context-bar`, `prompt-enhancer`, `modelo-justo`,
 `where-am-i` y `cache-tax` (este mantiene caliente la caché, y eso gasta tokens). `superpowers` llega cuando el proyecto usa el método.
 
-En cifras: 311 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
+En cifras: 312 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
 (Claude Code, Codex, Cursor, Copilot, Gemini…). Detalle en la [referencia técnica](docs/referencia-tecnica.md).
 
 ---
 
 ## Catálogo
 
-![311 skills por dominio](docs/img/readme/readme-15-catalogo.png)
+![312 skills por dominio](docs/img/readme/readme-15-catalogo.png)
 
-311 skills en 25 dominios: software, negocio, contenido, datos e IA.
+312 skills en 25 dominios: software, negocio, contenido, datos e IA.
 Cada una se activa sola cuando la tarea encaja.
 
 **[Ver el catálogo completo →](docs/catalogo.md)** · [Referencia técnica](docs/referencia-tecnica.md) ·

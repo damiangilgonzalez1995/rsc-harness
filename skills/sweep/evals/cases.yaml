@@ -1,0 +1,33 @@
+skill: sweep
+
+should_trigger:
+  - prompt: "/sweep"
+    why: "Invocación directa de la skill."
+  - prompt: "Revisa qué TODOs, tickets y páginas de la wiki ya no son verdad y archívalos."
+    why: "Encontrar contexto obsoleto y archivarlo es justo lo que hace sweep."
+  - prompt: "El agente no para de hacer cosas que nadie le ha pedido, creo que lee notas viejas."
+    why: "Trabajo que nadie pidió por contexto obsoleto: el síntoma que sweep ataca."
+  - prompt: "Clean up stale context in this repo: old TODOs, shipped tickets, outdated docs."
+    why: "Disparador directo en inglés."
+  - prompt: "Antes de empezar la feature grande, limpia la documentación que se haya quedado vieja."
+    why: "Barrido periódico antes de una feature grande."
+
+should_not_trigger:
+  - prompt: "Revisa los cambios de esta rama contra la spec."
+    route_to: "code-review"
+    why: "Revisar un diff es el trabajo de code-review, no barrer contexto."
+  - prompt: "Haz una retrospectiva de la sesión de hoy."
+    route_to: "retro"
+    why: "Una retrospectiva de sesión es el trabajo de retro."
+  - prompt: "Pasa lo que hay en docs/raw a la wiki."
+    route_to: "harness"
+    why: "Compilar la bandeja de entrada en la wiki es el trabajo de harness."
+  - prompt: "Parte esta spec en tickets."
+    route_to: "to-tickets"
+    why: "Crear tickets es el trabajo de to-tickets."
+
+capability:
+  - scenario: "El usuario pide limpiar el contexto obsoleto del proyecto."
+    must_include:
+      - "Sin pruebas"
+      - "docs/archive"
