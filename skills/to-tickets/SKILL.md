@@ -71,6 +71,10 @@ NO cierres ni modifiques ningún issue padre.
 
 <plantilla-ticket-local>
 
+---
+status: not_started
+---
+
 # <NN> — <Título del ticket>
 
 **Qué construir:** el comportamiento de extremo a extremo que este ticket hace funcionar, desde la perspectiva del usuario — no una lista de implementación capa por capa.
@@ -83,6 +87,8 @@ NO cierres ni modifiques ningún issue padre.
 - [ ] Criterio de aceptación 2
 
 </plantilla-ticket-local>
+
+**`status:` dice quién manda.** Cada ticket nace `not_started`; pasa a `in_progress` al empezar y a `completed` al fusionarse. Mientras no está `completed`, la spec manda sobre el código; después, manda el código y la spec es historia. En un tracker real, usa su estado nativo con esos mismos tres valores.
 
 <plantilla-issue>
 

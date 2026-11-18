@@ -23,8 +23,10 @@ npx @damiangilgonzalez/harness@latest onboard
 | Actualizarlo, compartirlo con el equipo o arreglarlo | [2. Actualizar y mantener](#2-actualizar-y-mantener) |
 | Entender cómo se trabaja (spec primero, test primero) | [3. La metodología](#3-la-metodología) |
 | Diseñar pantallas | [4. Interfaz (UX/UI)](#4-interfaz-uxui) |
+| Tener ideas de diseño de webs reales | [Inspo](#antes-de-diseñar-de-dónde-salen-las-ideas-inspo) |
 | Saber qué recuerda el agente | [5. La memoria](#5-la-memoria) |
 | Las skills que más se usan | [6. Skills útiles](#6-skills-útiles) |
+| Limpiar el contexto que ya no es verdad | [`sweep`](#sweep--barrer-el-contexto-que-ya-no-es-verdad) |
 | Ver qué deja en mi proyecto | [7. Qué se instala](#7-qué-se-instala) |
 
 ---
@@ -223,6 +225,56 @@ interfaz entera hay **una sola orden**.
 
 ![Una orden, todo el rediseño](docs/img/readme/readme-23-redesign-una-orden.png)
 
+### Antes de diseñar: de dónde salen las ideas (Inspo)
+
+> [!IMPORTANT]
+> **Sin referencias, el agente diseña de memoria, y su memoria es la plantilla media de IA.**
+> [Inspo](https://inspomcp.dev) le da **832 webs reales** (2.320 pantallas) para buscar por estilo,
+> por color o por sección antes de dibujar nada. Es gratis, no pide cuenta ni clave, y se conecta
+> **una vez por máquina**.
+
+![De dónde salen las ideas: Inspo, 800+ webs reales](docs/img/readme/readme-29-inspo-de-donde.png)
+
+Las referencias salen de aquí: [inspomcp.dev](https://inspomcp.dev), un archivo curado de webs en
+producción que tu agente consulta por MCP.
+
+![La portada de inspomcp.dev: webs reales como inspiración para tu agente](docs/img/readme/readme-inspo-captura-portada.png)
+
+![El archivo: cada tarjeta es una web real que el agente puede citar y abrir](docs/img/readme/readme-inspo-captura-archivo.png)
+
+**Cómo se activa, en tres pasos:**
+
+1. En Claude Code, escribe esto. El `!` lo ejecuta en la propia sesión:
+
+   ```bash
+   ! claude mcp add --transport http --scope user inspo https://inspomcp.dev/api/mcp
+   ```
+
+2. Cierra Claude Code y vuelve a abrirlo, porque los MCP se cargan al arrancar.
+3. Escribe `/mcp`: tiene que salir `inspo` como conectado.
+
+![Activar Inspo en tres pasos](docs/img/readme/readme-31-inspo-activar.png)
+
+Si no lo tienes, el harness te lo ofrece al iniciar sesión en un proyecto de front. Si dices que no,
+crea `.rsc/.no-inspo` y no vuelve a preguntar.
+
+**Cómo se usa:** hablando normal, sin comandos.
+
+| Dices | El agente busca |
+|---|---|
+| «No se me ocurre cómo hacer esta pantalla» | 3–5 webs reales; eliges una antes de que dibuje |
+| «Algo tipo fintech oscuro y tranquilo» | por estilo (`search_screens`) |
+| «Ya tengo estos colores» | webs que funcionan con tu paleta (`find_by_color`) |
+| «Enséñame heros, pricings o footers buenos» | por sección (`find_examples_for_macrostructure`) |
+| `/redesign` | la galería basa sus tres direcciones de estilo en webs de Inspo |
+
+![Tres formas de buscar referencias](docs/img/readme/readme-30-inspo-buscar.png)
+
+![La página del MCP: pantallas, componentes de referencia y un DESIGN.md por web](docs/img/readme/readme-inspo-captura-mcp.png)
+
+Va con una regla: **primero estático, después movimiento.** No se anima nada hasta que la pantalla
+quieta está aprobada.
+
 ### `/redesign`: el rediseño completo, en cascada
 
 Escribes `/redesign` en el proyecto y el agente encadena todo lo demás. Tú solo decides dos cosas:
@@ -383,6 +435,48 @@ Al cerrar una sesión larga, hace una retrospectiva: busca qué del entorno del 
 comprobaciones, estándares, ficheros de instrucciones, herramientas) hay que cambiar para que la
 siguiente vaya mejor. El resultado son cambios concretos, no una charla.
 
+### `sweep` — barrer el contexto que ya no es verdad
+
+> [!IMPORTANT]
+> **El contexto viejo sigue pareciendo una orden.** Un TODO ya hecho, un ticket ya fusionado o una
+> página de la wiki que el código contradice mandan al agente a hacer trabajo que nadie pidió.
+> `/sweep` los encuentra, los prueba contra git y los archiva **solo si dices que sí**.
+
+![El contexto viejo sigue pareciendo una orden](docs/img/readme/readme-32-sweep-problema.png)
+
+**Cómo se usa:** escribe `/sweep` cada pocas semanas, antes de una feature grande o cuando notes que
+el agente hace cosas que no le has pedido. También salta sola si lo dices con tus palabras («limpia
+los TODOs viejos»).
+
+**El proceso, en cinco fases:**
+
+1. **Escanear:** TODO/FIXME del código, tickets de `.scratch/*/issues`, `docs/wiki`, lecciones y
+   `CLAUDE.md`. Saca una afirmación comprobable de cada uno.
+2. **Pruebas en git:** `git log -S`, `git blame` y el `status:` del ticket.
+3. **Verificador a ciegas:** un agente con contexto limpio (`finding-verifier`) recibe solo la
+   afirmación, nunca tu conclusión, e intenta demostrar que sigue vigente. Ante la duda, no se toca.
+4. **Tres cajas** (abajo).
+5. **Archivar con permiso:** «¿archivo estas 9?». Se mueve a `docs/archive/` con `git mv`. Nunca se
+   borra.
+
+![Las cinco fases de /sweep](docs/img/readme/readme-33-sweep-proceso.png)
+
+| Caja | Qué es | Ejemplo | Qué hace `/sweep` |
+|---|---|---|---|
+| **Obsoleto** | Git demuestra que ya no es verdad | TODO «validar email», y ya existe `validateEmail` | Propone archivarlo |
+| **Conflicto** | Dos fuentes se contradicen | La spec dice JWT, el código usa sesiones | Te enseña las dos y decides tú |
+| **Sin pruebas** | Parece viejo, pero git no lo demuestra | TODO «añadir caché» que nadie ha hecho | No toca nada: viejo no es falso |
+
+![Las tres cajas, el archivo cerrado y quién manda](docs/img/readme/readme-34-sweep-cajas.png)
+
+**El archivo queda cerrado al agente.** El hook `archive-guard` le impide leer o buscar en
+`docs/archive/`, para que no vuelva a obedecer lo archivado. Tú puedes abrirlo cuando quieras, y
+`.rsc/.no-archive-guard` lo apaga en un proyecto.
+
+**Quién manda, la spec o el código.** Los tickets de `to-tickets` llevan `status:`. Mientras están
+`not_started` o `in_progress`, manda la spec; cuando pasan a `completed`, manda el código. Ante un
+conflicto, el agente para y pregunta.
+
 ### `overview` — qué está revisado, qué está mal y qué hacer primero
 
 Te dice el estado del proyecto de un vistazo: qué zonas (seguridad, base de datos, frontend, docs…) están revisadas **con el contenido que tienen hoy**, qué fallos hay abiertos y qué skill lanzar para cada cosa.
@@ -450,23 +544,24 @@ Lo que se comparte va a git; el estado de la máquina, no.
 ![Los reflejos: gate, danger-guard, ship-guard, gitmoji-guard, memoria y limpieza de worktrees](docs/img/readme/readme-07-guardias.png)
 
 Hooks que vigilan por ti: recuerdan la cadena, piden confirmación antes de un `rm -rf` o un
-`git push --force` y paran antes de volver a `main` sin abrir la PR.
+`git push --force`, paran antes de volver a `main` sin abrir la PR e impiden que el agente lea lo
+que `sweep` archivó en `docs/archive/`.
 
 ![Plugins de serie: superpowers, skins, savvy-progress y cache-tax](docs/img/readme/readme-16-plugins.png)
 
 En Claude Code quedan activados `skins`, `savvy-progress`, `context-bar`, `prompt-enhancer`, `modelo-justo`,
 `where-am-i` y `cache-tax` (este mantiene caliente la caché, y eso gasta tokens). `superpowers` llega cuando el proyecto usa el método.
 
-En cifras: 312 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
+En cifras: 313 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
 (Claude Code, Codex, Cursor, Copilot, Gemini…). Detalle en la [referencia técnica](docs/referencia-tecnica.md).
 
 ---
 
 ## Catálogo
 
-![312 skills por dominio](docs/img/readme/readme-15-catalogo.png)
+![313 skills por dominio](docs/img/readme/readme-15-catalogo.png)
 
-312 skills en 25 dominios: software, negocio, contenido, datos e IA.
+313 skills en 25 dominios: software, negocio, contenido, datos e IA.
 Cada una se activa sola cuando la tarea encaja.
 
 **[Ver el catálogo completo →](docs/catalogo.md)** · [Referencia técnica](docs/referencia-tecnica.md) ·

@@ -90,6 +90,7 @@ export function generatedHookFiles({ target, cwd, policy }) {
   return [...lifecycle, ...danger,
     join(cwd, '.rsc', 'ship-guard.mjs'),
     join(cwd, '.rsc', 'gitmoji-guard.mjs'), join(cwd, '.rsc', 'userprompt-gate.mjs'),
+    join(cwd, '.rsc', 'archive-guard.mjs'),
     join(cwd, '.rsc', 'sello.mjs')];
 }
 

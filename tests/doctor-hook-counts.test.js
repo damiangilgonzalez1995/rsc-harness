@@ -41,7 +41,7 @@ function wiredScope({ style = 'posix', copies = 1, guard = true, extra = {} } = 
     SessionStart: many('session-start.mjs'),
     PreCompact: many('worklog-checkpoint.mjs'),
     SessionEnd: many('worklog-checkpoint.mjs'),
-    PreToolUse: [...many('ship-guard.mjs'), ...many('danger-guard.mjs'), ...many('gitmoji-guard.mjs')],
+    PreToolUse: [...many('ship-guard.mjs'), ...many('danger-guard.mjs'), ...many('archive-guard.mjs'), ...many('gitmoji-guard.mjs')],
     UserPromptSubmit: [...many('userprompt-gate.mjs'), ...many('overview-prompt-hook.mjs')],
     PostToolUse: many('overview-skill-hook.mjs'),
     ...extra,
@@ -191,7 +191,7 @@ test('the CLI still exits 0 when duplication is found', () => {
   // #277 is a BROKEN harness (a missing piece, an unwired hook), so the scripts exist here: this scope
   // is duplicated and nothing else.
   const root = wiredScope({ copies: 4 });
-  for (const script of ['session-start.mjs', 'worklog-checkpoint.mjs', 'ship-guard.mjs', 'danger-guard.mjs', 'gitmoji-guard.mjs', 'userprompt-gate.mjs',
+  for (const script of ['session-start.mjs', 'worklog-checkpoint.mjs', 'ship-guard.mjs', 'danger-guard.mjs', 'archive-guard.mjs', 'gitmoji-guard.mjs', 'userprompt-gate.mjs',
     'overview-skill-hook.mjs', 'overview-prompt-hook.mjs']) {
     writeFileSync(join(root, '.rsc', script), '// hook\n');
   }

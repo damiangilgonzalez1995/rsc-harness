@@ -38,6 +38,13 @@ hardest one and say so. **Where they come from:** `../design/references/starting
 step 0 first, because a bar the project already owns outranks anything you would pick from outside,
 and proposing from memory is how this promise used to resolve to the AI-template median.
 
+**Nothing the project owns fits?** Then, if the Inspo MCP is connected (`mcp__inspo__*` tools),
+draw the outside candidates from it rather than from memory: `search_screens` with the goal in
+plain words, `find_by_color` when the palette is already fixed, `find_examples_for_macrostructure`
+for a single section. Each candidate is a real URL you can open. Not connected → offer it once
+(command in `../design/references/inspiration-sources.md`, unless the session already offered it)
+and carry on with the sources below.
+
 **Where to go looking.** For a whole page to beat, and for the flows and single patterns behind it:
 `../design/references/inspiration-sources.md`. For a component idea rather than a whole reference:
 a gallery of real products. Browse for the technique, never to clone a
@@ -108,6 +115,9 @@ different goals.
 - **All three must pass.** Any fail goes back to the builder with the single biggest gap named — one,
   not a list.
 - **No fixed round count.** The exit is winning, or the user stopping the run, or the halt below.
+- **Static first, motion second.** When the piece moves, the builder first ships it still. The
+  critics judge the static frame, and motion is only added once that frame passes. Movement hides a
+  weak layout, and a critic watching an animation ends up judging the choreography, not the design.
 
 ### The halt — how this loop is allowed to end
 

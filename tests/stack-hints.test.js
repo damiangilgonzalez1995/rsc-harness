@@ -21,8 +21,9 @@ function project(files = {}) {
   return dir;
 }
 
-function run(root, extra = {}) {
+function run(root, extra = {}, homeFiles = {}) {
   const home = mkdtempSync(join(tmpdir(), 'rsc-stack-home-'));
+  for (const [name, body] of Object.entries(homeFiles)) writeFileSync(join(home, name), body);
   return spawnSync('node', [SESSION_START, join(ROOT, 'skills', 'suggest', 'SKILL.md'), root], {
     encoding: 'utf8',
     input: JSON.stringify({ session_id: `s-${Math.random()}`, source: 'startup' }),
@@ -90,4 +91,70 @@ test('the hint and the skill reference agree on the ten holes', () => {
   for (const word of ['rate limiting', 'RLS', 'CORS', 'sessions that expire', 'hashed passwords']) {
     assert.ok(hook.includes(word), `hook names ${word}`);
   }
+});
+
+// Inspo MCP (free design-reference library): a front-end project is told how to use it when it is
+// connected, and offered it once when it is not. Detection reads ~/.claude.json (user scope and the
+// per-project entry) and the project's .mcp.json; anything unreadable counts as "not connected".
+const REACT = { 'package.json': '{"dependencies":{"react":"19.0.0"}}' };
+const INSPO_URL = 'https://inspomcp.dev/api/mcp';
+
+test('front-end project without Inspo: offered once with the install command', () => {
+  const out = run(project(REACT));
+  assert.match(out, /Inspo/);
+  assert.ok(out.includes(`claude mcp add --transport http --scope user inspo ${INSPO_URL}`), 'names the command');
+  // A no must outlive the session: the agent is told to write the switch, as the git and context7
+  // blocks do. Without it the offer came back every session.
+  assert.match(out, /If they decline, create \.rsc\/\.no-inspo/);
+});
+
+test('this project entry written with forward slashes (and, on Windows, other casing) still counts', () => {
+  const root = project(REACT);
+  const key = process.platform === 'win32' ? root.replace(/\\/g, '/').toUpperCase() : `${root}/`;
+  const claudeJson = JSON.stringify({ projects: { [key]: { mcpServers: { inspo: { url: INSPO_URL } } } } });
+  assert.match(run(root, {}, { '.claude.json': claudeJson }), /Inspo MCP is connected/);
+});
+
+test('Inspo in the user scope of ~/.claude.json: usage hint, no install offer', () => {
+  const claudeJson = JSON.stringify({ mcpServers: { inspo: { type: 'http', url: INSPO_URL } } });
+  const out = run(project(REACT), {}, { '.claude.json': claudeJson });
+  assert.match(out, /Inspo MCP is connected/);
+  assert.match(out, /search_screens/);
+  assert.doesNotMatch(out, /claude mcp add --transport http --scope user inspo/);
+});
+
+test('Inspo under another key but with its URL, in this project entry of ~/.claude.json: connected', () => {
+  const root = project(REACT);
+  const claudeJson = JSON.stringify({ projects: { [root]: { mcpServers: { refs: { type: 'http', url: INSPO_URL } } } } });
+  const out = run(root, {}, { '.claude.json': claudeJson });
+  assert.match(out, /Inspo MCP is connected/);
+});
+
+test('Inspo configured for ANOTHER project only: still offered here', () => {
+  const claudeJson = JSON.stringify({ projects: { '/somewhere/else': { mcpServers: { inspo: { url: INSPO_URL } } } } });
+  const out = run(project(REACT), {}, { '.claude.json': claudeJson });
+  assert.doesNotMatch(out, /Inspo MCP is connected/);
+  assert.match(out, /--scope user inspo/);
+});
+
+test('Inspo in the project .mcp.json: connected', () => {
+  const out = run(project({ ...REACT, '.mcp.json': JSON.stringify({ mcpServers: { inspo: { type: 'http', url: INSPO_URL } } }) }));
+  assert.match(out, /Inspo MCP is connected/);
+});
+
+test('a broken ~/.claude.json does not break the hook: treated as not connected', () => {
+  const out = run(project(REACT), {}, { '.claude.json': '{ not json' });
+  assert.match(out, /rsc front-end model/);
+  assert.match(out, /--scope user inspo/);
+});
+
+test('.rsc/.no-inspo silences the offer but keeps the front-end model', () => {
+  const out = run(project({ ...REACT, '.rsc/.no-inspo': '' }));
+  assert.match(out, /rsc front-end model/);
+  assert.doesNotMatch(out, /Inspo/);
+});
+
+test('backend-only project and .rsc/.no-stack-hints: no Inspo at all', () => {
+  assert.doesNotMatch(run(project({ 'package.json': '{"dependencies":{"express":"5.0.0"}}', '.env': 'K=1\n' })), /Inspo/);
+  assert.doesNotMatch(run(project({ ...REACT, '.rsc/.no-stack-hints': '' })), /Inspo/);
 });

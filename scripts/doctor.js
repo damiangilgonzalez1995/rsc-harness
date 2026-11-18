@@ -304,6 +304,7 @@ export const RSC_HOOKS = [
   { id: 'worklog-checkpoint', label: 'worklog-checkpoint', needle: '.rsc/worklog-checkpoint.', injects: null },
   { id: 'ship-guard', label: 'ship-guard', needle: '.rsc/ship-guard.', injects: null },
   { id: 'danger-guard', label: 'danger-guard', needle: '.rsc/danger-guard.', injects: null },
+  { id: 'archive-guard', label: 'archive-guard', needle: '.rsc/archive-guard.', injects: null },
   { id: 'gitmoji-guard', label: 'gitmoji-guard', needle: '.rsc/gitmoji-guard.', injects: null },
   // Los dos de overview registran revisiones en silencio: no inyectan nada.
   { id: 'overview-skill-hook', label: 'overview (Skill)', needle: '.rsc/overview-skill-hook.', injects: null },

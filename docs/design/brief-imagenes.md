@@ -491,3 +491,103 @@ El orden en que aparece cada imagen, para insertarlas sin pensar:
    `readme-13-memoria.png`
 8. **Catálogo:** `readme-15-catalogo.png` + enlace a `docs/catalogo.md`
 9. **Créditos:** una línea, sin imagen
+
+---
+
+# Parte 4 · Inspo y sweep (2026-11-18)
+
+Misma dirección de arte. Seis piezas: tres para Inspo (de dónde salen las ideas de diseño) y tres
+para `sweep` (barrer el contexto que ya no es verdad).
+
+### `readme-29-inspo-de-donde.png` · 1600 × 900
+
+De dónde sale la inspiración.
+
+- Título: **Ideas de diseño de webs reales, no de memoria**
+- Izquierda: tu agente (cursor de línea) con un bocadillo: *«No se me ocurre cómo hacer esta pantalla»*.
+- Centro: una flecha `acento` hacia una tarjeta grande **Inspo MCP** · `inspomcp.dev` · *más de 800
+  webs reales · gratis · sin cuenta ni clave*.
+- Derecha: una cuadrícula de 3 × 2 miniaturas de webs (abstractas, sin marcas reales) y debajo la
+  frase *3–5 referencias que puedes abrir. Eliges una antes de dibujar.*
+- Pie, en `aviso`: *Sin Inspo, el agente tira de memoria → la plantilla media de IA.*
+
+```mermaid
+flowchart LR
+  A["Agente: no se me ocurre"] --> B["Inspo MCP\n800+ webs reales"]
+  B --> C["3–5 referencias\nque puedes abrir"]
+  C --> D["Eliges una"]
+```
+
+### `readme-30-inspo-buscar.png` · 1600 × 900
+
+Las tres formas de buscar. Tres tarjetas en fila, cada una con una frase de ejemplo (lo que dices) y
+la herramienta (en mono):
+
+| Tarjeta | Lo que dices | Herramienta |
+|---|---|---|
+| Por estilo | *«Algo tipo fintech oscuro y tranquilo»* | `search_screens` |
+| Por color | *«Ya tengo estos colores»* (tres círculos de color) | `find_by_color` |
+| Por sección | *«Enséñame heros, pricings o footers buenos»* | `find_examples_for_macrostructure` |
+
+Abajo, una banda: **`/redesign`** → *la galería basa sus tres direcciones de estilo en webs de Inspo*.
+
+### `readme-31-inspo-activar.png` · 1600 × 700
+
+Cómo se activa, en tres pasos numerados (círculos `acento` con 1, 2 y 3):
+
+1. **Conecta** · `! claude mcp add --transport http --scope user inspo https://inspomcp.dev/api/mcp`
+2. **Reinicia** Claude Code · *los MCP se cargan al arrancar*
+3. **Comprueba** · `/mcp` → `inspo ✓ conectado`
+
+Nota lateral en `acento-2` (rombo): *¿No lo quieres? Di que no una vez → `.rsc/.no-inspo` y no vuelve a
+preguntar.* Pie: **Regla: primero estático, después movimiento.**
+
+### `readme-32-sweep-problema.png` · 1600 × 800
+
+El problema, como tira de tres viñetas:
+
+1. Un `CLAUDE.md` y una nota con *«TODO: validar el email»*. Debajo, pequeño: *escrito en marzo*.
+2. Un commit verde: `a1b2c3d añade validateEmail` · *abril*.
+3. El agente, en junio, lee la nota y se pone a reescribir la validación. Bocadillo en `aviso`:
+   *«Nadie te ha pedido eso»*.
+
+Título: **El contexto viejo sigue pareciendo una orden.** Subtítulo: *Un TODO hecho, un ticket ya
+fusionado o una wiki que el código contradice mandan al agente a trabajos que nadie pidió.*
+
+### `readme-33-sweep-proceso.png` · 1600 × 1000 · **la más importante de sweep**
+
+El proceso de `/sweep`, de izquierda a derecha, cinco fases:
+
+1. **Escanear** · TODO/FIXME · `.scratch/*/issues` · `docs/wiki` · lecciones · `CLAUDE.md` → *una
+   afirmación por elemento*
+2. **Pruebas en git** · `git log -S` · `git blame` · `status:` del ticket
+3. **Verificador a ciegas** · `finding-verifier` · *solo ve la afirmación, nunca tu conclusión* ·
+   *ante la duda, no se toca*
+4. **Tres cajas** (ver la imagen 34)
+5. **Archivar con permiso** · `git mv` → `docs/archive/` · *nunca se borra*
+
+Un rombo `acento-2` entre la 4 y la 5: *¿Archivo estas 9? (sí/no)*.
+
+```mermaid
+flowchart LR
+  A[Escanear] --> B[Pruebas en git] --> C[Verificador a ciegas] --> D[Tres cajas] --> E{¿Archivo?}
+  E -- sí --> F[docs/archive/]
+  E -- no --> G[Se queda]
+```
+
+### `readme-34-sweep-cajas.png` · 1600 × 1000
+
+Las tres cajas y lo que pasa con cada una. Tres columnas:
+
+| Caja | Color | Ejemplo | Qué hace `/sweep` |
+|---|---|---|---|
+| **Obsoleto** | `aviso` | *TODO «validar email» → ya existe `validateEmail`* | Propone archivar. Git decide. |
+| **Conflicto** | `acento-2` | *La spec dice JWT, el código usa sesiones* | Te enseña las dos y pregunta. Decides tú. |
+| **Sin pruebas** | `texto-suave` | *TODO «añadir caché», nadie lo ha hecho* | No toca nada. Viejo no es falso. |
+
+Debajo, dos bandas:
+
+- **El archivo cerrado:** una carpeta `docs/archive/` con un candado. *El hook `archive-guard`
+  impide que el agente la lea. Tú puedes abrirla cuando quieras.*
+- **Quién manda:** una balanza. Izquierda `status: completed` → **manda el código**. Derecha
+  `in_progress / not_started` → **manda la spec**. Centro: *¿Conflicto? Para y pregunta.*

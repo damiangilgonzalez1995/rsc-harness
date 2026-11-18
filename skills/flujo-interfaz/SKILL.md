@@ -50,6 +50,14 @@ Si el usuario no sabe que aspecto quiere, `ingeniero-diseno-web` propone tres es
 referencias reales antes de construir nada. Con `impeccable`, `/impeccable shape` planifica la UX
 antes del codigo.
 
+**Sin ideas o bloqueo creativo: Inspo.** Si el usuario dice que no se le ocurre nada, o nadie tiene
+una referencia en mente, busca webs reales antes de dibujar. Con el MCP Inspo conectado
+(`mcp__inspo__*`): `search_screens` con el objetivo en palabras, `find_by_color` si la paleta ya
+esta fijada, `find_examples_for_macrostructure` para una sola seccion. Ensena 3-5 resultados con su
+URL y deja que el usuario elija antes de construir. Si no esta conectado y en la sesion no se ha
+ofrecido ya, ofrecelo una vez (gratis, sin clave). El comando y mas fuentes estan en
+`design/references/inspiration-sources.md`.
+
 ## Paso 2 · Espectaculo, solo si toca
 
 `sitios-calidad-premio` para un lanzamiento, un portafolio o algo que tiene que impresionar: GSAP,
@@ -61,6 +69,10 @@ En un dashboard o una herramienta de uso diario, saltatela: el espectaculo se pa
 
 La filosofia comun es la de Emil Kowalski (`emil-design-eng`): el mejor movimiento a veces es
 ninguno. Primero decide si animar, luego como.
+
+**Primero estatico, despues movimiento.** No se anima nada hasta que la version quieta de la
+pantalla esta aprobada (por el usuario o por los criticos de `design-loop`). El movimiento tapa un
+layout flojo y hace que se juzgue la coreografia en vez del diseno.
 
 | Necesitas | Skill |
 |---|---|
@@ -74,6 +86,10 @@ ninguno. Primero decide si animar, luego como.
 | Sobra movimiento | `remove-animations` |
 | Describe un efecto y no sabe su nombre | `vocabulario-animacion` |
 | Aporta un video de referencia | `video-a-superprompt` |
+
+Si algo no le convence pero no sabe decir que, usa la **autodescripcion**: describe la seccion tal
+como esta (layout, fuentes y tamanos, colores en hex, que se mueve) y pidele que senale la linea
+que falla. Vale para cualquier fallo; si es un efecto de movimiento sin nombre, `vocabulario-animacion`.
 
 ## Paso 4 · Pulido
 
@@ -121,6 +137,7 @@ de las skills de diseno. Las mecanicas del framework son de `angular`, `react` o
 | Proyecto nuevo, primera pantalla | `impeccable init` -> direccion (`diseno-landing` o `ingeniero-diseno-web`) |
 | Landing nueva | `diseno-landing` -> `animar` -> `revision-interfaz` |
 | Dashboard o pantalla nueva | `ingeniero-diseno-web` -> `revision-interfaz` |
+| No se me ocurre nada / bloqueo creativo | Inspo MCP (`search_screens`) -> elegir una referencia -> `design-loop` |
 | Pantalla que parece hecha por IA | `impeccable critique` (o `tastemaker` auditar) -> `leyes-de-percepcion` |
 | Antes de publicar | `impeccable audit` -> `polish` -> `revision-interfaz` -> `break-ui` |
 | Un flujo pierde usuarios a mitad | `leyes-de-retencion` -> `mejor-redaccion` -> `mejor-accesibilidad` |

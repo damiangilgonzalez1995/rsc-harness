@@ -17,6 +17,7 @@
 
 /** Decisions of the project: they belong in `.rsc.json` and are rebuilt in a clone. */
 export const PROJECT_OPT_OUTS = [
+  'archive-guard',    // docs/archive/ closed to the agent: what sweep archived stays archived for everyone
   'audit',            // cadence of this project's skill audit
   'claudemd-check',   // the root CLAUDE.md context budget
   'danger-guard',     // foot-gun denial, keyed to the committed user profile
@@ -36,6 +37,7 @@ export const MACHINE_OPT_OUTS = [
   'context7',   // an MCP connection is machine wiring, and its consent is individual
   'git',        // only fires with no .git/, which a clone cannot be
   'harness',    // "not offered again ON THIS MACHINE" — the bootstrap's own words
+  'inspo',      // the Inspo design MCP: same as context7, connecting it is one person's call
   'scope-check',// compares the project and home scopes OF THIS MACHINE
 ];
 

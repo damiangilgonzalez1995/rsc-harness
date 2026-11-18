@@ -63,6 +63,40 @@ escuelas distintas con referencias reales. Eliges, y vuelves.
 **Para cómo se construye por dentro** (estado, componentes, formularios), `ui-engineering`, que
 viene del catálogo original del harness.
 
+### Sin ideas: activa Inspo (una vez por máquina)
+
+[Inspo](https://inspomcp.dev) es un MCP gratuito: no pide cuenta ni clave. Le da al agente más de
+800 webs reales para buscar por estilo, por color o por sección. **No viene activado:** lo conectas
+tú. Hasta que lo hagas, el harness te lo ofrece al iniciar sesión en un proyecto de front.
+
+**Cómo activarlo, en 3 pasos:**
+
+1. En Claude Code, escribe esto. El `!` ejecuta el comando en la propia sesión:
+
+   ```
+   ! claude mcp add --transport http --scope user inspo https://inspomcp.dev/api/mcp
+   ```
+
+   `--scope user` lo deja conectado en todos tus proyectos, no solo en este.
+2. Cierra Claude Code y vuelve a abrirlo, porque los MCP se cargan al arrancar.
+3. Escribe `/mcp`: tiene que aparecer `inspo` como conectado. Si no aparece, repite el paso 1.
+
+**Cómo se usa:** hablando normal, sin comandos.
+
+| Dices | El agente |
+|---|---|
+| «No se me ocurre cómo hacer esta pantalla» | Te enseña 3–5 webs reales y eliges una antes de que dibuje |
+| «Algo tipo fintech oscuro y tranquilo» | Busca por estilo |
+| «Ya tengo estos colores» | Busca webs que funcionan con tu paleta |
+| «Enséñame heros, pricings o footers buenos» | Busca por sección |
+| `/redesign` | La galería basa sus tres direcciones en webs de Inspo |
+
+**Cómo apagar el aviso:** si dices que no cuando te lo ofrece, el agente crea `.rsc/.no-inspo` y
+no vuelve a preguntar en ese proyecto. `.rsc/.no-stack-hints` apaga todos los avisos de stack.
+
+**Va con una regla:** primero estático, después movimiento. No se anima nada hasta que la pantalla
+quieta está aprobada.
+
 ---
 
 ## Paso 2 · Espectáculo, solo si toca

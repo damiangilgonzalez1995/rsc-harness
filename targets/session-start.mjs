@@ -211,6 +211,42 @@ function stackOf() {
   return { front, back };
 }
 const skillIn = (id) => [root, homedir()].some((r) => existsSync(join(r, '.claude', 'skills', id, 'SKILL.md')));
+
+// Inspo MCP (free design-reference library, inspomcp.dev): is it wired for THIS project? Looks in
+// ~/.claude.json (user scope + this project's entry) and in the project's .mcp.json. A server counts
+// when its key is `inspo` or its config points at inspomcp.dev / the inspo-mcp package. Anything
+// unreadable or malformed answers "not connected": a broken config must never break the hook.
+const INSPO_ADD = 'claude mcp add --transport http --scope user inspo https://inspomcp.dev/api/mcp';
+function inspoConnected() {
+  const isInspo = (servers) => Boolean(servers) && typeof servers === 'object'
+    && Object.entries(servers).some(([k, v]) => k === 'inspo' || /inspomcp\.dev|inspo-mcp/.test(JSON.stringify(v ?? '')));
+  const norm = (p) => (process.platform === 'win32' ? resolve(p).toLowerCase() : resolve(p));
+  try {
+    const cfg = JSON.parse(readFileSync(join(homedir(), '.claude.json'), 'utf8'));
+    if (isInspo(cfg.mcpServers)) return true;
+    for (const [dir, entry] of Object.entries(cfg.projects || {})) {
+      if (norm(dir) === norm(root) && isInspo(entry && entry.mcpServers)) return true;
+    }
+  } catch { /* unreadable → keep looking in the project */ }
+  try { return isInspo(JSON.parse(readFileSync(join(root, '.mcp.json'), 'utf8')).mcpServers); } catch { return false; }
+}
+
+// When and how to reach for Inspo, or a one-time offer to connect it. Silenced by .rsc/.no-inspo.
+function designIdeasHint() {
+  if (has('.rsc', '.no-inspo')) return '';
+  if (inspoConnected()) {
+    return `
+Design ideas: the Inspo MCP is connected (real, curated sites searchable by style, colour or section).
+Before designing a screen, and whenever the user is out of ideas, pull 3-5 references with
+\`search_screens\` / \`find_by_color\` / \`find_examples_for_macrostructure\` and show them BEFORE
+drawing anything. Static first: no motion until the still layout passes review.`;
+  }
+  return `
+Design ideas: the Inspo MCP (free, no key; real sites searchable by style, colour or section) is not
+connected. The first time this session designs a screen or the user is out of ideas, offer it ONCE:
+\`${INSPO_ADD}\` (then reload the session).
+If they decline, create .rsc/.no-inspo so it is not offered again.`;
+}
 if (emitBody && !has('.rsc', '.no-stack-hints')) {
   const { front, back } = stackOf();
   if (back) {
@@ -239,7 +275,7 @@ Secrets and server-only data never go into a client component.${skillIn('react')
 Design context: there is no PRODUCT.md. Before designing the FIRST screen of this project, ask the user once
 whether to run \`/impeccable init\` (install: \`npx impeccable install\`); it records audience, purpose and
 constraints that every later critique reads. If the UI already exists and there is no DESIGN.md, offer
-\`/impeccable document\` instead. If they decline, do not ask again.${skillIn('flujo-interfaz') ? ' Which design skill leads each step: `flujo-interfaz`.' : ''}`}
+\`/impeccable document\` instead. If they decline, do not ask again.${skillIn('flujo-interfaz') ? ' Which design skill leads each step: `flujo-interfaz`.' : ''}`}${designIdeasHint()}
 Opt out with .rsc/.no-stack-hints.
 ===============================
 `);
