@@ -33,15 +33,17 @@ Ask exactly these three, together, then stop and wait.
 website", "good SaaS design"), push once for the specific page or file: a critic with no concrete
 reference invents the comparison and approves everything on round one.
 
-On *skip*, propose three candidate bars, one line each on why, and wait. **If the Inspo MCP is
-connected** (`mcp__inspo__*` tools), draw the three from it rather than from memory: `search_screens`
-with the goal in plain words, `find_by_color` when the palette is already fixed, and
-`find_examples_for_macrostructure` for a single section. Each candidate is a real URL you can open.
-Not connected → offer it once (`claude mcp add --transport http --scope user inspo https://inspomcp.dev/api/mcp`)
-and carry on with the sources below. No answer → take the
+On *skip*, propose three candidate bars, one line each on why, and wait. No answer → take the
 hardest one and say so. **Where they come from:** `../design/references/starting-point.md` — run its
 step 0 first, because a bar the project already owns outranks anything you would pick from outside,
 and proposing from memory is how this promise used to resolve to the AI-template median.
+
+**Nothing the project owns fits?** Then, if the Inspo MCP is connected (`mcp__inspo__*` tools),
+draw the outside candidates from it rather than from memory: `search_screens` with the goal in
+plain words, `find_by_color` when the palette is already fixed, `find_examples_for_macrostructure`
+for a single section. Each candidate is a real URL you can open. Not connected → offer it once
+(command in `../design/references/inspiration-sources.md`, unless the session already offered it)
+and carry on with the sources below.
 
 **Where to go looking.** For a whole page to beat, and for the flows and single patterns behind it:
 `../design/references/inspiration-sources.md`. For a component idea rather than a whole reference:

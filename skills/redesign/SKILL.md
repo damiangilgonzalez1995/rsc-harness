@@ -43,7 +43,7 @@ Cada subagente recibe:
 - El PRODUCT.md y DESIGN.md del proyecto
 - Instrucción de entregar solo hallazgos, no implementar
 
-**Galería con Inspo.** Si el MCP Inspo está conectado (herramientas `mcp__inspo__*`), la galería saca sus referencias de ahí antes de proponer nada. Busca webs reales por el estilo del PRODUCT.md (`search_screens`), por los colores actuales (`find_by_color`) y por cada sección que se rediseña (`find_examples_for_macrostructure`). Cada una de las 3 direcciones va anclada a 2 o 3 webs con su URL y una frase de qué se toma de cada una: el principio, no los píxeles. Si Inspo no está conectado, la galería sigue como siempre. En el informe final se ofrece una vez instalarlo: `claude mcp add --transport http --scope user inspo https://inspomcp.dev/api/mcp`.
+**Galería con Inspo.** Si el MCP Inspo está conectado (herramientas `mcp__inspo__*`), la galería saca sus referencias de ahí antes de proponer nada. Busca webs reales por el estilo del PRODUCT.md (`search_screens`), por los colores actuales (`find_by_color`) y por cada sección que se rediseña (`find_examples_for_macrostructure`). Cada una de las 3 direcciones va anclada a 2 o 3 webs con su URL y una frase de qué se toma de cada una: el principio, no los píxeles. Si Inspo no está conectado, la galería sigue como siempre. En el informe final se ofrece una vez instalarlo, si en la sesión no se ha ofrecido ya (el comando está en `skills/design/references/inspiration-sources.md`).
 
 ### 4. Consolidar y elegir
 

@@ -54,9 +54,9 @@ antes del codigo.
 una referencia en mente, busca webs reales antes de dibujar. Con el MCP Inspo conectado
 (`mcp__inspo__*`): `search_screens` con el objetivo en palabras, `find_by_color` si la paleta ya
 esta fijada, `find_examples_for_macrostructure` para una sola seccion. Ensena 3-5 resultados con su
-URL y deja que el usuario elija antes de construir. Si no esta conectado, ofrecelo una vez:
-`claude mcp add --transport http --scope user inspo https://inspomcp.dev/api/mcp` (gratis, sin clave;
-mas fuentes en `design/references/inspiration-sources.md`).
+URL y deja que el usuario elija antes de construir. Si no esta conectado y en la sesion no se ha
+ofrecido ya, ofrecelo una vez (gratis, sin clave). El comando y mas fuentes estan en
+`design/references/inspiration-sources.md`.
 
 ## Paso 2 · Espectaculo, solo si toca
 
@@ -85,8 +85,11 @@ layout flojo y hace que se juzgue la coreografia en vez del diseno.
 | Ver donde faltaria movimiento | `find-animation-opportunities` |
 | Sobra movimiento | `remove-animations` |
 | Describe un efecto y no sabe su nombre | `vocabulario-animacion` |
-| Algo no le convence pero no sabe decir que | Autodescripcion: describe la seccion tal como esta (layout, fuentes y tamanos, colores en hex, que se mueve) y pidele que senale la linea que falla |
 | Aporta un video de referencia | `video-a-superprompt` |
+
+Si algo no le convence pero no sabe decir que, usa la **autodescripcion**: describe la seccion tal
+como esta (layout, fuentes y tamanos, colores en hex, que se mueve) y pidele que senale la linea
+que falla. Vale para cualquier fallo; si es un efecto de movimiento sin nombre, `vocabulario-animacion`.
 
 ## Paso 4 · Pulido
 

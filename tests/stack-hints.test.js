@@ -103,7 +103,16 @@ test('front-end project without Inspo: offered once with the install command', (
   const out = run(project(REACT));
   assert.match(out, /Inspo/);
   assert.ok(out.includes(`claude mcp add --transport http --scope user inspo ${INSPO_URL}`), 'names the command');
-  assert.match(out, /\.rsc\/\.no-inspo/);
+  // A no must outlive the session: the agent is told to write the switch, as the git and context7
+  // blocks do. Without it the offer came back every session.
+  assert.match(out, /If they decline, create \.rsc\/\.no-inspo/);
+});
+
+test('this project entry written with forward slashes (and, on Windows, other casing) still counts', () => {
+  const root = project(REACT);
+  const key = process.platform === 'win32' ? root.replace(/\\/g, '/').toUpperCase() : `${root}/`;
+  const claudeJson = JSON.stringify({ projects: { [key]: { mcpServers: { inspo: { url: INSPO_URL } } } } });
+  assert.match(run(root, {}, { '.claude.json': claudeJson }), /Inspo MCP is connected/);
 });
 
 test('Inspo in the user scope of ~/.claude.json: usage hint, no install offer', () => {

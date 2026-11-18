@@ -207,16 +207,16 @@ function designIdeasHint() {
   if (has('.rsc', '.no-inspo')) return '';
   if (inspoConnected()) {
     return `
-Design ideas: the Inspo MCP is connected (832 real sites, searchable by style, colour, section or
-feel). Before designing a screen, and whenever the user is out of ideas, pull 3-5 references with
-\`search_screens\` / \`find_by_color\` / \`get_design_system\` and show them BEFORE drawing anything.
-Static first: no motion until the still layout passes review.`;
+Design ideas: the Inspo MCP is connected (real, curated sites searchable by style, colour or section).
+Before designing a screen, and whenever the user is out of ideas, pull 3-5 references with
+\`search_screens\` / \`find_by_color\` / \`find_examples_for_macrostructure\` and show them BEFORE
+drawing anything. Static first: no motion until the still layout passes review.`;
   }
   return `
-Design ideas: the Inspo MCP (free, no key; 832 real sites searchable by style, colour or section) is
-not connected. The first time this session designs a screen or the user is out of ideas, offer it
-ONCE: \`${INSPO_ADD}\` (then restart the session). If they decline, do
-not ask again; to silence this for good, create .rsc/.no-inspo.`;
+Design ideas: the Inspo MCP (free, no key; real sites searchable by style, colour or section) is not
+connected. The first time this session designs a screen or the user is out of ideas, offer it ONCE:
+\`${INSPO_ADD}\` (then reload the session).
+If they decline, create .rsc/.no-inspo so it is not offered again.`;
 }
 if (emitBody && !has('.rsc', '.no-stack-hints')) {
   const { front, back } = stackOf();
