@@ -15,8 +15,7 @@ are the one piece guaranteed to be present before any other skill is matched. Tw
 1. **Route feature intent into the right workflow** before any code is written.
 2. **Keep the session equipped** — spot the skill the task needs but the user does not have.
 
-Everything below is what only this layer can do. The method behind each rule lives in the skill that
-owns it; this is the pointer, not the manual.
+Below is what only this layer can do; the method behind each rule lives in the skill that owns it.
 
 ---
 
@@ -46,7 +45,8 @@ Two exceptions, and say out loud when you take one:
 
 When unsure, take the clarifying step. A skipped one is where drift hides.
 
-A URL plus a description of desired behaviour is a feature request. An autopilot the user
+Judge the **meaning**, not the wording. A URL plus a description of desired behaviour is a
+feature request. An autopilot the user
 already engaged over this chain covers the whole run: advance without re-asking.
 
 If a step's skill is not installed, offer to add it (§2) before routing. `implement` always

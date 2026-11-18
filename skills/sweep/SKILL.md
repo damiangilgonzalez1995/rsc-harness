@@ -1,6 +1,6 @@
 ---
 name: sweep
-description: "Use when the project's written context may have gone stale — on `/sweep`, every few weeks, before a big feature, or when the agent keeps doing work nobody asked for. Scans TODO/FIXME, `.scratch/*/issues`, `docs/wiki`, lessons and CLAUDE.md, checks each claim against git, has a blind verifier confirm it, reports Obsoleto / Conflicto / Sin pruebas and archives to `docs/archive/` only with consent. NOT reviewing a diff (that is `code-review`), NOT a session retrospective (that is `retro`), NOT filing the docs inbox into the wiki (that is `harness`)."
+description: "Use on `/sweep` or when the agent keeps doing work nobody asked for: finds TODOs, tickets, wiki pages, lessons and CLAUDE.md lines that are no longer true, proves it with git and a blind verifier, and archives to `docs/archive/` only with consent. NOT reviewing a diff (`code-review`), NOT a session retrospective (`retro`), NOT filing the docs inbox (`harness`)."
 tags: [context, cleanup, stale, wiki, tickets, archive]
 recommends: [code-review, harness, retro]
 profiles: [core, ui, full]
@@ -56,17 +56,22 @@ El que encontró la prueba tiende a creérsela. Por eso cada afirmación marcada
 **Conflicto** pasa por el agente `finding-verifier`, uno por afirmación, con contexto limpio. Si el
 proyecto no lo tiene, usa un `general-purpose` con la misma postura.
 
+El hallazgo que le entregas es **«esta afirmación ya no es verdad»**. Su postura por defecto es que
+el hallazgo es falso, así que intentará demostrar que la afirmación **sigue vigente**. Ese sesgo es el
+correcto: en la duda, no se toca nada.
+
 Pásale **solo** esto:
 
-1. La afirmación, en una frase.
-2. Los punteros: SHA, rutas y líneas.
-3. La raíz del repo.
+1. El hallazgo: «ya no es verdad que <afirmación>», en una frase.
+2. Dónde vive la afirmación (ruta y línea) y la raíz del repo.
+3. El SHA de `HEAD`, que es el estado que juzga.
 
-No le pases el documento original ni tu razonamiento: eso es lo que lo volvería ciego al error.
-Su encargo: «demuestra que esta afirmación **sigue siendo verdad** hoy». Su veredicto decide:
+No le pases el commit que tú encontraste ni tu razonamiento: eso le contaría tu conclusión y dejaría
+de ser ciego. Su veredicto decide:
 
-- **REFUTED:** no pudo sostener que sigue vigente, así que se queda en Obsoleto o en Conflicto.
-- **CONFIRMED:** sigue vigente, así que vuelve a Sin pruebas y no se toca.
+- **CONFIRMED** (trae la prueba, con fichero y línea o commit): está obsoleta. Se queda en Obsoleto o
+  en Conflicto.
+- **REFUTED** (encontró dónde sigue siendo verdad): vuelve a Sin pruebas y no se toca.
 - **UNPROVEN:** va a Sin pruebas.
 
 Lanza los verificadores en paralelo y en segundo plano. Pide a cada uno un informe de 100 palabras
@@ -93,11 +98,13 @@ Di el recuento: «38 afirmaciones → 9 obsoletas, 2 en conflicto, 27 sin prueba
 Pregunta una vez por caja («¿archivo las 9 obsoletas?») y deja que la persona quite filas. Si dice
 que sí:
 
-1. `mkdir -p docs/archive/<AAAA-MM-DD>` y `git mv <ruta> docs/archive/<AAAA-MM-DD>/<ruta>`, manteniendo
-   la ruta relativa. Mover hacia el archivo es lo único que el hook deja hacer allí.
-2. En el código no se archiva nada: se borra la línea del TODO con una edición normal.
-3. Si la raíz no tiene un `.ignore` que nombre `docs/archive/`, añade esa línea con la herramienta
-   Write o Edit. Así la búsqueda sin ruta tampoco entra en el archivo.
+1. Antes de mover nada: si la raíz no tiene un `.ignore` que nombre `docs/archive/`, añade esa línea
+   con la herramienta Write o Edit. Una búsqueda sin ruta no la para el hook; la para ese fichero.
+2. Por cada fichero, crea la carpeta padre del destino y muévelo manteniendo la ruta relativa:
+   `mkdir -p docs/archive/<AAAA-MM-DD>/<carpeta>` y después
+   `git mv <ruta> docs/archive/<AAAA-MM-DD>/<ruta>`. Pon entre comillas las rutas con espacios. El hook
+   solo deja mover hacia el archivo, añadirlo a git y hacer commit.
+3. En el código no se archiva nada: se borra la línea del TODO con una edición normal.
 4. Añade una línea por elemento a `docs/archive-log.md`, fuera del archivo: fecha, ruta, por qué y
    SHA de la prueba. Así se puede saber qué se archivó sin abrir el archivo.
 5. Haz un solo commit: `🔥 chore(sweep): archiva N elementos obsoletos`.
@@ -112,4 +119,4 @@ puede, salvo que la persona cree `.rsc/.no-archive-guard`.
 | Se archivó algo que seguía vigente | Se saltó el verificador o se le pasó el documento entero | Afirmación sola más punteros, y CONFIRMED vuelve a Sin pruebas |
 | Informe enorme que nadie lee | Se mezclaron Sin pruebas con lo accionable | Sin pruebas va solo como lista |
 | La spec «corrige» código ya fusionado | Se ignoró el `status:` | En lo `completed` manda el código |
-| El agente sigue obedeciendo lo archivado | No había `.ignore` y la búsqueda entraba en el archivo | Paso 3 de la fase 5 |
+| El agente sigue obedeciendo lo archivado | No había `.ignore` y la búsqueda entraba en el archivo | Paso 1 de la fase 5 |

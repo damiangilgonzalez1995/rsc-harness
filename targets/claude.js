@@ -213,6 +213,19 @@ export function wireHook(paths, sourceMd, policy = {}) {
   );
   settings.hooks.PreToolUse.push({ matcher: SHELL_TOOLS, hooks: [{ type: 'command', command: gmCmd }] });
 
+  // Archive guard: docs/archive/ holds what `sweep` proved stale (TODOs, shipped tickets, wiki
+  // pages). It sits with the code guards: sweep's evidence is git, and an operations project keeps
+  // the single guard #273 promised it. Denies the file tools and the shell from looking inside;
+  // putting things INTO it is allowed. Materialized + node-run, idempotent, fail-open, opt-out via
+  // .rsc/.no-archive-guard.
+  const agDest = join(paths.projectRoot, '.rsc', 'archive-guard.mjs');
+  copyFileSync(join(HERE, 'archive-guard.mjs'), agDest);
+  const agCmd = viaBootstrap('guard', at('.rsc', 'archive-guard.mjs'), `"${P}"`);
+  settings.hooks.PreToolUse = settings.hooks.PreToolUse.filter(
+    (e) => !hookWiringOf(e).includes('.rsc/archive-guard.'),
+  );
+  settings.hooks.PreToolUse.push({ matcher: ARCHIVE_TOOLS, hooks: [{ type: 'command', command: agCmd }] });
+
   // New-feature gate: a UserPromptSubmit hook that re-injects the SDD new-feature gate as
   // the most-recent instruction on every user turn. SessionStart injects the full gate (the
   // `suggest` body) once; this keeps the precedence rule salient regardless of how many
@@ -229,18 +242,18 @@ export function wireHook(paths, sourceMd, policy = {}) {
     (e) => !hookWiringOf(e).includes('.rsc/userprompt-gate.'),
   );
   settings.hooks.UserPromptSubmit.push({ hooks: [{ type: 'command', command: fgCmd }] });
-  written.push(sgDest, gmDest, fgDest, join(paths.projectRoot, '.rsc', 'sello.mjs'));
+  written.push(sgDest, gmDest, agDest, fgDest, join(paths.projectRoot, '.rsc', 'sello.mjs'));
   } else {
     for (const event of ['PreToolUse', 'UserPromptSubmit']) {
       if (!settings.hooks[event]) continue;
       settings.hooks[event] = settings.hooks[event].filter((entry) => {
         const body = hookWiringOf(entry);
-        return !body.includes('.rsc/ship-guard.') &&
+        return !body.includes('.rsc/ship-guard.') && !body.includes('.rsc/archive-guard.') &&
           !body.includes('.rsc/gitmoji-guard.') && !body.includes('.rsc/userprompt-gate.');
       });
       if (!settings.hooks[event].length) delete settings.hooks[event];
     }
-    for (const name of ['ship-guard.mjs', 'gitmoji-guard.mjs', 'userprompt-gate.mjs', 'sello.mjs']) {
+    for (const name of ['ship-guard.mjs', 'archive-guard.mjs', 'gitmoji-guard.mjs', 'userprompt-gate.mjs', 'sello.mjs']) {
       rmSync(join(paths.projectRoot, '.rsc', name), { force: true });
     }
     written.push(operationsSuggest);
@@ -281,17 +294,6 @@ export function wireHook(paths, sourceMd, policy = {}) {
   } else {
     rmSync(join(paths.projectRoot, '.rsc', 'danger-guard.mjs'), { force: true });
   }
-  // Archive guard: docs/archive/ holds what `sweep` proved stale. Any project can have it (it is
-  // docs, not code), so it is wired like the danger guard, outside the code-hook block. Denies the
-  // file tools and the shell from looking inside; moving things INTO it is allowed. Materialized +
-  // node-run, idempotent, fail-open, opt-out via .rsc/.no-archive-guard.
-  settings.hooks.PreToolUse = settings.hooks.PreToolUse.filter((e) => !hookWiringOf(e).includes('.rsc/archive-guard.'));
-  const agDest = join(paths.projectRoot, '.rsc', 'archive-guard.mjs');
-  copyFileSync(join(HERE, 'archive-guard.mjs'), agDest);
-  const agCmd = viaBootstrap('guard', at('.rsc', 'archive-guard.mjs'), `"${P}"`);
-  settings.hooks.PreToolUse.push({ matcher: ARCHIVE_TOOLS, hooks: [{ type: 'command', command: agCmd }] });
-  written.push(agDest);
-
   if (!settings.hooks.PreToolUse.length) delete settings.hooks.PreToolUse;
 
   mkdirSync(dirname(file), { recursive: true });

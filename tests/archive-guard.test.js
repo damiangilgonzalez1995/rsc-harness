@@ -75,6 +75,17 @@ test('moving something INTO the archive is allowed: that is how sweep archives',
   }
 });
 
+test('a command substitution smuggled into an archiving command is still a read: denied', () => {
+  for (const command of ['mkdir -p docs/archive/x $(cat docs/archive/y)', 'mkdir docs/archive/x `cat docs/archive/y`']) {
+    assert.equal(decide(root, { tool_name: 'Bash', tool_input: { command } }), 'deny', command);
+  }
+});
+
+test('a commit message that names the archive is text, not a read: allowed', () => {
+  const command = 'git commit -m "chore(sweep): archiva docs/archive/2026-11/old.md"';
+  assert.equal(decide(root, { tool_name: 'Bash', tool_input: { command } }), 'allow');
+});
+
 test('a move OUT of the archive is still reading it back: denied', () => {
   assert.equal(decide(root, { tool_name: 'Bash', tool_input: { command: 'git mv docs/archive/old.md docs/wiki/old.md' } }), 'deny');
 });
@@ -98,4 +109,21 @@ test('fails open: broken input, unknown tool, no path', () => {
 test('.rsc/.no-archive-guard switches it off', () => {
   const off = project({ '.rsc/.no-archive-guard': '' });
   assert.equal(decide(off, { tool_name: 'Read', tool_input: { file_path: 'docs/archive/a.md' } }), 'allow');
+});
+
+test('git show of an archived revision path is a read: denied', () => {
+  assert.equal(decide(root, { tool_name: 'Bash', tool_input: { command: 'git show HEAD:docs/archive/old.md' } }), 'deny');
+});
+
+test('a Glob or Grep that starts above the archive and walks into it is denied', () => {
+  assert.equal(decide(root, { tool_name: 'Glob', tool_input: { pattern: 'archive/*.md', path: at('docs') } }), 'deny');
+  assert.equal(decide(root, { tool_name: 'Grep', tool_input: { pattern: 'TODO', glob: '**/archive/**' } }), 'deny');
+  // A regex over contents that happens to say "archive" is not a path.
+  assert.equal(decide(root, { tool_name: 'Grep', tool_input: { pattern: 'archive/' } }), 'allow');
+});
+
+test('staging what was archived and a path with spaces in quotes are allowed', () => {
+  for (const command of ['git add docs/archive', 'git mv "docs/wiki/old page.md" "docs/archive/2026-11/docs/wiki/old page.md"']) {
+    assert.equal(decide(root, { tool_name: 'Bash', tool_input: { command } }), 'allow', command);
+  }
 });

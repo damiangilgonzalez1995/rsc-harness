@@ -78,7 +78,6 @@ export function generatedHookFiles({ target, cwd, policy }) {
     join(cwd, '.rsc', 'worklog-checkpoint.mjs'),
     join(cwd, '.rsc', 'hook-once.mjs'),
     join(cwd, '.rsc', 'worktree-reaper.mjs'),
-    join(cwd, '.rsc', 'archive-guard.mjs'),
   ];
   // The danger guard is declared on its own terms (#273): present unless the plan says otherwise,
   // whether or not the code guards are.
@@ -87,6 +86,7 @@ export function generatedHookFiles({ target, cwd, policy }) {
   return [...lifecycle, ...danger,
     join(cwd, '.rsc', 'ship-guard.mjs'),
     join(cwd, '.rsc', 'gitmoji-guard.mjs'), join(cwd, '.rsc', 'userprompt-gate.mjs'),
+    join(cwd, '.rsc', 'archive-guard.mjs'),
     join(cwd, '.rsc', 'sello.mjs')];
 }
 

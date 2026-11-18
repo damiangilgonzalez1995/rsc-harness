@@ -829,7 +829,7 @@ test('claude: wires archive-guard once on PreToolUse for the file tools and the 
   const archive = settings.hooks.PreToolUse.filter((e) => JSON.stringify(e).includes('archive-guard'));
   assert.equal(archive.length, 1, 'exactly one archive-guard entry');
   for (const tool of ['Read', 'Grep', 'Glob', 'Edit', 'Write', 'NotebookEdit', 'Bash', 'PowerShell']) {
-    assert.ok(new RegExp(`(^|\|)${tool}(\||$)`).test(archive[0].matcher), `matcher covers ${tool}`);
+    assert.ok(archive[0].matcher.split('|').includes(tool), `matcher covers ${tool}`);
   }
   assert.ok(archive[0].hooks[0].command.startsWith('node '));
   assert.ok(existsSync(join(cwd, '.rsc/archive-guard.mjs')), 'archive-guard.mjs materialized');

@@ -5262,7 +5262,7 @@
     },
     {
       "id": "sweep",
-      "description": "Use when the project's written context may have gone stale — on `/sweep`, every few weeks, before a big feature, or when the agent keeps doing work nobody asked for. Scans TODO/FIXME, `.scratch/*/issues`, `docs/wiki`, lessons and CLAUDE.md, checks each claim against git, has a blind verifier confirm it, reports Obsoleto / Conflicto / Sin pruebas and archives to `docs/archive/` only with consent. NOT reviewing a diff (that is `code-review`), NOT a session retrospective (that is `retro`), NOT filing the docs inbox into the wiki (that is `harness`).",
+      "description": "Use on `/sweep` or when the agent keeps doing work nobody asked for: finds TODOs, tickets, wiki pages, lessons and CLAUDE.md lines that are no longer true, proves it with git and a blind verifier, and archives to `docs/archive/` only with consent. NOT reviewing a diff (`code-review`), NOT a session retrospective (`retro`), NOT filing the docs inbox (`harness`).",
       "tags": [
         "context",
         "cleanup",
