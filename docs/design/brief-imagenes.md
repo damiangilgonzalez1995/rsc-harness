@@ -499,7 +499,7 @@ El orden en que aparece cada imagen, para insertarlas sin pensar:
 Misma dirección de arte. Seis piezas: tres para Inspo (de dónde salen las ideas de diseño) y tres
 para `sweep` (barrer el contexto que ya no es verdad).
 
-### `readme-28-inspo-de-donde.png` · 1600 × 900
+### `readme-29-inspo-de-donde.png` · 1600 × 900
 
 De dónde sale la inspiración.
 
@@ -518,7 +518,7 @@ flowchart LR
   C --> D["Eliges una"]
 ```
 
-### `readme-29-inspo-buscar.png` · 1600 × 900
+### `readme-30-inspo-buscar.png` · 1600 × 900
 
 Las tres formas de buscar. Tres tarjetas en fila, cada una con una frase de ejemplo (lo que dices) y
 la herramienta (en mono):
@@ -531,7 +531,7 @@ la herramienta (en mono):
 
 Abajo, una banda: **`/redesign`** → *la galería basa sus tres direcciones de estilo en webs de Inspo*.
 
-### `readme-30-inspo-activar.png` · 1600 × 700
+### `readme-31-inspo-activar.png` · 1600 × 700
 
 Cómo se activa, en tres pasos numerados (círculos `acento` con 1, 2 y 3):
 
@@ -542,7 +542,7 @@ Cómo se activa, en tres pasos numerados (círculos `acento` con 1, 2 y 3):
 Nota lateral en `acento-2` (rombo): *¿No lo quieres? Di que no una vez → `.rsc/.no-inspo` y no vuelve a
 preguntar.* Pie: **Regla: primero estático, después movimiento.**
 
-### `readme-31-sweep-problema.png` · 1600 × 800
+### `readme-32-sweep-problema.png` · 1600 × 800
 
 El problema, como tira de tres viñetas:
 
@@ -554,7 +554,7 @@ El problema, como tira de tres viñetas:
 Título: **El contexto viejo sigue pareciendo una orden.** Subtítulo: *Un TODO hecho, un ticket ya
 fusionado o una wiki que el código contradice mandan al agente a trabajos que nadie pidió.*
 
-### `readme-32-sweep-proceso.png` · 1600 × 1000 · **la más importante de sweep**
+### `readme-33-sweep-proceso.png` · 1600 × 1000 · **la más importante de sweep**
 
 El proceso de `/sweep`, de izquierda a derecha, cinco fases:
 
@@ -563,7 +563,7 @@ El proceso de `/sweep`, de izquierda a derecha, cinco fases:
 2. **Pruebas en git** · `git log -S` · `git blame` · `status:` del ticket
 3. **Verificador a ciegas** · `finding-verifier` · *solo ve la afirmación, nunca tu conclusión* ·
    *ante la duda, no se toca*
-4. **Tres cajas** (ver la imagen 33)
+4. **Tres cajas** (ver la imagen 34)
 5. **Archivar con permiso** · `git mv` → `docs/archive/` · *nunca se borra*
 
 Un rombo `acento-2` entre la 4 y la 5: *¿Archivo estas 9? (sí/no)*.
@@ -575,7 +575,7 @@ flowchart LR
   E -- no --> G[Se queda]
 ```
 
-### `readme-33-sweep-cajas.png` · 1600 × 1000
+### `readme-34-sweep-cajas.png` · 1600 × 1000
 
 Las tres cajas y lo que pasa con cada una. Tres columnas:
 

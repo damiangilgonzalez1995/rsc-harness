@@ -233,7 +233,7 @@ interfaz entera hay **una sola orden**.
 > por color o por sección antes de dibujar nada. Es gratis, no pide cuenta ni clave, y se conecta
 > **una vez por máquina**.
 
-![De dónde salen las ideas: Inspo, 800+ webs reales](docs/img/readme/readme-28-inspo-de-donde.png)
+![De dónde salen las ideas: Inspo, 800+ webs reales](docs/img/readme/readme-29-inspo-de-donde.png)
 
 Las referencias salen de aquí: [inspomcp.dev](https://inspomcp.dev), un archivo curado de webs en
 producción que tu agente consulta por MCP.
@@ -253,7 +253,7 @@ producción que tu agente consulta por MCP.
 2. Cierra Claude Code y vuelve a abrirlo, porque los MCP se cargan al arrancar.
 3. Escribe `/mcp`: tiene que salir `inspo` como conectado.
 
-![Activar Inspo en tres pasos](docs/img/readme/readme-30-inspo-activar.png)
+![Activar Inspo en tres pasos](docs/img/readme/readme-31-inspo-activar.png)
 
 Si no lo tienes, el harness te lo ofrece al iniciar sesión en un proyecto de front. Si dices que no,
 crea `.rsc/.no-inspo` y no vuelve a preguntar.
@@ -268,7 +268,7 @@ crea `.rsc/.no-inspo` y no vuelve a preguntar.
 | «Enséñame heros, pricings o footers buenos» | por sección (`find_examples_for_macrostructure`) |
 | `/redesign` | la galería basa sus tres direcciones de estilo en webs de Inspo |
 
-![Tres formas de buscar referencias](docs/img/readme/readme-29-inspo-buscar.png)
+![Tres formas de buscar referencias](docs/img/readme/readme-30-inspo-buscar.png)
 
 ![La página del MCP: pantallas, componentes de referencia y un DESIGN.md por web](docs/img/readme/readme-inspo-captura-mcp.png)
 
@@ -442,7 +442,7 @@ siguiente vaya mejor. El resultado son cambios concretos, no una charla.
 > página de la wiki que el código contradice mandan al agente a hacer trabajo que nadie pidió.
 > `/sweep` los encuentra, los prueba contra git y los archiva **solo si dices que sí**.
 
-![El contexto viejo sigue pareciendo una orden](docs/img/readme/readme-31-sweep-problema.png)
+![El contexto viejo sigue pareciendo una orden](docs/img/readme/readme-32-sweep-problema.png)
 
 **Cómo se usa:** escribe `/sweep` cada pocas semanas, antes de una feature grande o cuando notes que
 el agente hace cosas que no le has pedido. También salta sola si lo dices con tus palabras («limpia
@@ -459,7 +459,7 @@ los TODOs viejos»).
 5. **Archivar con permiso:** «¿archivo estas 9?». Se mueve a `docs/archive/` con `git mv`. Nunca se
    borra.
 
-![Las cinco fases de /sweep](docs/img/readme/readme-32-sweep-proceso.png)
+![Las cinco fases de /sweep](docs/img/readme/readme-33-sweep-proceso.png)
 
 | Caja | Qué es | Ejemplo | Qué hace `/sweep` |
 |---|---|---|---|
@@ -467,7 +467,7 @@ los TODOs viejos»).
 | **Conflicto** | Dos fuentes se contradicen | La spec dice JWT, el código usa sesiones | Te enseña las dos y decides tú |
 | **Sin pruebas** | Parece viejo, pero git no lo demuestra | TODO «añadir caché» que nadie ha hecho | No toca nada: viejo no es falso |
 
-![Las tres cajas, el archivo cerrado y quién manda](docs/img/readme/readme-33-sweep-cajas.png)
+![Las tres cajas, el archivo cerrado y quién manda](docs/img/readme/readme-34-sweep-cajas.png)
 
 **El archivo queda cerrado al agente.** El hook `archive-guard` le impide leer o buscar en
 `docs/archive/`, para que no vuelva a obedecer lo archivado. Tú puedes abrirlo cuando quieras, y
