@@ -216,7 +216,7 @@ one of the five artifacts above, it is here; otherwise it is a sibling.
 | Invent the idea / topic / angle for the short | `shortform-ideation` |
 | Account-level plan: niche, cadence, which platforms, growth | `shortform-strategy` |
 | Write the spoken script / beat sheet, direct the cuts | [video-shorts](../video-shorts/SKILL.md) |
-| Execute the edit — caption burn-in, B-roll, sound sync | `shortform-editing` |
+| Execute the edit — guided local reel edit: silence cuts, branded lower-third captions, animated resources, 1080×1920 export | `shortform-editing` |
 | Schedule / cross-post the finished short | [social-publisher](../social-publisher/SKILL.md) |
 | Upload programmatically via the platform Graph/API | `tiktok-api` / `instagram-api` |
 | Title/description/tags for a long-form YouTube video | [youtube-packaging](../youtube-packaging/SKILL.md) |

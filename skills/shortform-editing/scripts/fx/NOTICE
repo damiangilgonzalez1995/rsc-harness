@@ -1,0 +1,17 @@
+Video effects (fx.py, words.py)
+===============================
+
+The effects in this folder (fx.py and words.py) are by Vibha Ramprakash
+(@vibha.in.progress), released under the MIT License. See LICENSE for the full text.
+
+Modified (MIT allows it). Changes made here: fx.py looks for fonts/ and models/ next to itself
+(scripts/fx/), reads the models into memory and writes --still PNGs through Python so paths with
+accents work on Windows, takes ffmpeg/ffprobe from ~/.editor-video/rutas.json when present, reads its
+plan as UTF-8, and the `phone-fan` effect gained the options `body` (frame colour), `x`, `y`,
+`spread`, `scale` and an empty `text` (no headline). words.py only uses the Whisper model
+already downloaded by the preparation step (it never downloads one) and writes UTF-8.
+
+Third-party files keep their own licences:
+- fonts/*.ttf: SIL Open Font License 1.1 (fonts/OFL-*.txt), except Permanent Marker,
+  Apache License 2.0 (fonts/LICENSE-PermanentMarker.txt).
+- models/: see models/NOTICE.md (YuNet, MIT; MediaPipe Selfie Segmenter, Apache 2.0).

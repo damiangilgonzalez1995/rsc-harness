@@ -1,0 +1,13 @@
+{
+  "clip": "reels/trabajo/mi-reel/cortado.mp4",
+  "palabras": "reels/trabajo/mi-reel/cortado.palabras.json",
+  "cortes": [],
+  "camara": [{"ini": 1.0, "fin": 2.4, "tipo": "empuje", "zoom": 1.12}],
+  "recursos": [
+    {"ini": 2.6, "fin": 5.6, "tipo": "palabra-caja", "opts": {"antes": "lo importante es", "palabra": "empezar"}}
+  ],
+  "fx": [],
+  "enfasis": [],
+  "congelar_final": 0,
+  "aprobado": false
+}
