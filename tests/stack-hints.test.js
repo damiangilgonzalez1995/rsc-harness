@@ -106,6 +106,9 @@ test('front-end project without Inspo: offered once with the install command', (
   // A no must outlive the session: the agent is told to write the switch, as the git and context7
   // blocks do. Without it the offer came back every session.
   assert.match(out, /If they decline, create \.rsc\/\.no-inspo/);
+  // The warning comes FIRST: before any design work, not tucked into the final report.
+  assert.match(out, /BEFORE anything else/);
+  assert.match(out, /\/mcp/, 'tells how to check it is connected');
 });
 
 test('this project entry written with forward slashes (and, on Windows, other casing) still counts', () => {
