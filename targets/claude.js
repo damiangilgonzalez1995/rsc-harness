@@ -11,8 +11,8 @@ const SHELL_TOOLS = 'Bash|PowerShell';
 const ARCHIVE_TOOLS = 'Read|Grep|Glob|Edit|MultiEdit|Write|NotebookEdit|Bash|PowerShell';
 
 // Mods de la terminal de Claude Code que el harness deja activados en cada proyecto.
-// Los cuatro `@harness-mods` viven en este mismo repo (`mods/plugins/`, catálogo de los mods en
-// la raíz del repo): context-bar, prompt-enhancer, modelo-justo y where-am-i.
+// Los tres `@harness-mods` viven en este mismo repo (`mods/plugins/`, catálogo de los mods en
+// la raíz del repo): context-bar, prompt-enhancer y where-am-i.
 // `cache-tax` mantiene caliente la caché del prompt en las pausas, y eso gasta tokens.
 export const CLAUDE_CODE_MODS = Object.freeze([
   { id: 'skins@hellosverre-mods', marketplace: 'hellosverre-mods', repo: 'hellosverre/claude-skins' },
@@ -20,9 +20,13 @@ export const CLAUDE_CODE_MODS = Object.freeze([
   { id: 'cache-tax@claude-code-mods', marketplace: 'claude-code-mods', repo: 'karanb192/claude-code-mods' },
   { id: 'context-bar@harness-mods', marketplace: 'harness-mods', repo: 'damiangilgonzalez1995/rsc-harness' },
   { id: 'prompt-enhancer@harness-mods', marketplace: 'harness-mods', repo: 'damiangilgonzalez1995/rsc-harness' },
-  { id: 'modelo-justo@harness-mods', marketplace: 'harness-mods', repo: 'damiangilgonzalez1995/rsc-harness' },
   { id: 'where-am-i@harness-mods', marketplace: 'harness-mods', repo: 'damiangilgonzalez1995/rsc-harness' },
 ]);
+
+// Mods que el harness activaba y ya no existen. Al reinstalar se quitan de `enabledPlugins`: si se
+// quedaran, Claude Code buscaría en el marketplace un plugin que ya no está.
+// `modelo-justo` (selección dinámica de Haiku/Sonnet/Opus) se retiró del harness.
+export const RETIRED_CLAUDE_CODE_MODS = Object.freeze(['modelo-justo@harness-mods']);
 
 export function writeSkill(id, fromDir, toPath) {
   // Migrate away from the legacy nested layout (.claude/skills/rsc/<id>) that
@@ -273,6 +277,7 @@ export function wireHook(paths, sourceMd, policy = {}) {
     settings.extraKnownMarketplaces[marketplace] ||= { source: { source: 'github', repo } };
     if (settings.enabledPlugins[id] !== false) settings.enabledPlugins[id] = true;
   }
+  for (const id of RETIRED_CLAUDE_CODE_MODS) delete settings.enabledPlugins[id];
 
   // Overview: registra sola cada skill de revisión que se lanza, por la herramienta Skill
   // (PostToolUse) o escribiendo `/<skill>` (UserPromptSubmit). Fuera del bloque de hooks de código

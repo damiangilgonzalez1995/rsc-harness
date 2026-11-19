@@ -6,7 +6,6 @@ Mods de Claude Code para probar de uno en uno. No se publican con el paquete npm
 | --- | --- | --- |
 | `context-bar` | ídem | barra de contexto; `/context-bar` la enciende o apaga |
 | `prompt-enhancer` | propio | botones Enhance / Send; Enhance reescribe el borrador en la caja |
-| `modelo-justo` | propio | clasifica la petición y cambia a Haiku/Sonnet/Opus; `/modelo-justo on\|off` |
 | `where-am-i` | catálogo (MIT, copiado y revisado) | resumen vivo encima del prompt; `/where` da uno largo |
 
 ## Probar uno (sin instalarlo)
