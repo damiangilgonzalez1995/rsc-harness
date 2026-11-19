@@ -89,7 +89,7 @@ Empiezas pequeño. El resto se carga bajo demanda: el harness te propone una ski
 la pide, con la evidencia que lo justifica.
 
 ```bash
-rsc install --profile minimal   # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes + overview
+rsc install --profile minimal   # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes + overview + sweep + redesign + pr + retro
 rsc install --profile core      # la base + el método completo + seguridad (security-scan, secure-coding, agent-safety)
 rsc install --profile ui        # core + todo lo de interfaz
 rsc install --profile full      # todo el catálogo
@@ -232,6 +232,9 @@ interfaz entera hay **una sola orden**.
 > [Inspo](https://inspomcp.dev) le da **832 webs reales** (2.320 pantallas) para buscar por estilo,
 > por color o por sección antes de dibujar nada. Es gratis, no pide cuenta ni clave, y se conecta
 > **una vez por máquina**.
+>
+> **Instala el MCP antes que nada.** Si no lo tienes, `/redesign` y cualquier diseño de pantalla te
+> lo piden lo primero, antes de empezar.
 
 ![De dónde salen las ideas: Inspo, 800+ webs reales](docs/img/readme/readme-29-inspo-de-donde.png)
 
@@ -255,8 +258,8 @@ producción que tu agente consulta por MCP.
 
 ![Activar Inspo en tres pasos](docs/img/readme/readme-31-inspo-activar.png)
 
-Si no lo tienes, el harness te lo ofrece al iniciar sesión en un proyecto de front. Si dices que no,
-crea `.rsc/.no-inspo` y no vuelve a preguntar.
+Si no lo tienes, el agente te avisa antes que nada la primera vez que va a diseñar en un proyecto
+de front. Si dices que no, crea `.rsc/.no-inspo` y no vuelve a preguntar.
 
 **Cómo se usa:** hablando normal, sin comandos.
 

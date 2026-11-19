@@ -4031,6 +4031,7 @@
       ],
       "recommends": [],
       "profiles": [
+        "minimal",
         "core",
         "ui",
         "full"
@@ -4351,6 +4352,8 @@
       ],
       "recommends": [],
       "profiles": [
+        "minimal",
+        "core",
         "ui",
         "full"
       ]
@@ -4579,6 +4582,7 @@
       ],
       "recommends": [],
       "profiles": [
+        "minimal",
         "core",
         "ui",
         "full"
@@ -5312,6 +5316,7 @@
         "retro"
       ],
       "profiles": [
+        "minimal",
         "core",
         "ui",
         "full"

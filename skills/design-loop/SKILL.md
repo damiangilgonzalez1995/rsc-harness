@@ -41,9 +41,11 @@ and proposing from memory is how this promise used to resolve to the AI-template
 **Nothing the project owns fits?** Then, if the Inspo MCP is connected (`mcp__inspo__*` tools),
 draw the outside candidates from it rather than from memory: `search_screens` with the goal in
 plain words, `find_by_color` when the palette is already fixed, `find_examples_for_macrostructure`
-for a single section. Each candidate is a real URL you can open. Not connected → offer it once
-(command in `../design/references/inspiration-sources.md`, unless the session already offered it)
-and carry on with the sources below.
+for a single section. Each candidate is a real URL you can open. Not connected (and no
+`.rsc/.no-inspo`) → warn BEFORE anything else, before proposing a single candidate: install it with
+`! claude mcp add --transport http --scope user inspo https://inspomcp.dev/api/mcp`, restart Claude
+Code, check `/mcp`. Wait for the answer; on a no, create `.rsc/.no-inspo` and carry on with the
+sources below.
 
 **Where to go looking.** For a whole page to beat, and for the flows and single patterns behind it:
 `../design/references/inspiration-sources.md`. For a component idea rather than a whole reference:

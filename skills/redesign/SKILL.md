@@ -2,7 +2,7 @@
 name: redesign
 description: "Rediseño completo de interfaz en cascada: crea PRODUCT.md/DESIGN.md si faltan, lanza 5 subagentes en paralelo (crítica, tipografía, color, movimiento, galería), consolida resultados y programa el rediseño. Una skill que orquesta todo."
 tags: [ui, ux, design, orchestration, impeccable, emil]
-profiles: [ui, full]
+profiles: [minimal, core, ui, full]
 requires: [impeccable]
 origin: damiangil
 ---
@@ -45,7 +45,7 @@ Cada subagente recibe:
 - Instrucción de entregar solo hallazgos, no implementar
 - La sección «Formato de los hallazgos» de [`informe.md`](informe.md): deja su resultado en `hallazgos/<agente>.json` con esa forma
 
-**Galería con Inspo.** Si el MCP Inspo está conectado (herramientas `mcp__inspo__*`), la galería saca sus referencias de ahí antes de proponer nada. Busca webs reales por el estilo del PRODUCT.md (`search_screens`), por los colores actuales (`find_by_color`) y por cada sección que se rediseña (`find_examples_for_macrostructure`). Cada una de las 3 direcciones va anclada a 2 o 3 webs con su URL y una frase de qué se toma de cada una: el principio, no los píxeles. Si Inspo no está conectado, la galería sigue como siempre. En el informe final se ofrece una vez instalarlo, si en la sesión no se ha ofrecido ya (el comando está en `skills/design/references/inspiration-sources.md`).
+**Galería con Inspo.** Si el MCP Inspo está conectado (herramientas `mcp__inspo__*`), la galería saca sus referencias de ahí antes de proponer nada. Busca webs reales por el estilo del PRODUCT.md (`search_screens`), por los colores actuales (`find_by_color`) y por cada sección que se rediseña (`find_examples_for_macrostructure`). Cada una de las 3 direcciones va anclada a 2 o 3 webs con su URL y una frase de qué se toma de cada una: el principio, no los píxeles. **Inspo antes que todo.** Si no hay herramientas `mcp__inspo__*` y no existe `.rsc/.no-inspo`, lo primero de `/redesign`, antes de leer el proyecto o proponer nada, es avisar: que instale el MCP con `! claude mcp add --transport http --scope user inspo https://inspomcp.dev/api/mcp`, reinicie Claude Code y compruebe con `/mcp` que sale `inspo` conectado. Espera la respuesta. Si dice que no, crea `.rsc/.no-inspo` y la galería sigue sin Inspo.
 
 ### 4. Informe y elección
 

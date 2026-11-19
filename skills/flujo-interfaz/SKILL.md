@@ -54,9 +54,11 @@ antes del codigo.
 una referencia en mente, busca webs reales antes de dibujar. Con el MCP Inspo conectado
 (`mcp__inspo__*`): `search_screens` con el objetivo en palabras, `find_by_color` si la paleta ya
 esta fijada, `find_examples_for_macrostructure` para una sola seccion. Ensena 3-5 resultados con su
-URL y deja que el usuario elija antes de construir. Si no esta conectado y en la sesion no se ha
-ofrecido ya, ofrecelo una vez (gratis, sin clave). El comando y mas fuentes estan en
-`design/references/inspiration-sources.md`.
+URL y deja que el usuario elija antes de construir. Si no esta conectado (y no existe
+`.rsc/.no-inspo`), avisa ANTES QUE TODO, antes de buscar o dibujar nada: que lo instale (gratis, sin
+clave) con `! claude mcp add --transport http --scope user inspo https://inspomcp.dev/api/mcp`,
+reinicie Claude Code y compruebe `/mcp`. Espera la respuesta; si dice que no, crea `.rsc/.no-inspo`
+y sigue. Mas fuentes en `design/references/inspiration-sources.md`.
 
 ## Paso 2 · Espectaculo, solo si toca
 

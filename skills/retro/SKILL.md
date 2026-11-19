@@ -3,7 +3,7 @@ name: retro
 description: "Conduct a retrospective on a coding session: find what in the agent's environment (navigation, checks, standards, steering files, tooling) should change so future runs go better."
 tags: ["retrospective", "session-review", "agent-environment"]
 disable-model-invocation: true
-profiles: [core, ui, full]
+profiles: [minimal, core, ui, full]
 origin: damiangil
 ---
 

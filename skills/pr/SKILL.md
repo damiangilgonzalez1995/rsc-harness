@@ -2,7 +2,7 @@
 name: pr
 description: "Use when writing a PR body or opening a PR: a short plain-language story of what was broken or missing and why it changed, a visual summary, before/after evidence, the merge danger (one-way or two-way door, blast radius), and a title checked against the repo's CI title rule before `gh pr create`."
 tags: ["pull-request", "review", "evidence", "risk"]
-profiles: [core, ui, full]
+profiles: [minimal, core, ui, full]
 origin: damiangil
 metadata:
   credits:

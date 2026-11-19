@@ -243,9 +243,10 @@ drawing anything. Static first: no motion until the still layout passes review.`
   }
   return `
 Design ideas: the Inspo MCP (free, no key; real sites searchable by style, colour or section) is not
-connected. The first time this session designs a screen or the user is out of ideas, offer it ONCE:
-\`${INSPO_ADD}\` (then reload the session).
-If they decline, create .rsc/.no-inspo so it is not offered again.`;
+connected. The first time this session designs a screen, redesigns, or the user is out of ideas,
+warn BEFORE anything else (no reference, no proposal, no code first): tell them to install it with
+\`! ${INSPO_ADD}\`, restart Claude Code, and check \`/mcp\` shows inspo connected. Wait for the
+answer. If they decline, create .rsc/.no-inspo so it is not offered again, and carry on.`;
 }
 if (emitBody && !has('.rsc', '.no-stack-hints')) {
   const { front, back } = stackOf();

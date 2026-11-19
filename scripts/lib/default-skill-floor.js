@@ -7,7 +7,9 @@
 // obligatorias por decisión del usuario: van al suelo para que también lleguen con
 // el update a los proyectos que ya existían, no solo a las instalaciones nuevas. `overview`
 // también: su hook de registro está siempre cableado y calla sin docs/overview/overview.json.
-export const DEFAULT_SKILL_FLOOR = Object.freeze(['orient', 'suggest', 'bro', 'tunel-ngrok', 'hardening', 'no-me-rayes', 'overview']);
+// `sweep`, `redesign` (con la galería de Inspo), `pr` y `retro` son obligatorias por decisión del
+// usuario: son las «skills útiles» del README y llegan con el update a todos los proyectos.
+export const DEFAULT_SKILL_FLOOR = Object.freeze(['orient', 'suggest', 'bro', 'tunel-ngrok', 'hardening', 'no-me-rayes', 'overview', 'sweep', 'redesign', 'pr', 'retro']);
 
 export function withDefaultSkillFloor(skillIds = []) {
   return [...new Set([...DEFAULT_SKILL_FLOOR, ...skillIds])];
