@@ -34,7 +34,7 @@ Do NOT use when (route to the sibling that owns it):
 | What to post / cadence / niche / hook strategy | `shortform-strategy` *(catalog id)* |
 | Clip ideas, hooks, a topic backlog | `shortform-ideation` *(catalog id)* |
 | Caption / cover / title packaging, A/B framing | `shortform-packaging` *(catalog id)* |
-| Cut/caption/render the actual clip file | `shortform-editing` *(catalog id)* |
+| Edit the actual clip file locally — cuts, branded captions, resources, 1080×1920 export | `shortform-editing` *(catalog id)* |
 | Render a video file programmatically | `../remotion-video/SKILL.md` |
 | Post one asset to TikTok + IG + YouTube at once | `../social-publisher/SKILL.md` |
 | Instagram's Graph / Content Publishing API | `../instagram-api/SKILL.md` |
@@ -315,5 +315,5 @@ Error → cause map:
 - `../instagram-api/SKILL.md` — same family pattern, Instagram's Graph/Content Publishing API.
 - `../youtube-api/SKILL.md` — same transport+ingestion shape, YouTube's two APIs.
 - `../remotion-video/SKILL.md` — produce the clip file this skill only uploads.
-- `shortform-strategy`, `shortform-ideation`, `shortform-packaging`, `shortform-editing` *(catalog ids)* — what the numbers *mean*, what to make, and how to package/edit it.
+- `shortform-strategy`, `shortform-ideation`, `shortform-packaging`, `shortform-editing` *(catalog ids)* — what the numbers *mean*, what to make, how to package it, and the guided local edit that produces the file.
 - `api-connector-builder`, `automation-flows`, `knowledge-ops` *(catalog ids)* — generic connector wrapping, cross-tool chaining, and wiki conventions.

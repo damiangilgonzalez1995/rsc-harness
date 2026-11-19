@@ -202,6 +202,16 @@ test('research, content and mixed intent survive normalization and drive proport
   assert.equal(mixed.decisions.find((d) => d.id === 'sdd').state, 'selected');
 });
 
+test('a content project gets shortform-editing; other kinds do not', () => {
+  const evidence = scanProject(root());
+  for (const [projectKind, want] of [['content', true], ['mixed', false], ['software', false], ['research', false], ['operations', false]]) {
+    const plan = buildOnboardingPlan(normalizeOnboarding(answers({ projectKind, softwareScope: ['software', 'mixed'].includes(projectKind) ? 'growing' : undefined })), evidence);
+    assert.equal(plan.policy.skills.includes('shortform-editing'), want, projectKind);
+    const decision = plan.decisions.find((d) => d.id === 'shortform-editing');
+    assert.equal(decision?.state === 'selected', want, `${projectKind} decision`);
+  }
+});
+
 test('un proyecto con frontend recibe el paquete de interfaz', () => {
   const plan = buildOnboardingPlan(
     { schemaVersion: 1, technicalLevel: 'technical', accompaniment: 'L1',

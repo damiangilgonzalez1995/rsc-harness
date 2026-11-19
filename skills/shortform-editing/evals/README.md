@@ -1,16 +1,18 @@
 # Evals — shortform-editing
 
-These are routing + capability checks for a human or an LLM judge, not a renderer
-test — nothing here encodes a video. To run them, read `cases.yaml` and confirm the
-skill's `description` would fire on every `should_trigger` prompt (including the
-non-obvious "captions out of sync and hidden behind the TikTok buttons" symptom and
-the Spanish/Catalan phrasings) and that each `should_not_trigger` prompt routes to
-the named sibling instead (`video-shorts`, `remotion-video`, `social-publisher`,
-`youtube-thumbnails`, `podcast`) rather than here. For the `capability` scenario,
-have the skill produce the pipeline/commands and grade them line by line against the
-`must_include` rubric: word-level transcription, a two-pass silence cut that removes
-video AND audio together, a beat grid with cuts snapped to it, karaoke `.ass`
-captions in the safe middle band, a 1080x1920 H.264/AAC export, and `ffprobe`
-verification. The "does it feel on-beat" judgment is subjective and stays in this
-rubric. To mechanically check a produced output, point `scripts/verify.sh` at the
-emitted `.mp4`.
+These are routing and capability checks for a human or an LLM judge, not a renderer test — nothing here
+encodes a video. The scripts have their own tests: `tests/shortform-editing-inventario.test.js` (inventory and
+the `## Reels` section of `CLAUDE.md`), `tests/shortform-editing-subs.test.js` (captions never above 70 % of
+the height) and the local pytest suite in `skills/shortform-editing/tests/`.
+
+Read `cases.yaml` and confirm the skill's `description` fires on every `should_trigger` prompt — including
+the Spanish ones in the person's own words («edita el último vídeo de brutos», «corrige: el gancho más
+grande») and the Catalan symptom-first one (captions covering the face) — and that each `should_not_trigger`
+prompt routes to the named sibling instead (`video-shorts`, `social-publisher`, `remotion-video`,
+`shortform-packaging`).
+
+For the `capability` scenario, have the skill walk the empty project and grade the transcript line by line
+against `must_include`: inventory first and `CLAUDE.md` updated, install only after explaining the ~3 GB and
+getting a yes, brand interview (or a one-line skip when a handoff package brings `marca.md`), cut and
+transcribe without touching `reels/brutos/`, contact sheet and an explicit yes before rendering, lower-third
+captions and a free face, nothing uploaded, a new `_vN` export, and every turn ending in a question.

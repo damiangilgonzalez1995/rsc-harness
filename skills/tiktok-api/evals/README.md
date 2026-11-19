@@ -6,7 +6,8 @@ TikTok transport/ingestion prompts — including the non-obvious ones (24h acces
 death, `url_ownership_unverified` on PULL_FROM_URL, `rate_limit_exceeded` at 6/min, and
 the Display-can't-give-watch-time distinction) and the Spanish/Catalan phrasings.
 `should_not_trigger` asserts the right sibling wins on intent (`shortform-strategy` /
-`shortform-packaging` / `shortform-editing`), on multi-network posting
+`shortform-packaging`), on producing the clip file itself (`shortform-editing`, the
+guided local edit), on multi-network posting
 (`social-publisher`), on other platforms (`instagram-api`), and on generic connector
 work (`api-connector-builder`). `capability` is a rubric for a generated answer to the
 daily-cron scenario — graded on whether it covers token refresh, the chunked

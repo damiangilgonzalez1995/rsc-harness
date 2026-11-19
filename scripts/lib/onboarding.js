@@ -194,7 +194,9 @@ export function buildOnboardingPlan(record, evidence) {
   const inAnyProfile = new Set(catalog.skills.filter((s) => (s.profiles || []).length).map((s) => s.id));
   const declared = (readManifest(evidence.root ?? process.cwd())?.skills ?? [])
     .filter((id) => catalogIds.has(id) && !inAnyProfile.has(id));
-  const skills = [...new Set([...skillsForProfile(catalog, profile), ...detectedSkills, ...declared])].sort();
+  // A content project gets the short-form editing skill; no other kind does, and nothing else in the profile changes.
+  const kindSkills = normalized.projectKind === 'content' && catalogIds.has('shortform-editing') ? ['shortform-editing'] : [];
+  const skills = [...new Set([...skillsForProfile(catalog, profile), ...detectedSkills, ...declared, ...kindSkills])].sort();
   const baseAgents = needsWorkflow;
   const hooks = needsWorkflow;
   const agents = baseAgents ? resolveAgentNames(skills, []).sort() : [];
@@ -208,6 +210,7 @@ export function buildOnboardingPlan(record, evidence) {
   const dangerGuard = normalized.technicalLevel !== 'technical';
   const decisions = skills.map((id) => detectedSkills.includes(id)
     ? selected(id, 'skill', `Detected ${id} evidence inside the selected project root.`, 'workspace-evidence')
+    : kindSkills.includes(id) ? selected(id, 'skill', 'Included because this is a content project.')
     : selected(id, 'skill', needsWorkflow
       ? (id === 'sdd' && complexitySignals.length
         ? `Included because the accepted work has ${complexitySignals.join(', ')} complexity.`

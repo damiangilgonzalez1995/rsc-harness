@@ -14,7 +14,7 @@ Hand off downstream the moment the deliverable becomes *one video*:
 - The 15–60s script and hook variants → `../video-shorts/SKILL.md`.
 - The topic/angle backlog feeding the account → `../shortform-ideation/SKILL.md`.
 - The cover frame / on-screen title / first-frame packaging → `../shortform-packaging/SKILL.md`.
-- The cut, caption burn-in, sound sync → `../shortform-editing/SKILL.md`.
+- The guided local edit — silence cuts, branded captions, animated resources, 1080×1920 export → `../shortform-editing/SKILL.md`.
 - Cross-platform calendar/scheduler across X/LinkedIn/Threads → `../social-publisher/SKILL.md`.
 - The top-down editorial system across all content types → `../content-engine/SKILL.md`.
 - The durable tone the account speaks in → `../brand-voice/SKILL.md`.

@@ -117,6 +117,6 @@ A healthy batch spreads widely, with few above 85.
 - `../shortform-packaging/SKILL.md` — the hook line, caption, hashtags and cover for a clip that
   passed this bar.
 - `../shortform-ideation/SKILL.md` — inventing the angle, upstream of anything scoreable.
-- `../shortform-editing/SKILL.md` — executing the edit once a clip is chosen.
+- `../shortform-editing/SKILL.md` — the guided local edit (cuts, branded captions, animated resources) once a clip is chosen.
 - `../shortform-strategy/SKILL.md` — what the channel should publish over time, which this feeds
   with per-clip evidence.

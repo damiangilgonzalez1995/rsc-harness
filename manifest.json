@@ -4615,22 +4615,26 @@
     },
     {
       "id": "shortform-editing",
-      "description": "Use when you have raw 9:16 footage and need it cut into a post-ready vertical short — dead air removed, fast jump cuts, karaoke word-by-word burned-in captions from a transcript, cuts and zooms snapped to the music beat, safe-area placement so captions clear the platform UI, and a platform-correct MP4 export. NOT writing the script, hook, beats or caption text (that is `video-shorts`), NOT building a Remotion React composition codebase (that is `remotion-video`), NOT deciding when or where to post (that is `social-publisher`).",
+      "description": "Use when a creator who talks to camera wants a raw vertical clip turned into a finished branded reel, guided step by step — installs local tools (Whisper, ffmpeg, HyperFrames) with consent, interviews the brand (colours, fonts, logo, tone, reference reels), cuts silences, burns branded captions in the lower third, adds face-tracked effects and animated visual resources, shows a contact sheet for approval and exports 1080×1920 versions; checks what already exists and records progress in CLAUDE.md. NOT writing the script or hook (that is `video-shorts`), NOT a Remotion codebase (that is `remotion-video`), NOT scheduling or publishing (that is `social-publisher`).",
       "tags": [
         "video-editing",
         "shortform",
+        "reels",
         "captions",
-        "ffmpeg",
         "whisper",
-        "beat-sync",
-        "vertical-video"
+        "ffmpeg",
+        "hyperframes",
+        "brand",
+        "vertical-video",
+        "guided"
       ],
       "recommends": [
         "video-shorts",
-        "remotion-video",
         "shortform-packaging",
+        "shortform-strategy",
+        "viral-score",
         "social-publisher",
-        "podcast"
+        "brand-identity"
       ],
       "profiles": []
     },
