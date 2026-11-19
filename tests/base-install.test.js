@@ -114,9 +114,29 @@ test('cada install deja activados los mods de Claude Code y respeta un false pue
   wireHook(paths, undefined, { codeHooks: false });
   const settings = JSON.parse(readFileSync(hookTarget, 'utf8'));
   assert.deepEqual(CLAUDE_CODE_MODS.map((m) => m.id).sort(),
-    ['cache-tax@claude-code-mods', 'context-bar@harness-mods', 'modelo-justo@harness-mods', 'prompt-enhancer@harness-mods', 'savvy-progress@claude-kit', 'skins@hellosverre-mods', 'where-am-i@harness-mods']);
+    ['cache-tax@claude-code-mods', 'context-bar@harness-mods', 'prompt-enhancer@harness-mods', 'savvy-progress@claude-kit', 'skins@hellosverre-mods', 'where-am-i@harness-mods']);
   for (const { id, marketplace, repo } of CLAUDE_CODE_MODS) {
     assert.deepEqual(settings.extraKnownMarketplaces[marketplace], { source: { source: 'github', repo } });
     assert.equal(settings.enabledPlugins[id], id === 'cache-tax@claude-code-mods' ? false : true);
   }
+});
+
+test('un mod retirado del harness desaparece de enabledPlugins al reinstalar', async () => {
+  const { mkdtempSync, mkdirSync, readFileSync, writeFileSync } = await import('node:fs');
+  const { join } = await import('node:path');
+  const { tmpdir } = await import('node:os');
+  const { wireHook, RETIRED_CLAUDE_CODE_MODS } = await import('../targets/claude.js');
+
+  const root = mkdtempSync(join(tmpdir(), 'rsc-mods-retired-'));
+  mkdirSync(join(root, '.claude'), { recursive: true });
+  const hookTarget = join(root, '.claude', 'settings.json');
+  writeFileSync(hookTarget, JSON.stringify({ enabledPlugins: { 'modelo-justo@harness-mods': true, 'otro@ajeno': true } }));
+  const paths = { projectRoot: root, hookTarget, skillDir: (id) => join(root, '.claude', 'skills', id) };
+  mkdirSync(paths.skillDir('suggest'), { recursive: true });
+
+  wireHook(paths, undefined, { codeHooks: false });
+  const settings = JSON.parse(readFileSync(hookTarget, 'utf8'));
+  assert.ok(RETIRED_CLAUDE_CODE_MODS.includes('modelo-justo@harness-mods'));
+  assert.equal('modelo-justo@harness-mods' in settings.enabledPlugins, false);
+  assert.equal(settings.enabledPlugins['otro@ajeno'], true);
 });

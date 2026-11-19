@@ -549,7 +549,7 @@ que `sweep` archivó en `docs/archive/`.
 
 ![Plugins de serie: superpowers, skins, savvy-progress y cache-tax](docs/img/readme/readme-16-plugins.png)
 
-En Claude Code quedan activados `skins`, `savvy-progress`, `context-bar`, `prompt-enhancer`, `modelo-justo`,
+En Claude Code quedan activados `skins`, `savvy-progress`, `context-bar`, `prompt-enhancer`,
 `where-am-i` y `cache-tax` (este mantiene caliente la caché, y eso gasta tokens). `superpowers` llega cuando el proyecto usa el método.
 
 En cifras: 313 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
