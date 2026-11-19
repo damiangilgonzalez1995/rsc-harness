@@ -3,7 +3,7 @@ name: sweep
 description: "Use on `/sweep` or when the agent keeps doing work nobody asked for: finds TODOs, tickets, wiki pages, lessons and CLAUDE.md lines that are no longer true, proves it with git and a blind verifier, and archives to `docs/archive/` only with consent. NOT reviewing a diff (`code-review`), NOT a session retrospective (`retro`), NOT filing the docs inbox (`harness`)."
 tags: [context, cleanup, stale, wiki, tickets, archive]
 recommends: [code-review, harness, retro]
-profiles: [core, ui, full]
+profiles: [minimal, core, ui, full]
 origin: damiangil
 ---
 

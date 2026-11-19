@@ -2,7 +2,7 @@
 name: redesign
 description: "Rediseño completo de interfaz en cascada: crea PRODUCT.md/DESIGN.md si faltan, lanza 5 subagentes en paralelo (crítica, tipografía, color, movimiento, galería), consolida resultados y programa el rediseño. Una skill que orquesta todo."
 tags: [ui, ux, design, orchestration, impeccable, emil]
-profiles: [ui, full]
+profiles: [minimal, core, ui, full]
 requires: [impeccable]
 origin: damiangil
 ---
