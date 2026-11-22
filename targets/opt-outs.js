@@ -20,6 +20,7 @@ export const PROJECT_OPT_OUTS = [
   'archive-guard',    // docs/archive/ closed to the agent: what sweep archived stays archived for everyone
   'audit',            // cadence of this project's skill audit
   'claudemd-check',   // the root CLAUDE.md context budget
+  'copypasta-hint',   // the session-start reminder to look in the recipe book before building a new piece
   'danger-guard',     // foot-gun denial, keyed to the committed user profile
   'feature-gate',     // per-turn re-injection of the SDD gate
   'gitmoji',          // the commit-message convention

@@ -29,6 +29,18 @@ test('the permanent floor stays inside the base install', async () => {
   for (const id of DEFAULT_SKILL_FLOOR) assert.ok(BASE.includes(id), `floor skill outside base: ${id}`);
 });
 
+test('a skill that joins the base also reaches the projects that already exist', async () => {
+  const { DEFAULT_SKILL_FLOOR } = await import('../scripts/lib/default-skill-floor.js');
+  // The profile only decides a NEW install; an update (`sync`) rebuilds from what the project
+  // declared plus the floor. `copypasta` joined the base without joining the floor, so every new
+  // project got it and no existing one did, after the update that was supposed to bring it.
+  // These six predate the rule and stay new-install only, on purpose. Anything else in the base
+  // must be in the floor, or be added here as a decision.
+  const NEW_INSTALLS_ONLY = ['eli5', 'harness', 'init', 'show-me', 'teach', 'unslop'];
+  const unreachable = BASE.filter((id) => !DEFAULT_SKILL_FLOOR.includes(id) && !NEW_INSTALLS_ONLY.includes(id));
+  assert.deepEqual(unreachable, [], `base skills an update never installs: ${unreachable.join(', ')}`);
+});
+
 test('the wizard label is read from the profile, not enumerated by hand', () => {
   const line = rscCli.split('\n').find((l) => l.includes("key: 'base'"));
   assert.ok(line, "the wizard still offers a 'base' choice");

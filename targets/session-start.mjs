@@ -283,6 +283,24 @@ Opt out with .rsc/.no-stack-hints.
   }
 }
 
+// Recipe book: a skill is matched by its description, and "add rate limiting" does not read like
+// "bring me a template", so with `copypasta` installed the agent still built pieces from scratch.
+// Said once per session, only where the skill is installed (otherwise the command would not exist).
+// The user decides: the agent offers the recipe, it never copies it unasked. Opt out with
+// .rsc/.no-copypasta-hint.
+if (emitBody && skillIn('copypasta') && !has('.rsc', '.no-copypasta-hint')) {
+  process.stdout.write(`
+===== rsc recipe book =====
+Before creating the structure of a NEW piece (an API, an agent, memory, RAG, auth, rate limit,
+observability, voice, settings, a React front end, its login, router or e2e), run
+\`npx @damiangilgonzalez/harness recipes list\` (skill \`copypasta\`). If a recipe fits, offer it to the user
+in one line (its id and what it brings) before writing anything; copy it only on a yes. If none
+fits, say so and build it by hand. Editing code that already exists is not a new piece.
+Opt out with .rsc/.no-copypasta-hint.
+===========================
+`);
+}
+
 // overview: una línea si alguna zona está en rojo. Ya va deduplicada entre scopes (emitBody). Dice
 // «en rojo» y no «piden revisión»: el KPI del dashboard con ese nombre cuenta también el ámbar.
 try {
