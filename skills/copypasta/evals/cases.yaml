@@ -1,0 +1,32 @@
+skill: copypasta
+
+should_trigger:
+  - prompt: "Que plantillas hay disponibles en el recetario?"
+    why: "Disparador directo de copypasta: listar las recetas."
+  - prompt: "Montame una API con FastAPI para este proyecto."
+    why: "Crear la estructura de una pieza nueva: antes se mira si hay receta."
+  - prompt: "Traeme la receta de memoria de conversacion para el agente."
+    why: "Disparador directo de copypasta: traer una receta concreta."
+  - prompt: "I need to scaffold a LangGraph agent with a chat endpoint, do we have a template?"
+    why: "Disparador directo de copypasta: plantilla para una pieza nueva."
+  - prompt: "Empieza el frontend en React con login, usa la estructura que uso siempre."
+    why: "'La estructura que uso' es el recetario."
+
+should_not_trigger:
+  - prompt: "Revisa este endpoint de FastAPI, creo que la dependencia de la sesion esta mal."
+    route_to: "fastapi"
+    why: "Escribir o revisar codigo FastAPI que ya existe es el trabajo de fastapi, no de copypasta."
+  - prompt: "Despliega la app en produccion."
+    route_to: "deployment"
+    why: "Desplegar es el trabajo de deployment, no de copypasta."
+  - prompt: "Haz una auditoria de seguridad del producto."
+    route_to: "hardening"
+    why: "Auditar la seguridad es el trabajo de hardening, no de copypasta."
+  - prompt: "Que skills del harness me faltan para este proyecto?"
+    route_to: "suggest"
+    why: "Proponer skills del harness es el trabajo de suggest; copypasta trae plantillas de codigo, no skills."
+
+capability:
+  - scenario: "El usuario pregunta que plantillas existen para montar un backend con un agente."
+    must_include:
+      - "recipes list"

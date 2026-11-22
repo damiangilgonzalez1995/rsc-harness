@@ -41,7 +41,7 @@ if (['--version', '-v', 'version'].includes(rawArgv[0])) {
 const GLOBAL_VALUE_FLAGS = new Set([
   '--target', '--technical-level', '--accompaniment', '--project-kind', '--goal', '--goal-base64', '--software-scope', '--accept-plan',
 ]);
-const COMMANDS = new Set(['onboard', 'reassess', 'add', 'install', 'consult', 'catalog', 'audit', 'list', 'doctor', 'memory', 'knowledge-sync', 'sync', 'backups', 'restore', 'upgrade', 'registry', 'worktrees', 'capabilities', 'review', 'sello', 'repair', 'uninstall', 'purge']);
+const COMMANDS = new Set(['onboard', 'reassess', 'add', 'install', 'consult', 'catalog', 'audit', 'list', 'doctor', 'memory', 'knowledge-sync', 'sync', 'backups', 'restore', 'upgrade', 'registry', 'worktrees', 'capabilities', 'review', 'sello', 'repair', 'uninstall', 'purge', 'recipes']);
 function positionalTokens(input) {
   const out = [];
   for (let i = 0; i < input.length; i++) {
@@ -627,6 +627,12 @@ function governedBy(receipt, skills) {
 }
 
 async function main() {
+  // The recipe book needs no assistant and no harness state: it answers before any of that is resolved.
+  if (cmd === 'recipes') {
+    const { runRecipes } = await import('./lib/recipes.js');
+    process.exitCode = await runRecipes(rawArgv);
+    return;
+  }
   // One resolution for every command, doctor included: `doctor` used to resolve on its
   // own and could report a different assistant than the one just installed into.
   // --target accepts one id or a comma list (e.g. --target claude,codex).
@@ -1283,7 +1289,7 @@ async function main() {
       return void (await runPurge(argv.includes('--dry-run'), argv.includes('--with-docs')));
     default:
       say(`rsc: unknown command '${cmd}'.`);
-      say('Use: npx @damiangilgonzalez/harness onboard | reassess | add <id...> | install --profile <p> | consult "<text>" | list | capabilities [--full|gap-log] | audit | registry refresh | doctor | sync | memory <on|off|status|save|resume|learn|metrics> | sello <on|off|status|…> | worktrees [new <nombre> [--branch <rama>] | reap [path|--merged] [--confirm]] | backups | restore <id|latest> | upgrade | repair | uninstall <id> | purge');
+      say('Use: npx @damiangilgonzalez/harness onboard | reassess | add <id...> | install --profile <p> | consult "<text>" | list | capabilities [--full|gap-log] | audit | registry refresh | doctor | sync | memory <on|off|status|save|resume|learn|metrics> | sello <on|off|status|…> | worktrees [new <nombre> [--branch <rama>] | reap [path|--merged] [--confirm]] | backups | restore <id|latest> | upgrade | repair | uninstall <id> | purge | recipes <list|show <id>|get <id> --to <dir>>');
       say('Any command takes --target <claude|codex|cursor|copilot|gemini|…> (comma-separate for several)');
       say('   → without it, rsc uses the assistant already installed here; if two are, it asks instead of guessing.');
       process.exitCode = 1;

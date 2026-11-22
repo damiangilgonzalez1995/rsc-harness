@@ -1,7 +1,7 @@
 {
   "version": "1.3.6",
   "counts": {
-    "skills": 313,
+    "skills": 315,
     "agents": 34,
     "commands": 43,
     "fixedCommands": 10
@@ -109,6 +109,30 @@
         "ui",
         "full"
       ]
+    },
+    {
+      "id": "ai-act",
+      "description": "Use when someone building a product with AI asks what the EU AI Act requires of it: classifies role and risk level, dates each duty, reviews the code (AI notice, synthetic-content marking, logs, retention, human oversight) and drafts Annex IV, instructions-for-use and FRIA skeletons. NOT scoping every framework or a control register (that is `compliance`), NOT a security audit (that is `hardening`), NOT retention schedules or a ROPA (that is `data-policy`).",
+      "tags": [
+        "ai-act",
+        "eu-ai-act",
+        "normativa",
+        "high-risk",
+        "transparency",
+        "logging",
+        "human-oversight",
+        "fria",
+        "annex-iv"
+      ],
+      "recommends": [
+        "compliance",
+        "hardening",
+        "data-policy",
+        "gdpr-privacy",
+        "agent-safety",
+        "write-adr"
+      ],
+      "profiles": []
     },
     {
       "id": "ai-media",
@@ -865,7 +889,7 @@
     },
     {
       "id": "compliance",
-      "description": "Use when scoping which regulatory frameworks bind a business — SOC 2, ISO 27001, HIPAA, PCI DSS, EU AI Act, DORA, NIS2 — building a control register with owners and evidence, or standing up the cadence that keeps it audit-ready. NOT drafting privacy-policy/ROPA/DPA or ToS text (that is gdpr-privacy, terms-conditions), NOT hardening code (that is secure-coding).",
+      "description": "Use when scoping which regulatory frameworks bind a business — SOC 2, ISO 27001, HIPAA, PCI DSS, EU AI Act, DORA, NIS2 — building a control register with owners and evidence, or standing up the cadence that keeps it audit-ready. NOT drafting privacy-policy/ROPA/DPA or ToS text (that is gdpr-privacy, terms-conditions), NOT hardening code (that is secure-coding), NOT classifying one AI product's role and risk under the EU AI Act or reviewing its code against it (that is ai-act).",
       "tags": [
         "compliance",
         "soc2",
@@ -879,7 +903,8 @@
         "terms-conditions",
         "data-policy",
         "contracts",
-        "secure-coding"
+        "secure-coding",
+        "ai-act"
       ],
       "profiles": []
     },
@@ -1009,6 +1034,30 @@
         "github-actions"
       ],
       "profiles": []
+    },
+    {
+      "id": "copypasta",
+      "description": "Use before creating the structure of any new piece of a project — a FastAPI API, a LangChain or LangGraph agent, conversation memory, RAG, auth, rate limit, observability, voice, settings, a React frontend, its login, router or e2e — or when the user asks which templates or recipes exist, wants to bring one in, or mentions 'copypasta', 'plantillas', 'recetas' or 'la estructura que uso'. Lists the CopyPasta-Kitchen recipes and copies only the one that is needed. NOT how to write FastAPI code itself (that is `fastapi`), NOT agent design decisions (that is `building-agents`).",
+      "tags": [
+        "templates",
+        "recipes",
+        "scaffolding",
+        "copypasta",
+        "fastapi",
+        "langgraph",
+        "react"
+      ],
+      "recommends": [
+        "fastapi",
+        "building-agents",
+        "react"
+      ],
+      "profiles": [
+        "minimal",
+        "core",
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "cost-tracking",

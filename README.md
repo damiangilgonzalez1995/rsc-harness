@@ -27,7 +27,9 @@ npx @damiangilgonzalez/harness@latest onboard
 | Saber qué recuerda el agente | [5. La memoria](#5-la-memoria) |
 | Las skills que más se usan | [6. Skills útiles](#6-skills-útiles) |
 | Limpiar el contexto que ya no es verdad | [`sweep`](#sweep--barrer-el-contexto-que-ya-no-es-verdad) |
-| Ver qué deja en mi proyecto | [7. Qué se instala](#7-qué-se-instala) |
+| Traer una plantilla de código ya probada (API, agente, login) | [7. Plantillas de código (CopyPasta)](#7-plantillas-de-código-copypasta) |
+| Saber qué me exige el AI Act y revisar mi producto | [8. Normativa europea de IA (AI Act)](#8-normativa-europea-de-ia-ai-act) |
+| Ver qué deja en mi proyecto | [9. Qué se instala](#9-qué-se-instala) |
 
 ---
 
@@ -89,7 +91,7 @@ Empiezas pequeño. El resto se carga bajo demanda: el harness te propone una ski
 la pide, con la evidencia que lo justifica.
 
 ```bash
-rsc install --profile minimal   # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes + overview + sweep + redesign + pr + retro
+rsc install --profile minimal   # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes + overview + sweep + redesign + pr + retro + copypasta
 rsc install --profile core      # la base + el método completo + seguridad (security-scan, secure-coding, agent-safety)
 rsc install --profile ui        # core + todo lo de interfaz
 rsc install --profile full      # todo el catálogo
@@ -537,7 +539,140 @@ Si alguna zona está en rojo, sale una sola línea: `overview: 2 zonas en rojo (
 
 ---
 
-## 7. Qué se instala
+## 7. Plantillas de código (CopyPasta)
+
+![No inventes la estructura: tráela del recetario. Sin recetario, cada proyecto tiene una estructura nueva; con recetario, la misma estructura probada](docs/img/readme/readme-35-copypasta-que-es.png)
+
+Cuando el agente monta una pieza nueva (una API, un agente, el login), no se inventa la
+estructura: la trae de un **recetario**. [CopyPasta-Kitchen](https://github.com/damiangilgonzalez1995/CopyPasta-Kitchen)
+son 18 plantillas sacadas de proyectos reales, cada una con sus tests y con un `RECIPE.md` que
+cuenta cuándo usarla, qué decisiones trae tomadas y cómo adaptarla.
+
+Viene dentro del harness: no hay nada más que instalar.
+
+### Cómo se usa
+
+![Mirar, leer, copiar, adaptar: recipes list, recipes show, recipes get y sustituir los marcadores](docs/img/readme/readme-36-copypasta-flujo.png)
+
+Lo normal es **no escribir ningún comando**. Pides la pieza y la skill `copypasta`, que va en la
+base, mira primero si hay receta:
+
+> «¿Qué plantillas hay?» · «Móntame una API con FastAPI» · «Tráeme la receta de memoria del agente»
+
+A mano son tres pasos, siempre en este orden: mirar, leer y copiar.
+
+```bash
+npx @damiangilgonzalez/harness recipes list                      # 1. qué recetas hay, una línea cada una
+npx @damiangilgonzalez/harness recipes list --category frontend  #    o filtradas: --category, --tag, --json
+npx @damiangilgonzalez/harness recipes show fastapi-base         # 2. leer una receta antes de traerla
+npx @damiangilgonzalez/harness recipes get fastapi-base --to backend --with-requires   # 3. copiarla
+```
+
+- **`--to`** es la carpeta de destino: la raíz del backend o del frontend.
+- **`--with-requires`** trae también las recetas de las que depende la que pides.
+- **Nunca pisa un fichero que ya existe.** Avisa con «ya existía, no se toca» y decides tú;
+  `--force` solo si de verdad quieres sobrescribir.
+- Al terminar te dice qué marcadores `{{...}}` quedan por sustituir (por ejemplo `{{app_name}}`).
+
+![Nunca pisa lo que ya tienes: los ficheros nuevos se copian y pytest.ini, que ya existía, no se toca](docs/img/readme/readme-37-copypasta-nunca-pisa.png)
+
+Después de copiar: sustituye los marcadores, sigue los pasos de «Cómo adaptarla» de la receta y
+pasa los tests que trae antes de tocar nada más.
+
+### Qué recetas hay
+
+| Zona | Recetas |
+|---|---|
+| Backend | `project-settings`, `fastapi-base`, `auth-verifier`, `agent-chat-api`, `rag-retriever`, `observability`, `voice-providers`, `rate-limit-quota`, `conversation-history`, `agent-feedback` |
+| Agentes | `langchain-agent`, `langgraph-graph`, `agent-memory` |
+| Frontend | `vite-react-base`, `react-agent-chat`, `react-supabase-auth`, `react-app-router`, `playwright-e2e` |
+
+La lista al día la da siempre `recipes list`.
+
+### La versión va fijada
+
+![Las recetas que recibes son las que se probaron con tu harness: de CopyPasta-Kitchen al paquete npm v0.1.0 y al harness con versión exacta](docs/img/readme/readme-38-copypasta-version-fijada.png)
+
+El recetario es un paquete npm aparte, [`@damiangilgonzalez/copypasta`](https://www.npmjs.com/package/@damiangilgonzalez/copypasta),
+y el harness depende de **una versión exacta**. Las recetas que recibes son las que se probaron
+con tu versión del harness; una receta nueva llega con una versión nueva del harness, no sola.
+
+Sin el harness funciona igual, con los mismos comandos:
+
+```bash
+npx @damiangilgonzalez/copypasta list
+```
+
+---
+
+## 8. Normativa europea de IA (AI Act)
+
+Si tu producto lleva IA y tiene usuarios en la UE, el Reglamento (UE) 2024/1689 te pide cosas
+concretas, y algunas ya son exigibles. La skill `ai-act` te dice **cuáles te tocan a ti y desde
+cuándo**, revisa tu código y te deja los documentos empezados.
+
+> [!IMPORTANT]
+> **Es una guía de ingeniería, no asesoría jurídica.** Cumple quien pone el producto en el mercado
+> o lo usa, no la skill. Una clasificación de alto riesgo o una evaluación de impacto las firma un
+> especialista.
+
+### Cómo se usa
+
+No va en la base: se instala cuando la necesitas.
+
+```bash
+npx @damiangilgonzalez/harness add ai-act
+```
+
+Después se le habla normal:
+
+> «¿Qué me exige el AI Act para este chatbot?» · «¿Mi producto es de alto riesgo?» ·
+> «Revisa el proyecto contra el AI Act» · «Hazme la documentación técnica del anexo IV»
+
+### Qué hace, en cinco pasos
+
+| Paso | Qué sale |
+|---|---|
+| 1. Rol | Si eres proveedor, responsable del despliegue o integras un modelo ajeno por API. Cada rol tiene deberes distintos. |
+| 2. Nivel de riesgo | Prohibido, alto riesgo, transparencia o mínimo. Lee el código y te pregunta lo que el código no dice. |
+| 3. Qué toca y cuándo | Cada obligación con su artículo, a quién obliga y su fecha. |
+| 4. Revisión del proyecto | Hallazgos con `fichero:línea` en siete zonas: aviso de IA, marcado de contenido sintético, registro y trazabilidad, retención y borrado, supervisión humana y parada, seudonimización en trazas y transferencias internacionales. No toca nada: tú decides qué se arregla. |
+| 5. Documentación | Esqueletos en `docs/`: decisión de clasificación, documentación técnica (anexo IV), instrucciones de uso (art. 13) y evaluación de impacto en derechos fundamentales (FRIA, art. 27). Rellena lo que el repositorio demuestra y marca `[HUMANO]` lo que exige tu juicio. |
+
+### Las fechas que importan
+
+| Fecha | Qué se aplica |
+|---|---|
+| 2.2.2025 | Formar al equipo en IA (art. 4) y prácticas prohibidas (art. 5). **Ya exigible.** |
+| 2.8.2026 | Transparencia (art. 50): avisar de que se habla con una IA y marcar el contenido generado. **Ya exigible.** |
+| 2.12.2026 | Fin del plazo extra para el marcado de contenido en sistemas que ya estaban en el mercado. |
+| 2.12.2027 | Alto riesgo del anexo III (empleo, educación, crédito, servicios esenciales…). |
+| 2.8.2028 | Alto riesgo del anexo I (IA dentro de productos regulados). |
+
+Las fechas de alto riesgo se movieron en julio de 2026 (Reglamento (UE) 2026/1744): quien te cite
+el 2.8.2026 para el alto riesgo usa un calendario caducado. La skill recomprueba cada fecha en
+EUR-Lex antes de afirmarla; la tabla de arriba está verificada a 2026-11-21.
+
+### Lo que casi todo producto con IA debe mirar ya
+
+- **Aviso de IA visible en la primera interacción** (art. 50.1 y 50.5). En los términos y
+  condiciones no vale.
+- **Contenido generado marcado** en formato legible por máquina, si tu sistema genera texto,
+  imagen, audio o vídeo (art. 50.2).
+- **RGPD**, si hay datos personales: el AI Act no lo sustituye.
+
+Si eres de alto riesgo se suma, entre otras cosas, guardar los registros de eventos al menos seis
+meses (arts. 19 y 26.6) y poder parar el sistema con supervisión humana (art. 14).
+
+### Con qué se combina
+
+`compliance` reparte el trabajo entre todos los marcos (RGPD, NIS2, ISO…), `data-policy` fija
+los plazos de retención y `hardening` audita la seguridad. `ai-act` se queda solo con el Reglamento
+de IA.
+
+---
+
+## 9. Qué se instala
 
 ![Qué deja en tu proyecto: qué se sube a git y qué se queda en local](docs/img/readme/readme-09-que-se-instala.png)
 
@@ -555,16 +690,16 @@ que `sweep` archivó en `docs/archive/`.
 En Claude Code quedan activados `skins`, `savvy-progress`, `context-bar`, `prompt-enhancer`,
 `where-am-i` y `cache-tax` (este mantiene caliente la caché, y eso gasta tokens). `superpowers` llega cuando el proyecto usa el método.
 
-En cifras: 313 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
+En cifras: 315 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
 (Claude Code, Codex, Cursor, Copilot, Gemini…). Detalle en la [referencia técnica](docs/referencia-tecnica.md).
 
 ---
 
 ## Catálogo
 
-![313 skills por dominio](docs/img/readme/readme-15-catalogo.png)
+![315 skills por dominio](docs/img/readme/readme-15-catalogo.png)
 
-313 skills en 25 dominios: software, negocio, contenido, datos e IA.
+315 skills en 25 dominios: software, negocio, contenido, datos e IA.
 Cada una se activa sola cuando la tarea encaja.
 
 **[Ver el catálogo completo →](docs/catalogo.md)** · [Referencia técnica](docs/referencia-tecnica.md) ·

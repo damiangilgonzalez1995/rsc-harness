@@ -213,8 +213,9 @@ This skill *follows* the rules; it does not run the legal program — that is
   results, and advance notice to candidates. No audit, no notice → do not deploy.
 - **EU AI Act:** recruitment / CV-screening / candidate-ranking AI is classed
   *high-risk* (Annex III, Cat. 4). Obligations apply from **2 Dec 2027**
-  (deferred from 2 Aug 2026 by the Nov-2025 AI-omnibus). Deployer fines reach
-  €15M or 3% of global turnover. Colorado's AI Act effective date moved to 2027.
+  (deferred from 2 Aug 2026 by Regulation (EU) 2026/1744, the Digital Omnibus
+  on AI). Deployer fines reach €15M or 3% of global turnover. Colorado's AI Act
+  effective date moved to 2027.
 - **Never auto-reject without human review.** A model can sort or flag; a person
   makes the reject call. Keep the human in the loop and the evidence trail intact.
 
