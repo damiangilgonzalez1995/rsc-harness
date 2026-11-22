@@ -9,7 +9,9 @@
 // también: su hook de registro está siempre cableado y calla sin docs/overview/overview.json.
 // `sweep`, `redesign` (con la galería de Inspo), `pr` y `retro` son obligatorias por decisión del
 // usuario: son las «skills útiles» del README y llegan con el update a todos los proyectos.
-export const DEFAULT_SKILL_FLOOR = Object.freeze(['orient', 'suggest', 'bro', 'tunel-ngrok', 'hardening', 'no-me-rayes', 'overview', 'sweep', 'redesign', 'pr', 'retro']);
+// `copypasta` (el recetario) igual: entró en la base y, sin estar aquí, solo la recibían los
+// proyectos nuevos. Toda skill que entre en la base va aquí (lo vigila tests/base-install.test.js).
+export const DEFAULT_SKILL_FLOOR = Object.freeze(['orient', 'suggest', 'bro', 'tunel-ngrok', 'hardening', 'no-me-rayes', 'overview', 'sweep', 'redesign', 'pr', 'retro', 'copypasta']);
 
 export function withDefaultSkillFloor(skillIds = []) {
   return [...new Set([...DEFAULT_SKILL_FLOOR, ...skillIds])];

@@ -556,7 +556,7 @@ No. Funciona solo, en tres capas:
 
 | Capa | Qué hace | Tú |
 |---|---|---|
-| **Instalación** | La skill `copypasta` va en la base: la recibe todo proyecto con el harness, sea cual sea el perfil. | Nada |
+| **Instalación** | La skill `copypasta` va en la base: la recibe todo proyecto con el harness, sea cual sea el perfil. Un proyecto que ya tenía el harness la recibe al actualizar (`npx @damiangilgonzalez/harness@latest`). | Actualizar, si el proyecto es anterior |
 | **Aviso al abrir sesión** (Claude Code) | Con la skill instalada, cada sesión arranca con un recordatorio para el agente: *antes de crear una pieza nueva, mira el recetario y ofrécele al usuario la receta que encaje*. | Nada |
 | **Tu sí** | El agente te propone la receta en una línea («Para esto hay `fastapi-base`: API base con errores, CORS y `/health`. ¿La traigo?»). Solo copia si dices que sí. | Decir sí o no |
 
