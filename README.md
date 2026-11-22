@@ -27,7 +27,8 @@ npx @damiangilgonzalez/harness@latest onboard
 | Saber qué recuerda el agente | [5. La memoria](#5-la-memoria) |
 | Las skills que más se usan | [6. Skills útiles](#6-skills-útiles) |
 | Limpiar el contexto que ya no es verdad | [`sweep`](#sweep--barrer-el-contexto-que-ya-no-es-verdad) |
-| Ver qué deja en mi proyecto | [7. Qué se instala](#7-qué-se-instala) |
+| Traer una plantilla de código ya probada (API, agente, login) | [7. Plantillas de código (CopyPasta)](#7-plantillas-de-código-copypasta) |
+| Ver qué deja en mi proyecto | [8. Qué se instala](#8-qué-se-instala) |
 
 ---
 
@@ -89,7 +90,7 @@ Empiezas pequeño. El resto se carga bajo demanda: el harness te propone una ski
 la pide, con la evidencia que lo justifica.
 
 ```bash
-rsc install --profile minimal   # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes + overview + sweep + redesign + pr + retro
+rsc install --profile minimal   # la base: orient + suggest + bro + unslop + show-me + eli5 + harness + init + teach + tunel-ngrok + hardening + no-me-rayes + overview + sweep + redesign + pr + retro + copypasta
 rsc install --profile core      # la base + el método completo + seguridad (security-scan, secure-coding, agent-safety)
 rsc install --profile ui        # core + todo lo de interfaz
 rsc install --profile full      # todo el catálogo
@@ -537,7 +538,65 @@ Si alguna zona está en rojo, sale una sola línea: `overview: 2 zonas en rojo (
 
 ---
 
-## 7. Qué se instala
+## 7. Plantillas de código (CopyPasta)
+
+Cuando el agente monta una pieza nueva (una API, un agente, el login), no se inventa la
+estructura: la trae de un **recetario**. [CopyPasta-Kitchen](https://github.com/damiangilgonzalez1995/CopyPasta-Kitchen)
+son 18 plantillas sacadas de proyectos reales, cada una con sus tests y con un `RECIPE.md` que
+cuenta cuándo usarla, qué decisiones trae tomadas y cómo adaptarla.
+
+Viene dentro del harness: no hay nada más que instalar.
+
+### Cómo se usa
+
+Lo normal es **no escribir ningún comando**. Pides la pieza y la skill `copypasta`, que va en la
+base, mira primero si hay receta:
+
+> «¿Qué plantillas hay?» · «Móntame una API con FastAPI» · «Tráeme la receta de memoria del agente»
+
+A mano son tres pasos, siempre en este orden: mirar, leer y copiar.
+
+```bash
+npx @damiangilgonzalez/harness recipes list                      # 1. qué recetas hay, una línea cada una
+npx @damiangilgonzalez/harness recipes list --category frontend  #    o filtradas: --category, --tag, --json
+npx @damiangilgonzalez/harness recipes show fastapi-base         # 2. leer una receta antes de traerla
+npx @damiangilgonzalez/harness recipes get fastapi-base --to backend --with-requires   # 3. copiarla
+```
+
+- **`--to`** es la carpeta de destino: la raíz del backend o del frontend.
+- **`--with-requires`** trae también las recetas de las que depende la que pides.
+- **Nunca pisa un fichero que ya existe.** Avisa con «ya existía, no se toca» y decides tú;
+  `--force` solo si de verdad quieres sobrescribir.
+- Al terminar te dice qué marcadores `{{...}}` quedan por sustituir (por ejemplo `{{app_name}}`).
+
+Después de copiar: sustituye los marcadores, sigue los pasos de «Cómo adaptarla» de la receta y
+pasa los tests que trae antes de tocar nada más.
+
+### Qué recetas hay
+
+| Zona | Recetas |
+|---|---|
+| Backend | `project-settings`, `fastapi-base`, `auth-verifier`, `agent-chat-api`, `rag-retriever`, `observability`, `voice-providers`, `rate-limit-quota`, `conversation-history`, `agent-feedback` |
+| Agentes | `langchain-agent`, `langgraph-graph`, `agent-memory` |
+| Frontend | `vite-react-base`, `react-agent-chat`, `react-supabase-auth`, `react-app-router`, `playwright-e2e` |
+
+La lista al día la da siempre `recipes list`.
+
+### La versión va fijada
+
+El recetario es un paquete npm aparte, [`@damiangilgonzalez/copypasta`](https://www.npmjs.com/package/@damiangilgonzalez/copypasta),
+y el harness depende de **una versión exacta**. Las recetas que recibes son las que se probaron
+con tu versión del harness; una receta nueva llega con una versión nueva del harness, no sola.
+
+Sin el harness funciona igual, con los mismos comandos:
+
+```bash
+npx @damiangilgonzalez/copypasta list
+```
+
+---
+
+## 8. Qué se instala
 
 ![Qué deja en tu proyecto: qué se sube a git y qué se queda en local](docs/img/readme/readme-09-que-se-instala.png)
 
@@ -555,16 +614,16 @@ que `sweep` archivó en `docs/archive/`.
 En Claude Code quedan activados `skins`, `savvy-progress`, `context-bar`, `prompt-enhancer`,
 `where-am-i` y `cache-tax` (este mantiene caliente la caché, y eso gasta tokens). `superpowers` llega cuando el proyecto usa el método.
 
-En cifras: 313 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
+En cifras: 314 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
 (Claude Code, Codex, Cursor, Copilot, Gemini…). Detalle en la [referencia técnica](docs/referencia-tecnica.md).
 
 ---
 
 ## Catálogo
 
-![313 skills por dominio](docs/img/readme/readme-15-catalogo.png)
+![314 skills por dominio](docs/img/readme/readme-15-catalogo.png)
 
-313 skills en 25 dominios: software, negocio, contenido, datos e IA.
+314 skills en 25 dominios: software, negocio, contenido, datos e IA.
 Cada una se activa sola cuando la tarea encaja.
 
 **[Ver el catálogo completo →](docs/catalogo.md)** · [Referencia técnica](docs/referencia-tecnica.md) ·

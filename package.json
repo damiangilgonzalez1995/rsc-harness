@@ -26,6 +26,7 @@
     "prepublishOnly": "npm run manifest && npm run validate && npm run drift:check && npm run originality:check"
   },
   "dependencies": {
+    "@damiangilgonzalez/copypasta": "0.1.0",
     "@iarna/toml": "^2.2.5",
     "ajv": "^8.18.0"
   },
