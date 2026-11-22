@@ -541,6 +541,8 @@ Si alguna zona está en rojo, sale una sola línea: `overview: 2 zonas en rojo (
 
 ## 7. Plantillas de código (CopyPasta)
 
+![No inventes la estructura: tráela del recetario. Sin recetario, cada proyecto tiene una estructura nueva; con recetario, la misma estructura probada](docs/img/readme/readme-35-copypasta-que-es.png)
+
 Cuando el agente monta una pieza nueva (una API, un agente, el login), no se inventa la
 estructura: la trae de un **recetario**. [CopyPasta-Kitchen](https://github.com/damiangilgonzalez1995/CopyPasta-Kitchen)
 son 18 plantillas sacadas de proyectos reales, cada una con sus tests y con un `RECIPE.md` que
@@ -549,6 +551,8 @@ cuenta cuándo usarla, qué decisiones trae tomadas y cómo adaptarla.
 Viene dentro del harness: no hay nada más que instalar.
 
 ### Cómo se usa
+
+![Mirar, leer, copiar, adaptar: recipes list, recipes show, recipes get y sustituir los marcadores](docs/img/readme/readme-36-copypasta-flujo.png)
 
 Lo normal es **no escribir ningún comando**. Pides la pieza y la skill `copypasta`, que va en la
 base, mira primero si hay receta:
@@ -570,6 +574,8 @@ npx @damiangilgonzalez/harness recipes get fastapi-base --to backend --with-requ
   `--force` solo si de verdad quieres sobrescribir.
 - Al terminar te dice qué marcadores `{{...}}` quedan por sustituir (por ejemplo `{{app_name}}`).
 
+![Nunca pisa lo que ya tienes: los ficheros nuevos se copian y pytest.ini, que ya existía, no se toca](docs/img/readme/readme-37-copypasta-nunca-pisa.png)
+
 Después de copiar: sustituye los marcadores, sigue los pasos de «Cómo adaptarla» de la receta y
 pasa los tests que trae antes de tocar nada más.
 
@@ -584,6 +590,8 @@ pasa los tests que trae antes de tocar nada más.
 La lista al día la da siempre `recipes list`.
 
 ### La versión va fijada
+
+![Las recetas que recibes son las que se probaron con tu harness: de CopyPasta-Kitchen al paquete npm v0.1.0 y al harness con versión exacta](docs/img/readme/readme-38-copypasta-version-fijada.png)
 
 El recetario es un paquete npm aparte, [`@damiangilgonzalez/copypasta`](https://www.npmjs.com/package/@damiangilgonzalez/copypasta),
 y el harness depende de **una versión exacta**. Las recetas que recibes son las que se probaron
