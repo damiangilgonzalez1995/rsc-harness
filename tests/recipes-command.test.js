@@ -66,3 +66,12 @@ test('recipes fails loudly on an unknown recipe or a bad command line', () => {
   assert.equal(bare.status, 2);
   assert.match(bare.stderr, /harness recipes list/);
 });
+
+test('global harness flags are the harness\'s, not the recipe book\'s', () => {
+  // `Any command takes --target`: it must not reach the recipe CLI as an unknown flag.
+  const before = harness(elsewhere(), '--target', 'claude', 'recipes', 'list', '--category', 'frontend');
+  assert.equal(before.status, 0, before.stderr);
+  assert.match(before.stdout, /vite-react-base/);
+  const after = harness(elsewhere(), 'recipes', 'list', '--target=claude');
+  assert.equal(after.status, 0, after.stderr);
+});

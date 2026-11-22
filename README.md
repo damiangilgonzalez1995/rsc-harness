@@ -557,12 +557,13 @@ No. Funciona solo, en tres capas:
 | Capa | Qué hace | Tú |
 |---|---|---|
 | **Instalación** | La skill `copypasta` va en la base: la recibe todo proyecto con el harness, sea cual sea el perfil. | Nada |
-| **Aviso al abrir sesión** | Con la skill instalada, cada sesión arranca con un recordatorio para el agente: *antes de crear una pieza nueva, mira el recetario y ofrécele al usuario la receta que encaje*. | Nada |
+| **Aviso al abrir sesión** (Claude Code) | Con la skill instalada, cada sesión arranca con un recordatorio para el agente: *antes de crear una pieza nueva, mira el recetario y ofrécele al usuario la receta que encaje*. | Nada |
 | **Tu sí** | El agente te propone la receta en una línea («Para esto hay `fastapi-base`: API base con errores, CORS y `/health`. ¿La traigo?»). Solo copia si dices que sí. | Decir sí o no |
 
 El aviso existe porque una skill se dispara cuando la petición se parece a su descripción, y
 «añade rate limit» no suena a «tráeme una plantilla». Con el aviso, el agente mira el recetario
-aunque no menciones plantillas.
+aunque no menciones plantillas. En otros asistentes (Codex, Cursor…) no hay aviso: la skill está
+igual, pero se activa cuando la pides o cuando tu petición habla de plantillas.
 
 Para comprobarlo o ajustarlo:
 
@@ -573,7 +574,7 @@ npx @damiangilgonzalez/harness add copypasta   # si no sale (por ejemplo, en un 
 
 - **Llamarla a mano:** «usa copypasta» en el chat, o `/copypasta` en Claude Code.
 - **Apagar el aviso** (la skill sigue disponible): crea el fichero vacío `.rsc/.no-copypasta-hint`
-  en tu proyecto.
+  en tu proyecto. Es una decisión del proyecto: queda en `.rsc.json` y le llega a todo el equipo.
 
 ### Cómo se usa
 
