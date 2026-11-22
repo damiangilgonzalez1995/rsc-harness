@@ -35,26 +35,31 @@ the primary source before quoting them in an audit response.
 
 ## EU AI Act
 
-Phased application:
+Phased application (verified 2026-11-21):
 
 | Obligation | Date |
 | --- | --- |
 | Prohibited practices + AI-literacy | 2 Feb 2025 |
 | GPAI-model obligations + governance + penalties | 2 Aug 2025 |
-| Annex III (use-based) high-risk obligations | **2 Aug 2026 — active legal date** |
-| Annex I (product-regulated, incl. medical devices) | 2 Aug 2027 |
+| Art. 50 transparency (AI-interaction notice, marking of synthetic content) | **2 Aug 2026 — already applies** (Art. 50(2) marking: until 2 Dec 2026 for systems already on the market before 2 Aug 2026) |
+| Two new Art. 5 prohibitions (non-consensual intimate imagery, CSAM) | 2 Dec 2026 |
+| Annex III (use-based) high-risk obligations | **2 Dec 2027** |
+| Annex I (product-regulated, incl. medical devices) | **2 Aug 2028** |
 
 High-risk obligations include conformity assessment, registration, risk
 management, data governance, logging, and human oversight.
 
-**Digital Omnibus on AI** — a provisional trilogue agreement (**7 May 2026**)
-proposes deferring Annex III high-risk to **2 Dec 2027** and Annex I to
-**2 Aug 2028**. It is **NOT yet adopted**. Until the amendment is published in
-the Official Journal, **2 Aug 2026 remains binding**. Plan to the original date;
-record the deferral as forthcoming-not-final.
+**Digital Omnibus on AI** — adopted as **Regulation (EU) 2026/1744**
+(Official Journal 24 Jul 2026, in force 27 Jul 2026). It moved Annex III
+high-risk from 2 Aug 2026 to **2 Dec 2027** and Annex I from 2 Aug 2027 to
+**2 Aug 2028**. It did **not** defer Art. 50. The calendar has already moved
+once: re-verify on EUR-Lex before quoting a date.
 
 Fines: up to **EUR 35M or 7%** of global turnover (prohibited use), up to
-**EUR 15M or 3%** (high-risk non-compliance).
+**EUR 15M or 3%** (most other obligations, incl. high-risk and Art. 50).
+
+Classifying one AI product (role, risk level, code review) is
+`../ai-act/SKILL.md`; here the Act is only a row in the register.
 
 ## PCI DSS v4.0.1
 

@@ -1,8 +1,8 @@
 ---
 name: compliance
-description: "Use when scoping which regulatory frameworks bind a business — SOC 2, ISO 27001, HIPAA, PCI DSS, EU AI Act, DORA, NIS2 — building a control register with owners and evidence, or standing up the cadence that keeps it audit-ready. NOT drafting privacy-policy/ROPA/DPA or ToS text (that is gdpr-privacy, terms-conditions), NOT hardening code (that is secure-coding)."
+description: "Use when scoping which regulatory frameworks bind a business — SOC 2, ISO 27001, HIPAA, PCI DSS, EU AI Act, DORA, NIS2 — building a control register with owners and evidence, or standing up the cadence that keeps it audit-ready. NOT drafting privacy-policy/ROPA/DPA or ToS text (that is gdpr-privacy, terms-conditions), NOT hardening code (that is secure-coding), NOT classifying one AI product's role and risk under the EU AI Act or reviewing its code against it (that is ai-act)."
 tags: [compliance, soc2, iso27001, audit-readiness, controls, governance]
-recommends: [gdpr-privacy, terms-conditions, data-policy, contracts, secure-coding]
+recommends: [gdpr-privacy, terms-conditions, data-policy, contracts, secure-coding, ai-act]
 origin: risco
 ---
 
@@ -30,6 +30,8 @@ here.
 - Commercial contract / MSA / DPA clause drafting → `../contracts/SKILL.md`.
 - Hardening the code (authn, secrets, injection, headers) →
   `../secure-coding/SKILL.md`.
+- Classifying one AI product under the EU AI Act (role, risk level, Art. 50
+  code review, Annex IV / FRIA skeletons) → `../ai-act/SKILL.md`.
 
 ## Step 1 — Scope to the frameworks that actually bind
 
@@ -43,23 +45,28 @@ obligations. Ask the operator the attribute questions, then apply this table.
 | Stores / processes / transmits cardholder data | PCI DSS v4.0.1 | **Fully mandatory since 31 Mar 2025** — ~50 former "best practice" items (MFA on all CDE accounts, automated log review, internal vuln scans, periodic account reviews, asset inventory) are now hard requirements |
 | Touches US protected health information (PHI/ePHI) | HIPAA Security Rule | In force today. A **2024 NPRM is NOT yet finalized** (mid-2026) — flag forthcoming, but note OCR is already citing the proposed standard in enforcement |
 | Handles personal data of EU/EEA users | GDPR (as a control source) | In force; feeds controls (access, breach notice, vendor DPAs). Document *text* → `../gdpr-privacy/SKILL.md` |
-| Builds or deploys an AI system, esp. high-risk use | EU AI Act | Phased — see below; **2 Aug 2026 is the active legal date** for Annex III high-risk |
+| Builds or deploys an AI system, esp. high-risk use | EU AI Act | Phased — see below; Art. 50 transparency **applies since 2 Aug 2026**, Annex III high-risk from **2 Dec 2027** (verified 2026-11-21) |
 | Is an EU financial entity (or critical ICT vendor to one) | DORA | **In force since Jan 2025** — ICT risk mgmt, incident reporting, resilience testing, third-party risk |
 | Operates essential/important services in the EU | NIS2 | Transposed in 21/27 member states by Mar 2026; many set a first audit deadline of **30 Jun 2026** |
 
-**EU AI Act — get the dates exactly right (high audit risk):**
+**EU AI Act — get the dates exactly right (high audit risk; verified 2026-11-21):**
 
 - Prohibited practices + AI-literacy: **2 Feb 2025**.
 - GPAI-model obligations + governance + penalties: **2 Aug 2025**.
-- Annex III (use-based) high-risk obligations: **2 Aug 2026**.
-- Annex I (product-regulated, incl. medical devices): **2 Aug 2027**.
-- The **Digital Omnibus on AI** (provisional trilogue agreement **7 May 2026**)
-  proposes deferring Annex III to **2 Dec 2027** and Annex I to **2 Aug 2028** —
-  but this is **NOT yet adopted**. Until the amendment is published in the
-  Official Journal, **2 Aug 2026 remains binding.** Plan to the original date;
-  flag the deferral as forthcoming-not-final.
+- Art. 50 transparency (AI-interaction notice, marking of synthetic content):
+  **2 Aug 2026 — already applies; it was not deferred.** Systems placed on the
+  market before that date have until **2 Dec 2026** for the Art. 50(2)
+  machine-readable marking only.
+- Two new Art. 5 prohibitions (non-consensual intimate imagery, CSAM):
+  **2 Dec 2026**.
+- Annex III (use-based) high-risk obligations: **2 Dec 2027**.
+- Annex I (product-regulated, incl. medical devices): **2 Aug 2028**.
+- These dates come from the **Digital Omnibus on AI**, adopted as **Regulation
+  (EU) 2026/1744** (Official Journal 24 Jul 2026, in force 27 Jul 2026), which
+  replaced the original 2 Aug 2026 / 2 Aug 2027 high-risk dates. The calendar
+  has already moved once: re-verify on EUR-Lex before quoting a date.
 - Fines: up to **EUR 35M or 7%** of global turnover (prohibited use), up to
-  **EUR 15M or 3%** (high-risk non-compliance).
+  **EUR 15M or 3%** (most other obligations, incl. high-risk and Art. 50).
 
 **Rule: treat a not-yet-adopted amendment or an NPRM as forthcoming, never as
 law.** Why: scoping to a draft that slips leaves you out of compliance on the

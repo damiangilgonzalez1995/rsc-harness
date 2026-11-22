@@ -128,7 +128,7 @@ The deletion *mechanics* — TTL columns, partition drops, soft-delete schema �
 
 ## AI reuse and cross-border transfers
 
-State explicitly in the policy whether production data may be reused for **AI/model training**. GDPR purpose limitation (Art. 5(1)(b)) restricts reusing data collected for one purpose to train a model — that is a new purpose needing its own basis. The EU AI Act adds documentation and logging-retention duties, with high-risk obligations applying from **2 Aug 2026**; the Commission's Digital Omnibus proposal would let AI providers lean on legitimate interest for development with enhanced safeguards and an unconditional opt-out (TechGDPR; IAPP, 2026). Practical rule: the retention policy must say whether AI reuse is allowed, on what basis, and how a subject opts out.
+State explicitly in the policy whether production data may be reused for **AI/model training**. GDPR purpose limitation (Art. 5(1)(b)) restricts reusing data collected for one purpose to train a model — that is a new purpose needing its own basis. The EU AI Act adds documentation and logging-retention duties, with high-risk obligations applying from **2 Dec 2027** (Annex III) and **2 Aug 2028** (Annex I) since Regulation (EU) 2026/1744; the Commission's Digital Omnibus proposal would let AI providers lean on legitimate interest for development with enhanced safeguards and an unconditional opt-out (TechGDPR; IAPP, 2026). Practical rule: the retention policy must say whether AI reuse is allowed, on what basis, and how a subject opts out.
 
 For cross-border transfers, name the mechanism in the ROPA row (e.g. SCCs) and point to `../gdpr-privacy/SKILL.md` for the SCC/notice depth — that is its territory, not yours.
 

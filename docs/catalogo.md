@@ -1,6 +1,6 @@
 # Catálogo de skills
 
-314 skills, agrupadas por lo que quieres hacer. Cada enlace abre la carpeta de la skill y su
+315 skills, agrupadas por lo que quieres hacer. Cada enlace abre la carpeta de la skill y su
 `SKILL.md`. Ninguna hace falta llamarla a mano: se activa sola cuando la tarea encaja.
 
 Para instalar una: `rsc add <id>`. Para que te recomiende: `rsc consult "lo que quieres hacer"`.
@@ -270,3 +270,4 @@ encargo.
 | [no-me-rayes](../skills/no-me-rayes/) | Obliga a responder en viñetas con emojis: hecho, ahora, bloqueos y resumen. Va en la base. |
 | [overview](../skills/overview/) | Arranca un proyecto con preguntas y comprobaciones senior por rondas, y luego dice qué zonas piden revisión y qué está revisado con el contenido de hoy. Va en la base. |
 | [copypasta](../skills/copypasta/) | Lista las plantillas del recetario CopyPasta-Kitchen (API, agente, RAG, auth, frontend…) y copia solo la que hace falta, en vez de inventar la estructura. Va en la base. |
+| [ai-act](../skills/ai-act/) | Qué exige el Reglamento europeo de IA a tu producto: rol, nivel de riesgo, obligaciones con fecha, revisión del código por zonas y esqueletos de anexo IV, instrucciones de uso y FRIA. No es asesoría jurídica; tú decides qué se arregla. |
