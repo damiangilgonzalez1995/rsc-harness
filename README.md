@@ -550,6 +550,31 @@ cuenta cuándo usarla, qué decisiones trae tomadas y cómo adaptarla.
 
 Viene dentro del harness: no hay nada más que instalar.
 
+### ¿Tengo que activarlo?
+
+No. Funciona solo, en tres capas:
+
+| Capa | Qué hace | Tú |
+|---|---|---|
+| **Instalación** | La skill `copypasta` va en la base: la recibe todo proyecto con el harness, sea cual sea el perfil. | Nada |
+| **Aviso al abrir sesión** | Con la skill instalada, cada sesión arranca con un recordatorio para el agente: *antes de crear una pieza nueva, mira el recetario y ofrécele al usuario la receta que encaje*. | Nada |
+| **Tu sí** | El agente te propone la receta en una línea («Para esto hay `fastapi-base`: API base con errores, CORS y `/health`. ¿La traigo?»). Solo copia si dices que sí. | Decir sí o no |
+
+El aviso existe porque una skill se dispara cuando la petición se parece a su descripción, y
+«añade rate limit» no suena a «tráeme una plantilla». Con el aviso, el agente mira el recetario
+aunque no menciones plantillas.
+
+Para comprobarlo o ajustarlo:
+
+```bash
+npx @damiangilgonzalez/harness list            # sale copypasta si está instalada
+npx @damiangilgonzalez/harness add copypasta   # si no sale (por ejemplo, en un proyecto antiguo)
+```
+
+- **Llamarla a mano:** «usa copypasta» en el chat, o `/copypasta` en Claude Code.
+- **Apagar el aviso** (la skill sigue disponible): crea el fichero vacío `.rsc/.no-copypasta-hint`
+  en tu proyecto.
+
 ### Cómo se usa
 
 ![Mirar, leer, copiar, adaptar: recipes list, recipes show, recipes get y sustituir los marcadores](docs/img/readme/readme-36-copypasta-flujo.png)
