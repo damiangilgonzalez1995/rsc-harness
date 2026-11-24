@@ -338,6 +338,19 @@ then reload the session. If you don't want it here: create .rsc/.no-context7.
 `);
 }
 
+// Plugins activados pero sin instalar: settings.json los declara, Claude Code no los carga hasta un
+// `claude plugin install`. Sale en cada sesión mientras falte alguno (se calla solo al instalarlos),
+// también en la primera, antes del onboarding. Una vez por sesión aunque haya dos scopes cableados.
+// El detector viaja como hermano; si falta (instalación vieja), el aviso se calla.
+// Opt-out: .rsc/.no-plugin-check.
+if (emitBody && !has('.rsc', '.no-plugin-check')) {
+  try {
+    const { pendingPlugins, pluginNotice } = await import('./plugin-check.mjs');
+    const notice = pluginNotice(pendingPlugins(root));
+    if (notice) process.stdout.write(notice);
+  } catch { /* fail-open */ }
+}
+
 // Periodic skill audit: for active rsc projects, nudge to re-audit when the last run
 // is stale (or never ran). Running \`rsc audit\` stamps .rsc/audit.json and silences
 // this for the cadence. Opt out with .rsc/.no-audit.

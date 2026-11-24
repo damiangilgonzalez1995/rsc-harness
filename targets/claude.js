@@ -3,6 +3,7 @@ import { dirname, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { linkOrCopy } from './index.js';
 import { ensureShadowClaudeMd, removeShadowClaudeMd } from './agents-md-shadow.js';
+import { RETIRED_PLUGINS } from './plugin-check.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 // Shell tools the PreToolUse guards listen on. On Windows the primary shell is the PowerShell tool,
@@ -24,9 +25,9 @@ export const CLAUDE_CODE_MODS = Object.freeze([
 ]);
 
 // Mods que el harness activaba y ya no existen. Al reinstalar se quitan de `enabledPlugins`: si se
-// quedaran, Claude Code buscaría en el marketplace un plugin que ya no está.
-// `modelo-justo` (selección dinámica de Haiku/Sonnet/Opus) se retiró del harness.
-export const RETIRED_CLAUDE_CODE_MODS = Object.freeze(['modelo-justo@harness-mods']);
+// quedaran, Claude Code buscaría en el marketplace un plugin que ya no está. La lista vive en
+// plugin-check.mjs, que también la necesita y viaja solo como hermano en .rsc/.
+export const RETIRED_CLAUDE_CODE_MODS = RETIRED_PLUGINS;
 
 export function writeSkill(id, fromDir, toPath) {
   // Migrate away from the legacy nested layout (.claude/skills/rsc/<id>) that
@@ -137,6 +138,7 @@ export function wireHook(paths, sourceMd, policy = {}) {
   // Shared by session-start + userprompt-gate. Hooks are materialized file by file, so a module
   // they import must be copied as their SIBLING — a subdirectory import would break once copied.
   copyFileSync(join(HERE, 'hook-once.mjs'), join(paths.projectRoot, '.rsc', 'hook-once.mjs'));
+  copyFileSync(join(HERE, 'plugin-check.mjs'), join(paths.projectRoot, '.rsc', 'plugin-check.mjs'));
   // Same reason: session-start imports the reaper for the landed-worktree sweep, so it travels as a
   // sibling too. Missing it does not break startup — the sweep is wrapped — it just goes silent.
   copyFileSync(join(HERE, 'worktree-reaper.mjs'), join(paths.projectRoot, '.rsc', 'worktree-reaper.mjs'));

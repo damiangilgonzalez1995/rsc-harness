@@ -39,6 +39,7 @@ export const MACHINE_OPT_OUTS = [
   'git',        // only fires with no .git/, which a clone cannot be
   'harness',    // "not offered again ON THIS MACHINE" — the bootstrap's own words
   'inspo',      // the Inspo design MCP: same as context7, connecting it is one person's call
+  'plugin-check', // installing a Claude Code plugin happens per machine (scope user)
   'scope-check',// compares the project and home scopes OF THIS MACHINE
 ];
 

@@ -711,10 +711,34 @@ Hooks que vigilan por ti: recuerdan la cadena, piden confirmación antes de un `
 `git push --force`, paran antes de volver a `main` sin abrir la PR e impiden que el agente lea lo
 que `sweep` archivó en `docs/archive/`.
 
-![Plugins de serie: superpowers, skins, savvy-progress y cache-tax](docs/img/readme/readme-16-plugins.png)
+![Plugins de serie: superpowers, skins, savvy-progress, cache-tax, context-bar, prompt-enhancer y where-am-i](docs/img/readme/readme-16-plugins.png)
 
 En Claude Code quedan activados `skins`, `savvy-progress`, `context-bar`, `prompt-enhancer`,
 `where-am-i` y `cache-tax` (este mantiene caliente la caché, y eso gasta tokens). `superpowers` llega cuando el proyecto usa el método.
+
+> [!IMPORTANT]
+> **Activar no es instalar.** El harness los deja activados en `.claude/settings.json`, pero Claude Code
+> no los carga hasta que los instalas en tu máquina, una vez por persona. Mientras falte alguno, al
+> abrir Claude Code el harness te avisa con los comandos exactos que te faltan. Para instalarlos todos:
+>
+> ```bash
+> # 1. Registra de dónde salen (cada uno es un repo de GitHub)
+> claude plugin marketplace add hellosverre/claude-skins
+> claude plugin marketplace add johnnyvizz/claude-kit
+> claude plugin marketplace add karanb192/claude-code-mods
+> claude plugin marketplace add damiangilgonzalez1995/rsc-harness
+>
+> # 2. Instálalos para tu usuario (sirven en todos tus proyectos)
+> claude plugin install skins@hellosverre-mods --scope user
+> claude plugin install savvy-progress@claude-kit --scope user
+> claude plugin install cache-tax@claude-code-mods --scope user
+> claude plugin install context-bar@harness-mods --scope user
+> claude plugin install prompt-enhancer@harness-mods --scope user
+> claude plugin install where-am-i@harness-mods --scope user
+> claude plugin install superpowers@claude-plugins-official --scope user   # si usas el método
+> ```
+>
+> Después, reinicia Claude Code. ¿No quieres el aviso en un proyecto? Crea `.rsc/.no-plugin-check`.
 
 En cifras: 315 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
 (Claude Code, Codex, Cursor, Copilot, Gemini…). Detalle en la [referencia técnica](docs/referencia-tecnica.md).
