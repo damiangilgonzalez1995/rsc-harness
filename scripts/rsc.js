@@ -17,6 +17,7 @@ import { diagnose, repair } from './lib/repair.js';
 import { DEFAULT_SKILL_FLOOR, withDefaultSkillFloor } from './lib/default-skill-floor.js';
 import { readManifest, writeManifest } from './lib/manifest-file.js';
 import { versionReport } from './lib/versions.js';
+import { pendingPlugins, pluginCommands } from '../targets/plugin-check.mjs';
 import {
   normalizeOnboarding, missingOnboardingFields, scanProject,
   buildOnboardingPlan, decodeGoal, encodeGoal, identifyPlan, recommendDeferredComponents,
@@ -479,7 +480,19 @@ function printAgentHandoff() {
     say(`     ${readiness.action}`);
     say('     Then tell the user, and do NOT auto-start a task.');
   }
+  printPendingPlugins();
   say('════════════════════════════════════════════════');
+}
+
+// El harness activa plugins en .claude/settings.json, pero activar no es instalar: hasta un
+// `claude plugin install` Claude Code no los carga. Se dice aquí, al terminar, y lo repite el hook
+// de inicio de sesión mientras falten.
+function printPendingPlugins() {
+  const pending = pendingPlugins(process.cwd());
+  if (!pending.plugins.length) return;
+  say(`  4. ${pending.plugins.length} Claude Code plugin(s) are enabled but NOT installed (enabling is not installing).`);
+  say('     Tell the user and offer to run:');
+  for (const c of pluginCommands(pending)) say(`       ${c}`);
 }
 
 // What the harness costs in context before the user types anything. Printed ahead of the raw

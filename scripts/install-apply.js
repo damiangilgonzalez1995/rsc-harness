@@ -77,6 +77,7 @@ export function generatedHookFiles({ target, cwd, policy }) {
     join(cwd, '.rsc', 'session-start.mjs'),
     join(cwd, '.rsc', 'worklog-checkpoint.mjs'),
     join(cwd, '.rsc', 'hook-once.mjs'),
+    join(cwd, '.rsc', 'plugin-check.mjs'),
     join(cwd, '.rsc', 'worktree-reaper.mjs'),
     // overview es de suelo: su motor y sus dos hooks van con o sin hooks de código.
     join(cwd, '.rsc', 'overview.mjs'),
