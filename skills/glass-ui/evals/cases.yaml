@@ -1,0 +1,33 @@
+skill: glass-ui
+
+should_trigger:
+  - prompt: "Hazme un panel de proyectos con estetica glass, cristal esmerilado y gradientes difuminados."
+    why: "Disparador directo de glass-ui."
+  - prompt: "Quiero que mi app se vea tipo Liquid Glass de Apple, en movil y ordenador."
+    why: "Liquid Glass es una de las esteticas que cubre glass-ui."
+  - prompt: "Dale a este dashboard un look de glassmorphism con pastillas y cifras de puntos."
+    why: "Glassmorphism, pildoras y cifras de puntos son el nucleo de glass-ui."
+  - prompt: "Build a frosted glass dashboard with a blurred mesh gradient background and spring animations."
+    why: "Disparador directo de glass-ui en ingles."
+  - prompt: "Rehaz esta pantalla con materiales Mica y Acrylic, mas formal y con menos redondeles."
+    why: "El estilo formal (Mica/Acrylic) es una de las variantes de glass-ui."
+
+should_not_trigger:
+  - prompt: "Hazme una landing de marketing para vender mi curso."
+    route_to: "diseno-landing"
+    why: "Una landing de conversion es el trabajo de diseno-landing, no de glass-ui."
+  - prompt: "Anima la apertura de este modal con un muelle."
+    route_to: "animar"
+    why: "Una microinteraccion aislada es el trabajo de animar, no de glass-ui."
+  - prompt: "Revisa el contraste de color de mi app."
+    route_to: "mejor-colores"
+    why: "Medir contraste es el trabajo de mejor-colores, no de glass-ui."
+  - prompt: "Extrae el look de esta captura y aplicalo a mi web."
+    route_to: "tastemaker"
+    why: "Extraer una estetica cualquiera de una referencia es el trabajo de tastemaker."
+
+capability:
+  - scenario: "El usuario pide un panel con estetica glass para su proyecto."
+    must_include:
+      - "estilo"
+      - "backdrop-filter"

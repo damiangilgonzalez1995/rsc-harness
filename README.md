@@ -740,16 +740,16 @@ En Claude Code quedan activados `skins`, `savvy-progress`, `context-bar`, `promp
 >
 > Después, reinicia Claude Code. ¿No quieres el aviso en un proyecto? Crea `.rsc/.no-plugin-check`.
 
-En cifras: 315 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
+En cifras: 316 skills, 34 agentes y 43 entradas de comando, para 17 asistentes
 (Claude Code, Codex, Cursor, Copilot, Gemini…). Detalle en la [referencia técnica](docs/referencia-tecnica.md).
 
 ---
 
 ## Catálogo
 
-![315 skills por dominio](docs/img/readme/readme-15-catalogo.png)
+![316 skills por dominio](docs/img/readme/readme-15-catalogo.png)
 
-315 skills en 25 dominios: software, negocio, contenido, datos e IA.
+316 skills en 25 dominios: software, negocio, contenido, datos e IA.
 Cada una se activa sola cuando la tarea encaja.
 
 **[Ver el catálogo completo →](docs/catalogo.md)** · [Referencia técnica](docs/referencia-tecnica.md) ·

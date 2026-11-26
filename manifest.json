@@ -1,7 +1,7 @@
 {
   "version": "1.3.6",
   "counts": {
-    "skills": 315,
+    "skills": 316,
     "agents": 34,
     "commands": 43,
     "fixedCommands": 10
@@ -2347,6 +2347,29 @@
         "vercel"
       ],
       "profiles": []
+    },
+    {
+      "id": "glass-ui",
+      "description": "Use when building or restyling a web app, dashboard or screen with the glass aesthetic: frosted glass (glassmorphism, Apple Liquid Glass, Fluent Mica/Acrylic), blurred mesh-gradient backgrounds with grain, pills, dot-matrix numerals and spring motion, on desktop and mobile. Asks the user to pick one of four styles (soft, formal, mist, nocturne) and a typeface that fits the project. NOT a marketing landing page (that is `diseno-landing`), NOT a generic visual direction pass (that is `tastemaker`).",
+      "tags": [
+        "glassmorphism",
+        "liquid-glass",
+        "ui",
+        "motion",
+        "design-system"
+      ],
+      "recommends": [
+        "animar",
+        "diseno-apple",
+        "mejor-accesibilidad",
+        "mejor-colores",
+        "mejor-tipografia",
+        "tastemaker"
+      ],
+      "profiles": [
+        "ui",
+        "full"
+      ]
     },
     {
       "id": "go",
