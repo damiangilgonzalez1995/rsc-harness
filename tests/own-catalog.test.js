@@ -23,7 +23,7 @@ const OWN = [
   'code-review', 'handoff', 'revision-de-cambios', 'revision-interfaz', 'muscle-memory',
   'teach', 'wait-what', 'writing-for-agents', 'write-adr',
   'implement-spec', 'pr', 'retro',
-  'tunel-ngrok', 'hardening', 'no-me-rayes', 'overview', 'copypasta', 'ai-act',
+  'tunel-ngrok', 'hardening', 'no-me-rayes', 'overview', 'copypasta', 'ai-act', 'glass-ui',
 ];
 
 test('el catalogo propio esta completo', () => {

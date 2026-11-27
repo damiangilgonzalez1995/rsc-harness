@@ -1,6 +1,6 @@
 # Catálogo de skills
 
-315 skills, agrupadas por lo que quieres hacer. Cada enlace abre la carpeta de la skill y su
+316 skills, agrupadas por lo que quieres hacer. Cada enlace abre la carpeta de la skill y su
 `SKILL.md`. Ninguna hace falta llamarla a mano: se activa sola cuando la tarea encaja.
 
 Para instalar una: `rsc add <id>`. Para que te recomiende: `rsc consult "lo que quieres hacer"`.
@@ -220,6 +220,7 @@ encargo.
 | [mejor-ui](../skills/mejor-ui/) | Radios concéntricos, alineación óptica, superficies, transiciones de iconos. |
 | [mejor-redaccion](../skills/mejor-redaccion/) | Voz y tono, botones con verbo, errores que dicen cómo arreglarlos, estados vacíos. |
 | [tastemaker](../skills/tastemaker/) | UI que no parece hecha por IA: color medido al píxel, paletas generadas. |
+| [glass-ui](../skills/glass-ui/) | Apps con estética de cristal (glassmorphism, Liquid Glass, Mica): pregunta uno de cuatro estilos y la letra del proyecto, y verifica en ordenador y móvil. |
 | [leyes-de-percepcion](../skills/leyes-de-percepcion/) | Gestalt para interfaces: proximidad, similitud, figura-fondo, jerarquía. |
 | [leyes-de-retencion](../skills/leyes-de-retencion/) | Por qué la gente abandona un flujo: Hick, Fitts, Miller, Jakob, Doherty, pico-final. |
 | [vocabulario-animacion](../skills/vocabulario-animacion/) | Glosario inverso: convierte "eso que rebota" en el término exacto. |
